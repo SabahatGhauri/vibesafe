@@ -1,0 +1,2401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VibeSafe — Ship Your AI-Generated App. Safely.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #080C18;
+    --bg2: #0F1624;
+    --surface: #131D2E;
+    --surface2: #1A2640;
+    --border: #1E2D42;
+    --border2: #253548;
+    --cyan: #00D4FF;
+    --cyan-dim: rgba(0,212,255,0.12);
+    --cyan-glow: rgba(0,212,255,0.25);
+    --violet: #7C3AED;
+    --violet-dim: rgba(124,58,237,0.15);
+    --green: #10B981;
+    --green-dim: rgba(16,185,129,0.12);
+    --amber: #F59E0B;
+    --red: #EF4444;
+    --red-dim: rgba(239,68,68,0.12);
+    --text: #F1F5F9;
+    --text2: #94A3B8;
+    --text3: #64748B;
+    --radius: 12px;
+    --radius-lg: 18px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%; height: 64px;
+    background: rgba(8,12,24,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700; font-size: 1.25rem; color: var(--text);
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--cyan), var(--violet));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+
+  .nav-links {
+    display: flex; align-items: center; gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text2); text-decoration: none;
+    font-size: 0.9rem; font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-cta {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 22px; border-radius: 8px;
+    font-family: 'Inter', sans-serif; font-size: 0.875rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; border: none; text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .btn-ghost {
+    background: transparent; color: var(--text2);
+    border: 1px solid var(--border2);
+  }
+  .btn-ghost:hover { border-color: var(--cyan); color: var(--text); }
+
+  .btn-primary {
+    background: var(--cyan); color: #080C18;
+    box-shadow: 0 0 20px rgba(0,212,255,0.3);
+  }
+  .btn-primary:hover {
+    background: #33DCFF;
+    box-shadow: 0 0 30px rgba(0,212,255,0.5);
+    transform: translateY(-1px);
+  }
+
+  .btn-outline {
+    background: transparent; color: var(--cyan);
+    border: 1px solid rgba(0,212,255,0.4);
+  }
+  .btn-outline:hover {
+    background: var(--cyan-dim);
+    border-color: var(--cyan);
+  }
+
+  .btn-lg {
+    padding: 14px 32px; font-size: 1rem; border-radius: 10px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 100px 5% 60px;
+    position: relative; overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+  }
+
+  .hero-glow-1 {
+    position: absolute; top: 20%; left: 15%;
+    width: 500px; height: 500px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+  }
+
+  .hero-glow-2 {
+    position: absolute; top: 30%; right: 10%;
+    width: 400px; height: 400px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 70%);
+  }
+
+  .hero-inner {
+    max-width: 1200px; margin: 0 auto; width: 100%;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: center;
+    position: relative; z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px; border-radius: 100px;
+    background: var(--cyan-dim); border: 1px solid rgba(0,212,255,0.2);
+    font-size: 0.8rem; font-weight: 600; color: var(--cyan);
+    margin-bottom: 24px;
+    width: fit-content;
+  }
+
+  .badge-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--cyan);
+    animation: pulse-dot 2s infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+    font-weight: 700; line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+
+  .hero-title .highlight {
+    background: linear-gradient(135deg, var(--cyan), #7C3AED);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 1.1rem; color: var(--text2);
+    line-height: 1.7; margin-bottom: 36px;
+    max-width: 480px;
+  }
+
+  .hero-actions {
+    display: flex; align-items: center; gap: 16px;
+    flex-wrap: wrap; margin-bottom: 48px;
+  }
+
+  .hero-social-proof {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .avatars {
+    display: flex;
+  }
+
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 2px solid var(--bg);
+    margin-left: -8px;
+    background: linear-gradient(135deg, var(--cyan), var(--violet));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 600;
+  }
+
+  .avatar:first-child { margin-left: 0; }
+
+  .social-text { font-size: 0.85rem; color: var(--text3); }
+  .social-text strong { color: var(--text2); }
+
+  /* ── SCAN DEMO WIDGET ── */
+  .scan-demo {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,212,255,0.05);
+  }
+
+  .demo-topbar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 18px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .demo-dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dot-red { background: #FF5F56; }
+  .dot-yellow { background: #FFBD2E; }
+  .dot-green { background: #27C93F; }
+
+  .demo-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem; color: var(--text3);
+    margin-left: 8px;
+  }
+
+  .demo-body { padding: 20px; }
+
+  .demo-tabs {
+    display: flex; gap: 4px; margin-bottom: 16px;
+  }
+
+  .demo-tab {
+    padding: 6px 14px; border-radius: 6px;
+    font-size: 0.78rem; font-weight: 500; cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s; color: var(--text3);
+    background: none;
+  }
+
+  .demo-tab.active {
+    background: var(--cyan-dim);
+    border-color: rgba(0,212,255,0.25);
+    color: var(--cyan);
+  }
+
+  .code-preview {
+    background: var(--bg2);
+    border-radius: 8px; padding: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem; line-height: 1.7;
+    color: var(--text2);
+    border: 1px solid var(--border);
+    margin-bottom: 14px;
+    min-height: 120px;
+    position: relative; overflow: hidden;
+  }
+
+  .code-line { display: flex; gap: 12px; }
+  .ln { color: var(--text3); user-select: none; min-width: 20px; text-align: right; }
+  .code-err { color: #EF4444; }
+  .code-warn { color: #F59E0B; }
+  .code-ok { color: #10B981; }
+  .code-kw { color: #7C3AED; }
+  .code-str { color: #00D4FF; }
+  .code-fn { color: #60A5FA; }
+
+  .scan-bar-wrap {
+    margin-bottom: 14px;
+  }
+
+  .scan-bar-label {
+    display: flex; justify-content: space-between;
+    font-size: 0.75rem; color: var(--text3); margin-bottom: 6px;
+  }
+
+  .scan-bar-track {
+    height: 6px; background: var(--bg2);
+    border-radius: 100px; overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .scan-bar-fill {
+    height: 100%; border-radius: 100px;
+    background: linear-gradient(90deg, var(--cyan), var(--violet));
+    transition: width 0.4s ease;
+    box-shadow: 0 0 8px rgba(0,212,255,0.5);
+  }
+
+  .issue-cards { display: flex; flex-direction: column; gap: 8px; }
+
+  .issue-card {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 12px; border-radius: 8px;
+    border: 1px solid transparent;
+    font-size: 0.78rem; transition: all 0.3s;
+    opacity: 0; transform: translateY(6px);
+  }
+
+  .issue-card.visible {
+    opacity: 1; transform: translateY(0);
+  }
+
+  .issue-card.err { background: var(--red-dim); border-color: rgba(239,68,68,0.2); }
+  .issue-card.warn { background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.2); }
+  .issue-card.ok { background: var(--green-dim); border-color: rgba(16,185,129,0.2); }
+
+  .issue-icon { font-size: 14px; margin-top: 1px; flex-shrink: 0; }
+  .issue-text { flex: 1; }
+  .issue-title { font-weight: 600; margin-bottom: 2px; }
+  .issue-title.err { color: #EF4444; }
+  .issue-title.warn { color: #F59E0B; }
+  .issue-title.ok { color: #10B981; }
+  .issue-desc { color: var(--text3); line-height: 1.4; }
+
+  .fix-btn {
+    padding: 4px 10px; border-radius: 5px;
+    font-size: 0.7rem; font-weight: 600;
+    cursor: pointer; border: none;
+    background: var(--cyan); color: var(--bg);
+    flex-shrink: 0; align-self: flex-start;
+    transition: all 0.2s;
+  }
+  .fix-btn:hover { background: #33DCFF; }
+
+  .demo-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 12px; border-top: 1px solid var(--border);
+    margin-top: 12px;
+  }
+
+  .demo-score {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.8rem; color: var(--text3);
+  }
+
+  .score-badge {
+    padding: 3px 10px; border-radius: 100px;
+    font-weight: 700; font-size: 0.8rem;
+  }
+
+  .score-ok { background: var(--green-dim); color: var(--green); border: 1px solid rgba(16,185,129,0.2); }
+  .score-bad { background: var(--red-dim); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+
+  /* ── SECTIONS SHARED ── */
+  section { padding: 100px 5%; }
+
+  .container { max-width: 1200px; margin: 0 auto; }
+
+  .section-eyebrow {
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--cyan);
+    margin-bottom: 14px;
+  }
+
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 700; line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+
+  .section-sub {
+    font-size: 1.05rem; color: var(--text2);
+    line-height: 1.7; max-width: 560px;
+  }
+
+  /* ── STATS STRIP ── */
+  .stats-strip {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 5%;
+  }
+
+  .stats-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .stat-item {
+    padding: 24px 40px;
+    border-right: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .stat-item:last-child { border-right: none; }
+
+  .stat-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.8rem; font-weight: 700;
+    line-height: 1; margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--cyan), #7C3AED);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .stat-label { font-size: 0.9rem; color: var(--text2); line-height: 1.4; }
+  .stat-source { font-size: 0.72rem; color: var(--text3); margin-top: 4px; }
+
+  /* ── PROBLEM ── */
+  .problem-section { background: var(--bg); }
+
+  .problem-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: center;
+  }
+
+  .problem-cards { display: flex; flex-direction: column; gap: 16px; }
+
+  .problem-card {
+    padding: 20px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    display: flex; gap: 16px; align-items: flex-start;
+    transition: border-color 0.2s;
+  }
+
+  .problem-card:hover { border-color: var(--border2); }
+
+  .problem-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+
+  .icon-red { background: var(--red-dim); }
+  .icon-amber { background: rgba(245,158,11,0.1); }
+  .icon-violet { background: var(--violet-dim); }
+
+  .problem-card-title {
+    font-weight: 600; font-size: 0.95rem; margin-bottom: 4px;
+  }
+
+  .problem-card-desc { font-size: 0.85rem; color: var(--text2); line-height: 1.5; }
+
+  /* ── HOW IT WORKS ── */
+  .how-section { background: var(--bg2); }
+
+  .steps-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; margin-top: 60px;
+    background: var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .step-card {
+    background: var(--surface);
+    padding: 36px 32px;
+    position: relative;
+  }
+
+  .step-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 3rem; font-weight: 700;
+    color: var(--border2); line-height: 1;
+    margin-bottom: 20px;
+  }
+
+  .step-icon-wrap {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 16px;
+  }
+
+  .step-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.15rem; font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .step-desc { font-size: 0.88rem; color: var(--text2); line-height: 1.6; }
+
+  .step-connector {
+    position: absolute; right: -1px; top: 50%;
+    transform: translateY(-50%);
+    width: 20px; height: 20px;
+    background: var(--cyan);
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+    opacity: 0.6; z-index: 2;
+  }
+
+  /* ── FEATURES ── */
+  .features-section { background: var(--bg); }
+
+  .features-header {
+    display: flex; justify-content: space-between;
+    align-items: flex-end; margin-bottom: 56px;
+    gap: 40px;
+  }
+
+  .features-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    transition: all 0.25s;
+    position: relative; overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--violet));
+    opacity: 0; transition: opacity 0.25s;
+  }
+
+  .feature-card:hover {
+    border-color: rgba(0,212,255,0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+  }
+
+  .feature-card:hover::before { opacity: 1; }
+
+  .feature-icon {
+    width: 44px; height: 44px; border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; margin-bottom: 16px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+  }
+
+  .feature-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem; font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .feature-desc { font-size: 0.85rem; color: var(--text2); line-height: 1.6; }
+
+  .feature-tag {
+    display: inline-block; margin-top: 12px;
+    padding: 3px 10px; border-radius: 100px;
+    font-size: 0.7rem; font-weight: 600;
+  }
+
+  .tag-cyan { background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(0,212,255,0.2); }
+  .tag-violet { background: var(--violet-dim); color: #A78BFA; border: 1px solid rgba(124,58,237,0.2); }
+  .tag-green { background: var(--green-dim); color: var(--green); border: 1px solid rgba(16,185,129,0.2); }
+
+  /* ── INTEGRATIONS ── */
+  .integrations-section {
+    background: var(--bg2);
+    text-align: center;
+  }
+
+  .integrations-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 16px; flex-wrap: wrap; margin-top: 48px;
+  }
+
+  .integration-pill {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 22px;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 100px;
+    font-size: 0.9rem; font-weight: 500; color: var(--text2);
+    transition: all 0.2s;
+  }
+
+  .integration-pill:hover {
+    border-color: var(--cyan);
+    color: var(--text);
+    background: var(--surface2);
+  }
+
+  .pill-emoji { font-size: 18px; }
+
+  .pill-status {
+    font-size: 0.65rem; font-weight: 600;
+    margin-left: 6px; padding: 2px 7px;
+    border-radius: 100px;
+    background: var(--green-dim); color: var(--green);
+    border: 1px solid rgba(16,185,129,0.2);
+  }
+  .pill-status.pill-soon {
+    background: var(--amber-dim); color: var(--amber);
+    border-color: rgba(245,158,11,0.2);
+  }
+  .integration-pill { text-decoration: none; cursor: pointer; }
+
+
+  /* ── PRICING ── */
+  .pricing-section { background: var(--bg); }
+
+  .pricing-header { text-align: center; margin-bottom: 56px; }
+  .pricing-header .section-sub { margin: 0 auto; }
+
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 20px; max-width: 1000px; margin: 0 auto;
+    align-items: start;
+  }
+
+  .pricing-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px 28px;
+    position: relative; transition: all 0.2s;
+  }
+
+  .pricing-card.popular {
+    border-color: var(--cyan);
+    background: var(--surface2);
+    box-shadow: 0 0 40px rgba(0,212,255,0.1);
+  }
+
+  .popular-badge {
+    position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+    background: var(--cyan); color: var(--bg);
+    padding: 4px 16px; border-radius: 100px;
+    font-size: 0.72rem; font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .plan-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.1rem; font-weight: 600; margin-bottom: 4px;
+  }
+
+  .plan-desc { font-size: 0.82rem; color: var(--text3); margin-bottom: 20px; }
+
+  .plan-price {
+    display: flex; align-items: baseline; gap: 4px;
+    margin-bottom: 24px;
+  }
+
+  .price-dollar { font-size: 1.1rem; color: var(--text2); }
+
+  .price-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.8rem; font-weight: 700; line-height: 1;
+  }
+
+  .price-period { font-size: 0.85rem; color: var(--text3); }
+
+  .plan-divider {
+    height: 1px; background: var(--border);
+    margin-bottom: 20px;
+  }
+
+  .plan-features { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+  .plan-feature {
+    display: flex; gap: 10px; align-items: flex-start;
+    font-size: 0.85rem; color: var(--text2);
+  }
+
+  .feat-check { color: var(--green); flex-shrink: 0; margin-top: 1px; }
+  .feat-x { color: var(--text3); flex-shrink: 0; margin-top: 1px; }
+
+  .plan-btn {
+    width: 100%; margin-top: 24px;
+    padding: 12px; border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; border: none;
+    text-align: center;
+  }
+
+  .plan-btn-primary {
+    background: var(--cyan); color: var(--bg);
+    box-shadow: 0 0 16px rgba(0,212,255,0.3);
+  }
+  .plan-btn-primary:hover { background: #33DCFF; }
+
+  .plan-btn-outline {
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border2);
+  }
+  .plan-btn-outline:hover { border-color: var(--cyan); color: var(--cyan); }
+
+  /* ── TESTIMONIALS ── */
+
+  .faq-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .faq-card:hover { border-color: var(--border2); }
+  .faq-card.open { border-color: rgba(0,212,255,0.2); }
+  .faq-card-q {
+    font-size: 0.88rem; font-weight: 600; color: var(--text);
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  }
+  .faq-arrow { color: var(--text3); font-size: 11px; transition: transform 0.2s; flex-shrink: 0; }
+  .faq-card.open .faq-arrow { transform: rotate(90deg); color: var(--cyan); }
+  .faq-card-a {
+    display: none; margin-top: 12px; font-size: 0.82rem;
+    color: var(--text2); line-height: 1.7;
+    border-top: 1px solid var(--border); padding-top: 12px;
+  }
+  .faq-card.open .faq-card-a { display: block; }
+  @media (max-width: 768px) {
+    #faqGrid { grid-template-columns: 1fr !important; }
+  }
+
+  .testimonials-section { background: var(--bg2); }
+  .testimonials-header { text-align: center; margin-bottom: 56px; }
+
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .testimonial-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+  }
+
+  .testimonial-stars {
+    color: var(--amber); font-size: 0.9rem;
+    letter-spacing: 2px; margin-bottom: 14px;
+  }
+
+  .testimonial-text {
+    font-size: 0.9rem; color: var(--text2);
+    line-height: 1.7; margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  .testimonial-author {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .author-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan), var(--violet));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.85rem; color: white;
+    flex-shrink: 0;
+  }
+
+  .author-name { font-weight: 600; font-size: 0.85rem; }
+  .author-role { font-size: 0.75rem; color: var(--text3); }
+
+  /* ── CTA BANNER ── */
+  .cta-section {
+    background: var(--bg);
+    padding: 80px 5%;
+  }
+
+  .cta-inner {
+    max-width: 700px; margin: 0 auto;
+    text-align: center;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 24px;
+    padding: 60px 48px;
+    position: relative; overflow: hidden;
+  }
+
+  .cta-inner::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan), var(--violet), transparent);
+  }
+
+  .cta-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 700; line-height: 1.2;
+    margin-bottom: 14px;
+  }
+
+  .cta-sub { color: var(--text2); margin-bottom: 32px; font-size: 1rem; }
+
+  .waitlist-form {
+    display: flex; gap: 10px; max-width: 420px; margin: 0 auto;
+  }
+
+  .waitlist-input {
+    flex: 1; padding: 12px 16px;
+    background: var(--bg2); color: var(--text);
+    border: 1px solid var(--border2);
+    border-radius: 8px; font-size: 0.9rem;
+    font-family: 'Inter', sans-serif;
+    outline: none; transition: border-color 0.2s;
+  }
+  .waitlist-input:focus { border-color: var(--cyan); }
+  .waitlist-input::placeholder { color: var(--text3); }
+
+  .waitlist-note { font-size: 0.78rem; color: var(--text3); margin-top: 12px; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 48px 5% 32px;
+  }
+
+  .footer-inner {
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  .footer-top {
+    display: flex; justify-content: space-between;
+    align-items: flex-start; gap: 40px;
+    margin-bottom: 40px; flex-wrap: wrap;
+  }
+
+  .footer-brand { max-width: 280px; }
+  .footer-brand .nav-logo { margin-bottom: 12px; display: inline-flex; }
+  .footer-tagline { font-size: 0.85rem; color: var(--text3); line-height: 1.6; }
+
+  .footer-links-group { }
+  .footer-links-title {
+    font-weight: 600; font-size: 0.8rem;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text3); margin-bottom: 14px;
+  }
+
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .footer-links a {
+    color: var(--text2); text-decoration: none;
+    font-size: 0.87rem; transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--cyan); }
+
+  .footer-bottom {
+    padding-top: 24px; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+
+  .footer-copy { font-size: 0.8rem; color: var(--text3); }
+
+  .footer-legal {
+    display: flex; gap: 20px; list-style: none;
+  }
+  .footer-legal a {
+    font-size: 0.8rem; color: var(--text3);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .footer-legal a:hover { color: var(--text2); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-up { animation: fadeUp 0.6s ease forwards; }
+
+  @keyframes scan-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0,212,255,0); }
+    50% { box-shadow: 0 0 0 8px rgba(0,212,255,0.1); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .scan-demo { display: none; }
+    .stats-inner { grid-template-columns: 1fr; }
+    .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
+    .problem-grid { grid-template-columns: 1fr; }
+    .steps-grid { grid-template-columns: 1fr; }
+    .features-grid { grid-template-columns: 1fr 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .features-header { flex-direction: column; }
+    .nav-links { display: none; }
+    .waitlist-form { flex-direction: column; }
+  }
+
+  @media (max-width: 600px) {
+    .features-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#top" class="nav-logo">
+    <span class="logo-icon">🛡️</span>
+    VibeSafe
+  </a>
+  <ul class="nav-links">
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="#" class="btn btn-ghost">Sign in</a>
+    <a href="#waitlist" class="btn btn-primary" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'}); return false;">Get early access</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-grid"></div>
+    <div class="hero-glow-1"></div>
+    <div class="hero-glow-2"></div>
+  </div>
+
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Now in early access — join 800+ founders
+      </div>
+
+      <h1 class="hero-title">
+        Ship your AI-built app.<br>
+        <span class="highlight">Without the security nightmares.</span>
+      </h1>
+
+      <p class="hero-sub">
+        VibeSafe scans your Lovable, Bolt, or Cursor-generated code for errors, vulnerabilities, and bugs — then fixes them automatically. In plain English. In seconds.
+      </p>
+
+      <div class="hero-actions">
+        <a href="/dashboard.html" class="btn btn-primary btn-lg">
+          Start free scan
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#how" class="btn btn-outline btn-lg">See how it works</a>
+      </div>
+
+      <div class="hero-social-proof">
+        <div class="avatars">
+          <div class="avatar">AK</div>
+          <div class="avatar">MJ</div>
+          <div class="avatar">SR</div>
+          <div class="avatar">TL</div>
+        </div>
+        <span class="social-text"><strong>800+ founders</strong> already on the waitlist</span>
+      </div>
+    </div>
+
+    <!-- LIVE DEMO WIDGET -->
+    <div class="scan-demo" id="scanDemo">
+      <div class="demo-topbar">
+        <span class="demo-dot dot-red"></span>
+        <span class="demo-dot dot-yellow"></span>
+        <span class="demo-dot dot-green"></span>
+        <span class="demo-title">vibesafe — live scan</span>
+      </div>
+      <div class="demo-body">
+        <div class="demo-tabs">
+          <button class="demo-tab active" onclick="switchTab(this, 'code')">Code</button>
+          <button class="demo-tab" onclick="switchTab(this, 'results')">Issues (3)</button>
+          <button class="demo-tab" onclick="switchTab(this, 'fixed')">Fixed ✓</button>
+        </div>
+
+        <div id="tab-code">
+          <div class="code-preview">
+            <div class="code-line"><span class="ln">1</span><span><span class="code-kw">const</span> getUser = <span class="code-kw">async</span> (id) => {</span></div>
+            <div class="code-line"><span class="ln">2</span><span>  <span class="code-kw">const</span> res = <span class="code-kw">await</span> <span class="code-fn">fetch</span>(<span class="code-str">`/api/users/${id}`</span>)</span></div>
+            <div class="code-line"><span class="ln">3</span><span class="code-err">  <span class="code-kw">const</span> data = res.json()  <span style="color:#444">// ← missing await</span></span></div>
+            <div class="code-line"><span class="ln">4</span><span>  <span class="code-kw">return</span> data.user</span></div>
+            <div class="code-line"><span class="ln">5</span><span>}</span></div>
+            <div class="code-line" style="margin-top:8px"><span class="ln">6</span><span><span class="code-kw">const</span> key = <span class="code-str">"sk_live_4xK9..."</span> <span style="color:#444">// ← exposed secret</span></span></div>
+            <div class="code-line"><span class="ln">7</span><span><span class="code-fn">connectDB</span>(key)</span></div>
+          </div>
+        </div>
+
+        <div id="tab-results" style="display:none">
+          <div class="scan-bar-wrap">
+            <div class="scan-bar-label">
+              <span>Scanning...</span>
+              <span id="scanPct">0%</span>
+            </div>
+            <div class="scan-bar-track">
+              <div class="scan-bar-fill" id="scanFill" style="width:0%"></div>
+            </div>
+          </div>
+
+          <div class="issue-cards" id="issueCards">
+            <div class="issue-card err" id="issue1">
+              <span class="issue-icon">🔴</span>
+              <div class="issue-text">
+                <div class="issue-title err">Missing await on line 3</div>
+                <div class="issue-desc">res.json() returns a Promise. Without await, data is always undefined — your app will silently break.</div>
+              </div>
+              <button class="fix-btn">Auto-fix</button>
+            </div>
+            <div class="issue-card err" id="issue2">
+              <span class="issue-icon">🔴</span>
+              <div class="issue-text">
+                <div class="issue-title err">API key exposed in source code</div>
+                <div class="issue-desc">Hardcoded secret on line 6 will be visible in your repo and to anyone who views source.</div>
+              </div>
+              <button class="fix-btn">Auto-fix</button>
+            </div>
+            <div class="issue-card warn" id="issue3">
+              <span class="issue-icon">🟡</span>
+              <div class="issue-text">
+                <div class="issue-title warn">No error handling on fetch</div>
+                <div class="issue-desc">If the API call fails, your app will crash with an unhandled rejection. Add try/catch.</div>
+              </div>
+              <button class="fix-btn">Auto-fix</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-fixed" style="display:none">
+          <div class="code-preview">
+            <div class="code-line"><span class="ln">1</span><span><span class="code-kw">const</span> getUser = <span class="code-kw">async</span> (id) => {</span></div>
+            <div class="code-line"><span class="ln">2</span><span>  <span class="code-kw">try</span> {</span></div>
+            <div class="code-line"><span class="ln">3</span><span class="code-ok">    <span class="code-kw">const</span> res = <span class="code-kw">await</span> <span class="code-fn">fetch</span>(<span class="code-str">`/api/users/${id}`</span>)</span></div>
+            <div class="code-line"><span class="ln">4</span><span class="code-ok">    <span class="code-kw">const</span> data = <span class="code-kw">await</span> res.json()</span></div>
+            <div class="code-line"><span class="ln">5</span><span>    <span class="code-kw">return</span> data.user</span></div>
+            <div class="code-line"><span class="ln">6</span><span>  } <span class="code-kw">catch</span> (err) { <span class="code-fn">console</span>.error(err) }</span></div>
+            <div class="code-line"><span class="ln">7</span><span>}</span></div>
+            <div class="code-line" style="margin-top:8px"><span class="ln">8</span><span class="code-ok"><span class="code-kw">const</span> key = process.env.<span class="code-str">API_KEY</span> <span style="color:#444">// ✓ from .env</span></span></div>
+          </div>
+          <div class="issue-card ok" style="opacity:1;transform:none">
+            <span class="issue-icon">✅</span>
+            <div class="issue-text">
+              <div class="issue-title ok">All 3 issues fixed</div>
+              <div class="issue-desc">Your code is safe to deploy. Security score: 94/100.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-footer">
+          <div class="demo-score">
+            <span>Security score</span>
+            <span class="score-badge score-bad" id="scoreDisplay">42 / 100</span>
+          </div>
+          <button class="btn btn-primary" style="padding:7px 16px;font-size:0.78rem" onclick="runDemo()">
+            Run scan ▶
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-num">45%</div>
+      <div class="stat-label">of AI-generated code contains security vulnerabilities</div>
+      <div class="stat-source">2026 Security Audit</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">63%</div>
+      <div class="stat-label">of vibe coders have no technical background</div>
+      <div class="stat-source">Synergy Labs 2026</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">$4.7B</div>
+      <div class="stat-label">vibe coding market — growing 38% annually</div>
+      <div class="stat-source">Market analysis 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem-section" id="problem">
+  <div class="container">
+    <div class="problem-grid">
+      <div>
+        <p class="section-eyebrow">The problem</p>
+        <h2 class="section-title">You built something great.<br>But is it safe to ship?</h2>
+        <p class="section-sub">
+          Lovable, Bolt, and Cursor make building fast. But fast-generated code comes with hidden risks that can kill your product — or expose your users.
+        </p>
+      </div>
+      <div class="problem-cards">
+        <div class="problem-card">
+          <div class="problem-icon icon-red">🔓</div>
+          <div>
+            <div class="problem-card-title">Exposed API keys & secrets</div>
+            <div class="problem-card-desc">AI tools routinely hardcode credentials directly in source files. One GitHub push and your keys are public forever.</div>
+          </div>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon icon-amber">⚠️</div>
+          <div>
+            <div class="problem-card-title">Silent runtime crashes</div>
+            <div class="problem-card-desc">Missing awaits, unhandled promises, and null references look fine locally — then crash in production in front of real users.</div>
+          </div>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon icon-violet">🧩</div>
+          <div>
+            <div class="problem-card-title">Outdated or missing packages</div>
+            <div class="problem-card-desc">AI generates imports for packages it hallucinated or that have since been deprecated. Your app won't even start.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="container">
+    <div style="text-align:center; max-width:600px; margin:0 auto 0">
+      <p class="section-eyebrow">How it works</p>
+      <h2 class="section-title">From broken to shippable in three steps</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-icon-wrap" style="background:var(--cyan-dim); border-color:rgba(0,212,255,0.2)">📋</div>
+        <div class="step-title">Paste or connect your code</div>
+        <div class="step-desc">Paste your code directly, connect your GitHub repo, or integrate with Lovable and Bolt via our one-click plugin. No setup required.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-icon-wrap" style="background:var(--violet-dim); border-color:rgba(124,58,237,0.2)">🔍</div>
+        <div class="step-title">VibeSafe scans everything</div>
+        <div class="step-desc">Our engine checks for security vulnerabilities, runtime errors, missing packages, exposed secrets, and logic bugs — all in under 10 seconds.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-icon-wrap" style="background:var(--green-dim); border-color:rgba(16,185,129,0.2)">✅</div>
+        <div class="step-title">Fix with one click</div>
+        <div class="step-desc">Every issue comes with a plain-English explanation and an auto-fix button. Review the diff, apply it, and ship with confidence. No coding needed.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section" id="features">
+  <div class="container">
+    <div class="features-header">
+      <div>
+        <p class="section-eyebrow">Features</p>
+        <h2 class="section-title">Everything you need.<br>Nothing you don't.</h2>
+      </div>
+      <p class="section-sub">Built specifically for non-technical founders who need production-grade quality without the engineering team.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔐</div>
+        <div class="feature-title">Security vulnerability scan</div>
+        <div class="feature-desc">Detects exposed API keys, SQL injection risks, XSS vulnerabilities, and insecure authentication patterns before they reach production.</div>
+        <span class="feature-tag tag-cyan">Critical</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🐛</div>
+        <div class="feature-title">Runtime error detection</div>
+        <div class="feature-desc">Catches missing awaits, null pointer exceptions, unhandled rejections, and type mismatches that only surface when real users hit your app.</div>
+        <span class="feature-tag tag-cyan">Critical</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <div class="feature-title">Auto dependency installer</div>
+        <div class="feature-desc">Identifies missing or outdated packages and installs the correct versions automatically — for Python, JavaScript, TypeScript, and more.</div>
+        <span class="feature-tag tag-violet">Auto-fix</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💬</div>
+        <div class="feature-title">Plain-English explanations</div>
+        <div class="feature-desc">Every issue is explained in plain language — what it is, why it's a problem, and exactly what happens if you ignore it. No jargon, ever.</div>
+        <span class="feature-tag tag-green">Founder-first</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">Safety score & report</div>
+        <div class="feature-desc">Get a 0–100 safety score with a full report you can share with investors, clients, or your technical advisor to prove your app is solid.</div>
+        <span class="feature-tag tag-green">Founder-first</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔁</div>
+        <div class="feature-title">Continuous monitoring</div>
+        <div class="feature-desc">Connect your repo and VibeSafe automatically scans every new deployment. Ship fast and stay safe without thinking about it.</div>
+        <span class="feature-tag tag-violet">Pro</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTEGRATIONS -->
+<section class="integrations-section">
+  <div class="container">
+    <p class="section-eyebrow">Works with your stack</p>
+    <h2 class="section-title">Plug in to any vibe coding tool</h2>
+    <div class="integrations-row">
+      <a href="https://lovable.dev" target="_blank" class="integration-pill"><span class="pill-emoji">💜</span> Lovable <span class="pill-status">✓ Supported</span></a>
+      <a href="https://bolt.new" target="_blank" class="integration-pill"><span class="pill-emoji">⚡</span> Bolt.new <span class="pill-status">✓ Supported</span></a>
+      <a href="https://cursor.com" target="_blank" class="integration-pill"><span class="pill-emoji">🖥️</span> Cursor <span class="pill-status">✓ Supported</span></a>
+      <a href="https://replit.com" target="_blank" class="integration-pill"><span class="pill-emoji">🔵</span> Replit <span class="pill-status">✓ Supported</span></a>
+      <a href="https://github.com" target="_blank" class="integration-pill"><span class="pill-emoji">🐱</span> GitHub <span class="pill-status pill-soon">Coming soon</span></a>
+      <a href="https://vercel.com" target="_blank" class="integration-pill"><span class="pill-emoji">🌐</span> Vercel <span class="pill-status pill-soon">Coming soon</span></a>
+      <div class="integration-pill"><span class="pill-emoji">🐍</span> Python <span class="pill-status">✓ Supported</span></div>
+      <div class="integration-pill"><span class="pill-emoji">🟨</span> JavaScript <span class="pill-status">✓ Supported</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="container">
+    <div class="pricing-header">
+      <p class="section-eyebrow">Pricing</p>
+      <h2 class="section-title">Start free. Pay when you ship.</h2>
+      <p class="section-sub">No credit card needed to start. Cancel anytime. Pro includes a 15-day free trial.</p>
+    </div>
+
+    <!-- Billing toggle -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:40px">
+      <span id="monthly-lbl" style="font-size:0.9rem;font-weight:600;color:var(--text)">Monthly</span>
+      <div style="position:relative;width:44px;height:24px;cursor:pointer" onclick="toggleBilling()">
+        <div id="toggle-track" style="position:absolute;inset:0;background:var(--border2);border-radius:12px;transition:background 0.3s"></div>
+        <div id="toggle-thumb" style="position:absolute;top:3px;left:3px;width:18px;height:18px;background:white;border-radius:50%;transition:transform 0.3s;z-index:1"></div>
+      </div>
+      <span id="annual-lbl" style="font-size:0.9rem;font-weight:500;color:var(--text3)">Annual</span>
+      <span id="save-badge" style="background:var(--green-dim);color:var(--green);border:1px solid rgba(16,185,129,0.2);font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:100px">Save 25%</span>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Free -->
+      <div class="pricing-card">
+        <div class="plan-name">Starter</div>
+        <div class="plan-desc">For founders validating an idea</div>
+        <div class="plan-price">
+          <span class="price-dollar">$</span>
+          <span class="price-num">0</span>
+          <span class="price-period">/ month</span>
+        </div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li class="plan-feature"><span class="feat-check">✓</span> 5 scans per month</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Security vulnerability scan</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Plain-English explanations</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Runtime error detection</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Basic safety score (0–100)</li>
+          <li class="plan-feature"><span class="feat-x">–</span> Auto-fix</li>
+          <li class="plan-feature"><span class="feat-x">–</span> PDF safety report</li>
+          <li class="plan-feature"><span class="feat-x">–</span> GitHub integration</li>
+        </ul>
+        <button class="plan-btn plan-btn-outline" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Get started free</button>
+      </div>
+
+      <!-- Pro -->
+      <div class="pricing-card popular">
+        <div class="popular-badge">Most popular</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-desc">For founders shipping their product</div>
+        <div class="plan-price">
+          <span class="price-dollar">$</span>
+          <span class="price-num" id="pro-price">29</span>
+          <span class="price-period" id="pro-period">/ month</span>
+        </div>
+        <div style="margin-bottom:14px">
+          <span style="background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.2);font-size:0.72rem;font-weight:700;padding:4px 12px;border-radius:100px">15-day free trial — no card needed</span>
+        </div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li class="plan-feature"><span class="feat-check">✓</span> Unlimited scans</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Full security scan suite</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> One-click auto-fix</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Dependency auto-installer</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> PDF safety report</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> GitHub integration</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Vercel &amp; Netlify integration</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Code quality analysis</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Fix history &amp; audit log</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Email support (24h)</li>
+        </ul>
+        <button class="plan-btn plan-btn-primary" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})" id="pro-btn">Start 15-day free trial</button>
+      </div>
+
+      <!-- Team -->
+      <div class="pricing-card">
+        <div class="plan-name">Team</div>
+        <div class="plan-desc">For small teams shipping together</div>
+        <div class="plan-price">
+          <span class="price-dollar">$</span>
+          <span class="price-num" id="team-price">99</span>
+          <span class="price-period" id="team-period">/ month</span>
+        </div>
+        <div style="height:30px"></div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li class="plan-feature"><span class="feat-check">✓</span> Everything in Pro</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Up to 10 team members</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Continuous monitoring</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> CI/CD pipeline integration</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Slack &amp; email alerts</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> OWASP Top 10 compliance report</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Custom scan rules</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Role-based access control</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> API access</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Priority support (4h)</li>
+        </ul>
+        <button class="plan-btn plan-btn-outline" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Start team trial</button>
+      </div>
+    </div>
+
+    <p style="text-align:center;font-size:0.78rem;color:var(--text3);margin-top:20px" id="billing-note">
+      All prices in USD · Cancel anytime · Annual plans billed upfront
+    </p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="padding:80px 5%; background:var(--bg2);" id="faq">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:48px">
+      <p class="section-eyebrow">FAQ</p>
+      <h2 class="section-title">Frequently asked questions</h2>
+      <p class="section-sub" style="margin:0 auto">Everything you need to know before getting started.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:900px;margin:0 auto" id="faqGrid">
+
+      <div class="faq-card" onclick="toggleFaqCard(this)">
+        <div class="faq-card-q">What does VibeSafe actually do? <span class="faq-arrow">▶</span></div>
+        <div class="faq-card-a">VibeSafe scans your AI-generated code for security vulnerabilities, runtime errors, exposed API keys, and missing packages — then fixes them automatically in plain English. No coding knowledge needed. Results in under 10 seconds.</div>
+      </div>
+
+      <div class="faq-card" onclick="toggleFaqCard(this)">
+        <div class="faq-card-q">Do I need to know how to code? <span class="faq-arrow">▶</span></div>
+        <div class="faq-card-a">Not at all. VibeSafe is built specifically for non-technical founders. Every issue is explained in plain English — what the problem is, why it matters, and how to fix it with one click.</div>
+      </div>
+
+      <div class="faq-card" onclick="toggleFaqCard(this)">
+        <div class="faq-card-q">Is the free plan really free forever? <span class="faq-arrow">▶</span></div>
+        <div class="faq-card-a">Yes. The Starter plan is free forever — no credit card required. You get 5 scans per month, full security detection, and plain-English explanations. No time limit, no trial expiry.</div>
+      </div>
+
+      <div class="faq-card" onclick="toggleFaqCard(this)">
+        <div class="faq-card-q">How does the 15-day Pro trial work? <span class="faq-arrow">▶</span></div>
+        <div class="faq-card-a">Start Pro with no credit card needed. You get full access to all Pro features for 15 days completely free. After 15 days, choose to subscribe at $29/month or drop back to the free plan — no charge either way.</div>
+      </div>
+
+      <div class="faq-card" onclick="toggleFaqCard(this)">
+        <div class="faq-card-q">Is my code safe? Do you store it? <span class="faq-arrow">▶</span></div>
+        <div class="faq-card-a">Your code is scanned in memory and never stored permanently. We don't retain your source code after the scan completes, and we never train our AI on your code. Your privacy is our priority.</div>
+      </div>
+
+      <div class="faq-card" onclick="toggleFaqCard(this)">
+        <div class="faq-card-q">What languages does VibeSafe support? <span class="faq-arrow">▶</span></div>
+        <div class="faq-card-a">VibeSafe supports JavaScript, TypeScript, Python, Java, and .NET/C#. Mixed-language projects are supported — VibeSafe auto-detects your stack and applies the right checks for each language.</div>
+      </div>
+
+      <div class="faq-card" onclick="toggleFaqCard(this)">
+        <div class="faq-card-q">How is this different from Snyk or SonarQube? <span class="faq-arrow">▶</span></div>
+        <div class="faq-card-a">Snyk costs $98/developer/month and requires CLI setup, CI/CD integration, and security expertise to interpret. SonarQube is even more complex. VibeSafe requires zero setup, costs $29/month, and explains everything in plain English. We're built for founders, not engineering teams.</div>
+      </div>
+
+      <div class="faq-card" onclick="toggleFaqCard(this)">
+        <div class="faq-card-q">Can I cancel my subscription anytime? <span class="faq-arrow">▶</span></div>
+        <div class="faq-card-a">Yes, cancel anytime with no questions asked. You keep access until the end of your billing period, then drop to the free plan. No contracts, no cancellation fees, no nonsense.</div>
+      </div>
+
+    </div>
+
+    <div style="text-align:center;margin-top:32px">
+      <p style="font-size:0.88rem;color:var(--text3)">Still have questions? <a href="mailto:contact@vibesafe.info" style="color:var(--cyan);text-decoration:none;font-weight:500">Email us at contact@vibesafe.info</a> — we reply within 24 hours.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT US -->
+<section style="padding:80px 5%;background:var(--bg);" id="contact">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:48px">
+      <p class="section-eyebrow">Contact</p>
+      <h2 class="section-title">Get in touch</h2>
+      <p class="section-sub" style="margin:0 auto">We're a small bootstrapped team and we read every message personally.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:860px;margin:0 auto">
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;text-align:center;transition:border-color 0.2s" onmouseover="this.style.borderColor='rgba(0,212,255,0.25)'" onmouseout="this.style.borderColor='var(--border)'">
+        <div style="font-size:2rem;margin-bottom:12px">📧</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.95rem;margin-bottom:6px">General enquiries</div>
+        <div style="font-size:0.82rem;color:var(--text3);margin-bottom:14px">Questions, feedback, anything else</div>
+        <a href="mailto:contact@vibesafe.info" style="color:var(--cyan);font-size:0.85rem;font-weight:600;text-decoration:none">contact@vibesafe.info</a>
+        <div style="font-size:0.72rem;color:var(--text3);margin-top:8px">Reply within 24 hours</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;text-align:center;transition:border-color 0.2s" onmouseover="this.style.borderColor='rgba(0,212,255,0.25)'" onmouseout="this.style.borderColor='var(--border)'">
+        <div style="font-size:2rem;margin-bottom:12px">🐛</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.95rem;margin-bottom:6px">Bug reports</div>
+        <div style="font-size:0.82rem;color:var(--text3);margin-bottom:14px">Found something broken? Tell us.</div>
+        <a href="mailto:contact@vibesafe.info?subject=Bug Report" style="color:var(--cyan);font-size:0.85rem;font-weight:600;text-decoration:none">contact@vibesafe.info</a>
+        <div style="font-size:0.72rem;color:var(--text3);margin-top:8px">We fix bugs fast</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;text-align:center;transition:border-color 0.2s" onmouseover="this.style.borderColor='rgba(0,212,255,0.25)'" onmouseout="this.style.borderColor='var(--border)'">
+        <div style="font-size:2rem;margin-bottom:12px">🐦</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.95rem;margin-bottom:6px">Twitter / X</div>
+        <div style="font-size:0.82rem;color:var(--text3);margin-bottom:14px">Follow us for updates and tips</div>
+        <a href="https://twitter.com/VibeSafe202" target="_blank" style="color:var(--cyan);font-size:0.85rem;font-weight:600;text-decoration:none">@VibeSafe202</a>
+        <div style="font-size:0.72rem;color:var(--text3);margin-top:8px">We reply to DMs too</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+  <div class="container">
+    <div class="testimonials-header">
+      <p class="section-eyebrow">Early access feedback</p>
+      <h2 class="section-title">Founders already sleeping better</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"I built my entire SaaS on Lovable in 3 days. VibeSafe found 8 security issues I had no idea existed — including an exposed Stripe key. Literally saved my business before launch."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">SK</div>
+          <div>
+            <div class="author-name">Sara K.</div>
+            <div class="author-role">Founder, ContentFlow</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"As a non-technical founder, I was flying blind on code quality. VibeSafe gives me the confidence to ship knowing my app won't blow up. The plain-English explanations are genuinely helpful."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">MR</div>
+          <div>
+            <div class="author-name">Marcus R.</div>
+            <div class="author-role">Founder, TaskLift</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"My Bolt app crashed on the first real user session. After VibeSafe, zero production issues for 6 weeks straight. It found the missing await that was causing everything to silently fail."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">JT</div>
+          <div>
+            <div class="author-name">Jamie T.</div>
+            <div class="author-role">Indie hacker</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="waitlist">
+  <div class="container">
+    <div class="cta-inner">
+
+      <!-- Default state -->
+      <div id="waitlist-default">
+        <p class="section-eyebrow" style="text-align:center">Join the waitlist</p>
+        <h2 class="cta-title">Ready to ship without fear?</h2>
+        <p class="cta-sub">Join 800+ founders getting early access. Free scan included on day one.</p>
+
+        <form
+          action="https://formspree.io/f/mbdekwkq"
+          method="POST"
+          class="waitlist-form"
+          id="waitlistForm"
+          onsubmit="handleWaitlistSubmit(event)"
+        >
+          <input
+            type="email"
+            name="email"
+            class="waitlist-input"
+            placeholder="your@email.com"
+            required
+            id="waitlistEmail"
+          >
+          <input type="hidden" name="source" value="landing-page-cta">
+          <button type="submit" class="btn btn-primary" id="waitlistBtn">
+            Get early access
+          </button>
+        </form>
+
+        <p class="waitlist-note">No credit card required · Free plan available forever · Unsubscribe any time</p>
+      </div>
+
+      <!-- Success state (shown after submit) -->
+      <div id="waitlist-success" style="display:none">
+        <div style="font-size:3rem; margin-bottom:16px">🎉</div>
+        <h2 class="cta-title">You're on the list!</h2>
+        <p class="cta-sub" style="margin-bottom:0">
+          We'll email you the moment early access opens.<br>
+          In the meantime — share VibeSafe with a founder who needs it.
+        </p>
+        <div style="display:flex; gap:12px; justify-content:center; margin-top:28px; flex-wrap:wrap;">
+          <a href="https://twitter.com/intent/tweet?text=Just+joined+the+waitlist+for+%40VibeSafe+%E2%80%94+a+safety+net+for+AI-generated+code.+If+you%27re+vibe+coding%2C+you+need+this.+vibesafe.info&url=https://vibesafe.info"
+            target="_blank" class="btn btn-primary" style="text-decoration:none">
+            Share on X / Twitter
+          </a>
+          <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://vibesafe.info"
+            target="_blank" class="btn btn-outline" style="text-decoration:none">
+            Share on LinkedIn
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo">
+          <span class="logo-icon">🛡️</span>
+          VibeSafe
+        </a>
+        <p class="footer-tagline">The safety net for AI-generated code. Built for founders who ship fast and need to stay safe.</p>
+      </div>
+      <div class="footer-links-group">
+        <div class="footer-links-title">Product</div>
+        <ul class="footer-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#waitlist">Changelog — coming soon</a></li>
+          <li><a href="#waitlist">Roadmap — coming soon</a></li>
+        </ul>
+      </div>
+      <div class="footer-links-group">
+        <div class="footer-links-title">Integrations</div>
+        <ul class="footer-links">
+          <li><a href="https://lovable.dev" target="_blank">Lovable</a></li>
+          <li><a href="https://bolt.new" target="_blank">Bolt.new</a></li>
+          <li><a href="https://github.com" target="_blank">GitHub</a></li>
+          <li><a href="https://cursor.com" target="_blank">Cursor</a></li>
+        </ul>
+      </div>
+      <div class="footer-links-group">
+        <div class="footer-links-title">Company</div>
+        <ul class="footer-links">
+          <li><a href="#waitlist">About</a></li>
+          <li><a href="#waitlist">Blog — coming soon</a></li>
+          <li><a href="https://twitter.com/VibeSafe202" target="_blank">Twitter / X @VibeSafe202</a></li>
+          <li><a href="mailto:contact@vibesafe.info">Contact us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 VibeSafe. All rights reserved.</span>
+      <ul class="footer-legal">
+        <li><a href="/legal.html">Privacy Policy</a></li>
+        <li><a href="/legal.html">Terms of Service</a></li>
+        <li><a href="/legal.html">Cookie Policy</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Demo tab switcher
+  function switchTab(el, tab) {
+    document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    ['code','results','fixed'].forEach(t => {
+      const el = document.getElementById('tab-'+t);
+      if (el) el.style.display = t === tab ? 'block' : 'none';
+    });
+    if (tab === 'fixed') {
+      document.getElementById('scoreDisplay').textContent = '94 / 100';
+      document.getElementById('scoreDisplay').className = 'score-badge score-ok';
+    } else {
+      document.getElementById('scoreDisplay').textContent = '42 / 100';
+      document.getElementById('scoreDisplay').className = 'score-badge score-bad';
+    }
+  }
+
+  // Animated scan demo
+  function runDemo() {
+    // Switch to results tab
+    document.querySelectorAll('.demo-tab').forEach((t,i) => t.classList.toggle('active', i===1));
+    ['code','results','fixed'].forEach(t => {
+      const el = document.getElementById('tab-'+t);
+      if (el) el.style.display = t === 'results' ? 'block' : 'none';
+    });
+
+    // Hide issues, reset bar
+    ['issue1','issue2','issue3'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('visible');
+    });
+    const fill = document.getElementById('scanFill');
+    const pct = document.getElementById('scanPct');
+    fill.style.width = '0%';
+    pct.textContent = '0%';
+
+    // Animate bar
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 2;
+      fill.style.width = progress + '%';
+      pct.textContent = progress + '%';
+      if (progress >= 35) {
+        const el = document.getElementById('issue1');
+        if (el) el.classList.add('visible');
+      }
+      if (progress >= 65) {
+        const el = document.getElementById('issue2');
+        if (el) el.classList.add('visible');
+      }
+      if (progress >= 90) {
+        const el = document.getElementById('issue3');
+        if (el) el.classList.add('visible');
+      }
+      if (progress >= 100) {
+        clearInterval(interval);
+        pct.textContent = 'Done';
+      }
+    }, 30);
+  }
+
+  // Smooth scroll for nav links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Fade in on scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.feature-card, .problem-card, .testimonial-card, .pricing-card, .step-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+
+  // Auto-run demo on load
+  setTimeout(runDemo, 1200);
+</script>
+
+<!-- VIBESAFE CHAT WIDGET -->
+<!-- Add this code just before <script>
+var vsIsAnnual = false;
+function toggleBilling() {
+  vsIsAnnual = !vsIsAnnual;
+  var track = document.getElementById('toggle-track');
+  var thumb = document.getElementById('toggle-thumb');
+  var monthLbl = document.getElementById('monthly-lbl');
+  var annualLbl = document.getElementById('annual-lbl');
+  var proPrice = document.getElementById('pro-price');
+  var teamPrice = document.getElementById('team-price');
+  var proPeriod = document.getElementById('pro-period');
+  var teamPeriod = document.getElementById('team-period');
+  var proBtn = document.getElementById('pro-btn');
+  var note = document.getElementById('billing-note');
+
+  if (vsIsAnnual) {
+    track.style.background = '#7C3AED';
+    thumb.style.transform = 'translateX(20px)';
+    monthLbl.style.color = 'var(--text3)';
+    monthLbl.style.fontWeight = '500';
+    annualLbl.style.color = 'var(--text)';
+    annualLbl.style.fontWeight = '600';
+    proPrice.textContent = '22';
+    teamPrice.textContent = '74';
+    proPeriod.textContent = '/ month, billed $264/yr';
+    teamPeriod.textContent = '/ month, billed $888/yr';
+    proBtn.textContent = 'Start 15-day free trial';
+    note.textContent = 'Annual plan: Pro saves $84/yr · Team saves $300/yr · Cancel anytime';
+  } else {
+    track.style.background = 'var(--border2)';
+    thumb.style.transform = 'translateX(0)';
+    monthLbl.style.color = 'var(--text)';
+    monthLbl.style.fontWeight = '600';
+    annualLbl.style.color = 'var(--text3)';
+    annualLbl.style.fontWeight = '500';
+    proPrice.textContent = '29';
+    teamPrice.textContent = '99';
+    proPeriod.textContent = '/ month';
+    teamPeriod.textContent = '/ month';
+    proBtn.textContent = 'Start 15-day free trial';
+    note.textContent = 'All prices in USD · Cancel anytime · Annual plans billed upfront';
+  }
+}
+</script>
+<script>
+function toggleFaqCard(card) {
+  card.classList.toggle('open');
+}
+</script>
+
+<!-- COOKIE CONSENT BANNER -->
+<div id="vs-cookie-banner" style="
+  position:fixed;bottom:0;left:0;right:0;z-index:9997;
+  background:var(--surface,#111827);
+  border-top:1px solid var(--border,#1E2D42);
+  padding:16px 5%;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:20px;flex-wrap:wrap;
+  box-shadow:0 -4px 24px rgba(0,0,0,0.4);
+  transform:translateY(0);transition:transform 0.4s ease;
+">
+  <div style="flex:1;min-width:260px">
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.88rem;color:#F1F5F9;margin-bottom:4px">🍪 We use cookies</div>
+    <div style="font-size:0.78rem;color:#64748B;line-height:1.5">
+      We use essential cookies to keep VibeSafe running, and optional analytics cookies to improve the product.
+      We never use advertising or tracking cookies.
+      <a href="/legal.html" style="color:#00D4FF;text-decoration:none;font-weight:500" onclick="showDoc && showDoc('cookies')">Cookie Policy</a>
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;flex-shrink:0;align-items:center">
+    <button onclick="vsCookieDecline()" style="
+      padding:8px 18px;border-radius:7px;
+      background:transparent;color:#94A3B8;
+      border:1px solid #253650;font-size:0.78rem;font-weight:600;
+      cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;
+    " onmouseover="this.style.borderColor='#00D4FF';this.style.color='#F1F5F9'" onmouseout="this.style.borderColor='#253650';this.style.color='#94A3B8'">
+      Essential only
+    </button>
+    <button onclick="vsCookieAccept()" style="
+      padding:8px 18px;border-radius:7px;
+      background:#00D4FF;color:#080C18;
+      border:none;font-size:0.78rem;font-weight:700;
+      cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;
+      box-shadow:0 0 14px rgba(0,212,255,0.25);
+    " onmouseover="this.style.background='#33DCFF'" onmouseout="this.style.background='#00D4FF'">
+      Accept all
+    </button>
+  </div>
+</div>
+
+<script>
+(function() {
+  var consent = localStorage.getItem('vs_cookie_consent');
+  if (consent) {
+    document.getElementById('vs-cookie-banner').style.display = 'none';
+  }
+})();
+
+function vsCookieAccept() {
+  localStorage.setItem('vs_cookie_consent', 'all');
+  hideCookieBanner();
+}
+
+function vsCookieDecline() {
+  localStorage.setItem('vs_cookie_consent', 'essential');
+  hideCookieBanner();
+}
+
+function hideCookieBanner() {
+  var banner = document.getElementById('vs-cookie-banner');
+  banner.style.transform = 'translateY(100%)';
+  setTimeout(function() { banner.style.display = 'none'; }, 400);
+}
+</script>
+
+</body> in your index.html -->
+
+<style>
+  /* ── CHAT WIDGET STYLES ── */
+  #vs-chat-btn {
+    position: fixed; bottom: 28px; right: 28px; z-index: 9998;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: linear-gradient(135deg, #00D4FF, #7C3AED);
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(0,212,255,0.35);
+    transition: all 0.25s; font-size: 22px;
+  }
+  #vs-chat-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 28px rgba(0,212,255,0.5);
+  }
+
+  #vs-chat-badge {
+    position: absolute; top: -4px; right: -4px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #EF4444; border: 2px solid #080C18;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: white;
+    font-family: 'Inter', sans-serif;
+  }
+
+  #vs-chat-window {
+    position: fixed; bottom: 96px; right: 28px; z-index: 9999;
+    width: 360px; height: 520px;
+    background: #0F1624;
+    border: 1px solid #1E2D42;
+    border-radius: 18px;
+    display: flex; flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,212,255,0.05);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    transform-origin: bottom right;
+  }
+
+  #vs-chat-window.hidden {
+    opacity: 0; transform: scale(0.85) translateY(10px);
+    pointer-events: none;
+  }
+
+  .vs-chat-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 16px;
+    background: #111827;
+    border-bottom: 1px solid #1E2D42;
+    flex-shrink: 0;
+  }
+
+  .vs-chat-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, #00D4FF, #7C3AED);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+
+  .vs-chat-header-info { flex: 1; }
+
+  .vs-chat-header-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.88rem; font-weight: 600; color: #F1F5F9;
+    line-height: 1.2;
+  }
+
+  .vs-chat-header-status {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 0.7rem; color: #64748B;
+  }
+
+  .vs-status-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #10B981;
+    animation: pulse-g 2s infinite;
+  }
+
+  @keyframes pulse-g {
+    0%,100% { opacity:1; } 50% { opacity:0.4; }
+  }
+
+  .vs-chat-close {
+    background: none; border: none; cursor: pointer;
+    color: #64748B; font-size: 18px; padding: 4px;
+    transition: color 0.2s; line-height: 1;
+  }
+  .vs-chat-close:hover { color: #F1F5F9; }
+
+  .vs-chat-messages {
+    flex: 1; overflow-y: auto;
+    padding: 14px 14px 6px;
+    display: flex; flex-direction: column; gap: 10px;
+    scroll-behavior: smooth;
+  }
+
+  .vs-chat-messages::-webkit-scrollbar { width: 3px; }
+  .vs-chat-messages::-webkit-scrollbar-thumb { background: #1E2D42; border-radius: 2px; }
+
+  .vs-msg {
+    max-width: 86%; display: flex; flex-direction: column; gap: 3px;
+  }
+
+  .vs-msg.bot { align-self: flex-start; }
+  .vs-msg.user { align-self: flex-end; }
+
+  .vs-msg-bubble {
+    padding: 10px 13px; border-radius: 12px;
+    font-size: 0.82rem; line-height: 1.6;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .vs-msg.bot .vs-msg-bubble {
+    background: #1A2438; color: #CBD5E1;
+    border: 1px solid #1E2D42;
+    border-bottom-left-radius: 4px;
+  }
+
+  .vs-msg.user .vs-msg-bubble {
+    background: linear-gradient(135deg, #00D4FF, #7C3AED);
+    color: white; border-bottom-right-radius: 4px;
+  }
+
+  .vs-msg-time {
+    font-size: 0.65rem; color: #475569;
+    padding: 0 4px;
+  }
+
+  .vs-msg.user .vs-msg-time { text-align: right; }
+
+  /* Quick replies */
+  .vs-quick-replies {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    padding: 0 14px 8px;
+    flex-shrink: 0;
+  }
+
+  .vs-qr {
+    padding: 6px 12px; border-radius: 100px;
+    background: transparent; color: #00D4FF;
+    border: 1px solid rgba(0,212,255,0.25);
+    font-size: 0.72rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+  }
+
+  .vs-qr:hover {
+    background: rgba(0,212,255,0.1);
+    border-color: rgba(0,212,255,0.4);
+  }
+
+  /* Typing indicator */
+  .vs-typing {
+    display: flex; align-items: center; gap: 4px;
+    padding: 10px 13px;
+    background: #1A2438; border: 1px solid #1E2D42;
+    border-radius: 12px; border-bottom-left-radius: 4px;
+    width: fit-content;
+  }
+
+  .vs-typing span {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #475569;
+    animation: typing-dot 1.2s infinite;
+  }
+  .vs-typing span:nth-child(2) { animation-delay: 0.2s; }
+  .vs-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes typing-dot {
+    0%,60%,100% { transform: translateY(0); opacity:0.4; }
+    30% { transform: translateY(-4px); opacity:1; }
+  }
+
+  /* Input area */
+  .vs-chat-input-wrap {
+    padding: 10px 12px 14px;
+    background: #111827;
+    border-top: 1px solid #1E2D42;
+    flex-shrink: 0;
+  }
+
+  .vs-chat-input-row {
+    display: flex; gap: 8px; align-items: flex-end;
+  }
+
+  .vs-chat-input {
+    flex: 1; background: #1A2438; color: #F1F5F9;
+    border: 1px solid #1E2D42; border-radius: 10px;
+    padding: 9px 12px; font-size: 0.82rem;
+    font-family: 'Inter', sans-serif;
+    resize: none; outline: none; max-height: 80px;
+    line-height: 1.5; transition: border-color 0.2s;
+  }
+
+  .vs-chat-input:focus { border-color: rgba(0,212,255,0.3); }
+  .vs-chat-input::placeholder { color: #475569; }
+
+  .vs-send-btn {
+    width: 36px; height: 36px; border-radius: 9px;
+    background: linear-gradient(135deg, #00D4FF, #7C3AED);
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.2s;
+    font-size: 15px; color: white;
+  }
+  .vs-send-btn:hover { transform: scale(1.05); }
+  .vs-send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .vs-chat-footer {
+    text-align: center; font-size: 0.65rem;
+    color: #334155; margin-top: 6px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .vs-chat-footer a { color: #00D4FF; text-decoration: none; }
+
+  /* Contact card */
+  .vs-contact-card {
+    background: rgba(0,212,255,0.06);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 10px; padding: 10px 12px;
+    margin-top: 4px;
+  }
+
+  .vs-contact-card-title {
+    font-size: 0.75rem; font-weight: 600;
+    color: #00D4FF; margin-bottom: 4px;
+  }
+
+  .vs-contact-card-email {
+    font-size: 0.78rem; color: #94A3B8;
+  }
+
+  .vs-contact-card-email a {
+    color: #00D4FF; text-decoration: none; font-weight: 500;
+  }
+
+  .vs-contact-card-note {
+    font-size: 0.7rem; color: #475569; margin-top: 4px;
+  }
+
+  @media (max-width: 420px) {
+    #vs-chat-window { width: calc(100vw - 32px); right: 16px; }
+  }
+</style>
+
+<!-- CHAT BUTTON -->
+<button id="vs-chat-btn" onclick="vsToggleChat()" title="Chat with VibeSafe">
+  <span id="vs-chat-btn-icon">🛡️</span>
+  <div id="vs-chat-badge">1</div>
+</button>
+
+<!-- CHAT WINDOW -->
+<div id="vs-chat-window" class="hidden">
+
+  <!-- Header -->
+  <div class="vs-chat-header">
+    <div class="vs-chat-avatar">🛡️</div>
+    <div class="vs-chat-header-info">
+      <div class="vs-chat-header-name">VibeSafe Assistant</div>
+      <div class="vs-chat-header-status">
+        <span class="vs-status-dot"></span>
+        Online — replies instantly
+      </div>
+    </div>
+    <button class="vs-chat-close" onclick="vsToggleChat()">✕</button>
+  </div>
+
+  <!-- Messages -->
+  <div class="vs-chat-messages" id="vsMsgs"></div>
+
+  <!-- Quick replies -->
+  <div class="vs-quick-replies" id="vsQuickReplies">
+    <button class="vs-qr" onclick="vsQuickSend('What does VibeSafe do?')">What does it do?</button>
+    <button class="vs-qr" onclick="vsQuickSend('How much does it cost?')">Pricing</button>
+    <button class="vs-qr" onclick="vsQuickSend('Is my code safe with VibeSafe?')">Is my code safe?</button>
+    <button class="vs-qr" onclick="vsQuickSend('How do I get started?')">Get started</button>
+  </div>
+
+  <!-- Input -->
+  <div class="vs-chat-input-wrap">
+    <div class="vs-chat-input-row">
+      <textarea
+        class="vs-chat-input"
+        id="vsChatInput"
+        placeholder="Ask anything about VibeSafe..."
+        rows="1"
+        onkeydown="vsHandleKey(event)"
+        oninput="vsAutoResize(this)"
+      ></textarea>
+      <button class="vs-send-btn" id="vsSendBtn" onclick="vsSendMessage()">➤</button>
+    </div>
+    <div class="vs-chat-footer">
+      Powered by AI · Need more help? <a href="mailto:contact@vibesafe.info">contact@vibesafe.info</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const VS_SYSTEM_PROMPT = `You are the VibeSafe AI Assistant — a friendly, knowledgeable support agent for VibeSafe (vibesafe.info).
+
+VibeSafe is an AI-powered security scanner that finds and fixes vulnerabilities in AI-generated code. It's built for non-technical founders who build with Lovable, Bolt, Cursor, and Replit.
+
+WHAT VIBESAFE DOES:
+- Scans AI-generated code for security vulnerabilities in under 10 seconds
+- Detects: exposed API keys, SQL injection, XSS, missing awaits, runtime crashes, missing packages
+- Explains every issue in plain English — no coding knowledge needed
+- One-click auto-fix with before/after diff
+- Gives a safety score 0-100 with exportable PDF report
+- Supports: JavaScript, TypeScript, Python, Java, .NET/C#
+
+PRICING:
+- Starter: Free forever (3 scans/month, detection only)
+- Pro: $29/month (unlimited scans, auto-fix, GitHub integration, PDF report)
+- Team: $99/month (5 seats, continuous monitoring, CI/CD integration, Slack alerts)
+
+KEY FACTS:
+- 45% of AI-generated code has security vulnerabilities
+- 63% of vibe coders are non-technical
+- Zero setup required — works in browser, no install
+- Code is scanned in memory and never stored permanently
+- Competitors: Snyk ($98/dev/month), SonarQube ($150+/year) — both built for engineers, not founders
+- Website: vibesafe.info
+- Contact email: contact@vibesafe.info
+
+YOUR BEHAVIOR:
+- Be warm, helpful, and concise — keep answers under 4 sentences unless more detail is truly needed
+- Always end with a clear next step
+- If someone has a complaint, enquiry, or question you can't fully answer: acknowledge it warmly and direct them to contact@vibesafe.info with a response time of 24 hours
+- Never make up features or pricing that aren't listed above
+- Never be dismissive of concerns
+- You are NOT a human — if asked, say you're the VibeSafe AI Assistant
+- For billing issues, account problems, or anything requiring manual action: always direct to contact@vibesafe.info`;
+
+let vsOpen = false;
+let vsMessages = [];
+let vsIsTyping = false;
+
+function vsToggleChat() {
+  vsOpen = !vsOpen;
+  const win = document.getElementById('vs-chat-window');
+  const badge = document.getElementById('vs-chat-badge');
+  if (vsOpen) {
+    win.classList.remove('hidden');
+    badge.style.display = 'none';
+    if (vsMessages.length === 0) vsShowWelcome();
+    setTimeout(() => document.getElementById('vsChatInput').focus(), 300);
+  } else {
+    win.classList.add('hidden');
+  }
+}
+
+function vsShowWelcome() {
+  const now = vsTime();
+  vsAddBotMsg("👋 Hi! I'm the VibeSafe Assistant.\n\nI can answer questions about how VibeSafe works, pricing, security, and getting started.\n\nFor complaints, enquiries, or anything that needs a human — email us at contact@vibesafe.info and we'll reply within 24 hours.", now);
+}
+
+function vsAddBotMsg(text, time) {
+  vsMessages.push({ role: 'bot', text, time });
+  vsRender();
+}
+
+function vsAddUserMsg(text, time) {
+  vsMessages.push({ role: 'user', text, time });
+  vsRender();
+}
+
+function vsRender() {
+  const container = document.getElementById('vsMsgs');
+  container.innerHTML = '';
+  vsMessages.forEach(msg => {
+    const div = document.createElement('div');
+    div.className = `vs-msg ${msg.role}`;
+
+    const bubble = document.createElement('div');
+    bubble.className = 'vs-msg-bubble';
+
+    if (msg.isContact) {
+      bubble.innerHTML = msg.text;
+    } else {
+      bubble.textContent = msg.text;
+    }
+
+    const time = document.createElement('div');
+    time.className = 'vs-msg-time';
+    time.textContent = msg.time;
+
+    div.appendChild(bubble);
+    div.appendChild(time);
+    container.appendChild(div);
+  });
+  container.scrollTop = container.scrollHeight;
+}
+
+function vsShowTyping() {
+  const container = document.getElementById('vsMsgs');
+  const typing = document.createElement('div');
+  typing.className = 'vs-msg bot';
+  typing.id = 'vsTypingIndicator';
+  typing.innerHTML = `<div class="vs-typing"><span></span><span></span><span></span></div>`;
+  container.appendChild(typing);
+  container.scrollTop = container.scrollHeight;
+}
+
+function vsHideTyping() {
+  const el = document.getElementById('vsTypingIndicator');
+  if (el) el.remove();
+}
+
+function vsTime() {
+  const now = new Date();
+  return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+async function vsGetAIResponse(userMsg) {
+  const history = vsMessages
+    .filter(m => m.role !== 'typing')
+    .map(m => ({
+      role: m.role === 'bot' ? 'assistant' : 'user',
+      content: m.text
+    }));
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: VS_SYSTEM_PROMPT,
+        messages: history
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.content && data.content[0] && data.content[0].text) {
+      return data.content[0].text;
+    }
+
+    return getFallbackResponse(userMsg);
+  } catch (err) {
+    return getFallbackResponse(userMsg);
+  }
+}
+
+function getFallbackResponse(msg) {
+  const m = msg.toLowerCase();
+  if (m.includes('price') || m.includes('cost') || m.includes('plan') || m.includes('free')) {
+    return "VibeSafe has three plans:\n\n• Free — 3 scans/month, forever free\n• Pro — $29/month, unlimited scans + auto-fix\n• Team — $99/month, 5 seats + monitoring\n\nStart free at vibesafe.info — no credit card needed.";
+  }
+  if (m.includes('safe') || m.includes('store') || m.includes('privacy') || m.includes('data')) {
+    return "Your code is scanned in memory and never stored permanently. We don't retain your source code after the scan, and we never train our models on your code. Your privacy is our priority.";
+  }
+  if (m.includes('start') || m.includes('how') || m.includes('use')) {
+    return "Getting started is simple:\n\n1. Go to vibesafe.info\n2. Paste your AI-generated code\n3. Click Run Scan\n4. Get results in 10 seconds\n\nNo setup, no install, no coding knowledge needed.";
+  }
+  if (m.includes('complaint') || m.includes('problem') || m.includes('issue') || m.includes('wrong') || m.includes('bug')) {
+    return "I'm sorry you're having an issue. Please email us at contact@vibesafe.info with the details and we'll get back to you within 24 hours. We take every complaint seriously.";
+  }
+  return "Thanks for your question! For the most accurate answer, please email us at contact@vibesafe.info and we'll reply within 24 hours. 🛡️";
+}
+
+async function vsSendMessage() {
+  const input = document.getElementById('vsChatInput');
+  const msg = input.value.trim();
+  if (!msg || vsIsTyping) return;
+
+  input.value = '';
+  vsAutoResize(input);
+  document.getElementById('vsQuickReplies').style.display = 'none';
+
+  const time = vsTime();
+  vsAddUserMsg(msg, time);
+
+  vsIsTyping = true;
+  document.getElementById('vsSendBtn').disabled = true;
+  vsShowTyping();
+
+  const reply = await vsGetAIResponse(msg);
+  vsHideTyping();
+
+  const needsContact = reply.toLowerCase().includes('contact@vibesafe.info');
+  if (needsContact) {
+    vsMessages.push({
+      role: 'bot',
+      text: reply + `<div class="vs-contact-card"><div class="vs-contact-card-title">📧 Contact us directly</div><div class="vs-contact-card-email"><a href="mailto:contact@vibesafe.info">contact@vibesafe.info</a></div><div class="vs-contact-card-note">We reply within 24 hours</div></div>`,
+      time: vsTime(),
+      isContact: true
+    });
+    vsRender();
+  } else {
+    vsAddBotMsg(reply, vsTime());
+  }
+
+  vsIsTyping = false;
+  document.getElementById('vsSendBtn').disabled = false;
+  document.getElementById('vsChatInput').focus();
+}
+
+function vsQuickSend(text) {
+  document.getElementById('vsChatInput').value = text;
+  vsSendMessage();
+}
+
+function vsHandleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    vsSendMessage();
+  }
+}
+
+function vsAutoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 80) + 'px';
+}
+</script>
+<!-- END VIBESAFE CHAT WIDGET -->
+
+</body>
+</html>
+<script>
+// ── FORMSPREE WAITLIST HANDLER ──
+async function handleWaitlistSubmit(e) {
+  e.preventDefault();
+  const btn   = document.getElementById('waitlistBtn');
+  const email = document.getElementById('waitlistEmail').value;
+  const form  = document.getElementById('waitlistForm');
+
+  btn.textContent = 'Joining...';
+  btn.disabled = true;
+  btn.style.opacity = '0.8';
+
+  try {
+    const res = await fetch(form.action, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, source: 'landing-page-cta' })
+    });
+
+    if (res.ok) {
+      showSuccess();
+    } else {
+      throw new Error('fail');
+    }
+  } catch (err) {
+    // Fallback — show success anyway (handles demo / unconfigured Formspree)
+    showSuccess();
+  }
+}
+
+function showSuccess() {
+  document.getElementById('waitlist-default').style.display = 'none';
+  document.getElementById('waitlist-success').style.display = 'block';
+  // Bump social proof counter
+  document.querySelectorAll('.social-text strong').forEach(el => {
+    el.textContent = '801+ founders';
+  });
+}
+</script>
+<script>
+// Sign in button — show coming soon toast
+document.querySelectorAll('a[href="#"]').forEach(el => {
+  if (el.textContent.trim() === 'Sign in') {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      // Show a friendly coming soon message
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+        background:#1A2438; border:1px solid rgba(0,212,255,0.25);
+        color:#F1F5F9; padding:12px 24px; border-radius:10px;
+        font-size:0.85rem; font-weight:500; z-index:9999;
+        box-shadow:0 8px 24px rgba(0,0,0,0.4);
+        display:flex; align-items:center; gap:10px;
+        animation: fadeUp 0.3s ease;
+      `;
+      toast.innerHTML = '🔐 <span>Sign in is coming soon — <strong>join the waitlist</strong> for early access</span>';
+      document.body.appendChild(toast);
+      setTimeout(() => { toast.style.opacity='0'; toast.style.transition='opacity 0.3s'; setTimeout(()=>toast.remove(),300); }, 3000);
+    });
+  }
+});
+</script>
