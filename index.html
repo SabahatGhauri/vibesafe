@@ -1906,7 +1906,7 @@ function hideCookieBanner() {
   .vs-chat-messages {
     flex: 1; overflow-y: auto;
     padding: 14px 14px 6px;
-    display: flex; flex-direction: column; gap: 10px;
+    display: flex; flex-direction: column; gap: 12px;
     scroll-behavior: smooth;
   }
 
@@ -1914,35 +1914,63 @@ function hideCookieBanner() {
   .vs-chat-messages::-webkit-scrollbar-thumb { background: #1E2D42; border-radius: 2px; }
 
   .vs-msg {
-    max-width: 86%; display: flex; flex-direction: column; gap: 3px;
+    max-width: 82%;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    clear: both;
   }
 
-  .vs-msg.bot { align-self: flex-start; }
-  .vs-msg.user { align-self: flex-end; }
+  .vs-msg.bot {
+    align-self: flex-start;
+    align-items: flex-start;
+  }
+
+  .vs-msg.user {
+    align-self: flex-end;
+    align-items: flex-end;
+  }
 
   .vs-msg-bubble {
-    padding: 10px 13px; border-radius: 12px;
-    font-size: 0.82rem; line-height: 1.6;
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 0.82rem;
+    line-height: 1.65;
     font-family: 'Inter', sans-serif;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    max-width: 100%;
   }
 
   .vs-msg.bot .vs-msg-bubble {
-    background: #1A2438; color: #CBD5E1;
+    background: #1A2438;
+    color: #CBD5E1;
     border: 1px solid #1E2D42;
     border-bottom-left-radius: 4px;
+    border-top-left-radius: 16px;
   }
 
   .vs-msg.user .vs-msg-bubble {
     background: linear-gradient(135deg, #00D4FF, #7C3AED);
-    color: white; border-bottom-right-radius: 4px;
+    color: white;
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 16px;
   }
 
   .vs-msg-time {
-    font-size: 0.65rem; color: #475569;
-    padding: 0 4px;
+    font-size: 0.62rem;
+    color: #475569;
+    padding: 0 6px;
+    line-height: 1;
   }
 
-  .vs-msg.user .vs-msg-time { text-align: right; }
+  .vs-msg.user .vs-msg-time {
+    text-align: right;
+  }
+
+  .vs-msg.bot .vs-msg-time {
+    text-align: left;
+  }
 
   /* Quick replies */
   .vs-quick-replies {
@@ -2195,7 +2223,14 @@ function vsRender() {
     if (msg.isContact) {
       bubble.innerHTML = msg.text;
     } else {
-      bubble.textContent = msg.text;
+      // Convert newlines to proper line breaks for clean formatting
+      bubble.innerHTML = msg.text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/
+/g, '<br>')
+        .replace(/•/g, '<span style="color:#00D4FF">•</span>');
     }
 
     const time = document.createElement('div');
