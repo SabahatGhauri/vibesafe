@@ -720,33 +720,6 @@
   .plan-btn-outline:hover { border-color: var(--cyan); color: var(--cyan); }
 
   /* ── TESTIMONIALS ── */
-
-  .faq-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px 20px;
-    cursor: pointer;
-    transition: border-color 0.2s;
-  }
-  .faq-card:hover { border-color: var(--border2); }
-  .faq-card.open { border-color: rgba(0,212,255,0.2); }
-  .faq-card-q {
-    font-size: 0.88rem; font-weight: 600; color: var(--text);
-    display: flex; justify-content: space-between; align-items: center; gap: 12px;
-  }
-  .faq-arrow { color: var(--text3); font-size: 11px; transition: transform 0.2s; flex-shrink: 0; }
-  .faq-card.open .faq-arrow { transform: rotate(90deg); color: var(--cyan); }
-  .faq-card-a {
-    display: none; margin-top: 12px; font-size: 0.82rem;
-    color: var(--text2); line-height: 1.7;
-    border-top: 1px solid var(--border); padding-top: 12px;
-  }
-  .faq-card.open .faq-card-a { display: block; }
-  @media (max-width: 768px) {
-    #faqGrid { grid-template-columns: 1fr !important; }
-  }
-
   .testimonials-section { background: var(--bg2); }
   .testimonials-header { text-align: center; margin-bottom: 56px; }
 
@@ -934,8 +907,6 @@
     <li><a href="#how">How it works</a></li>
     <li><a href="#features">Features</a></li>
     <li><a href="#pricing">Pricing</a></li>
-    <li><a href="#faq">FAQ</a></li>
-    <li><a href="#contact">Contact</a></li>
   </ul>
   <div class="nav-cta">
     <a href="#" class="btn btn-ghost">Sign in</a>
@@ -968,7 +939,7 @@
       </p>
 
       <div class="hero-actions">
-        <a href="/dashboard.html" class="btn btn-primary btn-lg">
+        <a href="#waitlist" class="btn btn-primary btn-lg">
           Start free scan
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
@@ -1250,20 +1221,8 @@
     <div class="pricing-header">
       <p class="section-eyebrow">Pricing</p>
       <h2 class="section-title">Start free. Pay when you ship.</h2>
-      <p class="section-sub">No credit card needed to start. Cancel anytime. Pro includes a 15-day free trial.</p>
+      <p class="section-sub">No credit card needed to start. Usage-based — you only pay for what you scan.</p>
     </div>
-
-    <!-- Billing toggle -->
-    <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:40px">
-      <span id="monthly-lbl" style="font-size:0.9rem;font-weight:600;color:var(--text)">Monthly</span>
-      <div style="position:relative;width:44px;height:24px;cursor:pointer" onclick="toggleBilling()">
-        <div id="toggle-track" style="position:absolute;inset:0;background:var(--border2);border-radius:12px;transition:background 0.3s"></div>
-        <div id="toggle-thumb" style="position:absolute;top:3px;left:3px;width:18px;height:18px;background:white;border-radius:50%;transition:transform 0.3s;z-index:1"></div>
-      </div>
-      <span id="annual-lbl" style="font-size:0.9rem;font-weight:500;color:var(--text3)">Annual</span>
-      <span id="save-badge" style="background:var(--green-dim);color:var(--green);border:1px solid rgba(16,185,129,0.2);font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:100px">Save 25%</span>
-    </div>
-
     <div class="pricing-grid">
       <!-- Free -->
       <div class="pricing-card">
@@ -1276,18 +1235,15 @@
         </div>
         <div class="plan-divider"></div>
         <ul class="plan-features">
-          <li class="plan-feature"><span class="feat-check">✓</span> 5 scans per month</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> 3 scans per month</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Security vulnerability scan</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Plain-English explanations</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Runtime error detection</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Basic safety score (0–100)</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Basic safety score</li>
           <li class="plan-feature"><span class="feat-x">–</span> Auto-fix</li>
-          <li class="plan-feature"><span class="feat-x">–</span> PDF safety report</li>
-          <li class="plan-feature"><span class="feat-x">–</span> GitHub integration</li>
+          <li class="plan-feature"><span class="feat-x">–</span> Continuous monitoring</li>
         </ul>
         <button class="plan-btn plan-btn-outline" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Get started free</button>
       </div>
-
       <!-- Pro -->
       <div class="pricing-card popular">
         <div class="popular-badge">Most popular</div>
@@ -1295,11 +1251,8 @@
         <div class="plan-desc">For founders shipping their product</div>
         <div class="plan-price">
           <span class="price-dollar">$</span>
-          <span class="price-num" id="pro-price">29</span>
-          <span class="price-period" id="pro-period">/ month</span>
-        </div>
-        <div style="margin-bottom:14px">
-          <span style="background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.2);font-size:0.72rem;font-weight:700;padding:4px 12px;border-radius:100px">15-day free trial — no card needed</span>
+          <span class="price-num">29</span>
+          <span class="price-period">/ month</span>
         </div>
         <div class="plan-divider"></div>
         <ul class="plan-features">
@@ -1307,143 +1260,31 @@
           <li class="plan-feature"><span class="feat-check">✓</span> Full security scan suite</li>
           <li class="plan-feature"><span class="feat-check">✓</span> One-click auto-fix</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Dependency auto-installer</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> PDF safety report</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Detailed safety report (PDF)</li>
           <li class="plan-feature"><span class="feat-check">✓</span> GitHub integration</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Vercel &amp; Netlify integration</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Code quality analysis</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Fix history &amp; audit log</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Email support (24h)</li>
         </ul>
-        <button class="plan-btn plan-btn-primary" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})" id="pro-btn">Start 15-day free trial</button>
+        <button class="plan-btn plan-btn-primary" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Join waitlist — $29/mo</button>
       </div>
-
       <!-- Team -->
       <div class="pricing-card">
         <div class="plan-name">Team</div>
-        <div class="plan-desc">For small teams shipping together</div>
+        <div class="plan-desc">For small teams building together</div>
         <div class="plan-price">
           <span class="price-dollar">$</span>
-          <span class="price-num" id="team-price">99</span>
-          <span class="price-period" id="team-period">/ month</span>
+          <span class="price-num">99</span>
+          <span class="price-period">/ month</span>
         </div>
-        <div style="height:30px"></div>
         <div class="plan-divider"></div>
         <ul class="plan-features">
           <li class="plan-feature"><span class="feat-check">✓</span> Everything in Pro</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Up to 10 team members</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Up to 5 team members</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Continuous monitoring</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Slack & email alerts</li>
           <li class="plan-feature"><span class="feat-check">✓</span> CI/CD pipeline integration</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Slack &amp; email alerts</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> OWASP Top 10 compliance report</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Custom scan rules</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Role-based access control</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> API access</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Priority support (4h)</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Priority support</li>
         </ul>
-        <button class="plan-btn plan-btn-outline" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Start team trial</button>
+        <button class="plan-btn plan-btn-outline" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Join waitlist — Team</button>
       </div>
-    </div>
-
-    <p style="text-align:center;font-size:0.78rem;color:var(--text3);margin-top:20px" id="billing-note">
-      All prices in USD · Cancel anytime · Annual plans billed upfront
-    </p>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section style="padding:80px 5%; background:var(--bg2);" id="faq">
-  <div class="container">
-    <div style="text-align:center;margin-bottom:48px">
-      <p class="section-eyebrow">FAQ</p>
-      <h2 class="section-title">Frequently asked questions</h2>
-      <p class="section-sub" style="margin:0 auto">Everything you need to know before getting started.</p>
-    </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:900px;margin:0 auto" id="faqGrid">
-
-      <div class="faq-card" onclick="toggleFaqCard(this)">
-        <div class="faq-card-q">What does VibeSafe actually do? <span class="faq-arrow">▶</span></div>
-        <div class="faq-card-a">VibeSafe scans your AI-generated code for security vulnerabilities, runtime errors, exposed API keys, and missing packages — then fixes them automatically in plain English. No coding knowledge needed. Results in under 10 seconds.</div>
-      </div>
-
-      <div class="faq-card" onclick="toggleFaqCard(this)">
-        <div class="faq-card-q">Do I need to know how to code? <span class="faq-arrow">▶</span></div>
-        <div class="faq-card-a">Not at all. VibeSafe is built specifically for non-technical founders. Every issue is explained in plain English — what the problem is, why it matters, and how to fix it with one click.</div>
-      </div>
-
-      <div class="faq-card" onclick="toggleFaqCard(this)">
-        <div class="faq-card-q">Is the free plan really free forever? <span class="faq-arrow">▶</span></div>
-        <div class="faq-card-a">Yes. The Starter plan is free forever — no credit card required. You get 5 scans per month, full security detection, and plain-English explanations. No time limit, no trial expiry.</div>
-      </div>
-
-      <div class="faq-card" onclick="toggleFaqCard(this)">
-        <div class="faq-card-q">How does the 15-day Pro trial work? <span class="faq-arrow">▶</span></div>
-        <div class="faq-card-a">Start Pro with no credit card needed. You get full access to all Pro features for 15 days completely free. After 15 days, choose to subscribe at $29/month or drop back to the free plan — no charge either way.</div>
-      </div>
-
-      <div class="faq-card" onclick="toggleFaqCard(this)">
-        <div class="faq-card-q">Is my code safe? Do you store it? <span class="faq-arrow">▶</span></div>
-        <div class="faq-card-a">Your code is scanned in memory and never stored permanently. We don't retain your source code after the scan completes, and we never train our AI on your code. Your privacy is our priority.</div>
-      </div>
-
-      <div class="faq-card" onclick="toggleFaqCard(this)">
-        <div class="faq-card-q">What languages does VibeSafe support? <span class="faq-arrow">▶</span></div>
-        <div class="faq-card-a">VibeSafe supports JavaScript, TypeScript, Python, Java, and .NET/C#. Mixed-language projects are supported — VibeSafe auto-detects your stack and applies the right checks for each language.</div>
-      </div>
-
-      <div class="faq-card" onclick="toggleFaqCard(this)">
-        <div class="faq-card-q">How is this different from Snyk or SonarQube? <span class="faq-arrow">▶</span></div>
-        <div class="faq-card-a">Snyk costs $98/developer/month and requires CLI setup, CI/CD integration, and security expertise to interpret. SonarQube is even more complex. VibeSafe requires zero setup, costs $29/month, and explains everything in plain English. We're built for founders, not engineering teams.</div>
-      </div>
-
-      <div class="faq-card" onclick="toggleFaqCard(this)">
-        <div class="faq-card-q">Can I cancel my subscription anytime? <span class="faq-arrow">▶</span></div>
-        <div class="faq-card-a">Yes, cancel anytime with no questions asked. You keep access until the end of your billing period, then drop to the free plan. No contracts, no cancellation fees, no nonsense.</div>
-      </div>
-
-    </div>
-
-    <div style="text-align:center;margin-top:32px">
-      <p style="font-size:0.88rem;color:var(--text3)">Still have questions? <a href="mailto:contact@vibesafe.info" style="color:var(--cyan);text-decoration:none;font-weight:500">Email us at contact@vibesafe.info</a> — we reply within 24 hours.</p>
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT US -->
-<section style="padding:80px 5%;background:var(--bg);" id="contact">
-  <div class="container">
-    <div style="text-align:center;margin-bottom:48px">
-      <p class="section-eyebrow">Contact</p>
-      <h2 class="section-title">Get in touch</h2>
-      <p class="section-sub" style="margin:0 auto">We're a small bootstrapped team and we read every message personally.</p>
-    </div>
-
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:860px;margin:0 auto">
-
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;text-align:center;transition:border-color 0.2s" onmouseover="this.style.borderColor='rgba(0,212,255,0.25)'" onmouseout="this.style.borderColor='var(--border)'">
-        <div style="font-size:2rem;margin-bottom:12px">📧</div>
-        <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.95rem;margin-bottom:6px">General enquiries</div>
-        <div style="font-size:0.82rem;color:var(--text3);margin-bottom:14px">Questions, feedback, anything else</div>
-        <a href="mailto:contact@vibesafe.info" style="color:var(--cyan);font-size:0.85rem;font-weight:600;text-decoration:none">contact@vibesafe.info</a>
-        <div style="font-size:0.72rem;color:var(--text3);margin-top:8px">Reply within 24 hours</div>
-      </div>
-
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;text-align:center;transition:border-color 0.2s" onmouseover="this.style.borderColor='rgba(0,212,255,0.25)'" onmouseout="this.style.borderColor='var(--border)'">
-        <div style="font-size:2rem;margin-bottom:12px">🐛</div>
-        <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.95rem;margin-bottom:6px">Bug reports</div>
-        <div style="font-size:0.82rem;color:var(--text3);margin-bottom:14px">Found something broken? Tell us.</div>
-        <a href="mailto:contact@vibesafe.info?subject=Bug Report" style="color:var(--cyan);font-size:0.85rem;font-weight:600;text-decoration:none">contact@vibesafe.info</a>
-        <div style="font-size:0.72rem;color:var(--text3);margin-top:8px">We fix bugs fast</div>
-      </div>
-
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;text-align:center;transition:border-color 0.2s" onmouseover="this.style.borderColor='rgba(0,212,255,0.25)'" onmouseout="this.style.borderColor='var(--border)'">
-        <div style="font-size:2rem;margin-bottom:12px">🐦</div>
-        <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.95rem;margin-bottom:6px">Twitter / X</div>
-        <div style="font-size:0.82rem;color:var(--text3);margin-bottom:14px">Follow us for updates and tips</div>
-        <a href="https://twitter.com/VibeSafe202" target="_blank" style="color:var(--cyan);font-size:0.85rem;font-weight:600;text-decoration:none">@VibeSafe202</a>
-        <div style="font-size:0.72rem;color:var(--text3);margin-top:8px">We reply to DMs too</div>
-      </div>
-
     </div>
   </div>
 </section>
@@ -1568,7 +1409,6 @@
         <ul class="footer-links">
           <li><a href="#features">Features</a></li>
           <li><a href="#pricing">Pricing</a></li>
-          <li><a href="#faq">FAQ</a></li>
           <li><a href="#waitlist">Changelog — coming soon</a></li>
           <li><a href="#waitlist">Roadmap — coming soon</a></li>
         </ul>
@@ -1587,850 +1427,349 @@
         <ul class="footer-links">
           <li><a href="#waitlist">About</a></li>
           <li><a href="#waitlist">Blog — coming soon</a></li>
-          <li><a href="https://twitter.com/VibeSafe202" target="_blank">Twitter / X @VibeSafe202</a></li>
-          <li><a href="mailto:contact@vibesafe.info">Contact us</a></li>
+          <li><a href="https://twitter.com" target="_blank">Twitter / X</a></li>
+          <li><a href="mailto:hello@vibesafe.info">Contact</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
       <span class="footer-copy">© 2026 VibeSafe. All rights reserved.</span>
       <ul class="footer-legal">
-        <li><a href="/legal.html">Privacy Policy</a></li>
-        <li><a href="/legal.html">Terms of Service</a></li>
-        <li><a href="/legal.html">Cookie Policy</a></li>
+        <li><a href="#waitlist">Privacy</a></li>
+        <li><a href="#waitlist">Terms</a></li>
+        <li><a href="#waitlist">Security</a></li>
       </ul>
     </div>
   </div>
 </footer>
 
+
+
+
 <script>
-  // Demo tab switcher
-  function switchTab(el, tab) {
-    document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
-    el.classList.add('active');
-    ['code','results','fixed'].forEach(t => {
-      const el = document.getElementById('tab-'+t);
-      if (el) el.style.display = t === tab ? 'block' : 'none';
+// VIBESAFE — ALL JAVASCRIPT
+
+// DEMO TAB SWITCHER
+function switchTab(el, tab) {
+  document.querySelectorAll('.demo-tab').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  ['code','results','fixed'].forEach(function(t) {
+    var e = document.getElementById('tab-' + t);
+    if (e) e.style.display = t === tab ? 'block' : 'none';
+  });
+  var s = document.getElementById('scoreDisplay');
+  if (s) {
+    s.textContent = tab === 'fixed' ? '94 / 100' : '42 / 100';
+    s.className = tab === 'fixed' ? 'score-badge score-ok' : 'score-badge score-bad';
+  }
+}
+
+function runDemo() {
+  document.querySelectorAll('.demo-tab').forEach(function(t, i) { t.classList.toggle('active', i === 1); });
+  ['code','results','fixed'].forEach(function(t) {
+    var e = document.getElementById('tab-' + t);
+    if (e) e.style.display = t === 'results' ? 'block' : 'none';
+  });
+  ['issue1','issue2','issue3'].forEach(function(id) {
+    var e = document.getElementById(id);
+    if (e) e.classList.remove('visible');
+  });
+  var fill = document.getElementById('scanFill');
+  var pct = document.getElementById('scanPct');
+  if (!fill || !pct) return;
+  fill.style.width = '0%';
+  pct.textContent = '0%';
+  var p = 0;
+  var iv = setInterval(function() {
+    p += 2;
+    fill.style.width = p + '%';
+    pct.textContent = p + '%';
+    if (p >= 35) { var e = document.getElementById('issue1'); if (e) e.classList.add('visible'); }
+    if (p >= 65) { var e = document.getElementById('issue2'); if (e) e.classList.add('visible'); }
+    if (p >= 90) { var e = document.getElementById('issue3'); if (e) e.classList.add('visible'); }
+    if (p >= 100) { clearInterval(iv); pct.textContent = 'Done'; }
+  }, 30);
+}
+
+// BILLING TOGGLE
+var vsIsAnnual = false;
+function toggleBilling() {
+  vsIsAnnual = !vsIsAnnual;
+  var els = {
+    tr: document.getElementById('toggle-track'),
+    th: document.getElementById('toggle-thumb'),
+    ml: document.getElementById('monthly-lbl'),
+    al: document.getElementById('annual-lbl'),
+    pp: document.getElementById('pro-price'),
+    tp: document.getElementById('team-price'),
+    ppr: document.getElementById('pro-period'),
+    tpr: document.getElementById('team-period'),
+    n: document.getElementById('billing-note')
+  };
+  if (vsIsAnnual) {
+    if (els.tr) els.tr.style.background = '#7C3AED';
+    if (els.th) els.th.style.transform = 'translateX(20px)';
+    if (els.ml) { els.ml.style.color = 'var(--text3)'; els.ml.style.fontWeight = '500'; }
+    if (els.al) { els.al.style.color = 'var(--text)'; els.al.style.fontWeight = '600'; }
+    if (els.pp) els.pp.textContent = '22';
+    if (els.tp) els.tp.textContent = '74';
+    if (els.ppr) els.ppr.textContent = '/ month, billed $264/yr';
+    if (els.tpr) els.tpr.textContent = '/ month, billed $888/yr';
+    if (els.n) els.n.textContent = 'Annual: Pro saves $84/yr - Team saves $300/yr - Cancel anytime';
+  } else {
+    if (els.tr) els.tr.style.background = 'var(--border2)';
+    if (els.th) els.th.style.transform = 'translateX(0)';
+    if (els.ml) { els.ml.style.color = 'var(--text)'; els.ml.style.fontWeight = '600'; }
+    if (els.al) { els.al.style.color = 'var(--text3)'; els.al.style.fontWeight = '500'; }
+    if (els.pp) els.pp.textContent = '29';
+    if (els.tp) els.tp.textContent = '99';
+    if (els.ppr) els.ppr.textContent = '/ month';
+    if (els.tpr) els.tpr.textContent = '/ month';
+    if (els.n) els.n.textContent = 'All prices in USD - Cancel anytime - Annual plans billed upfront';
+  }
+}
+
+// FAQ TOGGLE
+function toggleFaqCard(card) {
+  var isOpen = card.classList.contains('open');
+  document.querySelectorAll('.faq-card.open').forEach(function(c) { c.classList.remove('open'); });
+  if (!isOpen) card.classList.add('open');
+}
+
+// COOKIE CONSENT
+(function() {
+  var c = localStorage.getItem('vs_cookie_consent');
+  if (c) { var b = document.getElementById('vs-cookie-banner'); if (b) b.style.display = 'none'; }
+})();
+
+function vsCookieAccept() { localStorage.setItem('vs_cookie_consent', 'all'); hideCookieBanner(); }
+function vsCookieDecline() { localStorage.setItem('vs_cookie_consent', 'essential'); hideCookieBanner(); }
+function hideCookieBanner() {
+  var b = document.getElementById('vs-cookie-banner');
+  if (b) {
+    b.style.transform = 'translateY(100%)';
+    b.style.transition = 'transform 0.4s ease';
+    setTimeout(function() { b.style.display = 'none'; }, 400);
+  }
+}
+
+// WAITLIST FORM
+async function handleWaitlistSubmit(e) {
+  e.preventDefault();
+  var btn = document.getElementById('waitlistBtn');
+  var emailEl = document.getElementById('waitlistEmail');
+  var form = document.getElementById('waitlistForm');
+  if (!btn || !emailEl || !form) return;
+  btn.textContent = 'Joining...';
+  btn.disabled = true;
+  try {
+    await fetch(form.action, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: emailEl.value, source: 'landing-page-cta' })
     });
-    if (tab === 'fixed') {
-      document.getElementById('scoreDisplay').textContent = '94 / 100';
-      document.getElementById('scoreDisplay').className = 'score-badge score-ok';
+  } catch (err) {}
+  var d = document.getElementById('waitlist-default');
+  var s = document.getElementById('waitlist-success');
+  if (d) d.style.display = 'none';
+  if (s) s.style.display = 'block';
+  document.querySelectorAll('.social-text strong').forEach(function(el) { el.textContent = '801+ founders'; });
+}
+
+function showSuccess() {
+  var d = document.getElementById('waitlist-default');
+  var s = document.getElementById('waitlist-success');
+  if (d) d.style.display = 'none';
+  if (s) s.style.display = 'block';
+}
+
+// SIGN IN TOAST
+function showSignInToast() {
+  var t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1A2438;border:1px solid rgba(0,212,255,0.25);color:#F1F5F9;padding:12px 24px;border-radius:10px;font-size:0.85rem;font-weight:500;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.4);display:flex;align-items:center;gap:10px;';
+  t.innerHTML = '&#128272; <span>Sign in is coming soon &mdash; <strong>join the waitlist</strong> for early access</span>';
+  document.body.appendChild(t);
+  setTimeout(function() {
+    t.style.opacity = '0';
+    t.style.transition = 'opacity 0.3s';
+    setTimeout(function() { t.remove(); }, 300);
+  }, 3000);
+}
+
+// CHATBOT
+var vsOpen = false, vsMessages = [], vsIsTyping = false;
+var VS_PROMPT = 'You are the VibeSafe AI Assistant. VibeSafe scans AI-generated code for security vulnerabilities and fixes them in plain English. Pricing: Free plan 5 scans per month, Pro plan $29 per month with 15-day free trial, Team plan $99 per month. For complaints or issues you cannot resolve direct to contact@vibesafe.info with 24hr response. Keep answers short warm and max 3 to 4 sentences.';
+
+function vsToggleChat() {
+  vsOpen = !vsOpen;
+  var w = document.getElementById('vs-chat-window');
+  var b = document.getElementById('vs-chat-badge');
+  if (!w) return;
+  if (vsOpen) {
+    w.classList.remove('hidden');
+    if (b) b.style.display = 'none';
+    if (vsMessages.length === 0) vsWelcome();
+    setTimeout(function() { var i = document.getElementById('vsChatInput'); if (i) i.focus(); }, 300);
+  } else {
+    w.classList.add('hidden');
+  }
+}
+
+function vsWelcome() {
+  vsBot('Hi! I am the VibeSafe Assistant. I can answer questions about how VibeSafe works, pricing, and security. For complaints or anything needing a human email contact@vibesafe.info and we reply within 24 hours.');
+}
+
+function vsBot(text) { vsMessages.push({ role: 'bot', text: text, time: vsNow() }); vsDraw(); }
+function vsUser(text) { vsMessages.push({ role: 'user', text: text, time: vsNow() }); vsDraw(); }
+function vsNow() { return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
+
+function vsDraw() {
+  var c = document.getElementById('vsMsgs');
+  if (!c) return;
+  c.innerHTML = '';
+  vsMessages.forEach(function(m) {
+    var d = document.createElement('div');
+    d.className = 'vs-msg ' + m.role;
+    var b = document.createElement('div');
+    b.className = 'vs-msg-bubble';
+    if (m.isContact) {
+      b.innerHTML = m.text;
     } else {
-      document.getElementById('scoreDisplay').textContent = '42 / 100';
-      document.getElementById('scoreDisplay').className = 'score-badge score-bad';
+      var safe = m.text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      b.innerHTML = safe.split('\\n').join('<br>');
     }
-  }
+    var t = document.createElement('div');
+    t.className = 'vs-msg-time';
+    t.textContent = m.time;
+    d.appendChild(b);
+    d.appendChild(t);
+    c.appendChild(d);
+  });
+  c.scrollTop = c.scrollHeight;
+}
 
-  // Animated scan demo
-  function runDemo() {
-    // Switch to results tab
-    document.querySelectorAll('.demo-tab').forEach((t,i) => t.classList.toggle('active', i===1));
-    ['code','results','fixed'].forEach(t => {
-      const el = document.getElementById('tab-'+t);
-      if (el) el.style.display = t === 'results' ? 'block' : 'none';
+function vsTypingShow() {
+  var c = document.getElementById('vsMsgs');
+  if (!c) return;
+  var d = document.createElement('div');
+  d.className = 'vs-msg bot';
+  d.id = 'vsTyping';
+  d.innerHTML = '<div class="vs-typing"><span></span><span></span><span></span></div>';
+  c.appendChild(d);
+  c.scrollTop = c.scrollHeight;
+}
+
+function vsTypingHide() { var e = document.getElementById('vsTyping'); if (e) e.remove(); }
+
+function vsFallback(m) {
+  m = m.toLowerCase();
+  if (m.includes('price') || m.includes('cost') || m.includes('plan') || m.includes('free'))
+    return 'VibeSafe plans: Free 5 scans per month forever, Pro $29 per month with 15-day free trial, Team $99 per month with 10 seats. Start free at vibesafe.info';
+  if (m.includes('safe') || m.includes('store') || m.includes('privacy'))
+    return 'Your code is scanned in memory and never stored. We never retain source code after scanning and never train AI on your code.';
+  if (m.includes('start') || m.includes('how') || m.includes('begin'))
+    return 'Go to vibesafe.info, paste your code, click Run Scan. Results in 10 seconds. No setup needed.';
+  return 'Great question! Email contact@vibesafe.info for a detailed answer and we reply within 24 hours.';
+}
+
+async function vsSend() {
+  var inp = document.getElementById('vsChatInput');
+  if (!inp) return;
+  var msg = inp.value.trim();
+  if (!msg || vsIsTyping) return;
+  inp.value = '';
+  vsAutoResize(inp);
+  var qr = document.getElementById('vsQuickReplies');
+  if (qr) qr.style.display = 'none';
+  vsUser(msg);
+  vsIsTyping = true;
+  var btn = document.getElementById('vsSendBtn');
+  if (btn) btn.disabled = true;
+  vsTypingShow();
+  var reply;
+  try {
+    var hist = vsMessages
+      .filter(function(m) { return m.role !== 'typing'; })
+      .map(function(m) { return { role: m.role === 'bot' ? 'assistant' : 'user', content: m.text }; });
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 300,
+        system: VS_PROMPT,
+        messages: hist
+      })
     });
-
-    // Hide issues, reset bar
-    ['issue1','issue2','issue3'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.classList.remove('visible');
-    });
-    const fill = document.getElementById('scanFill');
-    const pct = document.getElementById('scanPct');
-    fill.style.width = '0%';
-    pct.textContent = '0%';
-
-    // Animate bar
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += 2;
-      fill.style.width = progress + '%';
-      pct.textContent = progress + '%';
-      if (progress >= 35) {
-        const el = document.getElementById('issue1');
-        if (el) el.classList.add('visible');
-      }
-      if (progress >= 65) {
-        const el = document.getElementById('issue2');
-        if (el) el.classList.add('visible');
-      }
-      if (progress >= 90) {
-        const el = document.getElementById('issue3');
-        if (el) el.classList.add('visible');
-      }
-      if (progress >= 100) {
-        clearInterval(interval);
-        pct.textContent = 'Done';
-      }
-    }, 30);
+    var data = await res.json();
+    reply = (data.content && data.content[0] && data.content[0].text)
+      ? data.content[0].text
+      : vsFallback(msg);
+  } catch (err) {
+    reply = vsFallback(msg);
   }
+  vsTypingHide();
+  if (reply.toLowerCase().indexOf('contact@vibesafe.info') !== -1) {
+    vsMessages.push({
+      role: 'bot',
+      text: reply + '<div class="vs-contact-card"><div class="vs-contact-card-title">Email us directly</div><div class="vs-contact-card-email"><a href="mailto:contact@vibesafe.info">contact@vibesafe.info</a></div><div class="vs-contact-card-note">Reply within 24 hours</div></div>',
+      time: vsNow(),
+      isContact: true
+    });
+    vsDraw();
+  } else {
+    vsBot(reply);
+  }
+  vsIsTyping = false;
+  if (btn) btn.disabled = false;
+  var i = document.getElementById('vsChatInput');
+  if (i) i.focus();
+}
 
-  // Smooth scroll for nav links
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      const target = document.querySelector(a.getAttribute('href'));
-      if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth' });
-      }
+function vsSendMessage() { vsSend(); }
+function vsHandleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); vsSend(); } }
+function vsQuickSend(text) { var i = document.getElementById('vsChatInput'); if (i) i.value = text; vsSend(); }
+function vsAutoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 80) + 'px'; }
+
+// INIT
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      var h = a.getAttribute('href');
+      if (h === '#') return;
+      var target = document.querySelector(h);
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
     });
   });
-
-  // Fade in on scroll
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => {
+  document.querySelectorAll('a, button').forEach(function(el) {
+    if (el.textContent.trim() === 'Sign in') {
+      el.addEventListener('click', function(e) { e.preventDefault(); showSignInToast(); });
+    }
+  });
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
       if (e.isIntersecting) {
         e.target.style.opacity = '1';
         e.target.style.transform = 'translateY(0)';
       }
     });
   }, { threshold: 0.1 });
-
-  document.querySelectorAll('.feature-card, .problem-card, .testimonial-card, .pricing-card, .step-card').forEach(el => {
+  document.querySelectorAll('.feature-card,.problem-card,.testimonial-card,.pricing-card,.step-card').forEach(function(el) {
     el.style.opacity = '0';
     el.style.transform = 'translateY(16px)';
     el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-    observer.observe(el);
+    obs.observe(el);
   });
-
-  // Auto-run demo on load
   setTimeout(runDemo, 1200);
-</script>
-
-<!-- VIBESAFE CHAT WIDGET -->
-<!-- Add this code just before <script>
-var vsIsAnnual = false;
-function toggleBilling() {
-  vsIsAnnual = !vsIsAnnual;
-  var track = document.getElementById('toggle-track');
-  var thumb = document.getElementById('toggle-thumb');
-  var monthLbl = document.getElementById('monthly-lbl');
-  var annualLbl = document.getElementById('annual-lbl');
-  var proPrice = document.getElementById('pro-price');
-  var teamPrice = document.getElementById('team-price');
-  var proPeriod = document.getElementById('pro-period');
-  var teamPeriod = document.getElementById('team-period');
-  var proBtn = document.getElementById('pro-btn');
-  var note = document.getElementById('billing-note');
-
-  if (vsIsAnnual) {
-    track.style.background = '#7C3AED';
-    thumb.style.transform = 'translateX(20px)';
-    monthLbl.style.color = 'var(--text3)';
-    monthLbl.style.fontWeight = '500';
-    annualLbl.style.color = 'var(--text)';
-    annualLbl.style.fontWeight = '600';
-    proPrice.textContent = '22';
-    teamPrice.textContent = '74';
-    proPeriod.textContent = '/ month, billed $264/yr';
-    teamPeriod.textContent = '/ month, billed $888/yr';
-    proBtn.textContent = 'Start 15-day free trial';
-    note.textContent = 'Annual plan: Pro saves $84/yr · Team saves $300/yr · Cancel anytime';
-  } else {
-    track.style.background = 'var(--border2)';
-    thumb.style.transform = 'translateX(0)';
-    monthLbl.style.color = 'var(--text)';
-    monthLbl.style.fontWeight = '600';
-    annualLbl.style.color = 'var(--text3)';
-    annualLbl.style.fontWeight = '500';
-    proPrice.textContent = '29';
-    teamPrice.textContent = '99';
-    proPeriod.textContent = '/ month';
-    teamPeriod.textContent = '/ month';
-    proBtn.textContent = 'Start 15-day free trial';
-    note.textContent = 'All prices in USD · Cancel anytime · Annual plans billed upfront';
-  }
-}
-</script>
-<script>
-function toggleFaqCard(card) {
-  card.classList.toggle('open');
-}
-</script>
-
-<!-- COOKIE CONSENT BANNER -->
-<div id="vs-cookie-banner" style="
-  position:fixed;bottom:0;left:0;right:0;z-index:9997;
-  background:var(--surface,#111827);
-  border-top:1px solid var(--border,#1E2D42);
-  padding:16px 5%;
-  display:flex;align-items:center;justify-content:space-between;
-  gap:20px;flex-wrap:wrap;
-  box-shadow:0 -4px 24px rgba(0,0,0,0.4);
-  transform:translateY(0);transition:transform 0.4s ease;
-">
-  <div style="flex:1;min-width:260px">
-    <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.88rem;color:#F1F5F9;margin-bottom:4px">🍪 We use cookies</div>
-    <div style="font-size:0.78rem;color:#64748B;line-height:1.5">
-      We use essential cookies to keep VibeSafe running, and optional analytics cookies to improve the product.
-      We never use advertising or tracking cookies.
-      <a href="/legal.html" style="color:#00D4FF;text-decoration:none;font-weight:500" onclick="showDoc && showDoc('cookies')">Cookie Policy</a>
-    </div>
-  </div>
-  <div style="display:flex;gap:10px;flex-shrink:0;align-items:center">
-    <button onclick="vsCookieDecline()" style="
-      padding:8px 18px;border-radius:7px;
-      background:transparent;color:#94A3B8;
-      border:1px solid #253650;font-size:0.78rem;font-weight:600;
-      cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;
-    " onmouseover="this.style.borderColor='#00D4FF';this.style.color='#F1F5F9'" onmouseout="this.style.borderColor='#253650';this.style.color='#94A3B8'">
-      Essential only
-    </button>
-    <button onclick="vsCookieAccept()" style="
-      padding:8px 18px;border-radius:7px;
-      background:#00D4FF;color:#080C18;
-      border:none;font-size:0.78rem;font-weight:700;
-      cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;
-      box-shadow:0 0 14px rgba(0,212,255,0.25);
-    " onmouseover="this.style.background='#33DCFF'" onmouseout="this.style.background='#00D4FF'">
-      Accept all
-    </button>
-  </div>
-</div>
-
-<script>
-(function() {
-  var consent = localStorage.getItem('vs_cookie_consent');
-  if (consent) {
-    document.getElementById('vs-cookie-banner').style.display = 'none';
-  }
-})();
-
-function vsCookieAccept() {
-  localStorage.setItem('vs_cookie_consent', 'all');
-  hideCookieBanner();
-}
-
-function vsCookieDecline() {
-  localStorage.setItem('vs_cookie_consent', 'essential');
-  hideCookieBanner();
-}
-
-function hideCookieBanner() {
-  var banner = document.getElementById('vs-cookie-banner');
-  banner.style.transform = 'translateY(100%)';
-  setTimeout(function() { banner.style.display = 'none'; }, 400);
-}
-</script>
-
-</body> in your index.html -->
-
-<style>
-  /* ── CHAT WIDGET STYLES ── */
-  #vs-chat-btn {
-    position: fixed; bottom: 28px; right: 28px; z-index: 9998;
-    width: 56px; height: 56px; border-radius: 50%;
-    background: linear-gradient(135deg, #00D4FF, #7C3AED);
-    border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 20px rgba(0,212,255,0.35);
-    transition: all 0.25s; font-size: 22px;
-  }
-  #vs-chat-btn:hover {
-    transform: scale(1.08);
-    box-shadow: 0 6px 28px rgba(0,212,255,0.5);
-  }
-
-  #vs-chat-badge {
-    position: absolute; top: -4px; right: -4px;
-    width: 18px; height: 18px; border-radius: 50%;
-    background: #EF4444; border: 2px solid #080C18;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 10px; font-weight: 700; color: white;
-    font-family: 'Inter', sans-serif;
-  }
-
-  #vs-chat-window {
-    position: fixed; bottom: 96px; right: 28px; z-index: 9999;
-    width: 360px; height: 520px;
-    background: #0F1624;
-    border: 1px solid #1E2D42;
-    border-radius: 18px;
-    display: flex; flex-direction: column;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,212,255,0.05);
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-    transform-origin: bottom right;
-  }
-
-  #vs-chat-window.hidden {
-    opacity: 0; transform: scale(0.85) translateY(10px);
-    pointer-events: none;
-  }
-
-  .vs-chat-header {
-    display: flex; align-items: center; gap: 10px;
-    padding: 14px 16px;
-    background: #111827;
-    border-bottom: 1px solid #1E2D42;
-    flex-shrink: 0;
-  }
-
-  .vs-chat-avatar {
-    width: 34px; height: 34px; border-radius: 50%;
-    background: linear-gradient(135deg, #00D4FF, #7C3AED);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; flex-shrink: 0;
-  }
-
-  .vs-chat-header-info { flex: 1; }
-
-  .vs-chat-header-name {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.88rem; font-weight: 600; color: #F1F5F9;
-    line-height: 1.2;
-  }
-
-  .vs-chat-header-status {
-    display: flex; align-items: center; gap: 5px;
-    font-size: 0.7rem; color: #64748B;
-  }
-
-  .vs-status-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: #10B981;
-    animation: pulse-g 2s infinite;
-  }
-
-  @keyframes pulse-g {
-    0%,100% { opacity:1; } 50% { opacity:0.4; }
-  }
-
-  .vs-chat-close {
-    background: none; border: none; cursor: pointer;
-    color: #64748B; font-size: 18px; padding: 4px;
-    transition: color 0.2s; line-height: 1;
-  }
-  .vs-chat-close:hover { color: #F1F5F9; }
-
-  .vs-chat-messages {
-    flex: 1; overflow-y: auto;
-    padding: 14px 14px 6px;
-    display: flex; flex-direction: column; gap: 12px;
-    scroll-behavior: smooth;
-  }
-
-  .vs-chat-messages::-webkit-scrollbar { width: 3px; }
-  .vs-chat-messages::-webkit-scrollbar-thumb { background: #1E2D42; border-radius: 2px; }
-
-  .vs-msg {
-    max-width: 82%;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    clear: both;
-  }
-
-  .vs-msg.bot {
-    align-self: flex-start;
-    align-items: flex-start;
-  }
-
-  .vs-msg.user {
-    align-self: flex-end;
-    align-items: flex-end;
-  }
-
-  .vs-msg-bubble {
-    padding: 10px 14px;
-    border-radius: 16px;
-    font-size: 0.82rem;
-    line-height: 1.65;
-    font-family: 'Inter', sans-serif;
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    max-width: 100%;
-  }
-
-  .vs-msg.bot .vs-msg-bubble {
-    background: #1A2438;
-    color: #CBD5E1;
-    border: 1px solid #1E2D42;
-    border-bottom-left-radius: 4px;
-    border-top-left-radius: 16px;
-  }
-
-  .vs-msg.user .vs-msg-bubble {
-    background: linear-gradient(135deg, #00D4FF, #7C3AED);
-    color: white;
-    border-bottom-right-radius: 4px;
-    border-top-right-radius: 16px;
-  }
-
-  .vs-msg-time {
-    font-size: 0.62rem;
-    color: #475569;
-    padding: 0 6px;
-    line-height: 1;
-  }
-
-  .vs-msg.user .vs-msg-time {
-    text-align: right;
-  }
-
-  .vs-msg.bot .vs-msg-time {
-    text-align: left;
-  }
-
-  /* Quick replies */
-  .vs-quick-replies {
-    display: flex; flex-wrap: wrap; gap: 6px;
-    padding: 0 14px 8px;
-    flex-shrink: 0;
-  }
-
-  .vs-qr {
-    padding: 6px 12px; border-radius: 100px;
-    background: transparent; color: #00D4FF;
-    border: 1px solid rgba(0,212,255,0.25);
-    font-size: 0.72rem; font-weight: 500;
-    cursor: pointer; transition: all 0.2s;
-    font-family: 'Inter', sans-serif;
-    white-space: nowrap;
-  }
-
-  .vs-qr:hover {
-    background: rgba(0,212,255,0.1);
-    border-color: rgba(0,212,255,0.4);
-  }
-
-  /* Typing indicator */
-  .vs-typing {
-    display: flex; align-items: center; gap: 4px;
-    padding: 10px 13px;
-    background: #1A2438; border: 1px solid #1E2D42;
-    border-radius: 12px; border-bottom-left-radius: 4px;
-    width: fit-content;
-  }
-
-  .vs-typing span {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: #475569;
-    animation: typing-dot 1.2s infinite;
-  }
-  .vs-typing span:nth-child(2) { animation-delay: 0.2s; }
-  .vs-typing span:nth-child(3) { animation-delay: 0.4s; }
-
-  @keyframes typing-dot {
-    0%,60%,100% { transform: translateY(0); opacity:0.4; }
-    30% { transform: translateY(-4px); opacity:1; }
-  }
-
-  /* Input area */
-  .vs-chat-input-wrap {
-    padding: 10px 12px 14px;
-    background: #111827;
-    border-top: 1px solid #1E2D42;
-    flex-shrink: 0;
-  }
-
-  .vs-chat-input-row {
-    display: flex; gap: 8px; align-items: flex-end;
-  }
-
-  .vs-chat-input {
-    flex: 1; background: #1A2438; color: #F1F5F9;
-    border: 1px solid #1E2D42; border-radius: 10px;
-    padding: 9px 12px; font-size: 0.82rem;
-    font-family: 'Inter', sans-serif;
-    resize: none; outline: none; max-height: 80px;
-    line-height: 1.5; transition: border-color 0.2s;
-  }
-
-  .vs-chat-input:focus { border-color: rgba(0,212,255,0.3); }
-  .vs-chat-input::placeholder { color: #475569; }
-
-  .vs-send-btn {
-    width: 36px; height: 36px; border-radius: 9px;
-    background: linear-gradient(135deg, #00D4FF, #7C3AED);
-    border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; transition: all 0.2s;
-    font-size: 15px; color: white;
-  }
-  .vs-send-btn:hover { transform: scale(1.05); }
-  .vs-send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-
-  .vs-chat-footer {
-    text-align: center; font-size: 0.65rem;
-    color: #334155; margin-top: 6px;
-    font-family: 'Inter', sans-serif;
-  }
-
-  .vs-chat-footer a { color: #00D4FF; text-decoration: none; }
-
-  /* Contact card */
-  .vs-contact-card {
-    background: rgba(0,212,255,0.06);
-    border: 1px solid rgba(0,212,255,0.15);
-    border-radius: 10px; padding: 10px 12px;
-    margin-top: 4px;
-  }
-
-  .vs-contact-card-title {
-    font-size: 0.75rem; font-weight: 600;
-    color: #00D4FF; margin-bottom: 4px;
-  }
-
-  .vs-contact-card-email {
-    font-size: 0.78rem; color: #94A3B8;
-  }
-
-  .vs-contact-card-email a {
-    color: #00D4FF; text-decoration: none; font-weight: 500;
-  }
-
-  .vs-contact-card-note {
-    font-size: 0.7rem; color: #475569; margin-top: 4px;
-  }
-
-  @media (max-width: 420px) {
-    #vs-chat-window { width: calc(100vw - 32px); right: 16px; }
-  }
-</style>
-
-<!-- CHAT BUTTON -->
-<button id="vs-chat-btn" onclick="vsToggleChat()" title="Chat with VibeSafe">
-  <span id="vs-chat-btn-icon">🛡️</span>
-  <div id="vs-chat-badge">1</div>
-</button>
-
-<!-- CHAT WINDOW -->
-<div id="vs-chat-window" class="hidden">
-
-  <!-- Header -->
-  <div class="vs-chat-header">
-    <div class="vs-chat-avatar">🛡️</div>
-    <div class="vs-chat-header-info">
-      <div class="vs-chat-header-name">VibeSafe Assistant</div>
-      <div class="vs-chat-header-status">
-        <span class="vs-status-dot"></span>
-        Online — replies instantly
-      </div>
-    </div>
-    <button class="vs-chat-close" onclick="vsToggleChat()">✕</button>
-  </div>
-
-  <!-- Messages -->
-  <div class="vs-chat-messages" id="vsMsgs"></div>
-
-  <!-- Quick replies -->
-  <div class="vs-quick-replies" id="vsQuickReplies">
-    <button class="vs-qr" onclick="vsQuickSend('What does VibeSafe do?')">What does it do?</button>
-    <button class="vs-qr" onclick="vsQuickSend('How much does it cost?')">Pricing</button>
-    <button class="vs-qr" onclick="vsQuickSend('Is my code safe with VibeSafe?')">Is my code safe?</button>
-    <button class="vs-qr" onclick="vsQuickSend('How do I get started?')">Get started</button>
-  </div>
-
-  <!-- Input -->
-  <div class="vs-chat-input-wrap">
-    <div class="vs-chat-input-row">
-      <textarea
-        class="vs-chat-input"
-        id="vsChatInput"
-        placeholder="Ask anything about VibeSafe..."
-        rows="1"
-        onkeydown="vsHandleKey(event)"
-        oninput="vsAutoResize(this)"
-      ></textarea>
-      <button class="vs-send-btn" id="vsSendBtn" onclick="vsSendMessage()">➤</button>
-    </div>
-    <div class="vs-chat-footer">
-      Powered by AI · Need more help? <a href="mailto:contact@vibesafe.info">contact@vibesafe.info</a>
-    </div>
-  </div>
-</div>
-
-<script>
-const VS_SYSTEM_PROMPT = `You are the VibeSafe AI Assistant — a friendly, knowledgeable support agent for VibeSafe (vibesafe.info).
-
-VibeSafe is an AI-powered security scanner that finds and fixes vulnerabilities in AI-generated code. It's built for non-technical founders who build with Lovable, Bolt, Cursor, and Replit.
-
-WHAT VIBESAFE DOES:
-- Scans AI-generated code for security vulnerabilities in under 10 seconds
-- Detects: exposed API keys, SQL injection, XSS, missing awaits, runtime crashes, missing packages
-- Explains every issue in plain English — no coding knowledge needed
-- One-click auto-fix with before/after diff
-- Gives a safety score 0-100 with exportable PDF report
-- Supports: JavaScript, TypeScript, Python, Java, .NET/C#
-
-PRICING:
-- Starter: Free forever (3 scans/month, detection only)
-- Pro: $29/month (unlimited scans, auto-fix, GitHub integration, PDF report)
-- Team: $99/month (5 seats, continuous monitoring, CI/CD integration, Slack alerts)
-
-KEY FACTS:
-- 45% of AI-generated code has security vulnerabilities
-- 63% of vibe coders are non-technical
-- Zero setup required — works in browser, no install
-- Code is scanned in memory and never stored permanently
-- Competitors: Snyk ($98/dev/month), SonarQube ($150+/year) — both built for engineers, not founders
-- Website: vibesafe.info
-- Contact email: contact@vibesafe.info
-
-YOUR BEHAVIOR:
-- Be warm, helpful, and concise — keep answers under 4 sentences unless more detail is truly needed
-- Always end with a clear next step
-- If someone has a complaint, enquiry, or question you can't fully answer: acknowledge it warmly and direct them to contact@vibesafe.info with a response time of 24 hours
-- Never make up features or pricing that aren't listed above
-- Never be dismissive of concerns
-- You are NOT a human — if asked, say you're the VibeSafe AI Assistant
-- For billing issues, account problems, or anything requiring manual action: always direct to contact@vibesafe.info`;
-
-let vsOpen = false;
-let vsMessages = [];
-let vsIsTyping = false;
-
-function vsToggleChat() {
-  vsOpen = !vsOpen;
-  const win = document.getElementById('vs-chat-window');
-  const badge = document.getElementById('vs-chat-badge');
-  if (vsOpen) {
-    win.classList.remove('hidden');
-    badge.style.display = 'none';
-    if (vsMessages.length === 0) vsShowWelcome();
-    setTimeout(() => document.getElementById('vsChatInput').focus(), 300);
-  } else {
-    win.classList.add('hidden');
-  }
-}
-
-function vsShowWelcome() {
-  const now = vsTime();
-  vsAddBotMsg("👋 Hi! I'm the VibeSafe Assistant.\n\nI can answer questions about how VibeSafe works, pricing, security, and getting started.\n\nFor complaints, enquiries, or anything that needs a human — email us at contact@vibesafe.info and we'll reply within 24 hours.", now);
-}
-
-function vsAddBotMsg(text, time) {
-  vsMessages.push({ role: 'bot', text, time });
-  vsRender();
-}
-
-function vsAddUserMsg(text, time) {
-  vsMessages.push({ role: 'user', text, time });
-  vsRender();
-}
-
-function vsRender() {
-  const container = document.getElementById('vsMsgs');
-  container.innerHTML = '';
-  vsMessages.forEach(msg => {
-    const div = document.createElement('div');
-    div.className = `vs-msg ${msg.role}`;
-
-    const bubble = document.createElement('div');
-    bubble.className = 'vs-msg-bubble';
-
-    if (msg.isContact) {
-      bubble.innerHTML = msg.text;
-    } else {
-      // Convert newlines to proper line breaks for clean formatting
-      bubble.innerHTML = msg.text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/
-/g, '<br>')
-        .replace(/•/g, '<span style="color:#00D4FF">•</span>');
-    }
-
-    const time = document.createElement('div');
-    time.className = 'vs-msg-time';
-    time.textContent = msg.time;
-
-    div.appendChild(bubble);
-    div.appendChild(time);
-    container.appendChild(div);
-  });
-  container.scrollTop = container.scrollHeight;
-}
-
-function vsShowTyping() {
-  const container = document.getElementById('vsMsgs');
-  const typing = document.createElement('div');
-  typing.className = 'vs-msg bot';
-  typing.id = 'vsTypingIndicator';
-  typing.innerHTML = `<div class="vs-typing"><span></span><span></span><span></span></div>`;
-  container.appendChild(typing);
-  container.scrollTop = container.scrollHeight;
-}
-
-function vsHideTyping() {
-  const el = document.getElementById('vsTypingIndicator');
-  if (el) el.remove();
-}
-
-function vsTime() {
-  const now = new Date();
-  return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-}
-
-async function vsGetAIResponse(userMsg) {
-  const history = vsMessages
-    .filter(m => m.role !== 'typing')
-    .map(m => ({
-      role: m.role === 'bot' ? 'assistant' : 'user',
-      content: m.text
-    }));
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        system: VS_SYSTEM_PROMPT,
-        messages: history
-      })
-    });
-
-    const data = await res.json();
-
-    if (data.content && data.content[0] && data.content[0].text) {
-      return data.content[0].text;
-    }
-
-    return getFallbackResponse(userMsg);
-  } catch (err) {
-    return getFallbackResponse(userMsg);
-  }
-}
-
-function getFallbackResponse(msg) {
-  const m = msg.toLowerCase();
-  if (m.includes('price') || m.includes('cost') || m.includes('plan') || m.includes('free')) {
-    return "VibeSafe has three plans:\n\n• Free — 3 scans/month, forever free\n• Pro — $29/month, unlimited scans + auto-fix\n• Team — $99/month, 5 seats + monitoring\n\nStart free at vibesafe.info — no credit card needed.";
-  }
-  if (m.includes('safe') || m.includes('store') || m.includes('privacy') || m.includes('data')) {
-    return "Your code is scanned in memory and never stored permanently. We don't retain your source code after the scan, and we never train our models on your code. Your privacy is our priority.";
-  }
-  if (m.includes('start') || m.includes('how') || m.includes('use')) {
-    return "Getting started is simple:\n\n1. Go to vibesafe.info\n2. Paste your AI-generated code\n3. Click Run Scan\n4. Get results in 10 seconds\n\nNo setup, no install, no coding knowledge needed.";
-  }
-  if (m.includes('complaint') || m.includes('problem') || m.includes('issue') || m.includes('wrong') || m.includes('bug')) {
-    return "I'm sorry you're having an issue. Please email us at contact@vibesafe.info with the details and we'll get back to you within 24 hours. We take every complaint seriously.";
-  }
-  return "Thanks for your question! For the most accurate answer, please email us at contact@vibesafe.info and we'll reply within 24 hours. 🛡️";
-}
-
-async function vsSendMessage() {
-  const input = document.getElementById('vsChatInput');
-  const msg = input.value.trim();
-  if (!msg || vsIsTyping) return;
-
-  input.value = '';
-  vsAutoResize(input);
-  document.getElementById('vsQuickReplies').style.display = 'none';
-
-  const time = vsTime();
-  vsAddUserMsg(msg, time);
-
-  vsIsTyping = true;
-  document.getElementById('vsSendBtn').disabled = true;
-  vsShowTyping();
-
-  const reply = await vsGetAIResponse(msg);
-  vsHideTyping();
-
-  const needsContact = reply.toLowerCase().includes('contact@vibesafe.info');
-  if (needsContact) {
-    vsMessages.push({
-      role: 'bot',
-      text: reply + `<div class="vs-contact-card"><div class="vs-contact-card-title">📧 Contact us directly</div><div class="vs-contact-card-email"><a href="mailto:contact@vibesafe.info">contact@vibesafe.info</a></div><div class="vs-contact-card-note">We reply within 24 hours</div></div>`,
-      time: vsTime(),
-      isContact: true
-    });
-    vsRender();
-  } else {
-    vsAddBotMsg(reply, vsTime());
-  }
-
-  vsIsTyping = false;
-  document.getElementById('vsSendBtn').disabled = false;
-  document.getElementById('vsChatInput').focus();
-}
-
-function vsQuickSend(text) {
-  document.getElementById('vsChatInput').value = text;
-  vsSendMessage();
-}
-
-function vsHandleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    vsSendMessage();
-  }
-}
-
-function vsAutoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 80) + 'px';
-}
-</script>
-<!-- END VIBESAFE CHAT WIDGET -->
-
-</body>
-</html>
-<script>
-// ── FORMSPREE WAITLIST HANDLER ──
-async function handleWaitlistSubmit(e) {
-  e.preventDefault();
-  const btn   = document.getElementById('waitlistBtn');
-  const email = document.getElementById('waitlistEmail').value;
-  const form  = document.getElementById('waitlistForm');
-
-  btn.textContent = 'Joining...';
-  btn.disabled = true;
-  btn.style.opacity = '0.8';
-
-  try {
-    const res = await fetch(form.action, {
-      method: 'POST',
-      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, source: 'landing-page-cta' })
-    });
-
-    if (res.ok) {
-      showSuccess();
-    } else {
-      throw new Error('fail');
-    }
-  } catch (err) {
-    // Fallback — show success anyway (handles demo / unconfigured Formspree)
-    showSuccess();
-  }
-}
-
-function showSuccess() {
-  document.getElementById('waitlist-default').style.display = 'none';
-  document.getElementById('waitlist-success').style.display = 'block';
-  // Bump social proof counter
-  document.querySelectorAll('.social-text strong').forEach(el => {
-    el.textContent = '801+ founders';
-  });
-}
-</script>
-<script>
-// Sign in button — show coming soon toast
-document.querySelectorAll('a[href="#"]').forEach(el => {
-  if (el.textContent.trim() === 'Sign in') {
-    el.addEventListener('click', function(e) {
-      e.preventDefault();
-      // Show a friendly coming soon message
-      const toast = document.createElement('div');
-      toast.style.cssText = `
-        position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
-        background:#1A2438; border:1px solid rgba(0,212,255,0.25);
-        color:#F1F5F9; padding:12px 24px; border-radius:10px;
-        font-size:0.85rem; font-weight:500; z-index:9999;
-        box-shadow:0 8px 24px rgba(0,0,0,0.4);
-        display:flex; align-items:center; gap:10px;
-        animation: fadeUp 0.3s ease;
-      `;
-      toast.innerHTML = '🔐 <span>Sign in is coming soon — <strong>join the waitlist</strong> for early access</span>';
-      document.body.appendChild(toast);
-      setTimeout(() => { toast.style.opacity='0'; toast.style.transition='opacity 0.3s'; setTimeout(()=>toast.remove(),300); }, 3000);
-    });
-  }
 });
 </script>
+</body>
+</html>
+
+
