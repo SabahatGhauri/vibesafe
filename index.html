@@ -231,6 +231,28 @@
   .social-text { font-size: 0.85rem; color: var(--text3); }
   .social-text strong { color: var(--text2); }
 
+  .trust-bar {
+    display: flex; align-items: center; justify-content: center;
+    gap: 14px; flex-wrap: wrap; margin-top: 28px;
+    padding: 14px 20px; border-radius: 12px;
+    background: rgba(17,24,39,0.5);
+    border: 1px solid var(--border);
+    max-width: 640px;
+  }
+  .trust-item {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 0.82rem; font-weight: 500; color: var(--text2);
+    white-space: nowrap;
+  }
+  .trust-icon { font-size: 14px; }
+  .trust-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--border2); }
+  @media (max-width: 640px) {
+    .trust-bar { gap: 10px; padding: 12px 14px; }
+    .trust-item { font-size: 0.75rem; }
+    .trust-dot { display: none; }
+  }
+
+
   /* ── SCAN DEMO WIDGET ── */
   .scan-demo {
     background: var(--surface);
@@ -954,6 +976,17 @@
           <div class="avatar">TL</div>
         </div>
         <span class="social-text"><strong>800+ founders</strong> already on the waitlist</span>
+      </div>
+
+      <!-- TRUST BAR -->
+      <div class="trust-bar">
+        <div class="trust-item"><span class="trust-icon">🔒</span> Code never stored</div>
+        <div class="trust-dot"></div>
+        <div class="trust-item"><span class="trust-icon">⚡</span> Scans in 10 seconds</div>
+        <div class="trust-dot"></div>
+        <div class="trust-item"><span class="trust-icon">💬</span> Plain-English fixes</div>
+        <div class="trust-dot"></div>
+        <div class="trust-item"><span class="trust-icon">✓</span> No card required</div>
       </div>
     </div>
 
