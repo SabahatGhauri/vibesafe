@@ -910,7 +910,7 @@
   </ul>
   <div class="nav-cta">
     <a href="#" class="btn btn-ghost">Sign in</a>
-    <a href="#waitlist" class="btn btn-primary" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'}); return false;">Get early access</a>
+    <a href="/dashboard.html" class="btn btn-primary">Start free scan</a>
   </div>
 </nav>
 
@@ -939,7 +939,7 @@
       </p>
 
       <div class="hero-actions">
-        <a href="#waitlist" class="btn btn-primary btn-lg">
+        <a href="/dashboard.html" class="btn btn-primary btn-lg">
           Start free scan
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
@@ -1427,7 +1427,7 @@
         <ul class="footer-links">
           <li><a href="#waitlist">About</a></li>
           <li><a href="#waitlist">Blog — coming soon</a></li>
-          <li><a href="https://twitter.com" target="_blank">Twitter / X</a></li>
+          <li><a href="https://twitter.com/VibeSafe202" target="_blank">Twitter / X @VibeSafe202</a></li>
           <li><a href="mailto:hello@vibesafe.info">Contact</a></li>
         </ul>
       </div>
@@ -1435,9 +1435,9 @@
     <div class="footer-bottom">
       <span class="footer-copy">© 2026 VibeSafe. All rights reserved.</span>
       <ul class="footer-legal">
-        <li><a href="#waitlist">Privacy</a></li>
-        <li><a href="#waitlist">Terms</a></li>
-        <li><a href="#waitlist">Security</a></li>
+        <li><a href="/legal.html">Privacy Policy</a></li>
+        <li><a href="/legal.html">Terms of Service</a></li>
+        <li><a href="/legal.html">Cookie Policy</a></li>
       </ul>
     </div>
   </div>
@@ -1769,6 +1769,306 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(runDemo, 1200);
 });
 </script>
+<style>
+  /* ── CHAT WIDGET STYLES ── */
+  #vs-chat-btn {
+    position: fixed; bottom: 28px; right: 28px; z-index: 9998;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: linear-gradient(135deg, #00D4FF, #7C3AED);
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(0,212,255,0.35);
+    transition: all 0.25s; font-size: 22px;
+  }
+  #vs-chat-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 28px rgba(0,212,255,0.5);
+  }
+
+  #vs-chat-badge {
+    position: absolute; top: -4px; right: -4px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #EF4444; border: 2px solid #080C18;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: white;
+    font-family: 'Inter', sans-serif;
+  }
+
+  #vs-chat-window {
+    position: fixed; bottom: 96px; right: 28px; z-index: 9999;
+    width: 360px; height: 520px;
+    background: #0F1624;
+    border: 1px solid #1E2D42;
+    border-radius: 18px;
+    display: flex; flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,212,255,0.05);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    transform-origin: bottom right;
+  }
+
+  #vs-chat-window.hidden {
+    opacity: 0; transform: scale(0.85) translateY(10px);
+    pointer-events: none;
+  }
+
+  .vs-chat-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 16px;
+    background: #111827;
+    border-bottom: 1px solid #1E2D42;
+    flex-shrink: 0;
+  }
+
+  .vs-chat-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, #00D4FF, #7C3AED);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+
+  .vs-chat-header-info { flex: 1; }
+
+  .vs-chat-header-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.88rem; font-weight: 600; color: #F1F5F9;
+    line-height: 1.2;
+  }
+
+  .vs-chat-header-status {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 0.7rem; color: #64748B;
+  }
+
+  .vs-status-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #10B981;
+    animation: pulse-g 2s infinite;
+  }
+
+  @keyframes pulse-g {
+    0%,100% { opacity:1; } 50% { opacity:0.4; }
+  }
+
+  .vs-chat-close {
+    background: none; border: none; cursor: pointer;
+    color: #64748B; font-size: 18px; padding: 4px;
+    transition: color 0.2s; line-height: 1;
+  }
+  .vs-chat-close:hover { color: #F1F5F9; }
+
+  .vs-chat-messages {
+    flex: 1; overflow-y: auto;
+    padding: 14px 14px 6px;
+    display: flex; flex-direction: column; gap: 10px;
+    scroll-behavior: smooth;
+  }
+
+  .vs-chat-messages::-webkit-scrollbar { width: 3px; }
+  .vs-chat-messages::-webkit-scrollbar-thumb { background: #1E2D42; border-radius: 2px; }
+
+  .vs-msg {
+    max-width: 86%; display: flex; flex-direction: column; gap: 3px;
+  }
+
+  .vs-msg.bot { align-self: flex-start; }
+  .vs-msg.user { align-self: flex-end; }
+
+  .vs-msg-bubble {
+    padding: 10px 13px; border-radius: 12px;
+    font-size: 0.82rem; line-height: 1.6;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .vs-msg.bot .vs-msg-bubble {
+    background: #1A2438; color: #CBD5E1;
+    border: 1px solid #1E2D42;
+    border-bottom-left-radius: 4px;
+  }
+
+  .vs-msg.user .vs-msg-bubble {
+    background: linear-gradient(135deg, #00D4FF, #7C3AED);
+    color: white; border-bottom-right-radius: 4px;
+  }
+
+  .vs-msg-time {
+    font-size: 0.65rem; color: #475569;
+    padding: 0 4px;
+  }
+
+  .vs-msg.user .vs-msg-time { text-align: right; }
+
+  /* Quick replies */
+  .vs-quick-replies {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    padding: 0 14px 8px;
+    flex-shrink: 0;
+  }
+
+  .vs-qr {
+    padding: 6px 12px; border-radius: 100px;
+    background: transparent; color: #00D4FF;
+    border: 1px solid rgba(0,212,255,0.25);
+    font-size: 0.72rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+  }
+
+  .vs-qr:hover {
+    background: rgba(0,212,255,0.1);
+    border-color: rgba(0,212,255,0.4);
+  }
+
+  /* Typing indicator */
+  .vs-typing {
+    display: flex; align-items: center; gap: 4px;
+    padding: 10px 13px;
+    background: #1A2438; border: 1px solid #1E2D42;
+    border-radius: 12px; border-bottom-left-radius: 4px;
+    width: fit-content;
+  }
+
+  .vs-typing span {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #475569;
+    animation: typing-dot 1.2s infinite;
+  }
+  .vs-typing span:nth-child(2) { animation-delay: 0.2s; }
+  .vs-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes typing-dot {
+    0%,60%,100% { transform: translateY(0); opacity:0.4; }
+    30% { transform: translateY(-4px); opacity:1; }
+  }
+
+  /* Input area */
+  .vs-chat-input-wrap {
+    padding: 10px 12px 14px;
+    background: #111827;
+    border-top: 1px solid #1E2D42;
+    flex-shrink: 0;
+  }
+
+  .vs-chat-input-row {
+    display: flex; gap: 8px; align-items: flex-end;
+  }
+
+  .vs-chat-input {
+    flex: 1; background: #1A2438; color: #F1F5F9;
+    border: 1px solid #1E2D42; border-radius: 10px;
+    padding: 9px 12px; font-size: 0.82rem;
+    font-family: 'Inter', sans-serif;
+    resize: none; outline: none; max-height: 80px;
+    line-height: 1.5; transition: border-color 0.2s;
+  }
+
+  .vs-chat-input:focus { border-color: rgba(0,212,255,0.3); }
+  .vs-chat-input::placeholder { color: #475569; }
+
+  .vs-send-btn {
+    width: 36px; height: 36px; border-radius: 9px;
+    background: linear-gradient(135deg, #00D4FF, #7C3AED);
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.2s;
+    font-size: 15px; color: white;
+  }
+  .vs-send-btn:hover { transform: scale(1.05); }
+  .vs-send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .vs-chat-footer {
+    text-align: center; font-size: 0.65rem;
+    color: #334155; margin-top: 6px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .vs-chat-footer a { color: #00D4FF; text-decoration: none; }
+
+  /* Contact card */
+  .vs-contact-card {
+    background: rgba(0,212,255,0.06);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 10px; padding: 10px 12px;
+    margin-top: 4px;
+  }
+
+  .vs-contact-card-title {
+    font-size: 0.75rem; font-weight: 600;
+    color: #00D4FF; margin-bottom: 4px;
+  }
+
+  .vs-contact-card-email {
+    font-size: 0.78rem; color: #94A3B8;
+  }
+
+  .vs-contact-card-email a {
+    color: #00D4FF; text-decoration: none; font-weight: 500;
+  }
+
+  .vs-contact-card-note {
+    font-size: 0.7rem; color: #475569; margin-top: 4px;
+  }
+
+  @media (max-width: 420px) {
+    #vs-chat-window { width: calc(100vw - 32px); right: 16px; }
+  }
+</style>
+
+
+<!-- CHAT BUTTON -->
+<button id="vs-chat-btn" onclick="vsToggleChat()" title="Chat with VibeSafe">
+  <span id="vs-chat-btn-icon">🛡️</span>
+  <div id="vs-chat-badge">1</div>
+</button>
+
+<!-- CHAT WINDOW -->
+<div id="vs-chat-window" class="hidden">
+
+  <!-- Header -->
+  <div class="vs-chat-header">
+    <div class="vs-chat-avatar">🛡️</div>
+    <div class="vs-chat-header-info">
+      <div class="vs-chat-header-name">VibeSafe Assistant</div>
+      <div class="vs-chat-header-status">
+        <span class="vs-status-dot"></span>
+        Online — replies instantly
+      </div>
+    </div>
+    <button class="vs-chat-close" onclick="vsToggleChat()">✕</button>
+  </div>
+
+  <!-- Messages -->
+  <div class="vs-chat-messages" id="vsMsgs"></div>
+
+  <!-- Quick replies -->
+  <div class="vs-quick-replies" id="vsQuickReplies">
+    <button class="vs-qr" onclick="vsQuickSend('What does VibeSafe do?')">What does it do?</button>
+    <button class="vs-qr" onclick="vsQuickSend('How much does it cost?')">Pricing</button>
+    <button class="vs-qr" onclick="vsQuickSend('Is my code safe with VibeSafe?')">Is my code safe?</button>
+    <button class="vs-qr" onclick="vsQuickSend('How do I get started?')">Get started</button>
+  </div>
+
+  <!-- Input -->
+  <div class="vs-chat-input-wrap">
+    <div class="vs-chat-input-row">
+      <textarea
+        class="vs-chat-input"
+        id="vsChatInput"
+        placeholder="Ask anything about VibeSafe..."
+        rows="1"
+        onkeydown="vsHandleKey(event)"
+        oninput="vsAutoResize(this)"
+      ></textarea>
+      <button class="vs-send-btn" id="vsSendBtn" onclick="vsSendMessage()">➤</button>
+    </div>
+    <div class="vs-chat-footer">
+      Powered by AI · Need more help? <a href="mailto:contact@vibesafe.info">contact@vibesafe.info</a>
+    </div>
+  </div>
+</div>
+
+
 </body>
 </html>
 
