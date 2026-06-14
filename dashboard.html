@@ -875,12 +875,17 @@ body {
       <div class="code-area-wrap" id="urlTab" style="display:none; align-items:center; justify-content:center; flex-direction:column; gap:14px; padding:32px;">
         <div style="font-size:2.5rem">🔗</div>
         <div style="font-weight:600">Scan from GitHub URL</div>
-        <div style="display:flex; gap:8px; width:100%; max-width:440px;">
-          <input type="text" placeholder="https://github.com/user/repo/blob/main/app.js"
-            style="flex:1; padding:9px 12px; background:var(--surface2); border:1px solid var(--border2); border-radius:7px; color:var(--text); font-size:0.82rem; outline:none; font-family:'Inter',sans-serif;"
-          >
-          <button class="btn btn-primary" onclick="showToast('GitHub integration available in Pro','info')">Fetch</button>
+        <div style="font-size:0.8rem; color:var(--text3); text-align:center; max-width:420px">
+          Paste a link to a specific file in a public GitHub repo. VibeSafe fetches it (read-only) and scans it instantly.
         </div>
+        <div style="display:flex; gap:8px; width:100%; max-width:440px;">
+          <input type="text" id="githubUrlInput" placeholder="https://github.com/user/repo/blob/main/app.js"
+            style="flex:1; padding:9px 12px; background:var(--surface2); border:1px solid var(--border2); border-radius:7px; color:var(--text); font-size:0.82rem; outline:none; font-family:'Inter',sans-serif;"
+            onkeydown="if(event.key==='Enter')scanFromGitHub()"
+          >
+          <button class="btn btn-primary" id="githubFetchBtn" onclick="scanFromGitHub()">Scan</button>
+        </div>
+        <div style="font-size:0.72rem; color:var(--text3)">Example: github.com/expressjs/express/blob/master/lib/router/route.js</div>
       </div>
 
       <div class="editor-footer">
@@ -971,6 +976,9 @@ body {
       <div class="results-footer" id="resultsFooter" style="display:none">
         <button class="fix-all-btn" id="fixAllBtn" onclick="fixAll()">
           ⚡ Auto-fix all issues
+        </button>
+        <button class="fix-all-btn" id="copyFixesBtn" onclick="copyFixesForAI()" style="margin-top:8px;background:var(--surface2);color:var(--cyan);border:1px solid rgba(0,212,255,0.3);box-shadow:none">
+          📋 Copy all fixes for Cursor / Lovable
         </button>
       </div>
 
@@ -1073,7 +1081,7 @@ const ISSUES_DATA = {
   js: [
     { id:1, sev:'critical', type:'Secret exposed', title:'API key hardcoded in source', line:'Line 5', desc:'The value "sk_live_4xKp9mQ2rT8wN3vL" is a live API key committed directly to your code. Anyone with repo access — or who views source — can extract and abuse it.', before:'const API_KEY = "sk_live_4xKp9mQ2rT8wN3vL"', after:'const API_KEY = process.env.API_KEY', fix:'Move to .env file and add .env to .gitignore.' },
     { id:2, sev:'critical', type:'SQL injection', title:'Unsanitised input in SQL query', line:'Line 11', desc:'Directly concatenating req.params.id into a SQL query allows an attacker to inject arbitrary SQL — they could dump your entire database or delete it.', before:'db.query("SELECT * FROM users WHERE id = " + req.params.id)', after:'db.query("SELECT * FROM users WHERE id = ?", [req.params.id])', fix:'Use parameterised queries — never string-concatenate user input into SQL.' },
-    { id:3, sev:'critical', type:'SQL injection', title:'Template literal SQL on login route', line:'Line 16', desc:'Using a template literal to build a SQL query from user-supplied email is equally dangerous. This is the most common attack vector for authentication bypasses.', before:'db.query(`SELECT * FROM users WHERE email=\'${email}\'')`', after:'db.query("SELECT * FROM users WHERE email = ?", [email])', fix:'Parameterise all queries.' },
+    { id:3, sev:'critical', type:'SQL injection', title:'Template literal SQL on login route', line:'Line 16', desc:'Using a template literal to build a SQL query from user-supplied email is equally dangerous. This is the most common attack vector for authentication bypasses.', before:'db.query SELECT FROM users WHERE email equals email variable', after:'db.query("SELECT * FROM users WHERE email = ?", [email])', fix:'Parameterise all queries.' },
     { id:4, sev:'warning', type:'Missing await', title:'Async DB call without await', line:'Line 11', desc:'db.query returns a Promise. Without await, user is always a Promise object — res.json(user) will send "{}" instead of real data, silently breaking your endpoint.', before:'const user = db.query(...)', after:'const user = await db.query(...)', fix:'Add await before every async call.' },
     { id:5, sev:'warning', type:'Weak comparison', title:'Password compared with == not ===', line:'Line 19', desc:'Using == allows type coercion. In JavaScript, "0" == false is true. Always use === for security comparisons.', before:'if (result.password == password)', after:'if (result.password === password)', fix:'Use strict equality for all comparisons.' },
   ],
@@ -1086,10 +1094,10 @@ const ISSUES_DATA = {
   ],
   ts: [
     { id:1, sev:'critical', type:'Secret exposed', title:'JWT secret hardcoded in source', line:'Line 5', desc:'JWT_SECRET is committed to your code. Anyone with repo access can forge valid authentication tokens and log in as any user.', before:'const JWT_SECRET = "hardcoded_jwt_secret_do_not_share"', after:'const JWT_SECRET = process.env.JWT_SECRET!', fix:'Move to environment variable.' },
-    { id:2, sev:'critical', type:'SQL injection', title:'Raw SQL with interpolated value', line:'Line 18', desc:'Using Prisma\'s $executeRaw with a template literal does not prevent injection. Use $executeRawUnsafe only when absolutely necessary and sanitise inputs.', before:'await prisma.$executeRaw`DELETE FROM users WHERE id = ${id}`', after:'await prisma.user.delete({ where: { id } })', fix:'Use Prisma\'s type-safe query methods instead of raw SQL.' },
+    { id:2, sev:'critical', type:'SQL injection', title:'Raw SQL with interpolated value', line:'Line 18', desc:'Using Prisma executeRaw with a template literal does not prevent injection. Use parameterised methods only.', before:'await prisma.executeRaw DELETE FROM users WHERE id', after:'await prisma.user.delete({ where: { id } })', fix:'Use Prisma type-safe query methods instead of raw SQL.' },
     { id:3, sev:'critical', type:'Missing await', title:'Prisma call missing await', line:'Line 9', desc:'prisma.user.findUnique returns a Promise. Without await, user is always a pending Promise — your function will return undefined silently.', before:'const user = prisma.user.findUnique(...)', after:'const user = await prisma.user.findUnique(...)', fix:'Add await before all Prisma calls.' },
     { id:4, sev:'warning', type:'Missing await', title:'fetch() and .json() both missing await', line:'Line 23', desc:'Both fetch() and .json() are async. Without await on both, res is a Promise and data will always be undefined.', before:'const res = fetch(url)\nconst data = res.json()', after:'const res = await fetch(url)\nconst data = await res.json()', fix:'Await every async operation in the chain.' },
-    { id:5, sev:'warning', type:'Unsafe type', title:'Parameter typed as any', line:'Line 17', desc:'Using any for the id parameter disables TypeScript\'s type checking. This is how bugs that TypeScript would catch get through to production.', before:'async function deleteUser(id: any)', after:'async function deleteUser(id: string)', fix:'Use the correct specific type.' },
+    { id:5, sev:'warning', type:'Unsafe type', title:'Parameter typed as any', line:'Line 17', desc:'Using any for the id parameter disables TypeScript type checking. This is how bugs that TypeScript would catch reach production.', before:'async function deleteUser(id: any)', after:'async function deleteUser(id: string)', fix:'Use the correct specific type.' },
   ],
 };
 
@@ -1154,6 +1162,78 @@ function resetResults() {
 // Calls the secure Vercel Edge Function — your API key never touches the browser
 
 const SCAN_API_URL = 'https://vibesafe-api.vercel.app/api/scan'; // Relative URL — same domain as your Vercel deployment
+
+async function scanFromGitHub() {
+  var urlInput = document.getElementById('githubUrlInput');
+  var url = urlInput.value.trim();
+  if (!url) { showToast('Please paste a GitHub file URL', 'error'); return; }
+  if (url.indexOf('github.com') === -1 && url.indexOf('githubusercontent.com') === -1) {
+    showToast('Please paste a valid GitHub URL', 'error');
+    return;
+  }
+
+  var btn = document.getElementById('githubFetchBtn');
+  btn.disabled = true;
+  btn.textContent = 'Fetching...';
+
+  // Switch to editor view and show scanning state
+  switchEditorTab(document.querySelector('.etab'), 'editor');
+
+  document.getElementById('scoreHeader').style.display = 'none';
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('issuesList').style.display = 'none';
+  document.getElementById('resultsFooter').style.display = 'none';
+  document.getElementById('scanningState').style.display = 'flex';
+  issues = [];
+
+  var stepLabel = document.getElementById('scanStepLabel');
+  var subLabel = document.getElementById('scanSubLabel');
+  if (stepLabel) stepLabel.textContent = 'Fetching from GitHub...';
+  if (subLabel) subLabel.textContent = url;
+  document.getElementById('scanProgressFill').style.width = '20%';
+  document.getElementById('scanPct').textContent = '20%';
+
+  try {
+    var response = await fetch(SCAN_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ githubUrl: url })
+    });
+
+    if (!response.ok) {
+      var err = await response.json().catch(function() { return {}; });
+      throw new Error(err.error || 'Could not scan that URL.');
+    }
+
+    document.getElementById('scanProgressFill').style.width = '90%';
+    document.getElementById('scanPct').textContent = '90%';
+
+    var result = await response.json();
+
+    issues = (result.issues || []).map(function(issue, idx) {
+      return {
+        id: idx + 1, sev: issue.severity || 'warning', type: issue.type || 'Issue',
+        title: issue.title || 'Unknown issue', line: issue.line || '', desc: issue.description || '',
+        impact: issue.impact || '', before: issue.before || '', after: issue.after || '',
+        fix: issue.fix_explanation || 'Apply the suggested fix.', fixed: false
+      };
+    });
+    window.vsPassedChecks = result.passed || [];
+    window.vsSummary = result.summary || '';
+
+    document.getElementById('scanProgressFill').style.width = '100%';
+    document.getElementById('scanPct').textContent = '100%';
+    setTimeout(function() { showResults(result.score); }, 300);
+    showToast('Scanned from GitHub successfully', 'success');
+  } catch (err) {
+    document.getElementById('scanningState').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'flex';
+    showToast(err.message || 'GitHub scan failed', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Scan';
+  }
+}
 
 async function startScan() {
   const code = document.getElementById('codeEditor').value.trim();
@@ -1456,6 +1536,39 @@ function showToast(msg, type='info') {
 // ── INIT ──
 updateLineNumbers();
 // Ready — paste your code and click Run Scan
+
+// ── AI-READY FIX EXPORT ──
+function copyFixesForAI() {
+  if (!issues || issues.length === 0) {
+    showToast('No fixes to copy', 'error');
+    return;
+  }
+  var lang = LANG_NAMES[document.getElementById('langSelect').value] || 'code';
+  var out = 'I used an AI security scanner (VibeSafe) on my ' + lang + ' code. ';
+  out += 'Please apply these ' + issues.length + ' security fixes to my code:\n\n';
+  issues.forEach(function(issue, idx) {
+    out += (idx + 1) + '. [' + (issue.sev || 'issue').toUpperCase() + '] ' + (issue.type || '') + ' — ' + (issue.title || '') + '\n';
+    if (issue.line) out += '   Location: ' + issue.line + '\n';
+    if (issue.desc) out += '   Problem: ' + issue.desc + '\n';
+    if (issue.before) out += '   Current code: ' + issue.before + '\n';
+    if (issue.after) out += '   Fix to: ' + issue.after + '\n';
+    out += '\n';
+  });
+  out += 'Please apply all of these fixes carefully and explain any that need my input.';
+
+  navigator.clipboard.writeText(out).then(function() {
+    showToast('Fixes copied! Paste into Cursor, Lovable, or Bolt', 'success');
+  }).catch(function() {
+    // Fallback for older browsers
+    var ta = document.createElement('textarea');
+    ta.value = out;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Fixes copied to clipboard!', 'success');
+  });
+}
 </script>
 </body>
 </html>
