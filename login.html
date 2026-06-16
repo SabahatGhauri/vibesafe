@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VibeSafe — Sign In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080C18;--bg2:#0D1220;--surface:#111827;--surface2:#1A2438;
+  --border:#1E2D42;--border2:#253650;
+  --cyan:#00D4FF;--cyan-dim:rgba(0,212,255,0.10);
+  --violet:#7C3AED;--green:#10B981;--green-dim:rgba(16,185,129,0.11);
+  --red:#EF4444;--red-dim:rgba(239,68,68,0.11);
+  --text:#F1F5F9;--text2:#94A3B8;--text3:#64748B;
+}
+body{
+  font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:20px;position:relative;overflow:hidden;
+}
+.bg-grid{
+  position:fixed;inset:0;
+  background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);
+  background-size:50px 50px;
+  mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black,transparent);
+  pointer-events:none;
+}
+.bg-glow{
+  position:fixed;width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(124,58,237,0.12),transparent 70%);
+  top:-150px;right:-100px;pointer-events:none;
+}
+.bg-glow2{
+  position:fixed;width:400px;height:400px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,212,255,0.1),transparent 70%);
+  bottom:-120px;left:-80px;pointer-events:none;
+}
+
+.auth-card{
+  width:100%;max-width:420px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:36px 32px;
+  position:relative;z-index:10;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+
+.auth-logo{
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  margin-bottom:8px;text-decoration:none;
+}
+.logo-icon{
+  width:34px;height:34px;border-radius:8px;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  display:flex;align-items:center;justify-content:center;font-size:17px;
+}
+.logo-text{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.35rem;color:var(--text)}
+
+.auth-title{
+  text-align:center;font-family:'Space Grotesk',sans-serif;
+  font-size:1.4rem;font-weight:600;margin:18px 0 4px;
+}
+.auth-sub{text-align:center;font-size:0.85rem;color:var(--text3);margin-bottom:26px}
+
+.auth-tabs{
+  display:flex;gap:4px;background:var(--bg2);
+  border-radius:10px;padding:4px;margin-bottom:24px;
+}
+.auth-tab{
+  flex:1;padding:9px;border-radius:7px;border:none;background:none;
+  font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:600;
+  color:var(--text3);cursor:pointer;transition:all 0.2s;
+}
+.auth-tab.active{background:var(--surface2);color:var(--cyan)}
+
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:0.8rem;font-weight:500;color:var(--text2);margin-bottom:6px}
+.form-input{
+  width:100%;padding:11px 14px;
+  background:var(--bg2);border:1px solid var(--border2);border-radius:9px;
+  color:var(--text);font-size:0.88rem;font-family:'Inter',sans-serif;
+  outline:none;transition:border-color 0.2s;
+}
+.form-input:focus{border-color:rgba(0,212,255,0.4)}
+.form-input::placeholder{color:var(--text3)}
+
+.auth-btn{
+  width:100%;padding:12px;margin-top:6px;
+  background:var(--cyan);color:var(--bg);
+  border:none;border-radius:9px;
+  font-family:'Inter',sans-serif;font-size:0.9rem;font-weight:700;
+  cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.auth-btn:hover{background:#33DCFF;box-shadow:0 4px 16px rgba(0,212,255,0.3)}
+.auth-btn:disabled{opacity:0.6;cursor:not-allowed}
+
+.auth-msg{
+  padding:10px 14px;border-radius:8px;font-size:0.82rem;
+  margin-bottom:16px;display:none;line-height:1.5;
+}
+.auth-msg.error{background:var(--red-dim);border:1px solid rgba(239,68,68,0.2);color:#FCA5A5;display:block}
+.auth-msg.success{background:var(--green-dim);border:1px solid rgba(16,185,129,0.2);color:#6EE7B7;display:block}
+
+.auth-divider{
+  display:flex;align-items:center;gap:12px;margin:22px 0;
+  color:var(--text3);font-size:0.75rem;
+}
+.auth-divider::before,.auth-divider::after{
+  content:'';flex:1;height:1px;background:var(--border);
+}
+
+.auth-footer{text-align:center;font-size:0.8rem;color:var(--text3);margin-top:20px}
+.auth-footer a{color:var(--cyan);text-decoration:none}
+
+.back-home{
+  position:absolute;top:24px;left:24px;z-index:20;
+  font-size:0.82rem;color:var(--text3);text-decoration:none;
+  display:flex;align-items:center;gap:6px;transition:color 0.2s;
+}
+.back-home:hover{color:var(--cyan)}
+
+.spinner{
+  width:16px;height:16px;border:2px solid rgba(8,12,24,0.3);
+  border-top-color:var(--bg);border-radius:50%;
+  animation:spin 0.6s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.trust-row{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  margin-top:18px;font-size:0.72rem;color:var(--text3);
+}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+<div class="bg-glow2"></div>
+
+<a href="/" class="back-home">← Back to home</a>
+
+<div class="auth-card">
+  <a href="/" class="auth-logo">
+    <span class="logo-icon">🛡️</span>
+    <span class="logo-text">VibeSafe</span>
+  </a>
+
+  <div class="auth-title" id="authTitle">Welcome back</div>
+  <div class="auth-sub" id="authSub">Sign in to access your scans</div>
+
+  <div class="auth-tabs">
+    <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Sign in</button>
+    <button class="auth-tab" id="tabSignup" onclick="switchTab('signup')">Sign up</button>
+  </div>
+
+  <div class="auth-msg" id="authMsg"></div>
+
+  <!-- Name field (signup only) -->
+  <div class="form-group" id="nameGroup" style="display:none">
+    <label class="form-label">Name</label>
+    <input type="text" class="form-input" id="nameInput" placeholder="Your name">
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Email</label>
+    <input type="email" class="form-input" id="emailInput" placeholder="you@example.com" autocomplete="email">
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Password</label>
+    <input type="password" class="form-input" id="passwordInput" placeholder="••••••••" autocomplete="current-password">
+  </div>
+
+  <button class="auth-btn" id="authBtn" onclick="handleAuth()">
+    <span id="authBtnText">Sign in</span>
+  </button>
+
+  <div class="auth-footer" id="authFooter">
+    Don't have an account? <a href="#" onclick="switchTab('signup');return false;">Sign up free</a>
+  </div>
+
+  <div class="trust-row">
+    🔒 Secured by industry-standard encryption
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ── SUPABASE CONFIG ──
+const SUPABASE_URL = 'https://uxsmmpujxbzdgxxburxr.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_hgCpN6tsYqEiCkyvJm06qQ_1Ddlvznn';
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let mode = 'login';
+
+// Check if already logged in
+(async function() {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (session) {
+    window.location.href = '/dashboard.html';
+  }
+})();
+
+function switchTab(newMode) {
+  mode = newMode;
+  document.getElementById('tabLogin').classList.toggle('active', mode === 'login');
+  document.getElementById('tabSignup').classList.toggle('active', mode === 'signup');
+  document.getElementById('nameGroup').style.display = mode === 'signup' ? 'block' : 'none';
+  document.getElementById('authTitle').textContent = mode === 'login' ? 'Welcome back' : 'Create your account';
+  document.getElementById('authSub').textContent = mode === 'login' ? 'Sign in to access your scans' : 'Start scanning your code for free';
+  document.getElementById('authBtnText').textContent = mode === 'login' ? 'Sign in' : 'Create account';
+  document.getElementById('passwordInput').setAttribute('autocomplete', mode === 'login' ? 'current-password' : 'new-password');
+  document.getElementById('authFooter').innerHTML = mode === 'login'
+    ? 'Don\'t have an account? <a href="#" onclick="switchTab(\'signup\');return false;">Sign up free</a>'
+    : 'Already have an account? <a href="#" onclick="switchTab(\'login\');return false;">Sign in</a>';
+  hideMsg();
+}
+
+function showMsg(text, type) {
+  const msg = document.getElementById('authMsg');
+  msg.textContent = text;
+  msg.className = 'auth-msg ' + type;
+}
+
+function hideMsg() {
+  document.getElementById('authMsg').className = 'auth-msg';
+}
+
+async function handleAuth() {
+  const email = document.getElementById('emailInput').value.trim();
+  const password = document.getElementById('passwordInput').value;
+  const name = document.getElementById('nameInput').value.trim();
+  const btn = document.getElementById('authBtn');
+  const btnText = document.getElementById('authBtnText');
+
+  // Validation
+  if (!email || !password) {
+    showMsg('Please enter your email and password.', 'error');
+    return;
+  }
+  if (password.length < 6) {
+    showMsg('Password must be at least 6 characters.', 'error');
+    return;
+  }
+  if (mode === 'signup' && !name) {
+    showMsg('Please enter your name.', 'error');
+    return;
+  }
+
+  // Loading state
+  btn.disabled = true;
+  btnText.innerHTML = '<span class="spinner"></span>';
+  hideMsg();
+
+  try {
+    if (mode === 'signup') {
+      const { data, error } = await supabaseClient.auth.signUp({
+        email: email,
+        password: password,
+        options: { data: { full_name: name } }
+      });
+      if (error) throw error;
+
+      if (data.user && !data.session) {
+        showMsg('Check your email to confirm your account, then sign in.', 'success');
+        btn.disabled = false;
+        btnText.textContent = 'Create account';
+        setTimeout(function() { switchTab('login'); }, 3000);
+      } else {
+        showMsg('Account created! Redirecting...', 'success');
+        setTimeout(function() { window.location.href = '/dashboard.html'; }, 1000);
+      }
+    } else {
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
+      if (error) throw error;
+      showMsg('Signed in! Redirecting...', 'success');
+      setTimeout(function() { window.location.href = '/dashboard.html'; }, 800);
+    }
+  } catch (err) {
+    let msg = err.message || 'Something went wrong. Please try again.';
+    if (msg.includes('Invalid login')) msg = 'Incorrect email or password.';
+    if (msg.includes('already registered')) msg = 'This email is already registered. Try signing in.';
+    showMsg(msg, 'error');
+    btn.disabled = false;
+    btnText.textContent = mode === 'login' ? 'Sign in' : 'Create account';
+  }
+}
+
+// Enter key submits
+document.getElementById('passwordInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') handleAuth();
+});
+document.getElementById('emailInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') handleAuth();
+});
+</script>
+</body>
+</html>

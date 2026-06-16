@@ -730,6 +730,54 @@ body {
 </style>
 </head>
 <body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ── SUPABASE AUTH ──
+const SUPABASE_URL = 'https://uxsmmpujxbzdgxxburxr.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_hgCpN6tsYqEiCkyvJm06qQ_1Ddlvznn';
+const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let currentUser = null;
+
+// Require login — redirect to login page if not authenticated
+(async function() {
+  const { data: { session } } = await sbClient.auth.getSession();
+  if (!session) {
+    window.location.href = '/login.html';
+    return;
+  }
+  currentUser = session.user;
+  // Show user email and initials
+  const email = currentUser.email || '';
+  const name = (currentUser.user_metadata && currentUser.user_metadata.full_name) || email;
+  const initials = name.split(' ').map(function(p){return p[0];}).join('').slice(0,2).toUpperCase() || email.slice(0,2).toUpperCase();
+  document.addEventListener('DOMContentLoaded', function() {
+    var av = document.getElementById('userAvatar');
+    var em = document.getElementById('userEmail');
+    if (av) av.textContent = initials;
+    if (em) em.textContent = email;
+  });
+})();
+
+function toggleUserMenu() {
+  var menu = document.getElementById('userMenu');
+  menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+}
+
+async function handleLogout() {
+  await sbClient.auth.signOut();
+  window.location.href = '/login.html';
+}
+
+// Close menu when clicking outside
+document.addEventListener('click', function(e) {
+  var menu = document.getElementById('userMenu');
+  var avatar = document.getElementById('userAvatar');
+  if (menu && avatar && !avatar.contains(e.target) && !menu.contains(e.target)) {
+    menu.style.display = 'none';
+  }
+});
+</script>
+
 
 <!-- TOP NAV -->
 <div class="topnav">
@@ -748,7 +796,18 @@ body {
       <span class="badge-pulse"></span>
       All systems operational
     </div>
-    <button class="avatar-btn">YO</button>
+    <div style="position:relative">
+      <button class="avatar-btn" id="userAvatar" onclick="toggleUserMenu()" title="Account">YO</button>
+      <div id="userMenu" style="display:none;position:absolute;top:42px;right:0;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:8px;min-width:200px;box-shadow:0 8px 24px rgba(0,0,0,0.4);z-index:100">
+        <div style="padding:8px 12px;border-bottom:1px solid var(--border);margin-bottom:6px">
+          <div style="font-size:0.72rem;color:var(--text3)">Signed in as</div>
+          <div style="font-size:0.82rem;color:var(--text);font-weight:500;word-break:break-all" id="userEmail">loading...</div>
+        </div>
+        <button onclick="handleLogout()" style="width:100%;text-align:left;padding:8px 12px;background:none;border:none;color:var(--text2);font-size:0.82rem;cursor:pointer;border-radius:6px;font-family:'Inter',sans-serif" onmouseover="this.style.background='var(--surface3)'" onmouseout="this.style.background='none'">
+          Sign out
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 
