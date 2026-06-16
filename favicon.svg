@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+<defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#7C3AED"/>
+</linearGradient></defs>
+<rect width="100" height="100" rx="22" fill="#080C18"/>
+<path d="M50 18 L74 28 L74 52 Q74 70 50 80 Q26 70 26 52 L26 28 Z" fill="url(#g)"/>
+<polyline points="38,50 46,60 64,38" fill="none" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
