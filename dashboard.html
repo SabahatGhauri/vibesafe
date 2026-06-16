@@ -755,8 +755,23 @@ let currentUser = null;
     var em = document.getElementById('userEmail');
     if (av) av.textContent = initials;
     if (em) em.textContent = email;
+    // Load scan history once logged in
+    if (typeof loadScanHistory === 'function') loadScanHistory();
   });
 })();
+
+function toggleHistory() {
+  var list = document.getElementById('historyList');
+  var chev = document.getElementById('histChevron');
+  if (list.style.display === 'none') {
+    list.style.display = 'block';
+    if (chev) chev.style.transform = 'rotate(90deg)';
+    if (typeof loadScanHistory === 'function') loadScanHistory();
+  } else {
+    list.style.display = 'none';
+    if (chev) chev.style.transform = 'rotate(0deg)';
+  }
+}
 
 function toggleUserMenu() {
   var menu = document.getElementById('userMenu');
@@ -822,9 +837,13 @@ document.addEventListener('click', function(e) {
         <span class="si-icon">🔍</span> New scan
         <span class="si-new">NEW</span>
       </button>
-      <button class="sidebar-item" onclick="setPage('history')">
+      <button class="sidebar-item" onclick="toggleHistory()">
         <span class="si-icon">📋</span> Scan history
+        <span class="si-chevron" id="histChevron" style="margin-left:auto;font-size:10px;transition:transform 0.2s">▶</span>
       </button>
+      <div class="history-section" id="historyList" style="display:none;max-height:280px">
+        <div style="padding:12px;font-size:0.78rem;color:var(--text3);text-align:center">Loading...</div>
+      </div>
       <button class="sidebar-item" onclick="setPage('monitor')">
         <span class="si-icon">📡</span> Monitoring
       </button>
@@ -1460,6 +1479,75 @@ function showResults(apiScore) {
   scanDone = true;
 
   showToast('Scan complete — ' + (issues.length === 0 ? 'no issues found!' : issues.length + ' issues found'), issues.length === 0 ? 'success' : 'info');
+
+  // Save this scan to history
+  saveScanToHistory(apiScore);
+}
+
+// ── SCAN HISTORY (Supabase) ──
+async function saveScanToHistory(score) {
+  if (!currentUser || !sbClient) return;
+  try {
+    var lang = LANG_NAMES[document.getElementById('langSelect').value] || 'code';
+    await sbClient.from('scans').insert({
+      user_id: currentUser.id,
+      language: lang,
+      score: Math.round(score || 0),
+      issues_count: issues.length,
+      summary: window.vsSummary || '',
+      results: { issues: issues, passed: window.vsPassedChecks || [], summary: window.vsSummary || '' }
+    });
+    loadScanHistory();
+  } catch (err) {
+    console.log('Could not save scan:', err);
+  }
+}
+
+async function loadScanHistory() {
+  if (!currentUser || !sbClient) return;
+  try {
+    var res = await sbClient
+      .from('scans')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(20);
+    if (res.error) throw res.error;
+    renderScanHistory(res.data || []);
+  } catch (err) {
+    console.log('Could not load history:', err);
+  }
+}
+
+function renderScanHistory(scans) {
+  var container = document.getElementById('historyList');
+  if (!container) return;
+  if (scans.length === 0) {
+    container.innerHTML = '<div style="padding:12px;font-size:0.78rem;color:var(--text3);text-align:center">No scans yet. Run your first scan!</div>';
+    return;
+  }
+  container.innerHTML = '';
+  scans.forEach(function(scan) {
+    var cls = scan.score >= 75 ? 'good' : scan.score >= 50 ? 'warn' : 'bad';
+    var date = new Date(scan.created_at).toLocaleDateString([], { month: 'short', day: 'numeric' });
+    var time = new Date(scan.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    var item = document.createElement('div');
+    item.className = 'history-item';
+    item.onclick = function() { loadPastScan(scan); };
+    item.innerHTML =
+      '<div class="hi-top"><span class="hi-name">' + scan.language + ' scan</span>' +
+      '<span class="hi-score ' + cls + '">' + scan.score + '</span></div>' +
+      '<div class="hi-meta">' + date + ' at ' + time + ' · ' + scan.issues_count + ' issue' + (scan.issues_count !== 1 ? 's' : '') + '</div>';
+    container.appendChild(item);
+  });
+}
+
+function loadPastScan(scan) {
+  if (!scan.results) return;
+  issues = (scan.results.issues || []).map(function(i) { return Object.assign({}, i, { fixed: false }); });
+  window.vsSummary = scan.results.summary || '';
+  window.vsPassedChecks = scan.results.passed || [];
+  showResults(scan.score);
+  showToast('Loaded scan from ' + new Date(scan.created_at).toLocaleDateString(), 'info');
 }
 
 function buildIssueCard(issue, idx) {
