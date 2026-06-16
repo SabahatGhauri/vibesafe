@@ -1255,8 +1255,20 @@
     <div class="pricing-header">
       <p class="section-eyebrow">Pricing</p>
       <h2 class="section-title">Start free. Pay when you ship.</h2>
-      <p class="section-sub">No credit card needed to start. Usage-based — you only pay for what you scan.</p>
+      <p class="section-sub">No credit card needed to start. Cancel anytime. Pro includes a 15-day free trial.</p>
     </div>
+
+    <!-- Billing toggle -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:40px">
+      <span id="monthly-lbl" style="font-size:0.9rem;font-weight:600;color:var(--text)">Monthly</span>
+      <div style="position:relative;width:46px;height:26px;cursor:pointer" onclick="toggleBilling()">
+        <div id="toggle-track" style="position:absolute;inset:0;background:var(--border2);border-radius:13px;transition:background 0.3s"></div>
+        <div id="toggle-thumb" style="position:absolute;top:3px;left:3px;width:20px;height:20px;background:white;border-radius:50%;transition:transform 0.3s;z-index:1"></div>
+      </div>
+      <span id="annual-lbl" style="font-size:0.9rem;font-weight:500;color:var(--text3)">Annual</span>
+      <span style="background:var(--green-dim);color:var(--green);border:1px solid rgba(16,185,129,0.2);font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:100px">Save 25%</span>
+    </div>
+
     <div class="pricing-grid">
       <!-- Free -->
       <div class="pricing-card">
@@ -1267,16 +1279,19 @@
           <span class="price-num">0</span>
           <span class="price-period">/ month</span>
         </div>
+        <div style="height:28px"></div>
         <div class="plan-divider"></div>
         <ul class="plan-features">
-          <li class="plan-feature"><span class="feat-check">✓</span> 3 scans per month</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> 5 scans per month</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Security vulnerability scan</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Plain-English explanations</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Basic safety score</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Runtime error detection</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Basic safety score (0–100)</li>
           <li class="plan-feature"><span class="feat-x">–</span> Auto-fix</li>
-          <li class="plan-feature"><span class="feat-x">–</span> Continuous monitoring</li>
+          <li class="plan-feature"><span class="feat-x">–</span> PDF safety report</li>
+          <li class="plan-feature"><span class="feat-x">–</span> GitHub integration</li>
         </ul>
-        <button class="plan-btn plan-btn-outline" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Get started free</button>
+        <button class="plan-btn plan-btn-outline" onclick="window.location.href='/login.html'">Get started free</button>
       </div>
       <!-- Pro -->
       <div class="pricing-card popular">
@@ -1285,8 +1300,11 @@
         <div class="plan-desc">For founders shipping their product</div>
         <div class="plan-price">
           <span class="price-dollar">$</span>
-          <span class="price-num">29</span>
-          <span class="price-period">/ month</span>
+          <span class="price-num" id="pro-price">29</span>
+          <span class="price-period" id="pro-period">/ month</span>
+        </div>
+        <div style="margin-bottom:14px">
+          <span style="background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.2);font-size:0.72rem;font-weight:700;padding:4px 12px;border-radius:100px">15-day free trial — no card needed</span>
         </div>
         <div class="plan-divider"></div>
         <ul class="plan-features">
@@ -1294,32 +1312,45 @@
           <li class="plan-feature"><span class="feat-check">✓</span> Full security scan suite</li>
           <li class="plan-feature"><span class="feat-check">✓</span> One-click auto-fix</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Dependency auto-installer</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Detailed safety report (PDF)</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> PDF safety report</li>
           <li class="plan-feature"><span class="feat-check">✓</span> GitHub integration</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Vercel &amp; Netlify integration</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Code quality analysis</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Fix history &amp; audit log</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Email support (24h)</li>
         </ul>
-        <button class="plan-btn plan-btn-primary" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Join waitlist — $29/mo</button>
+        <button class="plan-btn plan-btn-primary" id="pro-btn" onclick="startCheckout('pro')">Start 15-day free trial</button>
       </div>
       <!-- Team -->
       <div class="pricing-card">
         <div class="plan-name">Team</div>
-        <div class="plan-desc">For small teams building together</div>
+        <div class="plan-desc">For small teams shipping together</div>
         <div class="plan-price">
           <span class="price-dollar">$</span>
-          <span class="price-num">99</span>
-          <span class="price-period">/ month</span>
+          <span class="price-num" id="team-price">99</span>
+          <span class="price-period" id="team-period">/ month</span>
         </div>
+        <div style="height:30px"></div>
         <div class="plan-divider"></div>
         <ul class="plan-features">
           <li class="plan-feature"><span class="feat-check">✓</span> Everything in Pro</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Up to 5 team members</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Up to 10 team members</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Continuous monitoring</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Slack & email alerts</li>
           <li class="plan-feature"><span class="feat-check">✓</span> CI/CD pipeline integration</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Priority support</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Slack &amp; email alerts</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> OWASP Top 10 compliance report</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Custom scan rules</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Role-based access control</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> API access</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Priority support (4h)</li>
         </ul>
-        <button class="plan-btn plan-btn-outline" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Join waitlist — Team</button>
+        <button class="plan-btn plan-btn-outline" onclick="startCheckout('team')">Start team trial</button>
       </div>
     </div>
+
+    <p style="text-align:center;font-size:0.78rem;color:var(--text3);margin-top:20px" id="billing-note">
+      All prices in USD · Cancel anytime · Annual plans billed upfront
+    </p>
   </div>
 </section>
 
@@ -1412,9 +1443,9 @@
           In the meantime — share VibeSafe with a founder who needs it.
         </p>
         <div style="display:flex; gap:12px; justify-content:center; margin-top:28px; flex-wrap:wrap;">
-          <a href="https://twitter.com/intent/tweet?text=Just+joined+the+waitlist+for+%40VibeSafe+%E2%80%94+a+safety+net+for+AI-generated+code.+If+you%27re+vibe+coding%2C+you+need+this.+vibesafe.info&url=https://vibesafe.info"
+          <a href="https://www.facebook.com/sharer/sharer.php?u=https://vibesafe.info"
             target="_blank" class="btn btn-primary" style="text-decoration:none">
-            Share on X / Twitter
+            Share on Facebook
           </a>
           <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://vibesafe.info"
             target="_blank" class="btn btn-outline" style="text-decoration:none">
@@ -1461,8 +1492,8 @@
         <ul class="footer-links">
           <li><a href="#waitlist">About</a></li>
           <li><a href="#waitlist">Blog — coming soon</a></li>
-          <li><a href="https://twitter.com/VibeSafe202" target="_blank">Twitter / X @VibeSafe202</a></li>
-          <li><a href="mailto:hello@vibesafe.info">Contact</a></li>
+          <li><a href="https://www.facebook.com/share/1GG1uc3Yu6/" target="_blank">Facebook</a></li>
+          <li><a href="mailto:contact@vibesafe.info">Contact us</a></li>
         </ul>
       </div>
     </div>
@@ -1798,6 +1829,27 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   setTimeout(runDemo, 1200);
 });
+
+// ── STRIPE CHECKOUT (Payment Links) ──
+var STRIPE_LINKS = {
+  pro_monthly:  'https://buy.stripe.com/test_8x25kFdvx9Zi0rifNN9EI00',
+  pro_annual:   'https://buy.stripe.com/test_dRm5kF0IL9Zigqg6dd9EI01',
+  team_monthly: 'https://buy.stripe.com/test_4gMdRbdvx3AU6PG1WX9EI02',
+  team_annual:  'https://buy.stripe.com/test_8x228tezBgnG1vmfNN9EI03'
+};
+
+function startCheckout(plan) {
+  // vsIsAnnual is set by the billing toggle (true = annual, false = monthly)
+  var billing = (typeof vsIsAnnual !== 'undefined' && vsIsAnnual) ? 'annual' : 'monthly';
+  var key = plan + '_' + billing;
+  var link = STRIPE_LINKS[key];
+  if (link) {
+    window.location.href = link;
+  } else {
+    window.location.href = '/login.html';
+  }
+}
+
 </script>
 <style>
   /* ── CHAT WIDGET STYLES ── */
