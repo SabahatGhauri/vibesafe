@@ -362,66 +362,84 @@ body {
 
 /* score header */
 .score-header {
-  padding: 16px 18px 14px;
+  padding: 22px 18px 16px;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
 
-.score-row {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 12px;
+.gauge-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  margin-bottom: 16px;
 }
 
-.score-label {
-  font-size: 0.78rem; font-weight: 600; color: var(--text3);
-  text-transform: uppercase; letter-spacing: 0.06em;
+.gauge {
+  position: relative; width: 140px; height: 140px;
 }
 
-.score-value {
+.gauge-svg {
+  width: 140px; height: 140px;
+  transform: rotate(-90deg);
+}
+
+.gauge-bg {
+  fill: none;
+  stroke: var(--surface2);
+  stroke-width: 9;
+}
+
+.gauge-fill {
+  fill: none;
+  stroke: var(--cyan);
+  stroke-width: 9;
+  stroke-linecap: round;
+  stroke-dasharray: 327;
+  stroke-dashoffset: 327;
+  transition: stroke-dashoffset 1s cubic-bezier(0.4,0,0.2,1), stroke 0.4s;
+}
+
+.gauge-fill.good { stroke: var(--green); }
+.gauge-fill.warn { stroke: var(--amber); }
+.gauge-fill.bad  { stroke: var(--red); }
+
+.gauge-center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+
+.gauge-num {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.8rem; font-weight: 700; line-height: 1;
+  font-size: 2.4rem; font-weight: 700; line-height: 1;
+  color: var(--text);
 }
 
-.score-value.good { color: var(--green); }
-.score-value.warn { color: var(--amber); }
-.score-value.bad  { color: var(--red); }
-
-.score-track {
-  height: 8px; background: var(--surface2);
-  border-radius: 100px; overflow: hidden;
-  border: 1px solid var(--border);
+.gauge-max {
+  font-size: 0.75rem; color: var(--text3); margin-top: 2px;
 }
 
-.score-fill {
-  height: 100%; border-radius: 100px;
-  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
-  position: relative;
+.gauge-verdict {
+  margin-top: 12px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem; font-weight: 600;
 }
-
-.score-fill::after {
-  content: ''; position: absolute;
-  right: 0; top: 0; bottom: 0; width: 20px;
-  background: inherit; filter: brightness(1.5) blur(4px);
-}
-
-.score-fill.good { background: linear-gradient(90deg, #059669, var(--green)); }
-.score-fill.warn { background: linear-gradient(90deg, #D97706, var(--amber)); }
-.score-fill.bad  { background: linear-gradient(90deg, #DC2626, var(--red)); }
+.gauge-verdict.good { color: var(--green); }
+.gauge-verdict.warn { color: var(--amber); }
+.gauge-verdict.bad  { color: var(--red); }
 
 .score-stats {
-  display: flex; gap: 8px; margin-top: 12px;
+  display: flex; gap: 8px; margin-top: 4px;
 }
 
 .sstat {
-  flex: 1; padding: 8px 10px; border-radius: 7px;
+  flex: 1; padding: 10px; border-radius: 9px;
   text-align: center;
 }
 
 .sstat-num {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.2rem; font-weight: 700; line-height: 1;
-  margin-bottom: 3px;
+  font-size: 1.3rem; font-weight: 700; line-height: 1;
+  margin-bottom: 4px;
 }
 
 .sstat-label { font-size: 0.68rem; color: var(--text3); }
@@ -990,12 +1008,18 @@ document.addEventListener('click', function(e) {
 
       <!-- Score header (hidden until scan) -->
       <div class="score-header" id="scoreHeader" style="display:none">
-        <div class="score-row">
-          <div class="score-label">Safety score</div>
-          <div class="score-value bad" id="scoreValue">--</div>
-        </div>
-        <div class="score-track">
-          <div class="score-fill bad" id="scoreFill" style="width:0%"></div>
+        <div class="gauge-wrap">
+          <div class="gauge">
+            <svg viewBox="0 0 120 120" class="gauge-svg">
+              <circle class="gauge-bg" cx="60" cy="60" r="52"></circle>
+              <circle class="gauge-fill" id="gaugeFill" cx="60" cy="60" r="52"></circle>
+            </svg>
+            <div class="gauge-center">
+              <div class="gauge-num" id="scoreValue">--</div>
+              <div class="gauge-max">/100</div>
+            </div>
+          </div>
+          <div class="gauge-verdict" id="scoreVerdict">Scanning</div>
         </div>
         <div class="score-stats">
           <div class="sstat err">
@@ -1422,14 +1446,23 @@ function showResults(apiScore) {
 
   document.getElementById('scanningState').style.display = 'none';
 
-  const scoreEl = document.getElementById('scoreValue');
-  const fillEl  = document.getElementById('scoreFill');
-  scoreEl.textContent = score + ' / 100';
-  fillEl.style.width = score + '%';
-
   const cls = score >= 75 ? 'good' : score >= 50 ? 'warn' : 'bad';
-  scoreEl.className = 'score-value ' + cls;
-  fillEl.className  = 'score-fill ' + cls;
+  const verdict = score >= 75 ? 'Good' : score >= 50 ? 'Needs work' : 'At risk';
+
+  // Animate circular gauge
+  const scoreEl = document.getElementById('scoreValue');
+  const gaugeFill = document.getElementById('gaugeFill');
+  const verdictEl = document.getElementById('scoreVerdict');
+  if (scoreEl) scoreEl.textContent = score;
+  if (verdictEl) { verdictEl.textContent = verdict; verdictEl.className = 'gauge-verdict ' + cls; }
+  if (gaugeFill) {
+    gaugeFill.className.baseVal = 'gauge-fill ' + cls;
+    var circumference = 327; // 2 * PI * 52
+    var offset = circumference - (score / 100) * circumference;
+    // reset then animate
+    gaugeFill.style.strokeDashoffset = circumference;
+    setTimeout(function() { gaugeFill.style.strokeDashoffset = offset; }, 100);
+  }
 
   document.getElementById('critCount').textContent = criticals;
   document.getElementById('warnCount').textContent = warnings;
@@ -1638,10 +1671,14 @@ function updateScore() {
   const score = Math.min(100, Math.max(10, 100 - crits*18 - warns*8));
   const cls   = score >= 75 ? 'good' : score >= 50 ? 'warn' : 'bad';
 
-  document.getElementById('scoreValue').textContent = score + ' / 100';
-  document.getElementById('scoreValue').className = 'score-value ' + cls;
-  document.getElementById('scoreFill').style.width = score + '%';
-  document.getElementById('scoreFill').className = 'score-fill ' + cls;
+  var sv = document.getElementById('scoreValue');
+  if (sv) sv.textContent = score;
+  var gf = document.getElementById('gaugeFill');
+  if (gf) {
+    gf.className.baseVal = 'gauge-fill ' + cls;
+    var c = 327, off = c - (score/100)*c;
+    gf.style.strokeDashoffset = off;
+  }
 
   document.getElementById('critCount').textContent = crits;
   document.getElementById('warnCount').textContent = warns;
