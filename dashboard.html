@@ -47,10 +47,14 @@ body {
 
 body {
   font-family: 'Inter', sans-serif;
-  background: var(--bg);
   color: var(--text);
   display: flex;
   flex-direction: column;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(0, 212, 255, 0.18), transparent 32%),
+    radial-gradient(circle at 85% 20%, rgba(124, 58, 237, 0.22), transparent 34%),
+    radial-gradient(circle at 50% 100%, rgba(0, 80, 255, 0.15), transparent 38%),
+    #050816;
 }
 
 /* ── TOP NAV ── */
@@ -768,6 +772,134 @@ body {
 .hi-score.warn { background: var(--amber-dim); color: var(--amber); }
 .hi-score.bad  { background: var(--red-dim);   color: var(--red); }
 .hi-meta { font-size: 0.7rem; color: var(--text3); }
+
+/* ===== MOCKUP NEON RESTYLE (CSS ONLY) ===== */
+
+/* Step 2: Glassy panels */
+.topnav,
+.sidebar,
+.panel-header,
+.score-header,
+.results-footer {
+  background: rgba(8, 14, 32, 0.72);
+  backdrop-filter: blur(18px);
+  border-color: rgba(0, 212, 255, 0.16);
+}
+.editor-panel,
+.results-panel,
+.plan-card,
+.code-area-wrap {
+  background: rgba(10, 18, 42, 0.72);
+  border-color: rgba(0, 212, 255, 0.16);
+  box-shadow: 0 0 35px rgba(0, 140, 255, 0.08);
+}
+
+/* Step 3: Neon borders + spacing */
+.editor-panel,
+.results-panel {
+  border: 1px solid rgba(0, 212, 255, 0.18);
+  border-radius: 22px;
+  overflow: hidden;
+}
+.main {
+  padding: 18px;
+  gap: 18px;
+}
+
+/* Step 4: Gradient buttons */
+.btn-primary,
+.fix-all-btn,
+.upgrade-btn {
+  background: linear-gradient(135deg, #00D4FF, #2563EB 45%, #7C3AED);
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 0 22px rgba(0, 212, 255, 0.35);
+}
+.btn-primary:hover,
+.fix-all-btn:hover,
+.upgrade-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 32px rgba(124, 58, 237, 0.45);
+}
+
+/* Step 5: Premium sidebar */
+.sidebar {
+  width: 240px;
+  background: rgba(6, 12, 30, 0.78);
+  backdrop-filter: blur(20px);
+}
+.sidebar-item {
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 11px 12px;
+}
+.sidebar-item:hover {
+  background: rgba(0, 212, 255, 0.08);
+  border-color: rgba(0, 212, 255, 0.18);
+}
+.sidebar-item.active {
+  background: linear-gradient(135deg, rgba(0,212,255,0.16), rgba(124,58,237,0.14));
+  color: #ffffff;
+  border-color: rgba(0, 212, 255, 0.28);
+  box-shadow: inset 0 0 18px rgba(0, 212, 255, 0.06);
+}
+
+/* Step 6: Code editor area */
+.code-area-wrap {
+  background:
+    linear-gradient(180deg, rgba(6, 12, 28, 0.96), rgba(8, 15, 35, 0.96));
+}
+.code-editor {
+  color: #EAF3FF;
+  font-size: 0.84rem;
+}
+.line-numbers {
+  background: rgba(4, 9, 22, 0.88);
+  color: rgba(148, 163, 184, 0.55);
+}
+
+/* Step 7: Score gauge + result cards */
+.score-header {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(0, 212, 255, 0.12), transparent 55%),
+    rgba(9, 17, 38, 0.8);
+}
+.gauge {
+  filter: drop-shadow(0 0 22px rgba(0, 212, 255, 0.18));
+}
+.gauge-fill {
+  stroke: url(#gradient);
+}
+.issue-card {
+  background: rgba(12, 22, 48, 0.78) !important;
+  border: 1px solid rgba(0, 212, 255, 0.12);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.22);
+}
+.issue-card:hover {
+  border-color: rgba(0, 212, 255, 0.32);
+  box-shadow: 0 0 26px rgba(0, 212, 255, 0.12);
+}
+
+/* Step 8: Glow grid lines */
+.app-body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.035) 1px, transparent 1px);
+  background-size: 70px 70px;
+  mask-image: radial-gradient(circle at center, black, transparent 75%);
+  z-index: 0;
+}
+.topnav,
+.sidebar,
+.main {
+  position: relative;
+  z-index: 1;
+}
+
 </style>
 </head>
 <body>
@@ -1033,6 +1165,12 @@ document.addEventListener('click', function(e) {
         <div class="gauge-wrap">
           <div class="gauge">
             <svg viewBox="0 0 120 120" class="gauge-svg">
+              <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#00D4FF"/>
+                  <stop offset="100%" stop-color="#7C3AED"/>
+                </linearGradient>
+              </defs>
               <circle class="gauge-bg" cx="60" cy="60" r="52"></circle>
               <circle class="gauge-fill" id="gaugeFill" cx="60" cy="60" r="52"></circle>
             </svg>
