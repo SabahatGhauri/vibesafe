@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VibeSafe — Purpose, Differentiation & FAQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #080C18; --bg2: #0D1220; --surface: #111827;
+  --surface2: #1A2438; --border: #1E2D42; --border2: #253650;
+  --cyan: #00D4FF; --cyan-dim: rgba(0,212,255,0.10);
+  --violet: #7C3AED; --violet-dim: rgba(124,58,237,0.14);
+  --green: #10B981; --green-dim: rgba(16,185,129,0.11);
+  --amber: #F59E0B; --amber-dim: rgba(245,158,11,0.11);
+  --red: #EF4444; --red-dim: rgba(239,68,68,0.11);
+  --text: #F1F5F9; --text2: #94A3B8; --text3: #64748B;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 5%; height: 56px;
+  background: rgba(8,12,24,0.9); backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.logo { display: flex; align-items: center; gap: 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.1rem; text-decoration: none; color: var(--text); }
+.logo-icon { width: 26px; height: 26px; border-radius: 6px; background: linear-gradient(135deg, var(--cyan), var(--violet)); display: flex; align-items: center; justify-content: center; font-size: 13px; }
+.nav-links { display: flex; gap: 24px; list-style: none; }
+.nav-links a { color: var(--text3); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+.nav-links a:hover { color: var(--cyan); }
+
+/* HERO */
+.hero { padding: 100px 5% 60px; text-align: center; position: relative; overflow: hidden; }
+.hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px); background-size: 50px 50px; mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent); pointer-events: none; }
+.hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px; border-radius: 100px; background: var(--cyan-dim); border: 1px solid rgba(0,212,255,0.2); font-size: 0.75rem; font-weight: 600; color: var(--cyan); margin-bottom: 20px; }
+.hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 16px; }
+.hero h1 span { background: linear-gradient(135deg, var(--cyan), var(--violet)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero p { font-size: 1.05rem; color: var(--text2); max-width: 600px; margin: 0 auto; }
+
+/* SECTION */
+section { padding: 70px 5%; max-width: 1100px; margin: 0 auto; }
+.section-eyebrow { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan); margin-bottom: 10px; }
+.section-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.6rem, 2.5vw, 2.2rem); font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 14px; }
+.section-sub { font-size: 1rem; color: var(--text2); line-height: 1.7; max-width: 640px; }
+.divider { height: 1px; background: var(--border); margin: 0 5%; }
+
+/* PURPOSE CARDS */
+.purpose-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+.purpose-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; position: relative; overflow: hidden; transition: all 0.2s; }
+.purpose-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; opacity: 0; transition: opacity 0.2s; }
+.purpose-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+.purpose-card:hover::before { opacity: 1; }
+.pc-cyan::before { background: linear-gradient(90deg, var(--cyan), transparent); }
+.pc-violet::before { background: linear-gradient(90deg, var(--violet), transparent); }
+.pc-green::before { background: linear-gradient(90deg, var(--green), transparent); }
+.purpose-icon { font-size: 28px; margin-bottom: 14px; }
+.purpose-title { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+.purpose-desc { font-size: 0.84rem; color: var(--text2); line-height: 1.6; }
+
+/* COMPARISON TABLE */
+.comparison-wrap { margin-top: 40px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: var(--surface2); }
+th { padding: 14px 18px; text-align: left; font-size: 0.78rem; font-weight: 600; color: var(--text3); letter-spacing: 0.05em; text-transform: uppercase; border-bottom: 1px solid var(--border2); }
+th:first-child { border-radius: 10px 0 0 0; }
+th:last-child { border-radius: 0 10px 0 0; }
+th.highlight { color: var(--cyan); background: rgba(0,212,255,0.08); }
+td { padding: 14px 18px; font-size: 0.85rem; color: var(--text2); border-bottom: 1px solid var(--border); }
+td:first-child { font-weight: 500; color: var(--text); }
+td.highlight { background: rgba(0,212,255,0.04); color: var(--text); }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--surface); }
+tr:hover td.highlight { background: rgba(0,212,255,0.08); }
+.check { color: var(--green); font-weight: 700; }
+.cross { color: var(--red); }
+.partial { color: var(--amber); }
+
+/* FAQ */
+.faq-list { margin-top: 40px; display: flex; flex-direction: column; gap: 12px; }
+.faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: border-color 0.2s; }
+.faq-item:hover { border-color: var(--border2); }
+.faq-item.open { border-color: rgba(0,212,255,0.2); }
+.faq-q { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 20px; cursor: pointer; }
+.faq-q-text { font-size: 0.92rem; font-weight: 600; color: var(--text); }
+.faq-tag { flex-shrink: 0; padding: 3px 10px; border-radius: 100px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+.tag-general { background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(0,212,255,0.2); }
+.tag-security { background: var(--red-dim); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+.tag-pricing { background: var(--green-dim); color: var(--green); border: 1px solid rgba(16,185,129,0.2); }
+.tag-technical { background: var(--violet-dim); color: #A78BFA; border: 1px solid rgba(124,58,237,0.2); }
+.tag-trust { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
+.faq-chevron { color: var(--text3); transition: transform 0.25s; font-size: 12px; flex-shrink: 0; }
+.faq-item.open .faq-chevron { transform: rotate(90deg); color: var(--cyan); }
+.faq-a { display: none; padding: 0 20px 18px; font-size: 0.87rem; color: var(--text2); line-height: 1.75; border-top: 1px solid var(--border); padding-top: 14px; }
+.faq-item.open .faq-a { display: block; }
+.faq-a strong { color: var(--text); }
+.faq-a ul { margin: 8px 0 8px 16px; }
+.faq-a ul li { margin-bottom: 4px; }
+.faq-a .code { font-family: monospace; background: var(--bg2); padding: 2px 6px; border-radius: 4px; font-size: 0.82rem; color: var(--cyan); }
+
+/* FILTER TABS */
+.filter-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+.filter-tab { padding: 7px 16px; border-radius: 100px; font-size: 0.78rem; font-weight: 600; cursor: pointer; border: 1px solid var(--border2); background: transparent; color: var(--text3); transition: all 0.2s; }
+.filter-tab:hover { border-color: var(--cyan); color: var(--text); }
+.filter-tab.active { background: var(--cyan-dim); border-color: rgba(0,212,255,0.3); color: var(--cyan); }
+
+/* DIFFERENTIATORS */
+.diff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; }
+.diff-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+.diff-vs { display: flex; gap: 0; margin-top: 12px; }
+.diff-col { flex: 1; padding: 12px; }
+.diff-col:first-child { background: var(--red-dim); border-radius: 8px 0 0 8px; border: 1px solid rgba(239,68,68,0.15); }
+.diff-col:last-child { background: var(--green-dim); border-radius: 0 8px 8px 0; border: 1px solid rgba(16,185,129,0.15); border-left: none; }
+.diff-col-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+.diff-col:first-child .diff-col-label { color: var(--red); }
+.diff-col:last-child .diff-col-label { color: var(--green); }
+.diff-col-text { font-size: 0.82rem; line-height: 1.5; }
+.diff-col:first-child .diff-col-text { color: #FDA4A4; }
+.diff-col:last-child .diff-col-text { color: #6EE7B7; }
+.diff-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.95rem; margin-bottom: 4px; }
+.diff-sub { font-size: 0.82rem; color: var(--text3); }
+
+/* STATS ROW */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 40px; }
+.stat-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; }
+.stat-num { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 700; background: linear-gradient(135deg, var(--cyan), var(--violet)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; margin-bottom: 6px; }
+.stat-label { font-size: 0.78rem; color: var(--text3); line-height: 1.4; }
+
+/* CTA */
+.cta-box { background: var(--surface); border: 1px solid var(--border2); border-radius: 20px; padding: 48px; text-align: center; margin: 60px 5%; position: relative; overflow: hidden; }
+.cta-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--cyan), var(--violet), transparent); }
+.cta-box h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; }
+.cta-box p { color: var(--text2); margin-bottom: 24px; }
+.cta-btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 28px; border-radius: 10px; background: var(--cyan); color: var(--bg); font-size: 0.9rem; font-weight: 700; text-decoration: none; transition: all 0.2s; border: none; cursor: pointer; }
+.cta-btn:hover { background: #33DCFF; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,212,255,0.3); }
+
+/* FOOTER */
+footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--text3); }
+
+@media (max-width: 768px) {
+  .purpose-grid { grid-template-columns: 1fr; }
+  .diff-grid { grid-template-columns: 1fr; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .nav-links { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://www.vibesafe.info" class="logo">
+    <span class="logo-icon">🛡️</span> VibeSafe
+  </a>
+  <ul class="nav-links">
+    <li><a href="#purpose">Purpose</a></li>
+    <li><a href="#different">Why Different</a></li>
+    <li><a href="#comparison">Comparison</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-eyebrow">🛡️ VibeSafe — Full Product Brief</div>
+  <h1>What VibeSafe is,<br><span>why it exists, and why it wins</span></h1>
+  <p>A complete breakdown of VibeSafe's purpose, differentiation from competitors, and answers to every question founders and users will ask.</p>
+</div>
+
+<!-- PURPOSE -->
+<section id="purpose">
+  <p class="section-eyebrow">Purpose</p>
+  <h2 class="section-title">What VibeSafe does and why it matters</h2>
+  <p class="section-sub">VibeSafe is an AI-powered security scanner built specifically for non-technical founders who build apps using vibe coding tools like Lovable, Bolt, Cursor, and Replit. It finds errors, security holes, and bugs in AI-generated code — and fixes them automatically in plain English.</p>
+
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num">45%</div><div class="stat-label">of AI-generated code has security vulnerabilities</div></div>
+    <div class="stat-box"><div class="stat-num">63%</div><div class="stat-label">of vibe coders are non-technical founders</div></div>
+    <div class="stat-box"><div class="stat-num">$4.7B</div><div class="stat-label">vibe coding market growing at 38% annually</div></div>
+    <div class="stat-box"><div class="stat-num">10s</div><div class="stat-label">average time for VibeSafe to complete a full scan</div></div>
+  </div>
+
+  <div class="purpose-grid">
+    <div class="purpose-card pc-cyan">
+      <div class="purpose-icon">🔐</div>
+      <div class="purpose-title">Security vulnerability detection</div>
+      <div class="purpose-desc">Finds exposed API keys, hardcoded secrets, SQL injection risks, XSS vulnerabilities, and insecure authentication patterns before they reach production and get exploited.</div>
+    </div>
+    <div class="purpose-card pc-violet">
+      <div class="purpose-icon">🐛</div>
+      <div class="purpose-title">Runtime error detection</div>
+      <div class="purpose-desc">Catches missing awaits, null pointer exceptions, unhandled promise rejections, and type mismatches that only surface when real users hit your app — not in local testing.</div>
+    </div>
+    <div class="purpose-card pc-green">
+      <div class="purpose-icon">📦</div>
+      <div class="purpose-title">Auto dependency installer</div>
+      <div class="purpose-desc">Identifies missing, outdated, or hallucinated packages and installs the correct versions automatically — for Python, JavaScript, TypeScript, Java, and .NET.</div>
+    </div>
+    <div class="purpose-card pc-cyan">
+      <div class="purpose-icon">💬</div>
+      <div class="purpose-title">Plain-English explanations</div>
+      <div class="purpose-desc">Every issue is explained in plain language — what it is, why it's dangerous, and what happens if you ignore it. Zero jargon. Built for founders who don't write code.</div>
+    </div>
+    <div class="purpose-card pc-violet">
+      <div class="purpose-icon">⚡</div>
+      <div class="purpose-title">One-click auto-fix</div>
+      <div class="purpose-desc">Every issue has an auto-fix button. You see the before and after diff, click apply, and it's fixed. No manual editing, no Stack Overflow searches, no developer needed.</div>
+    </div>
+    <div class="purpose-card pc-green">
+      <div class="purpose-icon">📊</div>
+      <div class="purpose-title">Safety score & report</div>
+      <div class="purpose-desc">A 0–100 safety score with a full PDF report you can share with investors, clients, or your technical advisor to prove your app is production-ready.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- WHY DIFFERENT -->
+<section id="different">
+  <p class="section-eyebrow">Differentiation</p>
+  <h2 class="section-title">Why VibeSafe is different from everything else</h2>
+  <p class="section-sub">Every competitor was built for developers. VibeSafe was built for founders. That single difference changes everything about the product.</p>
+
+  <div class="diff-grid">
+    <div class="diff-card">
+      <div class="diff-title">Audience</div>
+      <div class="diff-sub">Who it's actually built for</div>
+      <div class="diff-vs">
+        <div class="diff-col">
+          <div class="diff-col-label">Snyk / SonarQube</div>
+          <div class="diff-col-text">Engineering teams with dedicated security budgets. Assumes you understand CVEs, SAST, SCA, and CI/CD pipelines.</div>
+        </div>
+        <div class="diff-col">
+          <div class="diff-col-label">VibeSafe</div>
+          <div class="diff-col-text">Non-technical founders who built with AI tools and need to know if their app is safe before launching.</div>
+        </div>
+      </div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-title">Language</div>
+      <div class="diff-sub">How issues are communicated</div>
+      <div class="diff-vs">
+        <div class="diff-col">
+          <div class="diff-col-label">Snyk / SonarQube</div>
+          <div class="diff-col-text">CVE IDs, OWASP classifications, CVSS scores, CWE mappings. Requires security knowledge to interpret.</div>
+        </div>
+        <div class="diff-col">
+          <div class="diff-col-label">VibeSafe</div>
+          <div class="diff-col-text">Plain English. "Your Stripe key is visible to anyone who views your source code. Here's how to fix it in one click."</div>
+        </div>
+      </div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-title">Setup</div>
+      <div class="diff-sub">What it takes to get started</div>
+      <div class="diff-vs">
+        <div class="diff-col">
+          <div class="diff-col-label">Snyk / SonarQube</div>
+          <div class="diff-col-text">CLI installation, IDE plugins, CI/CD pipeline configuration, authentication tokens, project setup. Hours of work.</div>
+        </div>
+        <div class="diff-col">
+          <div class="diff-col-label">VibeSafe</div>
+          <div class="diff-col-text">Go to vibesafe.info. Paste your code. Click Run Scan. Done in 10 seconds. Zero setup required.</div>
+        </div>
+      </div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-title">Pricing</div>
+      <div class="diff-sub">What it actually costs</div>
+      <div class="diff-vs">
+        <div class="diff-col">
+          <div class="diff-col-label">Snyk / SonarQube</div>
+          <div class="diff-col-text">Snyk starts at $98/developer/month. SonarQube Developer Edition from $150/year. Enterprise pricing is custom and expensive.</div>
+        </div>
+        <div class="diff-col">
+          <div class="diff-col-label">VibeSafe</div>
+          <div class="diff-col-text">Free plan forever. Pro at $29/month. Team at $99/month for up to 5 people. Built for bootstrapped founders.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- COMPARISON TABLE -->
+<section id="comparison">
+  <p class="section-eyebrow">Head to head</p>
+  <h2 class="section-title">VibeSafe vs the competition</h2>
+  <p class="section-sub">How VibeSafe stacks up against every tool a founder might consider.</p>
+
+  <div class="comparison-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th class="highlight">VibeSafe</th>
+          <th>Snyk</th>
+          <th>SonarQube</th>
+          <th>GitHub Advanced Security</th>
+          <th>Manual code review</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Built for non-technical founders</td>
+          <td class="highlight check">✓ Yes</td>
+          <td class="cross">✗ No</td>
+          <td class="cross">✗ No</td>
+          <td class="cross">✗ No</td>
+          <td class="cross">✗ No</td>
+        </tr>
+        <tr>
+          <td>Zero setup required</td>
+          <td class="highlight check">✓ Yes</td>
+          <td class="cross">✗ CLI required</td>
+          <td class="cross">✗ Self-hosted</td>
+          <td class="partial">⚡ GitHub only</td>
+          <td class="cross">✗ No</td>
+        </tr>
+        <tr>
+          <td>Plain-English explanations</td>
+          <td class="highlight check">✓ Always</td>
+          <td class="partial">⚡ Partial</td>
+          <td class="cross">✗ Technical only</td>
+          <td class="cross">✗ Technical only</td>
+          <td class="partial">⚡ Depends</td>
+        </tr>
+        <tr>
+          <td>One-click auto-fix</td>
+          <td class="highlight check">✓ Yes</td>
+          <td class="partial">⚡ Some issues</td>
+          <td class="cross">✗ No</td>
+          <td class="partial">⚡ Limited</td>
+          <td class="cross">✗ No</td>
+        </tr>
+        <tr>
+          <td>Security vulnerability scan</td>
+          <td class="highlight check">✓ Yes</td>
+          <td class="check">✓ Yes</td>
+          <td class="check">✓ Yes</td>
+          <td class="check">✓ Yes</td>
+          <td class="partial">⚡ Slow</td>
+        </tr>
+        <tr>
+          <td>Exposed secrets detection</td>
+          <td class="highlight check">✓ Yes</td>
+          <td class="check">✓ Yes</td>
+          <td class="partial">⚡ Paid only</td>
+          <td class="check">✓ Yes</td>
+          <td class="partial">⚡ Manual</td>
+        </tr>
+        <tr>
+          <td>Auto dependency installer</td>
+          <td class="highlight check">✓ Yes</td>
+          <td class="partial">⚡ Alerts only</td>
+          <td class="cross">✗ No</td>
+          <td class="cross">✗ No</td>
+          <td class="cross">✗ No</td>
+        </tr>
+        <tr>
+          <td>Works without GitHub</td>
+          <td class="highlight check">✓ Yes</td>
+          <td class="check">✓ Yes</td>
+          <td class="check">✓ Yes</td>
+          <td class="cross">✗ GitHub only</td>
+          <td class="check">✓ Yes</td>
+        </tr>
+        <tr>
+          <td>Free plan available</td>
+          <td class="highlight check">✓ Yes</td>
+          <td class="partial">⚡ Limited</td>
+          <td class="partial">⚡ Open source only</td>
+          <td class="cross">✗ Paid</td>
+          <td class="check">✓ Yes</td>
+        </tr>
+        <tr>
+          <td>Starting price</td>
+          <td class="highlight" style="color:var(--green);font-weight:600">$0 / month</td>
+          <td>$98/dev/month</td>
+          <td>$150/year</td>
+          <td>Custom pricing</td>
+          <td>$50–200/hour</td>
+        </tr>
+        <tr>
+          <td>Lovable / Bolt integration</td>
+          <td class="highlight check">✓ Yes</td>
+          <td class="cross">✗ No</td>
+          <td class="cross">✗ No</td>
+          <td class="cross">✗ No</td>
+          <td class="cross">✗ No</td>
+        </tr>
+        <tr>
+          <td>Safety score report</td>
+          <td class="highlight check">✓ Yes</td>
+          <td class="partial">⚡ Dashboard only</td>
+          <td class="partial">⚡ Dashboard only</td>
+          <td class="partial">⚡ Dashboard only</td>
+          <td class="cross">✗ No</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FAQ -->
+<section id="faq">
+  <p class="section-eyebrow">FAQ</p>
+  <h2 class="section-title">Every question answered</h2>
+  <p class="section-sub">Frequently asked questions plus the tough questions investors, users, and skeptics will ask.</p>
+
+  <div class="filter-tabs">
+    <button class="filter-tab active" onclick="filterFaq('all', this)">All questions</button>
+    <button class="filter-tab" onclick="filterFaq('general', this)">General</button>
+    <button class="filter-tab" onclick="filterFaq('security', this)">Security</button>
+    <button class="filter-tab" onclick="filterFaq('pricing', this)">Pricing</button>
+    <button class="filter-tab" onclick="filterFaq('technical', this)">Technical</button>
+    <button class="filter-tab" onclick="filterFaq('trust', this)">Trust & Privacy</button>
+  </div>
+
+  <div class="faq-list" id="faqList">
+
+    <!-- GENERAL -->
+    <div class="faq-item" data-cat="general">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">What exactly is VibeSafe and what does it do?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-general">General</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        VibeSafe is an AI-powered code security scanner built specifically for non-technical founders who build apps using vibe coding tools like Lovable, Bolt, Cursor, and Replit.<br><br>
+        You paste your AI-generated code into VibeSafe. In under 10 seconds it scans for:<br>
+        <ul>
+          <li>Exposed API keys and hardcoded secrets</li>
+          <li>Security vulnerabilities (SQL injection, XSS, etc.)</li>
+          <li>Runtime errors — missing awaits, null crashes</li>
+          <li>Missing or outdated packages</li>
+          <li>Logic bugs and type errors</li>
+        </ul>
+        Every issue gets a plain-English explanation and a one-click auto-fix button. No coding knowledge required.
+      </div>
+    </div>
+
+    <div class="faq-item" data-cat="general">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">Who is VibeSafe built for?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-general">General</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        VibeSafe is built for <strong>non-technical founders</strong> who build products using AI coding tools. Specifically:<br><br>
+        <ul>
+          <li>Founders using Lovable, Bolt.new, Cursor, or Replit to build their SaaS</li>
+          <li>Indie hackers who ship fast and don't have a technical co-founder</li>
+          <li>Agency owners building client apps with AI tools</li>
+          <li>Marketers and product managers who can now build with AI but can't read code</li>
+        </ul>
+        If you can build an app but can't tell if it's secure — VibeSafe is for you.
+      </div>
+    </div>
+
+    <div class="faq-item" data-cat="general">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">Do I need to know how to code to use VibeSafe?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-general">General</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        <strong>No. Zero coding knowledge required.</strong><br><br>
+        That's the entire point of VibeSafe. Every issue is explained in plain English — what the problem is, why it's dangerous, and what happens if you leave it unfixed. The auto-fix button handles the code change for you. You review the before and after, click Apply, and it's done.
+      </div>
+    </div>
+
+    <div class="faq-item" data-cat="general">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">What languages and frameworks does VibeSafe support?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-general">General</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        VibeSafe currently supports:<br><br>
+        <ul>
+          <li><strong>JavaScript</strong> — including Node.js, Express, React</li>
+          <li><strong>TypeScript</strong> — including Next.js, NestJS</li>
+          <li><strong>Python</strong> — including Flask, FastAPI, Django</li>
+          <li><strong>Java</strong> — including Spring Boot</li>
+          <li><strong>.NET / C#</strong> — including ASP.NET</li>
+        </ul>
+        Mixed-language projects are supported — VibeSafe auto-detects your stack.
+      </div>
+    </div>
+
+    <!-- SECURITY -->
+    <div class="faq-item" data-cat="security">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">What kinds of security vulnerabilities does VibeSafe find?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-security">Security</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        VibeSafe scans for the most common and dangerous vulnerabilities in AI-generated code:<br><br>
+        <ul>
+          <li><strong>Exposed secrets</strong> — API keys, database passwords, JWT secrets hardcoded in source files</li>
+          <li><strong>SQL injection</strong> — user input concatenated directly into database queries</li>
+          <li><strong>XSS (Cross-site scripting)</strong> — unsanitised user input rendered in the browser</li>
+          <li><strong>Insecure authentication</strong> — weak password comparisons, missing rate limiting</li>
+          <li><strong>Path traversal</strong> — user-controlled file paths that allow attackers to read server files</li>
+          <li><strong>Debug mode in production</strong> — Flask/Django debug=True exposing an interactive shell</li>
+          <li><strong>Missing HTTPS enforcement</strong> — sensitive data sent over unencrypted connections</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="faq-item" data-cat="security">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">Why do AI coding tools produce vulnerable code in the first place?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-security">Security</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        AI coding tools are optimised to produce <strong>working code quickly</strong> — not secure code. They're trained on millions of code examples from the internet, many of which contain security shortcuts, hardcoded credentials, and outdated patterns.<br><br>
+        Common reasons AI code is vulnerable:<br>
+        <ul>
+          <li>AI prioritises getting something that runs over security best practices</li>
+          <li>Training data includes old tutorials that predate modern security standards</li>
+          <li>AI doesn't know your production environment or threat model</li>
+          <li>Non-technical founders don't know what questions to ask about security</li>
+        </ul>
+        This isn't a criticism of Lovable or Bolt — they're incredible tools. VibeSafe is the safety layer that completes the workflow.
+      </div>
+    </div>
+
+    <div class="faq-item" data-cat="security">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">What happens if I ignore the issues VibeSafe finds?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-security">Security</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        It depends on the severity. For <strong>critical issues</strong>:<br><br>
+        <ul>
+          <li><strong>Exposed API key</strong> — attackers scan GitHub continuously. Your key will be found and abused, often within hours of your first commit. Stripe keys get drained. AWS keys get used for crypto mining, generating $50k+ bills.</li>
+          <li><strong>SQL injection</strong> — an attacker can dump your entire database, delete all records, or log in as any user including admin.</li>
+          <li><strong>Debug mode on</strong> — any visitor to your app can execute arbitrary Python code on your server.</li>
+        </ul>
+        For <strong>warnings</strong> — your app will crash in production under real usage. Missing awaits cause silent failures. Null errors crash on edge cases. These result in lost users and damaged reputation.
+      </div>
+    </div>
+
+    <!-- PRICING -->
+    <div class="faq-item" data-cat="pricing">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">Is VibeSafe really free? What's the catch?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-pricing">Pricing</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        <strong>Yes, genuinely free.</strong> No credit card required. No trial period. The free plan gives you:<br><br>
+        <ul>
+          <li>3 scans per month</li>
+          <li>Full security vulnerability detection</li>
+          <li>Plain-English explanations for every issue</li>
+          <li>Basic safety score</li>
+        </ul>
+        The catch: you can't auto-fix on the free plan (you see the fix, but apply it manually) and no GitHub integration. That's what Pro is for — $29/month, unlimited scans, one-click auto-fix, everything.
+      </div>
+    </div>
+
+    <div class="faq-item" data-cat="pricing">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">Why is VibeSafe so much cheaper than Snyk?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-pricing">Pricing</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        Snyk charges <strong>$98 per developer per month</strong> because it's selling to enterprise engineering teams with security budgets. It includes features those teams need — CI/CD pipeline integration, SBOM generation, compliance reports, and IDE plugins for 50-person engineering teams.<br><br>
+        VibeSafe is built for a solo founder who wants to know if their app is safe before they launch. We don't need to charge enterprise prices because we don't have enterprise overhead. $29/month is the right price for the value a founder gets.
+      </div>
+    </div>
+
+    <div class="faq-item" data-cat="pricing">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">Can I cancel anytime?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-pricing">Pricing</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        <strong>Yes. Cancel anytime, no questions asked.</strong> No contracts, no annual commitments on the monthly plan. If you cancel, you keep access until the end of your billing period, then drop to the free plan. We don't believe in making it hard to leave — if VibeSafe isn't worth $29 to you, you shouldn't pay for it.
+      </div>
+    </div>
+
+    <!-- TECHNICAL -->
+    <div class="faq-item" data-cat="technical">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">How does VibeSafe actually scan my code? What's the technology behind it?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-technical">Technical</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        VibeSafe uses a combination of static analysis and AI to scan your code:<br><br>
+        <ul>
+          <li><strong>Static analysis</strong> — pattern matching against known vulnerability signatures (SQL injection patterns, secret key formats, dangerous function calls)</li>
+          <li><strong>AI reasoning</strong> — understanding context to avoid false positives. Not every string that looks like a key is actually dangerous.</li>
+          <li><strong>Runtime simulation</strong> — predicting what will crash when real users hit your app</li>
+          <li><strong>Dependency analysis</strong> — checking your imports against known package databases</li>
+        </ul>
+        The entire scan completes in under 10 seconds for most codebases.
+      </div>
+    </div>
+
+    <div class="faq-item" data-cat="technical">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">How accurate are the auto-fixes? Can I trust them?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-technical">Technical</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        VibeSafe shows you the exact before-and-after diff before applying any fix. You always review first — we never change your code without showing you what's changing and why.<br><br>
+        For the most common issue types — exposed secrets, missing awaits, SQL injection, and wrong comparisons — the fixes are <strong>surgical and reliable</strong>. We only touch the broken line, never the surrounding code.<br><br>
+        For complex logic issues, we explain the problem and suggest the fix but always let you review. If a fix requires architectural changes, we flag it clearly rather than applying a surface-level band-aid.
+      </div>
+    </div>
+
+    <div class="faq-item" data-cat="technical">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">Does VibeSafe work with GitHub, Vercel, or CI/CD pipelines?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-technical">Technical</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        <strong>GitHub integration is available on the Pro plan.</strong> Connect your repo and VibeSafe automatically scans every new commit or pull request.<br><br>
+        Vercel integration (auto-scan on every deployment) is on the roadmap for Q3 2026.<br><br>
+        CI/CD pipeline integration (GitHub Actions, GitLab CI) is available on the Team plan — every deployment triggers a scan and blocks if critical issues are found.
+      </div>
+    </div>
+
+    <!-- TRUST -->
+    <div class="faq-item" data-cat="trust">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">Is my code safe with VibeSafe? Do you store it?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-trust">Trust & Privacy</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        Your code is <strong>scanned in memory and never stored permanently</strong>. We don't retain your source code after the scan completes. We don't train our models on your code. We don't share it with third parties.<br><br>
+        What we do store: your scan results and safety score (so you can reference them later). You can delete these at any time from your account settings.<br><br>
+        If you're building something highly sensitive, you can also use VibeSafe's self-hosted option (coming on the Enterprise plan) where your code never leaves your infrastructure.
+      </div>
+    </div>
+
+    <div class="faq-item" data-cat="trust">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">I'm not technical — how do I know VibeSafe actually found real issues and not false alarms?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-trust">Trust & Privacy</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        Every issue VibeSafe reports includes:<br><br>
+        <ul>
+          <li><strong>The exact line of code</strong> — so you can see it yourself</li>
+          <li><strong>What could go wrong</strong> — a specific scenario of how it gets exploited</li>
+          <li><strong>The before and after</strong> — showing exactly what changes and why it's safer</li>
+        </ul>
+        We never report vague warnings. If VibeSafe flags something, it shows you the exact dangerous line, explains the real-world attack scenario in plain English, and shows you the specific fix.<br><br>
+        You don't need to trust us blindly — the evidence is right there on screen.
+      </div>
+    </div>
+
+    <div class="faq-item" data-cat="trust">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">Couldn't I just ask ChatGPT or Claude to review my code for free?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-trust">Trust & Privacy</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        You could — and many founders do. The problems with that approach:<br><br>
+        <ul>
+          <li><strong>No structure</strong> — ChatGPT gives you a wall of text, not actionable issue cards with severity levels</li>
+          <li><strong>No verification</strong> — it can't run your code to confirm fixes actually work</li>
+          <li><strong>No safety score</strong> — nothing to share with investors or clients to prove your app is secure</li>
+          <li><strong>No monitoring</strong> — you'd need to re-paste code every time you make a change</li>
+          <li><strong>Context limits</strong> — large codebases get truncated, missing issues in the cut-off sections</li>
+        </ul>
+        VibeSafe is the structured, reliable, repeatable version of that workflow. Purpose-built for this specific problem.
+      </div>
+    </div>
+
+    <div class="faq-item" data-cat="trust">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">What if VibeSafe misses a vulnerability?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-trust">Trust & Privacy</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        No security tool catches 100% of vulnerabilities — including Snyk and GitHub Advanced Security. VibeSafe is designed to catch the most common and most dangerous issues in AI-generated code, which account for the vast majority of real-world breaches for early-stage apps.<br><br>
+        VibeSafe is <strong>significantly better than no scan at all</strong> — which is the current reality for most non-technical founders. We're transparent about what we scan for and continuously expand our detection coverage.<br><br>
+        For high-security applications (fintech, healthcare, anything handling sensitive data at scale), we recommend combining VibeSafe with a professional security audit. VibeSafe handles the automated layer; humans handle the nuanced architectural review.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-box">
+  <h2>Ready to ship safely?</h2>
+  <p>Join 800+ founders who scan before they ship. Free plan available — no credit card required.</p>
+  <a href="https://www.vibesafe.info" class="cta-btn" target="_blank">
+    Start free scan → vibesafe.info
+  </a>
+</div>
+
+<footer>
+  © 2026 VibeSafe · <a href="https://www.vibesafe.info" style="color:var(--cyan);text-decoration:none">vibesafe.info</a>
+</footer>
+
+<script>
+function toggleFaq(item) {
+  item.classList.toggle('open');
+}
+
+function filterFaq(cat, btn) {
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.faq-item').forEach(item => {
+    if (cat === 'all' || item.dataset.cat === cat) {
+      item.style.display = 'block';
+    } else {
+      item.style.display = 'none';
+      item.classList.remove('open');
+    }
+  });
+}
+</script>
+</body>
+</html>
