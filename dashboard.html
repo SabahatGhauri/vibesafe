@@ -3,774 +3,1998 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VibeSafe — Purpose, Differentiation & FAQ</title>
+<title>VibeSafe — Dashboard</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj4KPGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwRDRGRiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzdDM0FFRCIvPgo8L2xpbmVhckdyYWRpZW50PjwvZGVmcz4KPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIHJ4PSIyMiIgZmlsbD0iIzA4MEMxOCIvPgo8cGF0aCBkPSJNNTAgMTggTDc0IDI4IEw3NCA1MiBRNzQgNzAgNTAgODAgUTI2IDcwIDI2IDUyIEwyNiAyOCBaIiBmaWxsPSJ1cmwoI2cpIi8+Cjxwb2x5bGluZSBwb2ludHM9IjM4LDUwIDQ2LDYwIDY0LDM4IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4=">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
 :root {
-  --bg: #080C18; --bg2: #0D1220; --surface: #111827;
-  --surface2: #1A2438; --border: #1E2D42; --border2: #253650;
-  --cyan: #00D4FF; --cyan-dim: rgba(0,212,255,0.10);
-  --violet: #7C3AED; --violet-dim: rgba(124,58,237,0.14);
-  --green: #10B981; --green-dim: rgba(16,185,129,0.11);
-  --amber: #F59E0B; --amber-dim: rgba(245,158,11,0.11);
-  --red: #EF4444; --red-dim: rgba(239,68,68,0.11);
-  --text: #F1F5F9; --text2: #94A3B8; --text3: #64748B;
+  --bg:       #080C18;
+  --bg2:      #0D1220;
+  --surface:  #111827;
+  --surface2: #1A2438;
+  --surface3: #1F2D42;
+  --border:   #1E2D42;
+  --border2:  #253650;
+  --cyan:     #00D4FF;
+  --cyan-dim: rgba(0,212,255,0.10);
+  --cyan-glow:rgba(0,212,255,0.22);
+  --violet:   #7C3AED;
+  --violet-dim:rgba(124,58,237,0.14);
+  --green:    #10B981;
+  --green-dim:rgba(16,185,129,0.11);
+  --amber:    #F59E0B;
+  --amber-dim:rgba(245,158,11,0.11);
+  --red:      #EF4444;
+  --red-dim:  rgba(239,68,68,0.11);
+  --text:     #F1F5F9;
+  --text2:    #94A3B8;
+  --text3:    #64748B;
+  --r:        10px;
+  --r-lg:     14px;
 }
-html { scroll-behavior: smooth; }
-body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
 
-/* NAV */
-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+html, body { height: 100%; overflow: hidden; }
+body {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(124,58,237,0.10), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 10%, rgba(0,212,255,0.06), transparent 55%),
+    var(--bg);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(0, 212, 255, 0.18), transparent 32%),
+    radial-gradient(circle at 85% 20%, rgba(124, 58, 237, 0.22), transparent 34%),
+    radial-gradient(circle at 50% 100%, rgba(0, 80, 255, 0.15), transparent 38%),
+    #050816;
+}
+
+/* ── TOP NAV ── */
+.topnav {
+  height: 52px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 5%; height: 56px;
-  background: rgba(8,12,24,0.9); backdrop-filter: blur(16px);
+  padding: 0 20px;
+  background: var(--surface);
   border-bottom: 1px solid var(--border);
+  z-index: 50;
 }
-.logo { display: flex; align-items: center; gap: 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.1rem; text-decoration: none; color: var(--text); }
-.logo-icon { width: 26px; height: 26px; border-radius: 6px; background: linear-gradient(135deg, var(--cyan), var(--violet)); display: flex; align-items: center; justify-content: center; font-size: 13px; }
-.nav-links { display: flex; gap: 24px; list-style: none; }
-.nav-links a { color: var(--text3); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
-.nav-links a:hover { color: var(--cyan); }
 
-/* HERO */
-.hero { padding: 100px 5% 60px; text-align: center; position: relative; overflow: hidden; }
-.hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px); background-size: 50px 50px; mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent); pointer-events: none; }
-.hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px; border-radius: 100px; background: var(--cyan-dim); border: 1px solid rgba(0,212,255,0.2); font-size: 0.75rem; font-weight: 600; color: var(--cyan); margin-bottom: 20px; }
-.hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 16px; }
-.hero h1 span { background: linear-gradient(135deg, var(--cyan), var(--violet)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.hero p { font-size: 1.05rem; color: var(--text2); max-width: 600px; margin: 0 auto; }
+.topnav-left { display: flex; align-items: center; gap: 24px; }
 
-/* SECTION */
-section { padding: 70px 5%; max-width: 1100px; margin: 0 auto; }
-.section-eyebrow { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan); margin-bottom: 10px; }
-.section-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.6rem, 2.5vw, 2.2rem); font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 14px; }
-.section-sub { font-size: 1rem; color: var(--text2); line-height: 1.7; max-width: 640px; }
-.divider { height: 1px; background: var(--border); margin: 0 5%; }
-
-/* PURPOSE CARDS */
-.purpose-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
-.purpose-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; position: relative; overflow: hidden; transition: all 0.2s; }
-.purpose-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; opacity: 0; transition: opacity 0.2s; }
-.purpose-card:hover { border-color: var(--border2); transform: translateY(-2px); }
-.purpose-card:hover::before { opacity: 1; }
-.pc-cyan::before { background: linear-gradient(90deg, var(--cyan), transparent); }
-.pc-violet::before { background: linear-gradient(90deg, var(--violet), transparent); }
-.pc-green::before { background: linear-gradient(90deg, var(--green), transparent); }
-.purpose-icon { font-size: 28px; margin-bottom: 14px; }
-.purpose-title { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
-.purpose-desc { font-size: 0.84rem; color: var(--text2); line-height: 1.6; }
-
-/* COMPARISON TABLE */
-.comparison-wrap { margin-top: 40px; overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; }
-thead tr { background: var(--surface2); }
-th { padding: 14px 18px; text-align: left; font-size: 0.78rem; font-weight: 600; color: var(--text3); letter-spacing: 0.05em; text-transform: uppercase; border-bottom: 1px solid var(--border2); }
-th:first-child { border-radius: 10px 0 0 0; }
-th:last-child { border-radius: 0 10px 0 0; }
-th.highlight { color: var(--cyan); background: rgba(0,212,255,0.08); }
-td { padding: 14px 18px; font-size: 0.85rem; color: var(--text2); border-bottom: 1px solid var(--border); }
-td:first-child { font-weight: 500; color: var(--text); }
-td.highlight { background: rgba(0,212,255,0.04); color: var(--text); }
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: var(--surface); }
-tr:hover td.highlight { background: rgba(0,212,255,0.08); }
-.check { color: var(--green); font-weight: 700; }
-.cross { color: var(--red); }
-.partial { color: var(--amber); }
-
-/* FAQ */
-.faq-list { margin-top: 40px; display: flex; flex-direction: column; gap: 12px; }
-.faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: border-color 0.2s; }
-.faq-item:hover { border-color: var(--border2); }
-.faq-item.open { border-color: rgba(0,212,255,0.2); }
-.faq-q { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 20px; cursor: pointer; }
-.faq-q-text { font-size: 0.92rem; font-weight: 600; color: var(--text); }
-.faq-tag { flex-shrink: 0; padding: 3px 10px; border-radius: 100px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
-.tag-general { background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(0,212,255,0.2); }
-.tag-security { background: var(--red-dim); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
-.tag-pricing { background: var(--green-dim); color: var(--green); border: 1px solid rgba(16,185,129,0.2); }
-.tag-technical { background: var(--violet-dim); color: #A78BFA; border: 1px solid rgba(124,58,237,0.2); }
-.tag-trust { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
-.faq-chevron { color: var(--text3); transition: transform 0.25s; font-size: 12px; flex-shrink: 0; }
-.faq-item.open .faq-chevron { transform: rotate(90deg); color: var(--cyan); }
-.faq-a { display: none; padding: 0 20px 18px; font-size: 0.87rem; color: var(--text2); line-height: 1.75; border-top: 1px solid var(--border); padding-top: 14px; }
-.faq-item.open .faq-a { display: block; }
-.faq-a strong { color: var(--text); }
-.faq-a ul { margin: 8px 0 8px 16px; }
-.faq-a ul li { margin-bottom: 4px; }
-.faq-a .code { font-family: monospace; background: var(--bg2); padding: 2px 6px; border-radius: 4px; font-size: 0.82rem; color: var(--cyan); }
-
-/* FILTER TABS */
-.filter-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
-.filter-tab { padding: 7px 16px; border-radius: 100px; font-size: 0.78rem; font-weight: 600; cursor: pointer; border: 1px solid var(--border2); background: transparent; color: var(--text3); transition: all 0.2s; }
-.filter-tab:hover { border-color: var(--cyan); color: var(--text); }
-.filter-tab.active { background: var(--cyan-dim); border-color: rgba(0,212,255,0.3); color: var(--cyan); }
-
-/* DIFFERENTIATORS */
-.diff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; }
-.diff-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
-.diff-vs { display: flex; gap: 0; margin-top: 12px; }
-.diff-col { flex: 1; padding: 12px; }
-.diff-col:first-child { background: var(--red-dim); border-radius: 8px 0 0 8px; border: 1px solid rgba(239,68,68,0.15); }
-.diff-col:last-child { background: var(--green-dim); border-radius: 0 8px 8px 0; border: 1px solid rgba(16,185,129,0.15); border-left: none; }
-.diff-col-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
-.diff-col:first-child .diff-col-label { color: var(--red); }
-.diff-col:last-child .diff-col-label { color: var(--green); }
-.diff-col-text { font-size: 0.82rem; line-height: 1.5; }
-.diff-col:first-child .diff-col-text { color: #FDA4A4; }
-.diff-col:last-child .diff-col-text { color: #6EE7B7; }
-.diff-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.95rem; margin-bottom: 4px; }
-.diff-sub { font-size: 0.82rem; color: var(--text3); }
-
-/* STATS ROW */
-.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 40px; }
-.stat-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; }
-.stat-num { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 700; background: linear-gradient(135deg, var(--cyan), var(--violet)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; margin-bottom: 6px; }
-.stat-label { font-size: 0.78rem; color: var(--text3); line-height: 1.4; }
-
-/* CTA */
-.cta-box { background: var(--surface); border: 1px solid var(--border2); border-radius: 20px; padding: 48px; text-align: center; margin: 60px 5%; position: relative; overflow: hidden; }
-.cta-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--cyan), var(--violet), transparent); }
-.cta-box h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; }
-.cta-box p { color: var(--text2); margin-bottom: 24px; }
-.cta-btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 28px; border-radius: 10px; background: var(--cyan); color: var(--bg); font-size: 0.9rem; font-weight: 700; text-decoration: none; transition: all 0.2s; border: none; cursor: pointer; }
-.cta-btn:hover { background: #33DCFF; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,212,255,0.3); }
-
-/* FOOTER */
-footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--text3); }
-
-@media (max-width: 768px) {
-  .purpose-grid { grid-template-columns: 1fr; }
-  .diff-grid { grid-template-columns: 1fr; }
-  .stats-row { grid-template-columns: 1fr 1fr; }
-  .nav-links { display: none; }
+.logo {
+  display: flex; align-items: center; gap: 9px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700; font-size: 1.1rem; color: var(--text);
+  text-decoration: none;
 }
+
+.logo-icon {
+  width: 28px; height: 28px; border-radius: 7px;
+  background: linear-gradient(135deg, var(--cyan), var(--violet));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+
+.nav-divider {
+  width: 1px; height: 20px; background: var(--border2);
+}
+
+.breadcrumb {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.82rem; color: var(--text3);
+}
+
+.breadcrumb span { color: var(--text2); }
+.breadcrumb .sep { color: var(--border2); }
+
+.topnav-right { display: flex; align-items: center; gap: 12px; }
+
+.nav-badge {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: 100px;
+  background: var(--green-dim); border: 1px solid rgba(16,185,129,0.2);
+  font-size: 0.72rem; font-weight: 600; color: var(--green);
+}
+
+.badge-pulse {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50% { opacity:0.5; transform:scale(0.75); }
+}
+
+.avatar-btn {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--cyan), var(--violet));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; color: white;
+  cursor: pointer; border: none;
+}
+
+/* ── MAIN LAYOUT ── */
+.app-body {
+  flex: 1; display: flex; overflow: hidden;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 220px; flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebar-section { padding: 16px 12px 8px; }
+
+.sidebar-label {
+  font-size: 0.68rem; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text3); padding: 0 8px;
+  margin-bottom: 6px;
+}
+
+.sidebar-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px; border-radius: 7px;
+  font-size: 0.84rem; color: var(--text2);
+  cursor: pointer; transition: all 0.15s;
+  border: none; background: none; width: 100%;
+  text-align: left;
+}
+
+.sidebar-item:hover { background: var(--surface2); color: var(--text); }
+
+.sidebar-item.active {
+  background: var(--cyan-dim);
+  color: var(--cyan);
+  border: 1px solid rgba(0,212,255,0.15);
+}
+
+.sidebar-item .si-icon { font-size: 15px; flex-shrink: 0; }
+
+.sidebar-item .si-badge {
+  margin-left: auto;
+  background: var(--red-dim); color: var(--red);
+  border: 1px solid rgba(239,68,68,0.2);
+  font-size: 0.65rem; font-weight: 700;
+  padding: 1px 6px; border-radius: 100px;
+}
+
+.sidebar-item .si-new {
+  margin-left: auto;
+  background: var(--cyan-dim); color: var(--cyan);
+  border: 1px solid rgba(0,212,255,0.2);
+  font-size: 0.6rem; font-weight: 700;
+  padding: 1px 6px; border-radius: 100px;
+}
+
+.sidebar-sep {
+  height: 1px; background: var(--border);
+  margin: 8px 12px;
+}
+
+.sidebar-footer {
+  margin-top: auto; padding: 12px;
+}
+
+.plan-card {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  padding: 12px 14px;
+}
+
+.plan-label {
+  font-size: 0.7rem; color: var(--text3);
+  margin-bottom: 6px;
+}
+
+.plan-name {
+  font-weight: 600; font-size: 0.85rem;
+  margin-bottom: 8px; color: var(--text);
+}
+
+.plan-bar-track {
+  height: 4px; background: var(--border2);
+  border-radius: 100px; margin-bottom: 6px;
+}
+
+.plan-bar-fill {
+  height: 100%; border-radius: 100px;
+  background: linear-gradient(90deg, var(--cyan), var(--violet));
+  width: 33%;
+}
+
+.plan-meta {
+  display: flex; justify-content: space-between;
+  font-size: 0.7rem; color: var(--text3);
+}
+
+.upgrade-btn {
+  width: 100%; margin-top: 10px;
+  padding: 7px; border-radius: 7px;
+  background: var(--cyan); color: var(--bg);
+  font-size: 0.78rem; font-weight: 700;
+  border: none; cursor: pointer;
+  transition: all 0.2s;
+}
+.upgrade-btn:hover { background: #33DCFF; }
+
+/* ── MAIN CONTENT ── */
+.main {
+  flex: 1; display: flex;
+  overflow: hidden; gap: 0;
+}
+
+/* ── LEFT PANEL (editor) ── */
+.editor-panel {
+  flex: 1; display: flex; flex-direction: column;
+  border-right: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px; height: 44px; flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.panel-title {
+  font-size: 0.82rem; font-weight: 600; color: var(--text2);
+  display: flex; align-items: center; gap: 8px;
+}
+
+.panel-actions { display: flex; gap: 8px; align-items: center; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 7px;
+  font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; transition: all 0.18s; border: none;
+}
+
+.btn-ghost {
+  background: transparent; color: var(--text2);
+  border: 1px solid var(--border2);
+}
+.btn-ghost:hover { border-color: var(--cyan); color: var(--text); }
+
+.btn-primary {
+  background: var(--cyan); color: var(--bg);
+  box-shadow: 0 0 14px rgba(0,212,255,0.25);
+}
+.btn-primary:hover {
+  background: #33DCFF;
+  box-shadow: 0 0 22px rgba(0,212,255,0.4);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5; cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* lang selector */
+.lang-select {
+  padding: 5px 10px; border-radius: 6px;
+  background: var(--surface2); color: var(--text2);
+  border: 1px solid var(--border2);
+  font-size: 0.75rem; font-family: 'Inter', sans-serif;
+  cursor: pointer; outline: none;
+}
+
+/* tabs */
+.editor-tabs {
+  display: flex; gap: 2px;
+  padding: 8px 14px 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.etab {
+  padding: 6px 14px; border-radius: 6px 6px 0 0;
+  font-size: 0.77rem; font-weight: 500;
+  cursor: pointer; border: none; background: none;
+  color: var(--text3); transition: all 0.15s;
+  border-bottom: 2px solid transparent;
+  position: relative; top: 1px;
+}
+
+.etab.active {
+  color: var(--cyan);
+  border-bottom-color: var(--cyan);
+  background: var(--surface2);
+}
+
+/* code editor area */
+.code-area-wrap {
+  flex: 1; overflow: hidden; position: relative;
+  background: var(--bg2);
+}
+
+.code-editor {
+  width: 100%; height: 100%;
+  background: transparent;
+  color: var(--text); border: none; outline: none; resize: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem; line-height: 1.75;
+  padding: 16px 16px 16px 56px;
+  tab-size: 2;
+  white-space: pre;
+  overflow: auto;
+}
+
+.line-numbers {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 44px;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  padding: 16px 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem; line-height: 1.75;
+  color: var(--text3); text-align: right;
+  pointer-events: none; user-select: none;
+  overflow: hidden;
+}
+
+.editor-footer {
+  height: 28px; flex-shrink: 0;
+  display: flex; align-items: center; gap: 16px;
+  padding: 0 14px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  font-size: 0.7rem; color: var(--text3);
+}
+
+.ef-item { display: flex; align-items: center; gap: 5px; }
+
+/* ── RIGHT PANEL (results) ── */
+.results-panel {
+  width: 380px; flex-shrink: 0;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  background: var(--bg2);
+}
+
+/* score header */
+.score-header {
+  padding: 22px 18px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.gauge-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  margin-bottom: 16px;
+}
+
+.gauge {
+  position: relative; width: 140px; height: 140px;
+}
+
+.gauge-svg {
+  width: 140px; height: 140px;
+  transform: rotate(-90deg);
+}
+
+.gauge-bg {
+  fill: none;
+  stroke: var(--surface2);
+  stroke-width: 9;
+}
+
+.gauge-fill {
+  fill: none;
+  stroke: var(--cyan);
+  stroke-width: 9;
+  stroke-linecap: round;
+  stroke-dasharray: 327;
+  stroke-dashoffset: 327;
+  transition: stroke-dashoffset 1s cubic-bezier(0.4,0,0.2,1), stroke 0.4s;
+}
+
+.gauge-fill.good { stroke: var(--green); }
+.gauge-fill.warn { stroke: var(--amber); }
+.gauge-fill.bad  { stroke: var(--red); }
+
+.gauge-center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+
+.gauge-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2.4rem; font-weight: 700; line-height: 1;
+  color: var(--text);
+}
+
+.gauge-max {
+  font-size: 0.75rem; color: var(--text3); margin-top: 2px;
+}
+
+.gauge-verdict {
+  margin-top: 12px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem; font-weight: 600;
+}
+.gauge-verdict.good { color: var(--green); }
+.gauge-verdict.warn { color: var(--amber); }
+.gauge-verdict.bad  { color: var(--red); }
+
+.score-stats {
+  display: flex; gap: 8px; margin-top: 4px;
+}
+
+.sstat {
+  flex: 1; padding: 10px; border-radius: 9px;
+  text-align: center;
+}
+
+.sstat-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.3rem; font-weight: 700; line-height: 1;
+  margin-bottom: 4px;
+}
+
+.sstat-label { font-size: 0.68rem; color: var(--text3); }
+
+.sstat.err  { background: var(--red-dim);   border: 1px solid rgba(239,68,68,0.15); }
+.sstat.warn { background: var(--amber-dim); border: 1px solid rgba(245,158,11,0.15); }
+.sstat.ok   { background: var(--green-dim); border: 1px solid rgba(16,185,129,0.15); }
+
+.sstat.err  .sstat-num { color: var(--red); }
+.sstat.warn .sstat-num { color: var(--amber); }
+.sstat.ok   .sstat-num { color: var(--green); }
+
+/* issues list */
+.issues-list {
+  flex: 1; overflow-y: auto;
+  padding: 12px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+
+.issues-list::-webkit-scrollbar { width: 4px; }
+.issues-list::-webkit-scrollbar-track { background: transparent; }
+.issues-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* empty state */
+.empty-state {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px; padding: 32px; text-align: center;
+}
+
+.empty-icon { font-size: 2.5rem; }
+.empty-title { font-weight: 600; font-size: 0.95rem; }
+.empty-desc { font-size: 0.82rem; color: var(--text3); line-height: 1.5; }
+
+/* scanning state */
+.scanning-state {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 20px; padding: 32px;
+}
+
+.scan-ring {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  border: 3px solid var(--border2);
+  border-top-color: var(--cyan);
+  border-right-color: var(--violet);
+  animation: spin 1s linear infinite;
+  position: relative;
+}
+
+.scan-ring-inner {
+  position: absolute; inset: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  border-bottom-color: var(--cyan);
+  animation: spin 0.6s linear infinite reverse;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.scan-progress-wrap { width: 100%; }
+
+.scan-progress-label {
+  display: flex; justify-content: space-between;
+  font-size: 0.75rem; color: var(--text3); margin-bottom: 6px;
+}
+
+.scan-progress-track {
+  height: 4px; background: var(--surface2);
+  border-radius: 100px; overflow: hidden;
+}
+
+.scan-progress-fill {
+  height: 100%; border-radius: 100px;
+  background: linear-gradient(90deg, var(--cyan), var(--violet));
+  transition: width 0.3s ease;
+  box-shadow: 0 0 8px var(--cyan-glow);
+}
+
+.scan-step {
+  font-size: 0.8rem; color: var(--text2);
+  text-align: center;
+}
+
+/* issue card */
+
+.sev-pill {
+  font-size: 0.68rem; font-weight: 700;
+  padding: 4px 12px; border-radius: 100px;
+  flex-shrink: 0; align-self: center;
+  letter-spacing: 0.02em;
+}
+.sev-pill-critical { background: rgba(239,68,68,0.15); color: #FCA5A5; }
+.sev-pill-warning  { background: rgba(245,158,11,0.15); color: #FCD34D; }
+.sev-pill-info     { background: rgba(0,212,255,0.12); color: #7DD3F5; }
+.sev-pill-fixed    { background: rgba(16,185,129,0.15); color: #6EE7B7; }
+
+.issue-card {
+  border-radius: var(--r-lg);
+  border: 1px solid transparent;
+  overflow: hidden;
+  transition: all 0.2s;
+  opacity: 0; transform: translateY(8px);
+  animation: slideIn 0.3s ease forwards;
+}
+.issue-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+}
+
+@keyframes slideIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.issue-card.severity-critical {
+  background: rgba(239,68,68,0.06);
+  border-color: rgba(239,68,68,0.18);
+}
+.issue-card.severity-warning {
+  background: rgba(245,158,11,0.06);
+  border-color: rgba(245,158,11,0.18);
+}
+.issue-card.severity-info {
+  background: rgba(0,212,255,0.05);
+  border-color: rgba(0,212,255,0.15);
+}
+.issue-card.severity-fixed {
+  background: var(--green-dim);
+  border-color: rgba(16,185,129,0.2);
+}
+
+.issue-card-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+}
+
+.issue-sev-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  flex-shrink: 0; margin-top: 4px;
+}
+
+.severity-critical .issue-sev-dot { background: var(--red); box-shadow: 0 0 6px var(--red); }
+.severity-warning  .issue-sev-dot { background: var(--amber); }
+.severity-info     .issue-sev-dot { background: var(--cyan); }
+.severity-fixed    .issue-sev-dot { background: var(--green); }
+
+.issue-meta { flex: 1; min-width: 0; }
+
+.issue-type {
+  font-size: 0.67rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  margin-bottom: 3px;
+}
+
+.severity-critical .issue-type { color: var(--red); }
+.severity-warning  .issue-type { color: var(--amber); }
+.severity-info     .issue-type { color: var(--cyan); }
+.severity-fixed    .issue-type { color: var(--green); }
+
+.issue-title {
+  font-size: 0.82rem; font-weight: 600;
+  line-height: 1.3; color: var(--text);
+}
+
+.issue-line {
+  font-size: 0.7rem; color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 2px;
+}
+
+.issue-chevron {
+  flex-shrink: 0; color: var(--text3);
+  transition: transform 0.2s; font-size: 12px;
+  margin-top: 2px;
+}
+
+.issue-card.open .issue-chevron { transform: rotate(90deg); }
+
+.issue-body {
+  display: none; padding: 0 13px 12px;
+}
+
+.issue-card.open .issue-body { display: block; }
+
+.issue-desc {
+  font-size: 0.8rem; color: var(--text2);
+  line-height: 1.6; margin-bottom: 10px;
+}
+
+.code-snippet {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px; padding: 8px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.71rem; color: var(--text2);
+  line-height: 1.6; margin-bottom: 10px;
+  overflow-x: auto;
+}
+
+.code-snippet .del { color: var(--red); }
+.code-snippet .add { color: var(--green); }
+
+.fix-row { display: flex; gap: 8px; align-items: center; }
+
+.fix-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 14px; border-radius: 6px;
+  font-size: 0.75rem; font-weight: 600;
+  cursor: pointer; border: none; transition: all 0.2s;
+}
+
+.fix-btn-primary {
+  background: var(--cyan); color: var(--bg);
+}
+.fix-btn-primary:hover { background: #33DCFF; }
+
+.fix-btn-ghost {
+  background: transparent; color: var(--text2);
+  border: 1px solid var(--border2);
+}
+.fix-btn-ghost:hover { border-color: var(--cyan); color: var(--text); }
+
+.fixed-label {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.75rem; color: var(--green); font-weight: 600;
+}
+
+/* results footer */
+.results-footer {
+  padding: 12px 14px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.fix-all-btn {
+  width: 100%; padding: 10px;
+  background: var(--cyan); color: var(--bg);
+  border: none; border-radius: 8px;
+  font-size: 0.85rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  box-shadow: 0 0 16px rgba(0,212,255,0.2);
+}
+
+.fix-all-btn:hover {
+  background: #33DCFF;
+  box-shadow: 0 0 24px rgba(0,212,255,0.35);
+}
+
+.fix-all-btn:disabled {
+  opacity: 0.4; cursor: not-allowed; box-shadow: none;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+/* ── TOAST ── */
+.toast-wrap {
+  position: fixed; bottom: 20px; right: 20px;
+  display: flex; flex-direction: column; gap: 8px;
+  z-index: 999; pointer-events: none;
+}
+
+.toast {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 18px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  font-size: 0.82rem; color: var(--text);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  animation: toastIn 0.3s ease;
+  pointer-events: all;
+}
+
+@keyframes toastIn {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+.toast.success { border-color: rgba(16,185,129,0.25); }
+.toast.error   { border-color: rgba(239,68,68,0.25); }
+
+/* ── HISTORY LIST (sidebar panel) ── */
+.history-section {
+  padding: 6px 12px 12px;
+  flex: 1; overflow-y: auto;
+}
+
+.history-item {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 8px 10px; border-radius: 7px;
+  cursor: pointer; transition: all 0.15s;
+  border: 1px solid transparent;
+  margin-bottom: 4px;
+}
+
+.history-item:hover {
+  background: var(--surface2);
+  border-color: var(--border2);
+}
+
+.history-item.active {
+  background: var(--cyan-dim);
+  border-color: rgba(0,212,255,0.15);
+}
+
+.hi-top { display: flex; justify-content: space-between; align-items: center; }
+.hi-name { font-size: 0.8rem; font-weight: 500; }
+.hi-score {
+  font-size: 0.7rem; font-weight: 700;
+  padding: 1px 7px; border-radius: 100px;
+}
+.hi-score.good { background: var(--green-dim); color: var(--green); }
+.hi-score.warn { background: var(--amber-dim); color: var(--amber); }
+.hi-score.bad  { background: var(--red-dim);   color: var(--red); }
+.hi-meta { font-size: 0.7rem; color: var(--text3); }
+
+/* ===== MOCKUP NEON RESTYLE (CSS ONLY) ===== */
+
+/* Step 2: Glassy panels */
+.topnav,
+.sidebar,
+.panel-header,
+.score-header,
+.results-footer {
+  background: rgba(8, 14, 32, 0.72);
+  backdrop-filter: blur(18px);
+  border-color: rgba(0, 212, 255, 0.16);
+}
+.editor-panel,
+.results-panel,
+.plan-card,
+.code-area-wrap {
+  background: rgba(10, 18, 42, 0.72);
+  border-color: rgba(0, 212, 255, 0.16);
+  box-shadow: 0 0 35px rgba(0, 140, 255, 0.08);
+}
+
+/* Step 3: Neon borders + spacing */
+.editor-panel,
+.results-panel {
+  border: 1px solid rgba(0, 212, 255, 0.18);
+  border-radius: 22px;
+  overflow: hidden;
+}
+.main {
+  padding: 18px;
+  gap: 18px;
+}
+
+/* Step 4: Gradient buttons */
+.btn-primary,
+.fix-all-btn,
+.upgrade-btn {
+  background: linear-gradient(135deg, #00D4FF, #2563EB 45%, #7C3AED);
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 0 22px rgba(0, 212, 255, 0.35);
+}
+.btn-primary:hover,
+.fix-all-btn:hover,
+.upgrade-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 32px rgba(124, 58, 237, 0.45);
+}
+
+/* Step 5: Premium sidebar */
+.sidebar {
+  width: 240px;
+  background: rgba(6, 12, 30, 0.78);
+  backdrop-filter: blur(20px);
+}
+.sidebar-item {
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 11px 12px;
+}
+.sidebar-item:hover {
+  background: rgba(0, 212, 255, 0.08);
+  border-color: rgba(0, 212, 255, 0.18);
+}
+.sidebar-item.active {
+  background: linear-gradient(135deg, rgba(0,212,255,0.16), rgba(124,58,237,0.14));
+  color: #ffffff;
+  border-color: rgba(0, 212, 255, 0.28);
+  box-shadow: inset 0 0 18px rgba(0, 212, 255, 0.06);
+}
+
+/* Step 6: Code editor area */
+.code-area-wrap {
+  background:
+    linear-gradient(180deg, rgba(6, 12, 28, 0.96), rgba(8, 15, 35, 0.96));
+}
+.code-editor {
+  color: #EAF3FF;
+  font-size: 0.84rem;
+}
+.line-numbers {
+  background: rgba(4, 9, 22, 0.88);
+  color: rgba(148, 163, 184, 0.55);
+}
+
+/* Step 7: Score gauge + result cards */
+.score-header {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(0, 212, 255, 0.12), transparent 55%),
+    rgba(9, 17, 38, 0.8);
+}
+.gauge {
+  filter: drop-shadow(0 0 22px rgba(0, 212, 255, 0.18));
+}
+.gauge-fill {
+  stroke: url(#gradient);
+}
+.issue-card {
+  background: rgba(12, 22, 48, 0.78) !important;
+  border: 1px solid rgba(0, 212, 255, 0.12);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.22);
+}
+.issue-card:hover {
+  border-color: rgba(0, 212, 255, 0.32);
+  box-shadow: 0 0 26px rgba(0, 212, 255, 0.12);
+}
+
+/* Step 8: Glow grid lines */
+.app-body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.035) 1px, transparent 1px);
+  background-size: 70px 70px;
+  mask-image: radial-gradient(circle at center, black, transparent 75%);
+  z-index: 0;
+}
+.topnav,
+.sidebar,
+.main {
+  position: relative;
+  z-index: 1;
+}
+
 </style>
 </head>
 <body>
-
-<nav>
-  <a href="https://www.vibesafe.info" class="logo">
-    <span class="logo-icon">🛡️</span> VibeSafe
-  </a>
-  <ul class="nav-links">
-    <li><a href="#purpose">Purpose</a></li>
-    <li><a href="#different">Why Different</a></li>
-    <li><a href="#comparison">Comparison</a></li>
-    <li><a href="#faq">FAQ</a></li>
-  </ul>
-</nav>
-
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-grid"></div>
-  <div class="hero-eyebrow">🛡️ VibeSafe — Full Product Brief</div>
-  <h1>What VibeSafe is,<br><span>why it exists, and why it wins</span></h1>
-  <p>A complete breakdown of VibeSafe's purpose, differentiation from competitors, and answers to every question founders and users will ask.</p>
-</div>
-
-<!-- PURPOSE -->
-<section id="purpose">
-  <p class="section-eyebrow">Purpose</p>
-  <h2 class="section-title">What VibeSafe does and why it matters</h2>
-  <p class="section-sub">VibeSafe is an AI-powered security scanner built specifically for non-technical founders who build apps using vibe coding tools like Lovable, Bolt, Cursor, and Replit. It finds errors, security holes, and bugs in AI-generated code — and fixes them automatically in plain English.</p>
-
-  <div class="stats-row">
-    <div class="stat-box"><div class="stat-num">45%</div><div class="stat-label">of AI-generated code has security vulnerabilities</div></div>
-    <div class="stat-box"><div class="stat-num">63%</div><div class="stat-label">of vibe coders are non-technical founders</div></div>
-    <div class="stat-box"><div class="stat-num">$4.7B</div><div class="stat-label">vibe coding market growing at 38% annually</div></div>
-    <div class="stat-box"><div class="stat-num">10s</div><div class="stat-label">average time for VibeSafe to complete a full scan</div></div>
-  </div>
-
-  <div class="purpose-grid">
-    <div class="purpose-card pc-cyan">
-      <div class="purpose-icon">🔐</div>
-      <div class="purpose-title">Security vulnerability detection</div>
-      <div class="purpose-desc">Finds exposed API keys, hardcoded secrets, SQL injection risks, XSS vulnerabilities, and insecure authentication patterns before they reach production and get exploited.</div>
-    </div>
-    <div class="purpose-card pc-violet">
-      <div class="purpose-icon">🐛</div>
-      <div class="purpose-title">Runtime error detection</div>
-      <div class="purpose-desc">Catches missing awaits, null pointer exceptions, unhandled promise rejections, and type mismatches that only surface when real users hit your app — not in local testing.</div>
-    </div>
-    <div class="purpose-card pc-green">
-      <div class="purpose-icon">📦</div>
-      <div class="purpose-title">Auto dependency installer</div>
-      <div class="purpose-desc">Identifies missing, outdated, or hallucinated packages and installs the correct versions automatically — for Python, JavaScript, TypeScript, Java, and .NET.</div>
-    </div>
-    <div class="purpose-card pc-cyan">
-      <div class="purpose-icon">💬</div>
-      <div class="purpose-title">Plain-English explanations</div>
-      <div class="purpose-desc">Every issue is explained in plain language — what it is, why it's dangerous, and what happens if you ignore it. Zero jargon. Built for founders who don't write code.</div>
-    </div>
-    <div class="purpose-card pc-violet">
-      <div class="purpose-icon">⚡</div>
-      <div class="purpose-title">One-click auto-fix</div>
-      <div class="purpose-desc">Every issue has an auto-fix button. You see the before and after diff, click apply, and it's fixed. No manual editing, no Stack Overflow searches, no developer needed.</div>
-    </div>
-    <div class="purpose-card pc-green">
-      <div class="purpose-icon">📊</div>
-      <div class="purpose-title">Safety score & report</div>
-      <div class="purpose-desc">A 0–100 safety score with a full PDF report you can share with investors, clients, or your technical advisor to prove your app is production-ready.</div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- WHY DIFFERENT -->
-<section id="different">
-  <p class="section-eyebrow">Differentiation</p>
-  <h2 class="section-title">Why VibeSafe is different from everything else</h2>
-  <p class="section-sub">Every competitor was built for developers. VibeSafe was built for founders. That single difference changes everything about the product.</p>
-
-  <div class="diff-grid">
-    <div class="diff-card">
-      <div class="diff-title">Audience</div>
-      <div class="diff-sub">Who it's actually built for</div>
-      <div class="diff-vs">
-        <div class="diff-col">
-          <div class="diff-col-label">Snyk / SonarQube</div>
-          <div class="diff-col-text">Engineering teams with dedicated security budgets. Assumes you understand CVEs, SAST, SCA, and CI/CD pipelines.</div>
-        </div>
-        <div class="diff-col">
-          <div class="diff-col-label">VibeSafe</div>
-          <div class="diff-col-text">Non-technical founders who built with AI tools and need to know if their app is safe before launching.</div>
-        </div>
-      </div>
-    </div>
-    <div class="diff-card">
-      <div class="diff-title">Language</div>
-      <div class="diff-sub">How issues are communicated</div>
-      <div class="diff-vs">
-        <div class="diff-col">
-          <div class="diff-col-label">Snyk / SonarQube</div>
-          <div class="diff-col-text">CVE IDs, OWASP classifications, CVSS scores, CWE mappings. Requires security knowledge to interpret.</div>
-        </div>
-        <div class="diff-col">
-          <div class="diff-col-label">VibeSafe</div>
-          <div class="diff-col-text">Plain English. "Your Stripe key is visible to anyone who views your source code. Here's how to fix it in one click."</div>
-        </div>
-      </div>
-    </div>
-    <div class="diff-card">
-      <div class="diff-title">Setup</div>
-      <div class="diff-sub">What it takes to get started</div>
-      <div class="diff-vs">
-        <div class="diff-col">
-          <div class="diff-col-label">Snyk / SonarQube</div>
-          <div class="diff-col-text">CLI installation, IDE plugins, CI/CD pipeline configuration, authentication tokens, project setup. Hours of work.</div>
-        </div>
-        <div class="diff-col">
-          <div class="diff-col-label">VibeSafe</div>
-          <div class="diff-col-text">Go to vibesafe.info. Paste your code. Click Run Scan. Done in 10 seconds. Zero setup required.</div>
-        </div>
-      </div>
-    </div>
-    <div class="diff-card">
-      <div class="diff-title">Pricing</div>
-      <div class="diff-sub">What it actually costs</div>
-      <div class="diff-vs">
-        <div class="diff-col">
-          <div class="diff-col-label">Snyk / SonarQube</div>
-          <div class="diff-col-text">Snyk starts at $98/developer/month. SonarQube Developer Edition from $150/year. Enterprise pricing is custom and expensive.</div>
-        </div>
-        <div class="diff-col">
-          <div class="diff-col-label">VibeSafe</div>
-          <div class="diff-col-text">Free plan forever. Pro at $29/month. Team at $99/month for up to 5 people. Built for bootstrapped founders.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- COMPARISON TABLE -->
-<section id="comparison">
-  <p class="section-eyebrow">Head to head</p>
-  <h2 class="section-title">VibeSafe vs the competition</h2>
-  <p class="section-sub">How VibeSafe stacks up against every tool a founder might consider.</p>
-
-  <div class="comparison-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Feature</th>
-          <th class="highlight">VibeSafe</th>
-          <th>Snyk</th>
-          <th>SonarQube</th>
-          <th>GitHub Advanced Security</th>
-          <th>Manual code review</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Built for non-technical founders</td>
-          <td class="highlight check">✓ Yes</td>
-          <td class="cross">✗ No</td>
-          <td class="cross">✗ No</td>
-          <td class="cross">✗ No</td>
-          <td class="cross">✗ No</td>
-        </tr>
-        <tr>
-          <td>Zero setup required</td>
-          <td class="highlight check">✓ Yes</td>
-          <td class="cross">✗ CLI required</td>
-          <td class="cross">✗ Self-hosted</td>
-          <td class="partial">⚡ GitHub only</td>
-          <td class="cross">✗ No</td>
-        </tr>
-        <tr>
-          <td>Plain-English explanations</td>
-          <td class="highlight check">✓ Always</td>
-          <td class="partial">⚡ Partial</td>
-          <td class="cross">✗ Technical only</td>
-          <td class="cross">✗ Technical only</td>
-          <td class="partial">⚡ Depends</td>
-        </tr>
-        <tr>
-          <td>One-click auto-fix</td>
-          <td class="highlight check">✓ Yes</td>
-          <td class="partial">⚡ Some issues</td>
-          <td class="cross">✗ No</td>
-          <td class="partial">⚡ Limited</td>
-          <td class="cross">✗ No</td>
-        </tr>
-        <tr>
-          <td>Security vulnerability scan</td>
-          <td class="highlight check">✓ Yes</td>
-          <td class="check">✓ Yes</td>
-          <td class="check">✓ Yes</td>
-          <td class="check">✓ Yes</td>
-          <td class="partial">⚡ Slow</td>
-        </tr>
-        <tr>
-          <td>Exposed secrets detection</td>
-          <td class="highlight check">✓ Yes</td>
-          <td class="check">✓ Yes</td>
-          <td class="partial">⚡ Paid only</td>
-          <td class="check">✓ Yes</td>
-          <td class="partial">⚡ Manual</td>
-        </tr>
-        <tr>
-          <td>Auto dependency installer</td>
-          <td class="highlight check">✓ Yes</td>
-          <td class="partial">⚡ Alerts only</td>
-          <td class="cross">✗ No</td>
-          <td class="cross">✗ No</td>
-          <td class="cross">✗ No</td>
-        </tr>
-        <tr>
-          <td>Works without GitHub</td>
-          <td class="highlight check">✓ Yes</td>
-          <td class="check">✓ Yes</td>
-          <td class="check">✓ Yes</td>
-          <td class="cross">✗ GitHub only</td>
-          <td class="check">✓ Yes</td>
-        </tr>
-        <tr>
-          <td>Free plan available</td>
-          <td class="highlight check">✓ Yes</td>
-          <td class="partial">⚡ Limited</td>
-          <td class="partial">⚡ Open source only</td>
-          <td class="cross">✗ Paid</td>
-          <td class="check">✓ Yes</td>
-        </tr>
-        <tr>
-          <td>Starting price</td>
-          <td class="highlight" style="color:var(--green);font-weight:600">$0 / month</td>
-          <td>$98/dev/month</td>
-          <td>$150/year</td>
-          <td>Custom pricing</td>
-          <td>$50–200/hour</td>
-        </tr>
-        <tr>
-          <td>Lovable / Bolt integration</td>
-          <td class="highlight check">✓ Yes</td>
-          <td class="cross">✗ No</td>
-          <td class="cross">✗ No</td>
-          <td class="cross">✗ No</td>
-          <td class="cross">✗ No</td>
-        </tr>
-        <tr>
-          <td>Safety score report</td>
-          <td class="highlight check">✓ Yes</td>
-          <td class="partial">⚡ Dashboard only</td>
-          <td class="partial">⚡ Dashboard only</td>
-          <td class="partial">⚡ Dashboard only</td>
-          <td class="cross">✗ No</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- FAQ -->
-<section id="faq">
-  <p class="section-eyebrow">FAQ</p>
-  <h2 class="section-title">Every question answered</h2>
-  <p class="section-sub">Frequently asked questions plus the tough questions investors, users, and skeptics will ask.</p>
-
-  <div class="filter-tabs">
-    <button class="filter-tab active" onclick="filterFaq('all', this)">All questions</button>
-    <button class="filter-tab" onclick="filterFaq('general', this)">General</button>
-    <button class="filter-tab" onclick="filterFaq('security', this)">Security</button>
-    <button class="filter-tab" onclick="filterFaq('pricing', this)">Pricing</button>
-    <button class="filter-tab" onclick="filterFaq('technical', this)">Technical</button>
-    <button class="filter-tab" onclick="filterFaq('trust', this)">Trust & Privacy</button>
-  </div>
-
-  <div class="faq-list" id="faqList">
-
-    <!-- GENERAL -->
-    <div class="faq-item" data-cat="general">
-      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
-        <span class="faq-q-text">What exactly is VibeSafe and what does it do?</span>
-        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-          <span class="faq-tag tag-general">General</span>
-          <span class="faq-chevron">▶</span>
-        </div>
-      </div>
-      <div class="faq-a">
-        VibeSafe is an AI-powered code security scanner built specifically for non-technical founders who build apps using vibe coding tools like Lovable, Bolt, Cursor, and Replit.<br><br>
-        You paste your AI-generated code into VibeSafe. In under 10 seconds it scans for:<br>
-        <ul>
-          <li>Exposed API keys and hardcoded secrets</li>
-          <li>Security vulnerabilities (SQL injection, XSS, etc.)</li>
-          <li>Runtime errors — missing awaits, null crashes</li>
-          <li>Missing or outdated packages</li>
-          <li>Logic bugs and type errors</li>
-        </ul>
-        Every issue gets a plain-English explanation and a one-click auto-fix button. No coding knowledge required.
-      </div>
-    </div>
-
-    <div class="faq-item" data-cat="general">
-      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
-        <span class="faq-q-text">Who is VibeSafe built for?</span>
-        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-          <span class="faq-tag tag-general">General</span>
-          <span class="faq-chevron">▶</span>
-        </div>
-      </div>
-      <div class="faq-a">
-        VibeSafe is built for <strong>non-technical founders</strong> who build products using AI coding tools. Specifically:<br><br>
-        <ul>
-          <li>Founders using Lovable, Bolt.new, Cursor, or Replit to build their SaaS</li>
-          <li>Indie hackers who ship fast and don't have a technical co-founder</li>
-          <li>Agency owners building client apps with AI tools</li>
-          <li>Marketers and product managers who can now build with AI but can't read code</li>
-        </ul>
-        If you can build an app but can't tell if it's secure — VibeSafe is for you.
-      </div>
-    </div>
-
-    <div class="faq-item" data-cat="general">
-      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
-        <span class="faq-q-text">Do I need to know how to code to use VibeSafe?</span>
-        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-          <span class="faq-tag tag-general">General</span>
-          <span class="faq-chevron">▶</span>
-        </div>
-      </div>
-      <div class="faq-a">
-        <strong>No. Zero coding knowledge required.</strong><br><br>
-        That's the entire point of VibeSafe. Every issue is explained in plain English — what the problem is, why it's dangerous, and what happens if you leave it unfixed. The auto-fix button handles the code change for you. You review the before and after, click Apply, and it's done.
-      </div>
-    </div>
-
-    <div class="faq-item" data-cat="general">
-      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
-        <span class="faq-q-text">What languages and frameworks does VibeSafe support?</span>
-        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-          <span class="faq-tag tag-general">General</span>
-          <span class="faq-chevron">▶</span>
-        </div>
-      </div>
-      <div class="faq-a">
-        VibeSafe currently supports:<br><br>
-        <ul>
-          <li><strong>JavaScript</strong> — including Node.js, Express, React</li>
-          <li><strong>TypeScript</strong> — including Next.js, NestJS</li>
-          <li><strong>Python</strong> — including Flask, FastAPI, Django</li>
-          <li><strong>Java</strong> — including Spring Boot</li>
-          <li><strong>.NET / C#</strong> — including ASP.NET</li>
-        </ul>
-        Mixed-language projects are supported — VibeSafe auto-detects your stack.
-      </div>
-    </div>
-
-    <!-- SECURITY -->
-    <div class="faq-item" data-cat="security">
-      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
-        <span class="faq-q-text">What kinds of security vulnerabilities does VibeSafe find?</span>
-        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-          <span class="faq-tag tag-security">Security</span>
-          <span class="faq-chevron">▶</span>
-        </div>
-      </div>
-      <div class="faq-a">
-        VibeSafe scans for the most common and dangerous vulnerabilities in AI-generated code:<br><br>
-        <ul>
-          <li><strong>Exposed secrets</strong> — API keys, database passwords, JWT secrets hardcoded in source files</li>
-          <li><strong>SQL injection</strong> — user input concatenated directly into database queries</li>
-          <li><strong>XSS (Cross-site scripting)</strong> — unsanitised user input rendered in the browser</li>
-          <li><strong>Insecure authentication</strong> — weak password comparisons, missing rate limiting</li>
-          <li><strong>Path traversal</strong> — user-controlled file paths that allow attackers to read server files</li>
-          <li><strong>Debug mode in production</strong> — Flask/Django debug=True exposing an interactive shell</li>
-          <li><strong>Missing HTTPS enforcement</strong> — sensitive data sent over unencrypted connections</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="faq-item" data-cat="security">
-      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
-        <span class="faq-q-text">Why do AI coding tools produce vulnerable code in the first place?</span>
-        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-          <span class="faq-tag tag-security">Security</span>
-          <span class="faq-chevron">▶</span>
-        </div>
-      </div>
-      <div class="faq-a">
-        AI coding tools are optimised to produce <strong>working code quickly</strong> — not secure code. They're trained on millions of code examples from the internet, many of which contain security shortcuts, hardcoded credentials, and outdated patterns.<br><br>
-        Common reasons AI code is vulnerable:<br>
-        <ul>
-          <li>AI prioritises getting something that runs over security best practices</li>
-          <li>Training data includes old tutorials that predate modern security standards</li>
-          <li>AI doesn't know your production environment or threat model</li>
-          <li>Non-technical founders don't know what questions to ask about security</li>
-        </ul>
-        This isn't a criticism of Lovable or Bolt — they're incredible tools. VibeSafe is the safety layer that completes the workflow.
-      </div>
-    </div>
-
-    <div class="faq-item" data-cat="security">
-      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
-        <span class="faq-q-text">What happens if I ignore the issues VibeSafe finds?</span>
-        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-          <span class="faq-tag tag-security">Security</span>
-          <span class="faq-chevron">▶</span>
-        </div>
-      </div>
-      <div class="faq-a">
-        It depends on the severity. For <strong>critical issues</strong>:<br><br>
-        <ul>
-          <li><strong>Exposed API key</strong> — attackers scan GitHub continuously. Your key will be found and abused, often within hours of your first commit. Stripe keys get drained. AWS keys get used for crypto mining, generating $50k+ bills.</li>
-          <li><strong>SQL injection</strong> — an attacker can dump your entire database, delete all records, or log in as any user including admin.</li>
-          <li><strong>Debug mode on</strong> — any visitor to your app can execute arbitrary Python code on your server.</li>
-        </ul>
-        For <strong>warnings</strong> — your app will crash in production under real usage. Missing awaits cause silent failures. Null errors crash on edge cases. These result in lost users and damaged reputation.
-      </div>
-    </div>
-
-    <!-- PRICING -->
-    <div class="faq-item" data-cat="pricing">
-      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
-        <span class="faq-q-text">Is VibeSafe really free? What's the catch?</span>
-        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-          <span class="faq-tag tag-pricing">Pricing</span>
-          <span class="faq-chevron">▶</span>
-        </div>
-      </div>
-      <div class="faq-a">
-        <strong>Yes, genuinely free.</strong> No credit card required. No trial period. The free plan gives you:<br><br>
-        <ul>
-          <li>3 scans per month</li>
-          <li>Full security vulnerability detection</li>
-          <li>Plain-English explanations for every issue</li>
-          <li>Basic safety score</li>
-        </ul>
-        The catch: you can't auto-fix on the free plan (you see the fix, but apply it manually) and no GitHub integration. That's what Pro is for — $29/month, unlimited scans, one-click auto-fix, everything.
-      </div>
-    </div>
-
-    <div class="faq-item" data-cat="pricing">
-      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
-        <span class="faq-q-text">Why is VibeSafe so much cheaper than Snyk?</span>
-        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-          <span class="faq-tag tag-pricing">Pricing</span>
-          <span class="faq-chevron">▶</span>
-        </div>
-      </div>
-      <div class="faq-a">
-        Snyk charges <strong>$98 per developer per month</strong> because it's selling to enterprise engineering teams with security budgets. It includes features those teams need — CI/CD pipeline integration, SBOM generation, compliance reports, and IDE plugins for 50-person engineering teams.<br><br>
-        VibeSafe is built for a solo founder who wants to know if their app is safe before they launch. We don't need to charge enterprise prices because we don't have enterprise overhead. $29/month is the right price for the value a founder gets.
-      </div>
-    </div>
-
-    <div class="faq-item" data-cat="pricing">
-      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
-        <span class="faq-q-text">Can I cancel anytime?</span>
-        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-          <span class="faq-tag tag-pricing">Pricing</span>
-          <span class="faq-chevron">▶</span>
-        </div>
-      </div>
-      <div class="faq-a">
-        <strong>Yes. Cancel anytime, no questions asked.</strong> No contracts, no annual commitments on the monthly plan. If you cancel, you keep access until the end of your billing period, then drop to the free plan. We don't believe in making it hard to leave — if VibeSafe isn't worth $29 to you, you shouldn't pay for it.
-      </div>
-    </div>
-
-    <!-- TECHNICAL -->
-    <div class="faq-item" data-cat="technical">
-      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
-        <span class="faq-q-text">How does VibeSafe actually scan my code? What's the technology behind it?</span>
-        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-          <span class="faq-tag tag-technical">Technical</span>
-          <span class="faq-chevron">▶</span>
-        </div>
-      </div>
-      <div class="faq-a">
-        VibeSafe uses a combination of static analysis and AI to scan your code:<br><br>
-        <ul>
-          <li><strong>Static analysis</strong> — pattern matching against known vulnerability signatures (SQL injection patterns, secret key formats, dangerous function calls)</li>
-          <li><strong>AI reasoning</strong> — understanding context to avoid false positives. Not every string that looks like a key is actually dangerous.</li>
-          <li><strong>Runtime simulation</strong> — predicting what will crash when real users hit your app</li>
-          <li><strong>Dependency analysis</strong> — checking your imports against known package databases</li>
-        </ul>
-        The entire scan completes in under 10 seconds for most codebases.
-      </div>
-    </div>
-
-    <div class="faq-item" data-cat="technical">
-      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
-        <span class="faq-q-text">How accurate are the auto-fixes? Can I trust them?</span>
-        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-          <span class="faq-tag tag-technical">Technical</span>
-          <span class="faq-chevron">▶</span>
-        </div>
-      </div>
-      <div class="faq-a">
-        VibeSafe shows you the exact before-and-after diff before applying any fix. You always review first — we never change your code without showing you what's changing and why.<br><br>
-        For the most common issue types — exposed secrets, missing awaits, SQL injection, and wrong comparisons — the fixes are <strong>surgical and reliable</strong>. We only touch the broken line, never the surrounding code.<br><br>
-        For complex logic issues, we explain the problem and suggest the fix but always let you review. If a fix requires architectural changes, we flag it clearly rather than applying a surface-level band-aid.
-      </div>
-    </div>
-
-    <div class="faq-item" data-cat="technical">
-      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
-        <span class="faq-q-text">Does VibeSafe work with GitHub, Vercel, or CI/CD pipelines?</span>
-        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-          <span class="faq-tag tag-technical">Technical</span>
-          <span class="faq-chevron">▶</span>
-        </div>
-      </div>
-      <div class="faq-a">
-        <strong>GitHub integration is available on the Pro plan.</strong> Connect your repo and VibeSafe automatically scans every new commit or pull request.<br><br>
-        Vercel integration (auto-scan on every deployment) is on the roadmap for Q3 2026.<br><br>
-        CI/CD pipeline integration (GitHub Actions, GitLab CI) is available on the Team plan — every deployment triggers a scan and blocks if critical issues are found.
-      </div>
-    </div>
-
-    <!-- TRUST -->
-    <div class="faq-item" data-cat="trust">
-      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
-        <span class="faq-q-text">Is my code safe with VibeSafe? Do you store it?</span>
-        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-          <span class="faq-tag tag-trust">Trust & Privacy</span>
-          <span class="faq-chevron">▶</span>
-        </div>
-      </div>
-      <div class="faq-a">
-        Your code is <strong>scanned in memory and never stored permanently</strong>. We don't retain your source code after the scan completes. We don't train our models on your code. We don't share it with third parties.<br><br>
-        What we do store: your scan results and safety score (so you can reference them later). You can delete these at any time from your account settings.<br><br>
-        If you're building something highly sensitive, you can also use VibeSafe's self-hosted option (coming on the Enterprise plan) where your code never leaves your infrastructure.
-      </div>
-    </div>
-
-    <div class="faq-item" data-cat="trust">
-      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
-        <span class="faq-q-text">I'm not technical — how do I know VibeSafe actually found real issues and not false alarms?</span>
-        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-          <span class="faq-tag tag-trust">Trust & Privacy</span>
-          <span class="faq-chevron">▶</span>
-        </div>
-      </div>
-      <div class="faq-a">
-        Every issue VibeSafe reports includes:<br><br>
-        <ul>
-          <li><strong>The exact line of code</strong> — so you can see it yourself</li>
-          <li><strong>What could go wrong</strong> — a specific scenario of how it gets exploited</li>
-          <li><strong>The before and after</strong> — showing exactly what changes and why it's safer</li>
-        </ul>
-        We never report vague warnings. If VibeSafe flags something, it shows you the exact dangerous line, explains the real-world attack scenario in plain English, and shows you the specific fix.<br><br>
-        You don't need to trust us blindly — the evidence is right there on screen.
-      </div>
-    </div>
-
-    <div class="faq-item" data-cat="trust">
-      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
-        <span class="faq-q-text">Couldn't I just ask ChatGPT or Claude to review my code for free?</span>
-        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-          <span class="faq-tag tag-trust">Trust & Privacy</span>
-          <span class="faq-chevron">▶</span>
-        </div>
-      </div>
-      <div class="faq-a">
-        You could — and many founders do. The problems with that approach:<br><br>
-        <ul>
-          <li><strong>No structure</strong> — ChatGPT gives you a wall of text, not actionable issue cards with severity levels</li>
-          <li><strong>No verification</strong> — it can't run your code to confirm fixes actually work</li>
-          <li><strong>No safety score</strong> — nothing to share with investors or clients to prove your app is secure</li>
-          <li><strong>No monitoring</strong> — you'd need to re-paste code every time you make a change</li>
-          <li><strong>Context limits</strong> — large codebases get truncated, missing issues in the cut-off sections</li>
-        </ul>
-        VibeSafe is the structured, reliable, repeatable version of that workflow. Purpose-built for this specific problem.
-      </div>
-    </div>
-
-    <div class="faq-item" data-cat="trust">
-      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
-        <span class="faq-q-text">What if VibeSafe misses a vulnerability?</span>
-        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-          <span class="faq-tag tag-trust">Trust & Privacy</span>
-          <span class="faq-chevron">▶</span>
-        </div>
-      </div>
-      <div class="faq-a">
-        No security tool catches 100% of vulnerabilities — including Snyk and GitHub Advanced Security. VibeSafe is designed to catch the most common and most dangerous issues in AI-generated code, which account for the vast majority of real-world breaches for early-stage apps.<br><br>
-        VibeSafe is <strong>significantly better than no scan at all</strong> — which is the current reality for most non-technical founders. We're transparent about what we scan for and continuously expand our detection coverage.<br><br>
-        For high-security applications (fintech, healthcare, anything handling sensitive data at scale), we recommend combining VibeSafe with a professional security audit. VibeSafe handles the automated layer; humans handle the nuanced architectural review.
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- CTA -->
-<div class="cta-box">
-  <h2>Ready to ship safely?</h2>
-  <p>Join 800+ founders who scan before they ship. Free plan available — no credit card required.</p>
-  <a href="https://www.vibesafe.info" class="cta-btn" target="_blank">
-    Start free scan → vibesafe.info
-  </a>
-</div>
-
-<footer>
-  © 2026 VibeSafe · <a href="https://www.vibesafe.info" style="color:var(--cyan);text-decoration:none">vibesafe.info</a>
-</footer>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-function toggleFaq(item) {
-  item.classList.toggle('open');
+// ── SUPABASE AUTH ──
+const SUPABASE_URL = 'https://uxsmmpujxbzdgxxburxr.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_hgCpN6tsYqEiCkyvJm06qQ_1Ddlvznn';
+const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let currentUser = null;
+
+// Require login — redirect to login page if not authenticated
+(async function() {
+  const { data: { session } } = await sbClient.auth.getSession();
+  if (!session) {
+    window.location.href = '/login.html';
+    return;
+  }
+  currentUser = session.user;
+  // Show user email and initials
+  const email = currentUser.email || '';
+  const name = (currentUser.user_metadata && currentUser.user_metadata.full_name) || email;
+  const initials = name.split(' ').map(function(p){return p[0];}).join('').slice(0,2).toUpperCase() || email.slice(0,2).toUpperCase();
+  document.addEventListener('DOMContentLoaded', function() {
+    var av = document.getElementById('userAvatar');
+    var em = document.getElementById('userEmail');
+    if (av) av.textContent = initials;
+    if (em) em.textContent = email;
+    // Load scan history once logged in
+    if (typeof loadScanHistory === 'function') loadScanHistory();
+  });
+})();
+
+function toggleHistory() {
+  var list = document.getElementById('historyList');
+  var chev = document.getElementById('histChevron');
+  if (list.style.display === 'none') {
+    list.style.display = 'block';
+    if (chev) chev.style.transform = 'rotate(90deg)';
+    if (typeof loadScanHistory === 'function') loadScanHistory();
+  } else {
+    list.style.display = 'none';
+    if (chev) chev.style.transform = 'rotate(0deg)';
+  }
 }
 
-function filterFaq(cat, btn) {
-  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.faq-item').forEach(item => {
-    if (cat === 'all' || item.dataset.cat === cat) {
-      item.style.display = 'block';
-    } else {
-      item.style.display = 'none';
-      item.classList.remove('open');
+function toggleUserMenu(e) {
+  if (e) e.stopPropagation();
+  var menu = document.getElementById('userMenu');
+  menu.style.display = (menu.style.display === 'none' || menu.style.display === '') ? 'block' : 'none';
+}
+
+function openAccountMenu(e) {
+  if (e) e.stopPropagation();
+  var menu = document.getElementById('userMenu');
+  if (menu) menu.style.display = 'block';
+}
+
+async function handleLogout() {
+  await sbClient.auth.signOut();
+  window.location.href = '/login.html';
+}
+
+// Close menu when clicking outside
+document.addEventListener('click', function(e) {
+  var menu = document.getElementById('userMenu');
+  var avatar = document.getElementById('userAvatar');
+  if (menu && avatar && !avatar.contains(e.target) && !menu.contains(e.target)) {
+    menu.style.display = 'none';
+  }
+});
+</script>
+
+
+<!-- TOP NAV -->
+<div class="topnav">
+  <div class="topnav-left">
+    <a href="#" class="logo">
+      <span class="logo-icon">🛡️</span>
+      VibeSafe
+    </a>
+    <div class="nav-divider"></div>
+    <div class="breadcrumb">
+      Dashboard <span class="sep">/</span> <span>New scan</span>
+    </div>
+  </div>
+  <div class="topnav-right">
+    <div class="nav-badge">
+      <span class="badge-pulse"></span>
+      All systems operational
+    </div>
+    <div style="position:relative">
+      <button class="avatar-btn" id="userAvatar" onclick="toggleUserMenu(event)" title="Account">YO</button>
+      <div id="userMenu" style="display:none;position:absolute;top:42px;right:0;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:8px;min-width:200px;box-shadow:0 8px 24px rgba(0,0,0,0.4);z-index:100">
+        <div style="padding:8px 12px;border-bottom:1px solid var(--border);margin-bottom:6px">
+          <div style="font-size:0.72rem;color:var(--text3)">Signed in as</div>
+          <div style="font-size:0.82rem;color:var(--text);font-weight:500;word-break:break-all" id="userEmail">loading...</div>
+        </div>
+        <button onclick="handleLogout()" style="width:100%;text-align:left;padding:8px 12px;background:none;border:none;color:var(--text2);font-size:0.82rem;cursor:pointer;border-radius:6px;font-family:'Inter',sans-serif" onmouseover="this.style.background='var(--surface3)'" onmouseout="this.style.background='none'">
+          Sign out
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP BODY -->
+<div class="app-body">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Workspace</div>
+      <button class="sidebar-item active" onclick="setPage('scan')">
+        <span class="si-icon">🔍</span> New scan
+        <span class="si-new">NEW</span>
+      </button>
+      <button class="sidebar-item" onclick="toggleHistory()">
+        <span class="si-icon">📋</span> Scan history
+        <span class="si-chevron" id="histChevron" style="margin-left:auto;font-size:10px;transition:transform 0.2s">▶</span>
+      </button>
+      <div class="history-section" id="historyList" style="display:none;max-height:280px">
+        <div style="padding:12px;font-size:0.78rem;color:var(--text3);text-align:center">Loading...</div>
+      </div>
+      <button class="sidebar-item" onclick="setPage('monitor')">
+        <span class="si-icon">📡</span> Monitoring
+      </button>
+    </div>
+
+    <div class="sidebar-sep"></div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Scan from</div>
+      <button class="sidebar-item" onclick="switchEditorTab(document.querySelectorAll('.etab')[2],'url')">
+        <span class="si-icon">🐱</span> GitHub URL
+      </button>
+      <button class="sidebar-item" onclick="switchEditorTab(document.querySelectorAll('.etab')[1],'upload')">
+        <span class="si-icon">📁</span> Upload file
+      </button>
+      <button class="sidebar-item" onclick="switchEditorTab(document.querySelectorAll('.etab')[0],'editor')">
+        <span class="si-icon">📝</span> Paste code
+      </button>
+    </div>
+
+    <div class="sidebar-sep"></div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <button class="sidebar-item" onclick="openAccountMenu(event)">
+        <span class="si-icon">⚙️</span> Account
+      </button>
+      <button class="sidebar-item" onclick="window.open('/faq.html','_blank')">
+        <span class="si-icon">📚</span> Help &amp; FAQ
+      </button>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="plan-card">
+        <div class="plan-label">Current plan</div>
+        <div class="plan-name">Starter (Free)</div>
+        <div class="plan-bar-track">
+          <div class="plan-bar-fill"></div>
+        </div>
+        <div class="plan-meta">
+          <span>1 of 3 scans used</span>
+          <span>resets Jun 30</span>
+        </div>
+        <button class="upgrade-btn" onclick="window.open('https://buy.stripe.com/test_8x25kFdvx9Zi0rifNN9EI00','_blank')">
+          Upgrade to Pro →
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <!-- EDITOR PANEL -->
+    <div class="editor-panel" id="editorPanel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>📝</span> Code input
+        </div>
+        <div class="panel-actions">
+          <select class="lang-select" id="langSelect">
+            <option value="js">JavaScript</option>
+            <option value="ts">TypeScript</option>
+            <option value="py">Python</option>
+            <option value="java">Java</option>
+            <option value="cs">.NET / C#</option>
+          </select>
+          <button class="btn btn-ghost" onclick="clearEditor()">Clear</button>
+          <button class="btn btn-ghost" onclick="loadSample()">Load sample</button>
+          <button class="btn btn-primary" id="scanBtn" onclick="startScan()">
+            ▶ Run scan
+          </button>
+        </div>
+      </div>
+
+      <div class="editor-tabs">
+        <button class="etab active" onclick="switchEditorTab(this,'editor')">Editor</button>
+        <button class="etab" onclick="switchEditorTab(this,'upload')">Upload file</button>
+        <button class="etab" onclick="switchEditorTab(this,'url')">From URL</button>
+      </div>
+
+      <div class="code-area-wrap" id="editorTab">
+        <div class="line-numbers" id="lineNumbers">1</div>
+        <textarea
+          class="code-editor"
+          id="codeEditor"
+          spellcheck="false"
+          placeholder="// Paste your AI-generated code here...
+// VibeSafe will scan for:
+//   • Security vulnerabilities
+//   • Runtime errors
+//   • Missing packages
+//   • Exposed secrets
+//   • Logic bugs"
+          oninput="updateLineNumbers()"
+          onscroll="syncScroll()"
+        ></textarea>
+      </div>
+
+      <div class="code-area-wrap" id="uploadTab" style="display:none; align-items:center; justify-content:center; flex-direction:column; gap:14px;">
+        <div style="font-size:2.5rem">📁</div>
+        <div style="font-weight:600">Upload your code file</div>
+        <div style="font-size:0.82rem; color:var(--text3)">Supports .js .ts .jsx .tsx .py .java .cs .txt</div>
+        <input type="file" id="fileInput" accept=".js,.ts,.jsx,.tsx,.py,.java,.cs,.txt,.html,.css,.json" style="display:none" onchange="handleFileUpload(event)">
+        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">Browse files</button>
+        <div id="fileName" style="font-size:0.78rem;color:var(--cyan);margin-top:4px"></div>
+      </div>
+
+      <div class="code-area-wrap" id="urlTab" style="display:none; align-items:center; justify-content:center; flex-direction:column; gap:14px; padding:32px;">
+        <div style="font-size:2.5rem">🔗</div>
+        <div style="font-weight:600">Scan from GitHub URL</div>
+        <div style="font-size:0.8rem; color:var(--text3); text-align:center; max-width:420px">
+          Paste a link to a specific file in a public GitHub repo. VibeSafe fetches it (read-only) and scans it instantly.
+        </div>
+        <div style="display:flex; gap:8px; width:100%; max-width:440px;">
+          <input type="text" id="githubUrlInput" placeholder="https://github.com/user/repo/blob/main/app.js"
+            style="flex:1; padding:9px 12px; background:var(--surface2); border:1px solid var(--border2); border-radius:7px; color:var(--text); font-size:0.82rem; outline:none; font-family:'Inter',sans-serif;"
+            onkeydown="if(event.key==='Enter')scanFromGitHub()"
+          >
+          <button class="btn btn-primary" id="githubFetchBtn" onclick="scanFromGitHub()">Scan</button>
+        </div>
+        <div style="font-size:0.72rem; color:var(--text3)">Example: github.com/expressjs/express/blob/master/lib/router/route.js</div>
+      </div>
+
+      <div class="editor-footer">
+        <div class="ef-item">
+          <span>Lines:</span>
+          <span id="lineCount" style="color:var(--text2)">0</span>
+        </div>
+        <div class="ef-item">
+          <span>Chars:</span>
+          <span id="charCount" style="color:var(--text2)">0</span>
+        </div>
+        <div class="ef-item" id="langLabel">
+          <span style="color:var(--cyan)">●</span>
+          <span id="langDisplay">JavaScript</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS PANEL -->
+    <div class="results-panel" id="resultsPanel">
+
+      <!-- Score header (hidden until scan) -->
+      <div class="score-header" id="scoreHeader" style="display:none">
+        <div class="gauge-wrap">
+          <div class="gauge">
+            <svg viewBox="0 0 120 120" class="gauge-svg">
+              <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#00D4FF"/>
+                  <stop offset="100%" stop-color="#7C3AED"/>
+                </linearGradient>
+              </defs>
+              <circle class="gauge-bg" cx="60" cy="60" r="52"></circle>
+              <circle class="gauge-fill" id="gaugeFill" cx="60" cy="60" r="52"></circle>
+            </svg>
+            <div class="gauge-center">
+              <div class="gauge-num" id="scoreValue">--</div>
+              <div class="gauge-max">/100</div>
+            </div>
+          </div>
+          <div class="gauge-verdict" id="scoreVerdict">Scanning</div>
+        </div>
+        <div class="score-stats">
+          <div class="sstat err">
+            <div class="sstat-num" id="critCount">0</div>
+            <div class="sstat-label">Critical</div>
+          </div>
+          <div class="sstat warn">
+            <div class="sstat-num" id="warnCount">0</div>
+            <div class="sstat-label">Warnings</div>
+          </div>
+          <div class="sstat ok">
+            <div class="sstat-num" id="passCount">0</div>
+            <div class="sstat-label">Passed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel header -->
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>🛡️</span>
+          <span id="resultsPanelTitle">Scan results</span>
+        </div>
+        <div class="panel-actions" id="resultsPanelActions">
+          <button class="btn btn-ghost" id="exportBtn" style="display:none" onclick="exportReport()">
+            Export PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">🔬</div>
+        <div class="empty-title">No scan yet</div>
+        <div class="empty-desc">Paste your AI-generated code in the editor and click "Run scan" to detect errors, security vulnerabilities, and bugs.</div>
+      </div>
+
+      <!-- Scanning state -->
+      <div class="scanning-state" id="scanningState" style="display:none">
+        <div class="scan-ring">
+          <div class="scan-ring-inner"></div>
+        </div>
+        <div class="scan-progress-wrap">
+          <div class="scan-progress-label">
+            <span id="scanStepLabel">Checking code structure...</span>
+            <span id="scanPct">0%</span>
+          </div>
+          <div class="scan-progress-track">
+            <div class="scan-progress-fill" id="scanProgressFill" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="scan-step" id="scanSubLabel">Starting security scan</div>
+      </div>
+
+      <!-- Issues list -->
+      <div class="issues-list" id="issuesList" style="display:none"></div>
+
+      <!-- Results footer -->
+      <div class="results-footer" id="resultsFooter" style="display:none">
+        <button class="fix-all-btn" id="fixAllBtn" onclick="fixAll()">
+          ⚡ Auto-fix all issues
+        </button>
+        <button class="fix-all-btn" id="copyFixesBtn" onclick="copyFixesForAI()" style="margin-top:8px;background:var(--surface2);color:var(--cyan);border:1px solid rgba(0,212,255,0.3);box-shadow:none">
+          📋 Copy all fixes for Cursor / Lovable
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+// ── STATE ──
+let issues = [];
+let scanDone = false;
+let fixedCount = 0;
+
+// ── SAMPLE CODE ──
+const SAMPLES = {
+  js: `const express = require('express')
+const app = express()
+const db = require('./db')
+
+// TODO: remove before deploy
+const API_KEY = "sk_live_4xKp9mQ2rT8wN3vL"
+const DB_PASS = "admin123"
+
+app.get('/user/:id', async (req, res) => {
+  const user = db.query("SELECT * FROM users WHERE id = " + req.params.id)
+  res.json(user)
+})
+
+app.post('/login', (req, res) => {
+  const { email, password } = req.body
+  const result = db.query(\`SELECT * FROM users WHERE email='\${email}'\`)
+  if (result.password == password) {
+    res.json({ success: true })
+  }
+})
+
+app.listen(3000)`,
+
+  py: `import os
+import sqlite3
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+SECRET_KEY = "my_secret_key_12345"
+DB_PASSWORD = "root"
+
+def get_user(user_id):
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+    query = "SELECT * FROM users WHERE id = " + user_id
+    cursor.execute(query)
+    return cursor.fetchone()
+
+@app.route('/api/data')
+def get_data():
+    response = requests.get('https://api.example.com/data')
+    data = response.json
+    return jsonify(data)
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    file = request.files['file']
+    file.save('/uploads/' + file.filename)
+    return 'OK'
+
+if __name__ == '__main__':
+    app.run(debug=True)`,
+
+  ts: `import { PrismaClient } from '@prisma/client'
+import * as jwt from 'jsonwebtoken'
+
+const prisma = new PrismaClient()
+const JWT_SECRET = "hardcoded_jwt_secret_do_not_share"
+
+export async function getUser(id: string) {
+  const user = prisma.user.findUnique({ where: { id } })
+  return user
+}
+
+export async function createToken(userId: string) {
+  const token = jwt.sign({ userId }, JWT_SECRET)
+  return token
+}
+
+export async function deleteUser(id: any) {
+  await prisma.$executeRaw\`DELETE FROM users WHERE id = \${id}\`
+}
+
+async function fetchData(url: string) {
+  const res = fetch(url)
+  const data = res.json()
+  console.log(data)
+}`,
+};
+
+const ISSUES_DATA = {
+  js: [
+    { id:1, sev:'critical', type:'Secret exposed', title:'API key hardcoded in source', line:'Line 5', desc:'The value "sk_live_4xKp9mQ2rT8wN3vL" is a live API key committed directly to your code. Anyone with repo access — or who views source — can extract and abuse it.', before:'const API_KEY = "sk_live_4xKp9mQ2rT8wN3vL"', after:'const API_KEY = process.env.API_KEY', fix:'Move to .env file and add .env to .gitignore.' },
+    { id:2, sev:'critical', type:'SQL injection', title:'Unsanitised input in SQL query', line:'Line 11', desc:'Directly concatenating req.params.id into a SQL query allows an attacker to inject arbitrary SQL — they could dump your entire database or delete it.', before:'db.query("SELECT * FROM users WHERE id = " + req.params.id)', after:'db.query("SELECT * FROM users WHERE id = ?", [req.params.id])', fix:'Use parameterised queries — never string-concatenate user input into SQL.' },
+    { id:3, sev:'critical', type:'SQL injection', title:'Template literal SQL on login route', line:'Line 16', desc:'Using a template literal to build a SQL query from user-supplied email is equally dangerous. This is the most common attack vector for authentication bypasses.', before:'db.query SELECT FROM users WHERE email equals email variable', after:'db.query("SELECT * FROM users WHERE email = ?", [email])', fix:'Parameterise all queries.' },
+    { id:4, sev:'warning', type:'Missing await', title:'Async DB call without await', line:'Line 11', desc:'db.query returns a Promise. Without await, user is always a Promise object — res.json(user) will send "{}" instead of real data, silently breaking your endpoint.', before:'const user = db.query(...)', after:'const user = await db.query(...)', fix:'Add await before every async call.' },
+    { id:5, sev:'warning', type:'Weak comparison', title:'Password compared with == not ===', line:'Line 19', desc:'Using == allows type coercion. In JavaScript, "0" == false is true. Always use === for security comparisons.', before:'if (result.password == password)', after:'if (result.password === password)', fix:'Use strict equality for all comparisons.' },
+  ],
+  py: [
+    { id:1, sev:'critical', type:'Secret exposed', title:'Hardcoded secret key in source', line:'Line 6', desc:'SECRET_KEY and DB_PASSWORD are visible to anyone reading your code or git history. These should always come from environment variables.', before:'SECRET_KEY = "my_secret_key_12345"', after:'SECRET_KEY = os.environ.get("SECRET_KEY")', fix:'Use os.environ.get() and a .env file.' },
+    { id:2, sev:'critical', type:'SQL injection', title:'String concatenation in SQL query', line:'Line 13', desc:'Concatenating user_id directly into a SQL string is a classic injection vulnerability. An attacker can pass "1 OR 1=1" and receive all user records.', before:'"SELECT * FROM users WHERE id = " + user_id', after:'"SELECT * FROM users WHERE id = ?", (user_id,)', fix:'Use parameterised queries with cursor.execute().' },
+    { id:3, sev:'critical', type:'Path traversal', title:'Unsafe file path from user input', line:'Line 27', desc:'Using file.filename directly allows path traversal attacks. An attacker could upload a file named "../../app.py" and overwrite your application.', before:"file.save('/uploads/' + file.filename)", after:'file.save(os.path.join("/uploads", secure_filename(file.filename)))', fix:'Use werkzeug.utils.secure_filename().' },
+    { id:4, sev:'warning', type:'Missing call', title:'response.json not called', line:'Line 21', desc:'response.json is a method — without () it returns the method object, not the parsed JSON. This will cause a TypeError at runtime.', before:'data = response.json', after:'data = response.json()', fix:'Add () to call the method.' },
+    { id:5, sev:'warning', type:'Debug mode', title:'Flask running with debug=True', line:'Line 31', desc:'debug=True exposes an interactive debugger in the browser. In production, this allows arbitrary code execution on your server.', before:'app.run(debug=True)', after:'app.run(debug=os.environ.get("FLASK_DEBUG","false")=="true")', fix:'Control debug mode via environment variable.' },
+  ],
+  ts: [
+    { id:1, sev:'critical', type:'Secret exposed', title:'JWT secret hardcoded in source', line:'Line 5', desc:'JWT_SECRET is committed to your code. Anyone with repo access can forge valid authentication tokens and log in as any user.', before:'const JWT_SECRET = "hardcoded_jwt_secret_do_not_share"', after:'const JWT_SECRET = process.env.JWT_SECRET!', fix:'Move to environment variable.' },
+    { id:2, sev:'critical', type:'SQL injection', title:'Raw SQL with interpolated value', line:'Line 18', desc:'Using Prisma executeRaw with a template literal does not prevent injection. Use parameterised methods only.', before:'await prisma.executeRaw DELETE FROM users WHERE id', after:'await prisma.user.delete({ where: { id } })', fix:'Use Prisma type-safe query methods instead of raw SQL.' },
+    { id:3, sev:'critical', type:'Missing await', title:'Prisma call missing await', line:'Line 9', desc:'prisma.user.findUnique returns a Promise. Without await, user is always a pending Promise — your function will return undefined silently.', before:'const user = prisma.user.findUnique(...)', after:'const user = await prisma.user.findUnique(...)', fix:'Add await before all Prisma calls.' },
+    { id:4, sev:'warning', type:'Missing await', title:'fetch() and .json() both missing await', line:'Line 23', desc:'Both fetch() and .json() are async. Without await on both, res is a Promise and data will always be undefined.', before:'const res = fetch(url)\nconst data = res.json()', after:'const res = await fetch(url)\nconst data = await res.json()', fix:'Await every async operation in the chain.' },
+    { id:5, sev:'warning', type:'Unsafe type', title:'Parameter typed as any', line:'Line 17', desc:'Using any for the id parameter disables TypeScript type checking. This is how bugs that TypeScript would catch reach production.', before:'async function deleteUser(id: any)', after:'async function deleteUser(id: string)', fix:'Use the correct specific type.' },
+  ],
+};
+
+const LANG_NAMES = { js:'JavaScript', ts:'TypeScript', py:'Python', java:'Java', cs:'.NET / C#' };
+
+// ── LINE NUMBERS ──
+function updateLineNumbers() {
+  const ta = document.getElementById('codeEditor');
+  const lines = ta.value.split('\n');
+  document.getElementById('lineCount').textContent = lines.length;
+  document.getElementById('charCount').textContent = ta.value.length;
+  const ln = document.getElementById('lineNumbers');
+  ln.textContent = lines.map((_,i) => i+1).join('\n');
+}
+
+function syncScroll() {
+  const ta = document.getElementById('codeEditor');
+  document.getElementById('lineNumbers').scrollTop = ta.scrollTop;
+}
+
+// ── EDITOR TABS ──
+function switchEditorTab(el, tab) {
+  document.querySelectorAll('.etab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const tabs = { editor:'editorTab', upload:'uploadTab', url:'urlTab' };
+  Object.entries(tabs).forEach(([k,id]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.display = k === tab ? (k==='editor'?'relative':'flex') : 'none';
+  });
+}
+
+// ── LOAD SAMPLE ──
+function loadSample() {
+  const lang = document.getElementById('langSelect').value;
+  const sample = SAMPLES[lang] || SAMPLES.js;
+  document.getElementById('codeEditor').value = sample;
+  updateLineNumbers();
+  showToast('Sample ' + LANG_NAMES[lang] + ' code loaded', 'success');
+}
+
+// ── CLEAR EDITOR ──
+function clearEditor() {
+  document.getElementById('codeEditor').value = '';
+  updateLineNumbers();
+  resetResults();
+}
+
+function resetResults() {
+  scanDone = false; fixedCount = 0; issues = [];
+  document.getElementById('scoreHeader').style.display = 'none';
+  document.getElementById('emptyState').style.display = 'flex';
+  document.getElementById('scanningState').style.display = 'none';
+  document.getElementById('issuesList').style.display = 'none';
+  document.getElementById('resultsFooter').style.display = 'none';
+  document.getElementById('exportBtn').style.display = 'none';
+  document.getElementById('resultsPanelTitle').textContent = 'Scan results';
+}
+
+// ── START SCAN ──
+// ── REAL SCAN ENGINE ──
+// Calls the secure Vercel Edge Function — your API key never touches the browser
+
+const SCAN_API_URL = 'https://vibesafe-api.vercel.app/api/scan'; // Relative URL — same domain as your Vercel deployment
+
+async function scanFromGitHub() {
+  var urlInput = document.getElementById('githubUrlInput');
+  var url = urlInput.value.trim();
+  if (!url) { showToast('Please paste a GitHub file URL', 'error'); return; }
+  if (url.indexOf('github.com') === -1 && url.indexOf('githubusercontent.com') === -1) {
+    showToast('Please paste a valid GitHub URL', 'error');
+    return;
+  }
+
+  var btn = document.getElementById('githubFetchBtn');
+  btn.disabled = true;
+  btn.textContent = 'Fetching...';
+
+  // Switch to editor view and show scanning state
+  switchEditorTab(document.querySelector('.etab'), 'editor');
+
+  document.getElementById('scoreHeader').style.display = 'none';
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('issuesList').style.display = 'none';
+  document.getElementById('resultsFooter').style.display = 'none';
+  document.getElementById('scanningState').style.display = 'flex';
+  issues = [];
+
+  var stepLabel = document.getElementById('scanStepLabel');
+  var subLabel = document.getElementById('scanSubLabel');
+  if (stepLabel) stepLabel.textContent = 'Fetching from GitHub...';
+  if (subLabel) subLabel.textContent = url;
+  document.getElementById('scanProgressFill').style.width = '20%';
+  document.getElementById('scanPct').textContent = '20%';
+
+  try {
+    var response = await fetch(SCAN_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ githubUrl: url })
+    });
+
+    if (!response.ok) {
+      var err = await response.json().catch(function() { return {}; });
+      throw new Error(err.error || 'Could not scan that URL.');
     }
+
+    document.getElementById('scanProgressFill').style.width = '90%';
+    document.getElementById('scanPct').textContent = '90%';
+
+    var result = await response.json();
+
+    issues = (result.issues || []).map(function(issue, idx) {
+      return {
+        id: idx + 1, sev: issue.severity || 'warning', type: issue.type || 'Issue',
+        title: issue.title || 'Unknown issue', line: issue.line || '', desc: issue.description || '',
+        impact: issue.impact || '', before: issue.before || '', after: issue.after || '',
+        fix: issue.fix_explanation || 'Apply the suggested fix.', fixed: false
+      };
+    });
+    window.vsPassedChecks = result.passed || [];
+    window.vsSummary = result.summary || '';
+
+    document.getElementById('scanProgressFill').style.width = '100%';
+    document.getElementById('scanPct').textContent = '100%';
+    setTimeout(function() { showResults(result.score); }, 300);
+    showToast('Scanned from GitHub successfully', 'success');
+  } catch (err) {
+    document.getElementById('scanningState').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'flex';
+    showToast(err.message || 'GitHub scan failed', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Scan';
+  }
+}
+
+async function startScan() {
+  const code = document.getElementById('codeEditor').value.trim();
+  if (!code) { showToast('Please paste some code first', 'error'); return; }
+
+  const lang = document.getElementById('langSelect').value;
+  const langName = LANG_NAMES[lang] || 'code';
+
+  // Reset UI
+  document.getElementById('scoreHeader').style.display = 'none';
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('issuesList').style.display = 'none';
+  document.getElementById('resultsFooter').style.display = 'none';
+  document.getElementById('scanningState').style.display = 'flex';
+  document.getElementById('scanBtn').disabled = true;
+  document.getElementById('exportBtn').style.display = 'none';
+  issues = [];
+
+  // Animated progress while waiting for API
+  const steps = [
+    [0,  'Checking code structure...', 'Parsing syntax, imports, and module layout'],
+    [18, 'Finding exposed secrets...', 'Scanning for API keys, tokens, and credentials'],
+    [36, 'Checking packages...', 'Verifying dependencies and detecting hallucinated imports'],
+    [54, 'Detecting runtime errors...', 'Finding missing awaits, null risks, and logic bugs'],
+    [72, 'Preparing security report...', 'Calculating safety score and generating fixes'],
+  ];
+
+  let stepIdx = 0;
+  const progressInterval = setInterval(() => {
+    if (stepIdx < steps.length) {
+      const [pct, step, sub] = steps[stepIdx];
+      document.getElementById('scanProgressFill').style.width = pct + '%';
+      document.getElementById('scanPct').textContent = pct + '%';
+      document.getElementById('scanStepLabel').textContent = step;
+      document.getElementById('scanSubLabel').textContent = sub;
+      stepIdx++;
+    }
+  }, 900);
+
+  try {
+    // Call the secure backend
+    const response = await fetch(SCAN_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, language: langName }),
+    });
+
+    clearInterval(progressInterval);
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error || 'Scan failed. Please try again.');
+    }
+
+    const result = await response.json();
+
+    // Complete the progress bar
+    document.getElementById('scanProgressFill').style.width = '100%';
+    document.getElementById('scanPct').textContent = '100%';
+    document.getElementById('scanStepLabel').textContent = 'Scan complete!';
+
+    // Map API results to our issue format
+    issues = (result.issues || []).map((issue, idx) => ({
+      id: idx + 1,
+      sev: issue.severity || 'warning',
+      type: issue.type || 'Issue',
+      title: issue.title || 'Unknown issue',
+      line: issue.line || 'Unknown line',
+      desc: issue.description || '',
+      impact: issue.impact || '',
+      before: issue.before || '',
+      after: issue.after || '',
+      fix: issue.fix_explanation || 'Apply the suggested fix.',
+      fixed: false,
+    }));
+
+    // Store passed checks
+    window.vsPassedChecks = result.passed || [];
+    window.vsSummary = result.summary || '';
+    window.vsDetectedLang = result.language || langName;
+
+    setTimeout(() => showResults(result.score), 400);
+
+  } catch (err) {
+    clearInterval(progressInterval);
+    document.getElementById('scanningState').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'flex';
+    document.getElementById('scanBtn').disabled = false;
+    showToast(err.message || 'Scan failed. Please try again.', 'error');
+    console.error('Scan error:', err);
+  }
+}
+
+function showResults(apiScore) {
+  const criticals = issues.filter(i => i.sev === 'critical').length;
+  const warnings  = issues.filter(i => i.sev === 'warning').length;
+  const passed    = (window.vsPassedChecks || []).length || Math.max(0, 8 - criticals - warnings);
+
+  // Use score from API if provided, otherwise calculate
+  const score = apiScore !== undefined
+    ? Math.max(5, Math.min(100, Math.round(apiScore)))
+    : Math.max(5, 100 - criticals * 18 - warnings * 8);
+
+  document.getElementById('scanningState').style.display = 'none';
+
+  const cls = score >= 75 ? 'good' : score >= 50 ? 'warn' : 'bad';
+  const verdict = score >= 75 ? 'Good' : score >= 50 ? 'Needs work' : 'At risk';
+
+  // Animate circular gauge
+  const scoreEl = document.getElementById('scoreValue');
+  const gaugeFill = document.getElementById('gaugeFill');
+  const verdictEl = document.getElementById('scoreVerdict');
+  if (scoreEl) scoreEl.textContent = score;
+  if (verdictEl) { verdictEl.textContent = verdict; verdictEl.className = 'gauge-verdict ' + cls; }
+  if (gaugeFill) {
+    gaugeFill.className.baseVal = 'gauge-fill ' + cls;
+    var circumference = 327; // 2 * PI * 52
+    var offset = circumference - (score / 100) * circumference;
+    // reset then animate
+    gaugeFill.style.strokeDashoffset = circumference;
+    setTimeout(function() { gaugeFill.style.strokeDashoffset = offset; }, 100);
+  }
+
+  document.getElementById('critCount').textContent = criticals;
+  document.getElementById('warnCount').textContent = warnings;
+  document.getElementById('passCount').textContent = passed;
+  document.getElementById('scoreHeader').style.display = 'block';
+
+  const list = document.getElementById('issuesList');
+  list.innerHTML = '';
+
+  // Show summary if available
+  if (window.vsSummary) {
+    const summaryEl = document.createElement('div');
+    summaryEl.style.cssText = 'background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:10px 13px;font-size:0.78rem;color:var(--text2);line-height:1.5;margin-bottom:4px';
+    summaryEl.innerHTML = '<span style="color:var(--text3);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;font-weight:600;display:block;margin-bottom:4px">Summary</span>' + window.vsSummary;
+    list.appendChild(summaryEl);
+  }
+
+  if (issues.length === 0) {
+    const el = document.createElement('div');
+    el.style.cssText = 'text-align:center;padding:24px 16px';
+    el.innerHTML = '<div style="font-size:2rem;margin-bottom:8px">✅</div><div style="font-weight:600;color:var(--green);margin-bottom:4px">No issues found</div><div style="font-size:0.78rem;color:var(--text3)">Your code looks clean and safe to ship.</div>';
+    list.appendChild(el);
+  } else {
+    issues.forEach((issue, idx) => {
+      const card = buildIssueCard(issue, idx);
+      setTimeout(() => list.appendChild(card), idx * 80);
+    });
+  }
+
+  // Show passed checks
+  if ((window.vsPassedChecks || []).length > 0) {
+    setTimeout(() => {
+      const passedEl = document.createElement('div');
+      passedEl.style.cssText = 'background:var(--green-dim);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:10px 13px;margin-top:4px';
+      passedEl.innerHTML = '<div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;font-weight:600;color:var(--green);margin-bottom:6px">Passed checks</div>' +
+        window.vsPassedChecks.map(p => '<div style="font-size:0.78rem;color:#6EE7B7;margin-bottom:3px">✓ ' + p + '</div>').join('');
+      list.appendChild(passedEl);
+    }, issues.length * 80 + 100);
+  }
+
+  list.style.display = 'flex';
+  document.getElementById('resultsFooter').style.display = 'block';
+  document.getElementById('exportBtn').style.display = 'flex';
+
+  const title = issues.length === 0
+    ? 'All clear ✓'
+    : issues.length + ' issue' + (issues.length > 1 ? 's' : '') + ' found';
+  document.getElementById('resultsPanelTitle').textContent = title;
+  document.getElementById('scanBtn').disabled = false;
+  scanDone = true;
+
+  showToast('Scan complete — ' + (issues.length === 0 ? 'no issues found!' : issues.length + ' issues found'), issues.length === 0 ? 'success' : 'info');
+
+  // Save this scan to history
+  saveScanToHistory(apiScore);
+}
+
+// ── SCAN HISTORY (Supabase) ──
+async function saveScanToHistory(score) {
+  if (!currentUser || !sbClient) return;
+  try {
+    var lang = LANG_NAMES[document.getElementById('langSelect').value] || 'code';
+    await sbClient.from('scans').insert({
+      user_id: currentUser.id,
+      language: lang,
+      score: Math.round(score || 0),
+      issues_count: issues.length,
+      summary: window.vsSummary || '',
+      results: { issues: issues, passed: window.vsPassedChecks || [], summary: window.vsSummary || '' }
+    });
+    loadScanHistory();
+  } catch (err) {
+    console.log('Could not save scan:', err);
+  }
+}
+
+async function loadScanHistory() {
+  if (!currentUser || !sbClient) return;
+  try {
+    var res = await sbClient
+      .from('scans')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(20);
+    if (res.error) throw res.error;
+    renderScanHistory(res.data || []);
+  } catch (err) {
+    console.log('Could not load history:', err);
+  }
+}
+
+function renderScanHistory(scans) {
+  var container = document.getElementById('historyList');
+  if (!container) return;
+  if (scans.length === 0) {
+    container.innerHTML = '<div style="padding:12px;font-size:0.78rem;color:var(--text3);text-align:center">No scans yet. Run your first scan!</div>';
+    return;
+  }
+  container.innerHTML = '';
+  scans.forEach(function(scan) {
+    var cls = scan.score >= 75 ? 'good' : scan.score >= 50 ? 'warn' : 'bad';
+    var date = new Date(scan.created_at).toLocaleDateString([], { month: 'short', day: 'numeric' });
+    var time = new Date(scan.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    var item = document.createElement('div');
+    item.className = 'history-item';
+    item.onclick = function() { loadPastScan(scan); };
+    item.innerHTML =
+      '<div class="hi-top"><span class="hi-name">' + scan.language + ' scan</span>' +
+      '<span class="hi-score ' + cls + '">' + scan.score + '</span></div>' +
+      '<div class="hi-meta">' + date + ' at ' + time + ' · ' + scan.issues_count + ' issue' + (scan.issues_count !== 1 ? 's' : '') + '</div>';
+    container.appendChild(item);
+  });
+}
+
+function loadPastScan(scan) {
+  if (!scan.results) return;
+  issues = (scan.results.issues || []).map(function(i) { return Object.assign({}, i, { fixed: false }); });
+  window.vsSummary = scan.results.summary || '';
+  window.vsPassedChecks = scan.results.passed || [];
+  showResults(scan.score);
+  showToast('Loaded scan from ' + new Date(scan.created_at).toLocaleDateString(), 'info');
+}
+
+function buildIssueCard(issue, idx) {
+  const card = document.createElement('div');
+  card.className = `issue-card severity-${issue.sev}`;
+  card.id = `issue-card-${issue.id}`;
+  card.style.animationDelay = (idx * 80) + 'ms';
+
+  card.innerHTML = `
+    <div class="issue-card-header" onclick="toggleIssue(this.parentElement)">
+      <div class="issue-sev-dot"></div>
+      <div class="issue-meta">
+        <div class="issue-type">${issue.type}</div>
+        <div class="issue-title">${issue.title}</div>
+        <div class="issue-line">${issue.line}</div>
+      </div>
+      <span class="sev-pill sev-pill-${issue.sev}">${issue.sev === 'critical' ? 'High' : issue.sev === 'warning' ? 'Medium' : 'Low'}</span>
+      <div class="issue-chevron">▶</div>
+    </div>
+    <div class="issue-body">
+      <div class="issue-desc">${issue.desc}</div>
+      <div class="code-snippet">
+        <div class="del">− ${issue.before}</div>
+        <div class="add">+ ${issue.after}</div>
+      </div>
+      <div class="fix-row">
+        <button class="fix-btn fix-btn-primary" id="fix-btn-${issue.id}" onclick="fixIssue(${issue.id})">
+          ⚡ Auto-fix
+        </button>
+        <button class="fix-btn fix-btn-ghost" onclick="showToast('Explanation copied','success')">
+          Copy explanation
+        </button>
+      </div>
+    </div>
+  `;
+  return card;
+}
+
+function toggleIssue(card) {
+  card.classList.toggle('open');
+}
+
+function fixIssue(id) {
+  const issue = issues.find(i => i.id === id);
+  if (!issue || issue.fixed) return;
+  issue.fixed = true;
+  fixedCount++;
+
+  const card = document.getElementById(`issue-card-${id}`);
+  card.className = 'issue-card severity-fixed';
+
+  const fixBtn = document.getElementById(`fix-btn-${id}`);
+  fixBtn.parentElement.innerHTML = `
+    <div class="fixed-label">
+      ✅ Fixed — ${issue.fix}
+    </div>
+  `;
+
+  // Update score
+  updateScore();
+  showToast(`Fixed: ${issue.title}`, 'success');
+
+  // Update header count
+  const remaining = issues.filter(i => !i.fixed).length;
+  document.getElementById('resultsPanelTitle').textContent =
+    remaining > 0 ? `${remaining} issues remaining` : 'All issues fixed ✓';
+
+  if (remaining === 0) {
+    document.getElementById('fixAllBtn').disabled = true;
+    document.getElementById('fixAllBtn').textContent = '✅ All issues fixed';
+  }
+}
+
+function fixAll() {
+  const unfixed = issues.filter(i => !i.fixed);
+  unfixed.forEach((issue, idx) => {
+    setTimeout(() => fixIssue(issue.id), idx * 300);
+  });
+  showToast(`Auto-fixing ${unfixed.length} issues...`, 'success');
+}
+
+function updateScore() {
+  const remaining = issues.filter(i => !i.fixed);
+  const crits = remaining.filter(i => i.sev==='critical').length;
+  const warns = remaining.filter(i => i.sev==='warning').length;
+  const score = Math.min(100, Math.max(10, 100 - crits*18 - warns*8));
+  const cls   = score >= 75 ? 'good' : score >= 50 ? 'warn' : 'bad';
+
+  var sv = document.getElementById('scoreValue');
+  if (sv) sv.textContent = score;
+  var gf = document.getElementById('gaugeFill');
+  if (gf) {
+    gf.className.baseVal = 'gauge-fill ' + cls;
+    var c = 327, off = c - (score/100)*c;
+    gf.style.strokeDashoffset = off;
+  }
+
+  document.getElementById('critCount').textContent = crits;
+  document.getElementById('warnCount').textContent = warns;
+}
+
+// ── SIDEBAR PAGES ──
+function setPage(page) {
+  document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+
+  if (page === 'history') {
+    showToast('Scan history — 4 previous scans', 'info');
+  } else if (page === 'monitor') {
+    showToast('Continuous monitoring available in Pro', 'info');
+  }
+}
+
+// ── LANG DISPLAY ──
+document.getElementById('langSelect').addEventListener('change', function() {
+  document.getElementById('langDisplay').textContent = LANG_NAMES[this.value] || this.value;
+  resetResults();
+  document.getElementById('codeEditor').value = '';
+  updateLineNumbers();
+});
+
+// ── TOAST ──
+function showToast(msg, type='info') {
+  const icons = { success:'✅', error:'❌', info:'ℹ️' };
+  const wrap = document.getElementById('toastWrap');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${icons[type]||'•'}</span><span>${msg}</span>`;
+  wrap.appendChild(t);
+  setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateY(6px)';
+    t.style.transition = 'all 0.3s';
+    setTimeout(() => t.remove(), 300);
+  }, 3000);
+}
+
+// ── INIT ──
+updateLineNumbers();
+// Ready — paste your code and click Run Scan
+
+// ── AI-READY FIX EXPORT ──
+
+// ── FILE UPLOAD ──
+function handleFileUpload(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 500000) {
+    showToast('File too large. Maximum 500KB.', 'error');
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var code = e.target.result;
+    // Switch to editor tab and load the code
+    switchEditorTab(document.querySelector('.etab'), 'editor');
+    var editor = document.getElementById('codeEditor');
+    if (editor) editor.value = code;
+    // Auto-detect language from extension
+    var ext = file.name.split('.').pop().toLowerCase();
+    var langMap = { js:'js', jsx:'js', ts:'ts', tsx:'ts', py:'py', java:'java', cs:'cs' };
+    var sel = document.getElementById('langSelect');
+    if (sel && langMap[ext]) sel.value = langMap[ext];
+    var fn = document.getElementById('fileName');
+    if (fn) fn.textContent = 'Loaded: ' + file.name;
+    showToast('File loaded — click Run Scan', 'success');
+  };
+  reader.onerror = function() { showToast('Could not read file', 'error'); };
+  reader.readAsText(file);
+}
+
+// ── EXPORT PDF REPORT ──
+function exportReport() {
+  if (!issues || issues.length === 0) {
+    showToast('Run a scan first to export a report', 'error');
+    return;
+  }
+  var score = document.getElementById('scoreValue') ? document.getElementById('scoreValue').textContent : 'N/A';
+  var crit = issues.filter(function(i){return i.sev==='critical';}).length;
+  var warn = issues.filter(function(i){return i.sev==='warning';}).length;
+  var summary = window.vsSummary || '';
+
+  var html = '<html><head><title>VibeSafe Security Report</title>';
+  html += '<style>body{font-family:Arial,sans-serif;padding:40px;color:#1a202c;max-width:800px;margin:0 auto}';
+  html += 'h1{color:#7C3AED}h2{color:#0891b2;border-bottom:2px solid #eee;padding-bottom:6px;margin-top:28px}';
+  html += '.score{font-size:48px;font-weight:bold;color:#7C3AED}.meta{color:#666;font-size:13px}';
+  html += '.issue{border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin:12px 0}';
+  html += '.sev{display:inline-block;padding:2px 10px;border-radius:100px;font-size:11px;font-weight:bold;color:white}';
+  html += '.critical{background:#EF4444}.warning{background:#F59E0B}.info{background:#64748B}';
+  html += '.code{background:#f8f8f8;padding:8px;border-radius:5px;font-family:monospace;font-size:12px;margin:6px 0;border-left:3px solid #ccc}';
+  html += '.after{border-left-color:#10B981}</style></head><body>';
+  html += '<h1>🛡️ VibeSafe Security Report</h1>';
+  html += '<div class="meta">Generated ' + new Date().toLocaleString() + ' · vibesafe.info</div>';
+  html += '<div style="margin:24px 0"><span class="score">' + score + '</span></div>';
+  html += '<p><strong>Summary:</strong> ' + summary + '</p>';
+  html += '<p><strong>' + crit + '</strong> critical · <strong>' + warn + '</strong> warnings · <strong>' + issues.length + '</strong> total issues</p>';
+  html += '<h2>Issues Found</h2>';
+  issues.forEach(function(issue, idx) {
+    html += '<div class="issue">';
+    html += '<span class="sev ' + issue.sev + '">' + issue.sev.toUpperCase() + '</span> ';
+    html += '<strong>' + (issue.type||'') + ' — ' + (issue.title||'') + '</strong>';
+    if (issue.line) html += '<div class="meta">' + issue.line + '</div>';
+    if (issue.desc) html += '<p>' + issue.desc + '</p>';
+    if (issue.before) html += '<div class="code">Current: ' + issue.before + '</div>';
+    if (issue.after) html += '<div class="code after">Fix: ' + issue.after + '</div>';
+    html += '</div>';
+  });
+  html += '<p style="margin-top:40px;color:#999;font-size:11px">VibeSafe helps catch common risks before launch. It does not replace a full professional security audit.</p>';
+  html += '</body></html>';
+
+  var win = window.open('', '_blank');
+  win.document.write(html);
+  win.document.close();
+  setTimeout(function() { win.print(); }, 500);
+  showToast('Report opened — use your browser to save as PDF', 'success');
+}
+
+function copyFixesForAI() {
+  if (!issues || issues.length === 0) {
+    showToast('No fixes to copy', 'error');
+    return;
+  }
+  var lang = LANG_NAMES[document.getElementById('langSelect').value] || 'code';
+  var out = 'I used an AI security scanner (VibeSafe) on my ' + lang + ' code. ';
+  out += 'Please apply these ' + issues.length + ' security fixes to my code:\n\n';
+  issues.forEach(function(issue, idx) {
+    out += (idx + 1) + '. [' + (issue.sev || 'issue').toUpperCase() + '] ' + (issue.type || '') + ' — ' + (issue.title || '') + '\n';
+    if (issue.line) out += '   Location: ' + issue.line + '\n';
+    if (issue.desc) out += '   Problem: ' + issue.desc + '\n';
+    if (issue.before) out += '   Current code: ' + issue.before + '\n';
+    if (issue.after) out += '   Fix to: ' + issue.after + '\n';
+    out += '\n';
+  });
+  out += 'Please apply all of these fixes carefully and explain any that need my input.';
+
+  navigator.clipboard.writeText(out).then(function() {
+    showToast('Fixes copied! Paste into Cursor, Lovable, or Bolt', 'success');
+  }).catch(function() {
+    // Fallback for older browsers
+    var ta = document.createElement('textarea');
+    ta.value = out;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Fixes copied to clipboard!', 'success');
   });
 }
 </script>
