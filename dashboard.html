@@ -888,7 +888,7 @@ document.addEventListener('click', function(e) {
           <span>1 of 3 scans used</span>
           <span>resets Jun 30</span>
         </div>
-        <button class="upgrade-btn" onclick="showToast('Redirecting to upgrade...','success')">
+        <button class="upgrade-btn" onclick="window.open('https://buy.stripe.com/test_8x25kFdvx9Zi0rifNN9EI00','_blank')">
           Upgrade to Pro →
         </button>
       </div>
@@ -946,9 +946,11 @@ document.addEventListener('click', function(e) {
 
       <div class="code-area-wrap" id="uploadTab" style="display:none; align-items:center; justify-content:center; flex-direction:column; gap:14px;">
         <div style="font-size:2.5rem">📁</div>
-        <div style="font-weight:600">Drop your file here</div>
-        <div style="font-size:0.82rem; color:var(--text3)">Supports .js .ts .py .java .cs .txt</div>
-        <button class="btn btn-ghost" onclick="showToast('File upload coming soon','info')">Browse files</button>
+        <div style="font-weight:600">Upload your code file</div>
+        <div style="font-size:0.82rem; color:var(--text3)">Supports .js .ts .jsx .tsx .py .java .cs .txt</div>
+        <input type="file" id="fileInput" accept=".js,.ts,.jsx,.tsx,.py,.java,.cs,.txt,.html,.css,.json" style="display:none" onchange="handleFileUpload(event)">
+        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">Browse files</button>
+        <div id="fileName" style="font-size:0.78rem;color:var(--cyan);margin-top:4px"></div>
       </div>
 
       <div class="code-area-wrap" id="urlTab" style="display:none; align-items:center; justify-content:center; flex-direction:column; gap:14px; padding:32px;">
@@ -1018,7 +1020,7 @@ document.addEventListener('click', function(e) {
           <span id="resultsPanelTitle">Scan results</span>
         </div>
         <div class="panel-actions" id="resultsPanelActions">
-          <button class="btn btn-ghost" id="exportBtn" style="display:none" onclick="showToast('Report exported as PDF','success')">
+          <button class="btn btn-ghost" id="exportBtn" style="display:none" onclick="exportReport()">
             Export PDF
           </button>
         </div>
@@ -1686,6 +1688,81 @@ updateLineNumbers();
 // Ready — paste your code and click Run Scan
 
 // ── AI-READY FIX EXPORT ──
+
+// ── FILE UPLOAD ──
+function handleFileUpload(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 500000) {
+    showToast('File too large. Maximum 500KB.', 'error');
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var code = e.target.result;
+    // Switch to editor tab and load the code
+    switchEditorTab(document.querySelector('.etab'), 'editor');
+    var editor = document.getElementById('codeEditor');
+    if (editor) editor.value = code;
+    // Auto-detect language from extension
+    var ext = file.name.split('.').pop().toLowerCase();
+    var langMap = { js:'js', jsx:'js', ts:'ts', tsx:'ts', py:'py', java:'java', cs:'cs' };
+    var sel = document.getElementById('langSelect');
+    if (sel && langMap[ext]) sel.value = langMap[ext];
+    var fn = document.getElementById('fileName');
+    if (fn) fn.textContent = 'Loaded: ' + file.name;
+    showToast('File loaded — click Run Scan', 'success');
+  };
+  reader.onerror = function() { showToast('Could not read file', 'error'); };
+  reader.readAsText(file);
+}
+
+// ── EXPORT PDF REPORT ──
+function exportReport() {
+  if (!issues || issues.length === 0) {
+    showToast('Run a scan first to export a report', 'error');
+    return;
+  }
+  var score = document.getElementById('scoreValue') ? document.getElementById('scoreValue').textContent : 'N/A';
+  var crit = issues.filter(function(i){return i.sev==='critical';}).length;
+  var warn = issues.filter(function(i){return i.sev==='warning';}).length;
+  var summary = window.vsSummary || '';
+
+  var html = '<html><head><title>VibeSafe Security Report</title>';
+  html += '<style>body{font-family:Arial,sans-serif;padding:40px;color:#1a202c;max-width:800px;margin:0 auto}';
+  html += 'h1{color:#7C3AED}h2{color:#0891b2;border-bottom:2px solid #eee;padding-bottom:6px;margin-top:28px}';
+  html += '.score{font-size:48px;font-weight:bold;color:#7C3AED}.meta{color:#666;font-size:13px}';
+  html += '.issue{border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin:12px 0}';
+  html += '.sev{display:inline-block;padding:2px 10px;border-radius:100px;font-size:11px;font-weight:bold;color:white}';
+  html += '.critical{background:#EF4444}.warning{background:#F59E0B}.info{background:#64748B}';
+  html += '.code{background:#f8f8f8;padding:8px;border-radius:5px;font-family:monospace;font-size:12px;margin:6px 0;border-left:3px solid #ccc}';
+  html += '.after{border-left-color:#10B981}</style></head><body>';
+  html += '<h1>🛡️ VibeSafe Security Report</h1>';
+  html += '<div class="meta">Generated ' + new Date().toLocaleString() + ' · vibesafe.info</div>';
+  html += '<div style="margin:24px 0"><span class="score">' + score + '</span></div>';
+  html += '<p><strong>Summary:</strong> ' + summary + '</p>';
+  html += '<p><strong>' + crit + '</strong> critical · <strong>' + warn + '</strong> warnings · <strong>' + issues.length + '</strong> total issues</p>';
+  html += '<h2>Issues Found</h2>';
+  issues.forEach(function(issue, idx) {
+    html += '<div class="issue">';
+    html += '<span class="sev ' + issue.sev + '">' + issue.sev.toUpperCase() + '</span> ';
+    html += '<strong>' + (issue.type||'') + ' — ' + (issue.title||'') + '</strong>';
+    if (issue.line) html += '<div class="meta">' + issue.line + '</div>';
+    if (issue.desc) html += '<p>' + issue.desc + '</p>';
+    if (issue.before) html += '<div class="code">Current: ' + issue.before + '</div>';
+    if (issue.after) html += '<div class="code after">Fix: ' + issue.after + '</div>';
+    html += '</div>';
+  });
+  html += '<p style="margin-top:40px;color:#999;font-size:11px">VibeSafe helps catch common risks before launch. It does not replace a full professional security audit.</p>';
+  html += '</body></html>';
+
+  var win = window.open('', '_blank');
+  win.document.write(html);
+  win.document.close();
+  setTimeout(function() { win.print(); }, 500);
+  showToast('Report opened — use your browser to save as PDF', 'success');
+}
+
 function copyFixesForAI() {
   if (!issues || issues.length === 0) {
     showToast('No fixes to copy', 'error');
