@@ -38,6 +38,12 @@
 }
 
 html, body { height: 100%; overflow: hidden; }
+body {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(124,58,237,0.10), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 10%, rgba(0,212,255,0.06), transparent 55%),
+    var(--bg);
+}
 
 body {
   font-family: 'Inter', sans-serif;
@@ -526,13 +532,29 @@ body {
 }
 
 /* issue card */
+
+.sev-pill {
+  font-size: 0.68rem; font-weight: 700;
+  padding: 4px 12px; border-radius: 100px;
+  flex-shrink: 0; align-self: center;
+  letter-spacing: 0.02em;
+}
+.sev-pill-critical { background: rgba(239,68,68,0.15); color: #FCA5A5; }
+.sev-pill-warning  { background: rgba(245,158,11,0.15); color: #FCD34D; }
+.sev-pill-info     { background: rgba(0,212,255,0.12); color: #7DD3F5; }
+.sev-pill-fixed    { background: rgba(16,185,129,0.15); color: #6EE7B7; }
+
 .issue-card {
-  border-radius: var(--r);
+  border-radius: var(--r-lg);
   border: 1px solid transparent;
   overflow: hidden;
   transition: all 0.2s;
   opacity: 0; transform: translateY(8px);
   animation: slideIn 0.3s ease forwards;
+}
+.issue-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
 }
 
 @keyframes slideIn {
@@ -557,8 +579,8 @@ body {
 }
 
 .issue-card-header {
-  display: flex; align-items: flex-start; gap: 10px;
-  padding: 11px 13px 10px;
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px;
   cursor: pointer;
 }
 
@@ -871,15 +893,15 @@ document.addEventListener('click', function(e) {
     <div class="sidebar-sep"></div>
 
     <div class="sidebar-section">
-      <div class="sidebar-label">Integrations</div>
-      <button class="sidebar-item" onclick="showToast('GitHub integration coming in Pro','info')">
-        <span class="si-icon">🐱</span> GitHub
+      <div class="sidebar-label">Scan from</div>
+      <button class="sidebar-item" onclick="switchEditorTab(document.querySelectorAll('.etab')[2],'url')">
+        <span class="si-icon">🐱</span> GitHub URL
       </button>
-      <button class="sidebar-item" onclick="showToast('Lovable integration coming soon','info')">
-        <span class="si-icon">💜</span> Lovable
+      <button class="sidebar-item" onclick="switchEditorTab(document.querySelectorAll('.etab')[1],'upload')">
+        <span class="si-icon">📁</span> Upload file
       </button>
-      <button class="sidebar-item" onclick="showToast('Bolt integration coming soon','info')">
-        <span class="si-icon">⚡</span> Bolt.new
+      <button class="sidebar-item" onclick="switchEditorTab(document.querySelectorAll('.etab')[0],'editor')">
+        <span class="si-icon">📝</span> Paste code
       </button>
     </div>
 
@@ -887,11 +909,11 @@ document.addEventListener('click', function(e) {
 
     <div class="sidebar-section">
       <div class="sidebar-label">Account</div>
-      <button class="sidebar-item" onclick="showToast('Settings coming soon','info')">
-        <span class="si-icon">⚙️</span> Settings
+      <button class="sidebar-item" onclick="toggleUserMenu()">
+        <span class="si-icon">⚙️</span> Account
       </button>
-      <button class="sidebar-item" onclick="showToast('Docs opening...','success')">
-        <span class="si-icon">📚</span> Docs
+      <button class="sidebar-item" onclick="window.open('/index.html#faq','_blank')">
+        <span class="si-icon">📚</span> Help &amp; FAQ
       </button>
     </div>
 
@@ -1600,6 +1622,7 @@ function buildIssueCard(issue, idx) {
         <div class="issue-title">${issue.title}</div>
         <div class="issue-line">${issue.line}</div>
       </div>
+      <span class="sev-pill sev-pill-${issue.sev}">${issue.sev === 'critical' ? 'High' : issue.sev === 'warning' ? 'Medium' : 'Low'}</span>
       <div class="issue-chevron">▶</div>
     </div>
     <div class="issue-body">
