@@ -39,29 +39,22 @@
 
 html, body { height: 100%; overflow: hidden; }
 body {
-  background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(124,58,237,0.10), transparent 60%),
-    radial-gradient(ellipse 60% 50% at 90% 10%, rgba(0,212,255,0.06), transparent 55%),
-    var(--bg);
-}
-
-body {
   font-family: 'Inter', sans-serif;
   color: var(--text);
   display: flex;
   flex-direction: column;
   background:
-    radial-gradient(circle at 15% 10%, rgba(0, 212, 255, 0.18), transparent 32%),
-    radial-gradient(circle at 85% 20%, rgba(124, 58, 237, 0.22), transparent 34%),
-    radial-gradient(circle at 50% 100%, rgba(0, 80, 255, 0.15), transparent 38%),
+    radial-gradient(circle at 15% 10%, rgba(0, 212, 255, 0.16), transparent 32%),
+    radial-gradient(circle at 85% 20%, rgba(124, 58, 237, 0.20), transparent 34%),
+    radial-gradient(circle at 50% 100%, rgba(0, 80, 255, 0.13), transparent 38%),
     #050816;
 }
 
 /* ── TOP NAV ── */
 .topnav {
-  height: 52px; flex-shrink: 0;
+  height: 56px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 22px;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   z-index: 50;
@@ -70,17 +63,19 @@ body {
 .topnav-left { display: flex; align-items: center; gap: 24px; }
 
 .logo {
-  display: flex; align-items: center; gap: 9px;
+  display: flex; align-items: center; gap: 10px;
   font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700; font-size: 1.1rem; color: var(--text);
+  font-weight: 700; font-size: 1.15rem; color: var(--text);
   text-decoration: none;
+  letter-spacing: -0.01em;
 }
 
 .logo-icon {
-  width: 28px; height: 28px; border-radius: 7px;
+  width: 30px; height: 30px; border-radius: 8px;
   background: linear-gradient(135deg, var(--cyan), var(--violet));
   display: flex; align-items: center; justify-content: center;
-  font-size: 14px;
+  font-size: 15px;
+  box-shadow: 0 0 16px rgba(0,212,255,0.35);
 }
 
 .nav-divider {
@@ -193,8 +188,9 @@ body {
 .plan-card {
   background: var(--surface2);
   border: 1px solid var(--border2);
-  border-radius: var(--r);
-  padding: 12px 14px;
+  border-radius: var(--r-lg);
+  padding: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
 .plan-label {
@@ -254,7 +250,8 @@ body {
 }
 
 .panel-title {
-  font-size: 0.82rem; font-weight: 600; color: var(--text2);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.88rem; font-weight: 600; color: var(--text);
   display: flex; align-items: center; gap: 8px;
 }
 
@@ -268,10 +265,10 @@ body {
 }
 
 .btn-ghost {
-  background: transparent; color: var(--text2);
+  background: var(--surface2); color: var(--text);
   border: 1px solid var(--border2);
 }
-.btn-ghost:hover { border-color: var(--cyan); color: var(--text); }
+.btn-ghost:hover { border-color: var(--cyan); color: var(--text); background: var(--surface3); }
 
 .btn-primary {
   background: var(--cyan); color: var(--bg);
@@ -289,12 +286,14 @@ body {
 
 /* lang selector */
 .lang-select {
-  padding: 5px 10px; border-radius: 6px;
-  background: var(--surface2); color: var(--text2);
+  padding: 6px 10px; border-radius: 7px;
+  background: var(--surface2); color: var(--text);
   border: 1px solid var(--border2);
   font-size: 0.75rem; font-family: 'Inter', sans-serif;
   cursor: pointer; outline: none;
+  transition: border-color 0.15s;
 }
+.lang-select:hover, .lang-select:focus { border-color: var(--cyan); }
 
 /* tabs */
 .editor-tabs {
@@ -306,13 +305,15 @@ body {
 }
 
 .etab {
-  padding: 6px 14px; border-radius: 6px 6px 0 0;
-  font-size: 0.77rem; font-weight: 500;
+  padding: 7px 16px; border-radius: 8px 8px 0 0;
+  font-size: 0.78rem; font-weight: 500;
   cursor: pointer; border: none; background: none;
-  color: var(--text3); transition: all 0.15s;
+  color: var(--text2); transition: all 0.15s;
   border-bottom: 2px solid transparent;
   position: relative; top: 1px;
 }
+
+.etab:hover { color: var(--text); background: rgba(255,255,255,0.03); }
 
 .etab.active {
   color: var(--cyan);
@@ -364,7 +365,7 @@ body {
 
 /* ── RIGHT PANEL (results) ── */
 .results-panel {
-  width: 380px; flex-shrink: 0;
+  width: 420px; flex-shrink: 0;
   display: flex; flex-direction: column;
   overflow: hidden;
   background: var(--bg2);
@@ -462,16 +463,24 @@ body {
 .sstat.warn .sstat-num { color: var(--amber); }
 .sstat.ok   .sstat-num { color: var(--green); }
 
-/* issues list */
-.issues-list {
-  flex: 1; overflow-y: auto;
-  padding: 12px;
-  display: flex; flex-direction: column; gap: 10px;
+/* scrollable body of the results panel — score header, filters, fix-priority
+   and the issues list all scroll together as one unit, so a long issues
+   list doesn't get squeezed into a tiny clipped sliver below everything else */
+.results-scroll {
+  flex: 1; min-height: 0; overflow-y: auto;
+  display: flex; flex-direction: column;
 }
 
-.issues-list::-webkit-scrollbar { width: 4px; }
-.issues-list::-webkit-scrollbar-track { background: transparent; }
-.issues-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+.results-scroll::-webkit-scrollbar { width: 8px; }
+.results-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 4px; }
+.results-scroll::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.35); border-radius: 4px; }
+.results-scroll::-webkit-scrollbar-thumb:hover { background: rgba(0,212,255,0.55); }
+
+/* issues list */
+.issues-list {
+  padding: 14px;
+  display: flex; flex-direction: column; gap: 12px;
+}
 
 /* empty state */
 .empty-state {
@@ -480,9 +489,16 @@ body {
   gap: 12px; padding: 32px; text-align: center;
 }
 
-.empty-icon { font-size: 2.5rem; }
-.empty-title { font-weight: 600; font-size: 0.95rem; }
-.empty-desc { font-size: 0.82rem; color: var(--text3); line-height: 1.5; }
+.empty-icon {
+  font-size: 2.2rem;
+  width: 72px; height: 72px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,212,255,0.12), transparent 70%);
+  border: 1px solid rgba(0,212,255,0.15);
+}
+.empty-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 1rem; color: var(--text); }
+.empty-desc { font-size: 0.82rem; color: var(--text3); line-height: 1.6; max-width: 280px; }
 
 /* scanning state */
 .scanning-state {
@@ -669,10 +685,10 @@ body {
 .fix-btn-primary:hover { background: #33DCFF; }
 
 .fix-btn-ghost {
-  background: transparent; color: var(--text2);
+  background: var(--surface2); color: var(--text2);
   border: 1px solid var(--border2);
 }
-.fix-btn-ghost:hover { border-color: var(--cyan); color: var(--text); }
+.fix-btn-ghost:hover { border-color: var(--cyan); color: var(--text); background: var(--surface3); }
 
 .fixed-label {
   display: flex; align-items: center; gap: 6px;
@@ -707,9 +723,10 @@ body {
 }
 
 /* ── SCROLLBAR ── */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
+::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.3); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,212,255,0.5); }
 
 /* ── TOAST ── */
 .toast-wrap {
@@ -721,11 +738,12 @@ body {
 .toast {
   display: flex; align-items: center; gap: 10px;
   padding: 12px 18px;
-  background: var(--surface2);
+  background: rgba(20, 28, 52, 0.95);
+  backdrop-filter: blur(12px);
   border: 1px solid var(--border2);
   border-radius: var(--r);
   font-size: 0.82rem; color: var(--text);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.45);
   animation: toastIn 0.3s ease;
   pointer-events: all;
 }
@@ -781,14 +799,14 @@ body {
   flex-wrap: wrap;
 }
 .filter-btn {
-  padding: 5px 14px; border-radius: 100px;
+  padding: 6px 16px; border-radius: 100px;
   font-family: 'Inter', sans-serif;
-  font-size: 0.72rem; font-weight: 600;
-  background: var(--surface2); color: var(--text3);
-  border: 1px solid var(--border); cursor: pointer;
+  font-size: 0.74rem; font-weight: 600;
+  background: var(--surface3); color: var(--text2);
+  border: 1px solid var(--border2); cursor: pointer;
   transition: all 0.2s;
 }
-.filter-btn:hover { color: var(--text); border-color: var(--border2); }
+.filter-btn:hover { color: var(--text); border-color: var(--cyan); background: var(--surface3); }
 .filter-btn.active {
   background: rgba(0, 212, 255, 0.12);
   color: var(--cyan);
@@ -813,6 +831,13 @@ body {
   padding: 7px 10px; border-radius: 8px;
   font-size: 0.78rem; color: var(--text2);
   background: rgba(10, 18, 42, 0.5);
+  border: 1px solid transparent;
+  transition: all 0.15s;
+}
+.fix-priority-item:hover {
+  background: rgba(0, 212, 255, 0.07);
+  border-color: rgba(0, 212, 255, 0.2);
+  color: var(--text);
 }
 .fix-priority-num {
   width: 22px; height: 22px; border-radius: 6px;
@@ -838,16 +863,16 @@ body {
 .panel-header,
 .score-header,
 .results-footer {
-  background: rgba(8, 14, 32, 0.72);
+  background: rgba(10, 16, 36, 0.92);
   backdrop-filter: blur(18px);
-  border-color: rgba(0, 212, 255, 0.16);
+  border-color: rgba(0, 212, 255, 0.2);
 }
 .editor-panel,
 .results-panel,
 .plan-card,
 .code-area-wrap {
-  background: rgba(10, 18, 42, 0.72);
-  border-color: rgba(0, 212, 255, 0.16);
+  background: rgba(12, 20, 46, 0.92);
+  border-color: rgba(0, 212, 255, 0.22);
   box-shadow: 0 0 35px rgba(0, 140, 255, 0.08);
 }
 
@@ -928,13 +953,13 @@ body {
   stroke: url(#gradient);
 }
 .issue-card {
-  background: rgba(12, 22, 48, 0.78) !important;
-  border: 1px solid rgba(0, 212, 255, 0.12);
-  box-shadow: 0 10px 28px rgba(0,0,0,0.22);
+  background: rgba(18, 28, 56, 0.92) !important;
+  border: 1px solid rgba(0, 212, 255, 0.18);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.3);
 }
 .issue-card:hover {
-  border-color: rgba(0, 212, 255, 0.32);
-  box-shadow: 0 0 26px rgba(0, 212, 255, 0.12);
+  border-color: rgba(0, 212, 255, 0.4);
+  box-shadow: 0 0 26px rgba(0, 212, 255, 0.16);
 }
 
 /* Step 8: Glow grid lines */
@@ -1073,7 +1098,7 @@ document.addEventListener('click', function(e) {
   <aside class="sidebar">
     <div class="sidebar-section">
       <div class="sidebar-label">Workspace</div>
-      <button class="sidebar-item active" onclick="setPage('scan')">
+      <button class="sidebar-item active" onclick="setPage('scan', event)">
         <span class="si-icon">🔍</span> New scan
         <span class="si-new">NEW</span>
       </button>
@@ -1084,7 +1109,7 @@ document.addEventListener('click', function(e) {
       <div class="history-section" id="historyList" style="display:none;max-height:280px">
         <div style="padding:12px;font-size:0.78rem;color:var(--text3);text-align:center">Loading...</div>
       </div>
-      <button class="sidebar-item" onclick="setPage('monitor')">
+      <button class="sidebar-item" onclick="setPage('monitor', event)">
         <span class="si-icon">📡</span> Monitoring
       </button>
     </div>
@@ -1170,6 +1195,7 @@ document.addEventListener('click', function(e) {
         <textarea
           class="code-editor"
           id="codeEditor"
+          autofocus
           spellcheck="false"
           placeholder="// Paste your AI-generated code here...
 // VibeSafe will scan for:
@@ -1228,45 +1254,7 @@ document.addEventListener('click', function(e) {
     <!-- RESULTS PANEL -->
     <div class="results-panel" id="resultsPanel">
 
-      <!-- Score header (hidden until scan) -->
-      <div class="score-header" id="scoreHeader" style="display:none">
-        <div class="gauge-wrap">
-          <div class="gauge">
-            <svg viewBox="0 0 120 120" class="gauge-svg">
-              <defs>
-                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#00D4FF"/>
-                  <stop offset="100%" stop-color="#7C3AED"/>
-                </linearGradient>
-              </defs>
-              <circle class="gauge-bg" cx="60" cy="60" r="52"></circle>
-              <circle class="gauge-fill" id="gaugeFill" cx="60" cy="60" r="52"></circle>
-            </svg>
-            <div class="gauge-center">
-              <div class="gauge-num" id="scoreValue">--</div>
-              <div class="gauge-max">/100</div>
-            </div>
-          </div>
-          <div class="gauge-verdict" id="scoreVerdict">Scanning</div>
-          <div class="score-explanation" id="scoreExplanation" style="display:none;font-size:0.78rem;color:var(--text3);text-align:center;margin-top:8px;padding:0 12px;line-height:1.5"></div>
-        </div>
-        <div class="score-stats">
-          <div class="sstat err">
-            <div class="sstat-num" id="critCount">0</div>
-            <div class="sstat-label">Critical</div>
-          </div>
-          <div class="sstat warn">
-            <div class="sstat-num" id="warnCount">0</div>
-            <div class="sstat-label">Warnings</div>
-          </div>
-          <div class="sstat ok">
-            <div class="sstat-num" id="passCount">0</div>
-            <div class="sstat-label">Passed</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Panel header -->
+      <!-- Panel header (always pinned at top) -->
       <div class="panel-header">
         <div class="panel-title">
           <span>🛡️</span>
@@ -1279,49 +1267,92 @@ document.addEventListener('click', function(e) {
         </div>
       </div>
 
-      <!-- Empty state -->
-      <div class="empty-state" id="emptyState">
-        <div class="empty-icon">🔬</div>
-        <div class="empty-title">No scan yet</div>
-        <div class="empty-desc">Paste your AI-generated code in the editor and click "Run scan" to detect errors, security vulnerabilities, and bugs.</div>
-      </div>
+      <!-- Scrollable body: everything below scrolls as one unit -->
+      <div class="results-scroll" id="resultsScroll">
 
-      <!-- Scanning state -->
-      <div class="scanning-state" id="scanningState" style="display:none">
-        <div class="scan-ring">
-          <div class="scan-ring-inner"></div>
-        </div>
-        <div class="scan-progress-wrap">
-          <div class="scan-progress-label">
-            <span id="scanStepLabel">Checking code structure...</span>
-            <span id="scanPct">0%</span>
+        <!-- Score header (hidden until scan) -->
+        <div class="score-header" id="scoreHeader" style="display:none">
+          <div class="gauge-wrap">
+            <div class="gauge">
+              <svg viewBox="0 0 120 120" class="gauge-svg">
+                <defs>
+                  <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#00D4FF"/>
+                    <stop offset="100%" stop-color="#7C3AED"/>
+                  </linearGradient>
+                </defs>
+                <circle class="gauge-bg" cx="60" cy="60" r="52"></circle>
+                <circle class="gauge-fill" id="gaugeFill" cx="60" cy="60" r="52"></circle>
+              </svg>
+              <div class="gauge-center">
+                <div class="gauge-num" id="scoreValue">--</div>
+                <div class="gauge-max">/100</div>
+              </div>
+            </div>
+            <div class="gauge-verdict" id="scoreVerdict">Scanning</div>
+            <div class="score-explanation" id="scoreExplanation" style="display:none;font-size:0.78rem;color:var(--text3);text-align:center;margin-top:8px;padding:0 12px;line-height:1.5"></div>
           </div>
-          <div class="scan-progress-track">
-            <div class="scan-progress-fill" id="scanProgressFill" style="width:0%"></div>
+          <div class="score-stats">
+            <div class="sstat err">
+              <div class="sstat-num" id="critCount">0</div>
+              <div class="sstat-label">Critical</div>
+            </div>
+            <div class="sstat warn">
+              <div class="sstat-num" id="warnCount">0</div>
+              <div class="sstat-label">Warnings</div>
+            </div>
+            <div class="sstat ok">
+              <div class="sstat-num" id="passCount">0</div>
+              <div class="sstat-label">Passed</div>
+            </div>
           </div>
         </div>
-        <div class="scan-step" id="scanSubLabel">Starting security scan</div>
+
+        <!-- Empty state -->
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon">🔬</div>
+          <div class="empty-title">No scan yet</div>
+          <div class="empty-desc">Paste your AI-generated code in the editor and click "Run scan" to detect errors, security vulnerabilities, and bugs.</div>
+        </div>
+
+        <!-- Scanning state -->
+        <div class="scanning-state" id="scanningState" style="display:none">
+          <div class="scan-ring">
+            <div class="scan-ring-inner"></div>
+          </div>
+          <div class="scan-progress-wrap">
+            <div class="scan-progress-label">
+              <span id="scanStepLabel">Checking code structure...</span>
+              <span id="scanPct">0%</span>
+            </div>
+            <div class="scan-progress-track">
+              <div class="scan-progress-fill" id="scanProgressFill" style="width:0%"></div>
+            </div>
+          </div>
+          <div class="scan-step" id="scanSubLabel">Starting security scan</div>
+        </div>
+
+        <!-- Risk filter bar -->
+        <div class="filter-bar" id="filterBar" style="display:none">
+          <button class="filter-btn active" onclick="filterIssues('all', this)">All</button>
+          <button class="filter-btn" onclick="filterIssues('critical', this)">Critical</button>
+          <button class="filter-btn" onclick="filterIssues('warning', this)">Warnings</button>
+          <button class="filter-btn" onclick="filterIssues('info', this)">Info</button>
+          <button class="filter-btn" onclick="filterIssues('fixed', this)">Fixed</button>
+        </div>
+
+        <!-- Fix priority section -->
+        <div class="fix-priority" id="fixPriority" style="display:none">
+          <div class="fix-priority-title">🎯 Fix these first</div>
+          <div class="fix-priority-list" id="fixPriorityList"></div>
+        </div>
+
+        <!-- Issues list -->
+        <div class="issues-list" id="issuesList" style="display:none"></div>
+
       </div>
 
-      <!-- Risk filter bar -->
-      <div class="filter-bar" id="filterBar" style="display:none">
-        <button class="filter-btn active" onclick="filterIssues('all', this)">All</button>
-        <button class="filter-btn" onclick="filterIssues('critical', this)">Critical</button>
-        <button class="filter-btn" onclick="filterIssues('warning', this)">Warnings</button>
-        <button class="filter-btn" onclick="filterIssues('info', this)">Info</button>
-        <button class="filter-btn" onclick="filterIssues('fixed', this)">Fixed</button>
-      </div>
-
-      <!-- Fix priority section -->
-      <div class="fix-priority" id="fixPriority" style="display:none">
-        <div class="fix-priority-title">🎯 Fix these first</div>
-        <div class="fix-priority-list" id="fixPriorityList"></div>
-      </div>
-
-      <!-- Issues list -->
-      <div class="issues-list" id="issuesList" style="display:none"></div>
-
-      <!-- Results footer -->
+      <!-- Results footer (always pinned at bottom) -->
       <div class="results-footer" id="resultsFooter" style="display:none">
         <button class="fix-all-btn" id="fixAllBtn" onclick="fixAll()">
           ⚡ Auto-fix all issues
@@ -1478,7 +1509,7 @@ function switchEditorTab(el, tab) {
   Object.entries(tabs).forEach(([k,id]) => {
     const el = document.getElementById(id);
     if (!el) return;
-    el.style.display = k === tab ? (k==='editor'?'relative':'flex') : 'none';
+    el.style.display = k === tab ? (k==='editor'?'block':'flex') : 'none';
   });
 }
 
@@ -1486,7 +1517,10 @@ function switchEditorTab(el, tab) {
 function loadSample() {
   const lang = document.getElementById('langSelect').value;
   const sample = SAMPLES[lang] || SAMPLES.js;
-  document.getElementById('codeEditor').value = sample;
+  switchEditorTab(document.querySelectorAll('.etab')[0], 'editor');
+  const editor = document.getElementById('codeEditor');
+  editor.value = sample;
+  editor.focus();
   updateLineNumbers();
   showToast('Sample ' + LANG_NAMES[lang] + ' code loaded', 'success');
 }
@@ -2010,11 +2044,18 @@ function updateScore() {
 }
 
 // ── SIDEBAR PAGES ──
-function setPage(page) {
+function setPage(page, evt) {
   document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  if (evt && evt.currentTarget) evt.currentTarget.classList.add('active');
 
-  if (page === 'history') {
+  if (page === 'scan') {
+    switchEditorTab(document.querySelectorAll('.etab')[0], 'editor');
+    document.getElementById('codeEditor').value = '';
+    updateLineNumbers();
+    resetResults();
+    document.getElementById('codeEditor').focus();
+    showToast('Ready for a new scan', 'info');
+  } else if (page === 'history') {
     showToast('Scan history — 4 previous scans', 'info');
   } else if (page === 'monitor') {
     showToast('Continuous monitoring with email alerts — coming in Pro', 'info');
@@ -2047,6 +2088,7 @@ function showToast(msg, type='info') {
 
 // ── INIT ──
 updateLineNumbers();
+document.getElementById('codeEditor').focus();
 // Ready — paste your code and click Run Scan
 
 // ── AI-READY FIX EXPORT ──
