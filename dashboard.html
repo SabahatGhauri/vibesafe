@@ -773,6 +773,63 @@ body {
 .hi-score.bad  { background: var(--red-dim);   color: var(--red); }
 .hi-meta { font-size: 0.7rem; color: var(--text3); }
 
+
+/* ── RISK FILTERS ── */
+.filter-bar {
+  display: flex; gap: 6px; padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 5px 14px; border-radius: 100px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem; font-weight: 600;
+  background: var(--surface2); color: var(--text3);
+  border: 1px solid var(--border); cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-btn:hover { color: var(--text); border-color: var(--border2); }
+.filter-btn.active {
+  background: rgba(0, 212, 255, 0.12);
+  color: var(--cyan);
+  border-color: rgba(0, 212, 255, 0.3);
+}
+
+/* ── FIX PRIORITY ── */
+.fix-priority {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.fix-priority-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.82rem; font-weight: 600;
+  color: var(--text); margin-bottom: 8px;
+}
+.fix-priority-list {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.fix-priority-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 10px; border-radius: 8px;
+  font-size: 0.78rem; color: var(--text2);
+  background: rgba(10, 18, 42, 0.5);
+}
+.fix-priority-num {
+  width: 22px; height: 22px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; flex-shrink: 0;
+}
+.fix-priority-item.critical .fix-priority-num { background: var(--red-dim); color: var(--red); }
+.fix-priority-item.warning .fix-priority-num { background: var(--amber-dim); color: var(--amber); }
+.fix-priority-item.info .fix-priority-num { background: var(--cyan-dim); color: var(--cyan); }
+.fix-priority-sev {
+  font-size: 0.66rem; font-weight: 700; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 100px; margin-left: auto; flex-shrink: 0;
+}
+.fix-priority-item.critical .fix-priority-sev { background: rgba(239,68,68,0.15); color: #FCA5A5; }
+.fix-priority-item.warning .fix-priority-sev { background: rgba(245,158,11,0.15); color: #FCD34D; }
+.fix-priority-item.info .fix-priority-sev { background: rgba(0,212,255,0.12); color: #7DD3F5; }
+
 /* ===== MOCKUP NEON RESTYLE (CSS ONLY) ===== */
 
 /* Step 2: Glassy panels */
@@ -893,11 +950,14 @@ body {
   mask-image: radial-gradient(circle at center, black, transparent 75%);
   z-index: 0;
 }
-.topnav,
-.sidebar,
 .main {
   position: relative;
   z-index: 1;
+}
+.topnav,
+.sidebar {
+  position: relative;
+  z-index: 10;
 }
 
 </style>
@@ -1127,6 +1187,7 @@ document.addEventListener('click', function(e) {
         <div style="font-size:2.5rem">📁</div>
         <div style="font-weight:600">Upload your code file</div>
         <div style="font-size:0.82rem; color:var(--text3)">Supports .js .ts .jsx .tsx .py .java .cs .txt</div>
+        <div style="font-size:0.72rem;color:var(--text3);margin-top:6px;display:flex;align-items:center;gap:5px"><span>🔒</span> Your code is scanned securely and never stored or used for AI training.</div>
         <input type="file" id="fileInput" accept=".js,.ts,.jsx,.tsx,.py,.java,.cs,.txt,.html,.css,.json" style="display:none" onchange="handleFileUpload(event)">
         <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">Browse files</button>
         <div id="fileName" style="font-size:0.78rem;color:var(--cyan);margin-top:4px"></div>
@@ -1187,6 +1248,7 @@ document.addEventListener('click', function(e) {
             </div>
           </div>
           <div class="gauge-verdict" id="scoreVerdict">Scanning</div>
+          <div class="score-explanation" id="scoreExplanation" style="display:none;font-size:0.78rem;color:var(--text3);text-align:center;margin-top:8px;padding:0 12px;line-height:1.5"></div>
         </div>
         <div class="score-stats">
           <div class="sstat err">
@@ -1241,6 +1303,21 @@ document.addEventListener('click', function(e) {
         <div class="scan-step" id="scanSubLabel">Starting security scan</div>
       </div>
 
+      <!-- Risk filter bar -->
+      <div class="filter-bar" id="filterBar" style="display:none">
+        <button class="filter-btn active" onclick="filterIssues('all', this)">All</button>
+        <button class="filter-btn" onclick="filterIssues('critical', this)">Critical</button>
+        <button class="filter-btn" onclick="filterIssues('warning', this)">Warnings</button>
+        <button class="filter-btn" onclick="filterIssues('info', this)">Info</button>
+        <button class="filter-btn" onclick="filterIssues('fixed', this)">Fixed</button>
+      </div>
+
+      <!-- Fix priority section -->
+      <div class="fix-priority" id="fixPriority" style="display:none">
+        <div class="fix-priority-title">🎯 Fix these first</div>
+        <div class="fix-priority-list" id="fixPriorityList"></div>
+      </div>
+
       <!-- Issues list -->
       <div class="issues-list" id="issuesList" style="display:none"></div>
 
@@ -1251,6 +1328,9 @@ document.addEventListener('click', function(e) {
         </button>
         <button class="fix-all-btn" id="copyFixesBtn" onclick="copyFixesForAI()" style="margin-top:8px;background:var(--surface2);color:var(--cyan);border:1px solid rgba(0,212,255,0.3);box-shadow:none">
           📋 Copy all fixes for Cursor / Lovable
+        </button>
+        <button class="fix-all-btn" id="rescanBtn" onclick="startScan()" style="margin-top:8px;background:var(--surface2);color:var(--green);border:1px solid rgba(16,185,129,0.3);box-shadow:none">
+          🔄 Rescan after fixes
         </button>
       </div>
 
@@ -1521,6 +1601,8 @@ async function startScan() {
   document.getElementById('resultsFooter').style.display = 'none';
   document.getElementById('scanningState').style.display = 'flex';
   document.getElementById('scanBtn').disabled = true;
+  var fb = document.getElementById('filterBar'); if (fb) fb.style.display = 'none';
+  var fp = document.getElementById('fixPriority'); if (fp) fp.style.display = 'none';
   document.getElementById('exportBtn').style.display = 'none';
   issues = [];
 
@@ -1679,6 +1761,12 @@ function showResults(apiScore) {
   document.getElementById('scanBtn').disabled = false;
   scanDone = true;
 
+  // Show filter bar and fix priority
+  var filterBar = document.getElementById('filterBar');
+  if (filterBar) filterBar.style.display = issues.length > 0 ? 'flex' : 'none';
+  renderFixPriority();
+  renderScoreExplanation(score, criticals, warnings);
+
   showToast('Scan complete — ' + (issues.length === 0 ? 'no issues found!' : issues.length + ' issues found'), issues.length === 0 ? 'success' : 'info');
 
   // Save this scan to history
@@ -1749,6 +1837,77 @@ function loadPastScan(scan) {
   window.vsPassedChecks = scan.results.passed || [];
   showResults(scan.score);
   showToast('Loaded scan from ' + new Date(scan.created_at).toLocaleDateString(), 'info');
+}
+
+
+// ── RISK FILTERS ──
+function filterIssues(severity, btn) {
+  // Update active button
+  document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+
+  // Filter cards
+  var cards = document.querySelectorAll('.issue-card');
+  cards.forEach(function(card) {
+    if (severity === 'all') {
+      card.style.display = '';
+    } else {
+      var match = card.className.indexOf('severity-' + severity) !== -1;
+      card.style.display = match ? '' : 'none';
+    }
+  });
+}
+
+// ── FIX PRIORITY ──
+function renderFixPriority() {
+  var list = document.getElementById('fixPriorityList');
+  var section = document.getElementById('fixPriority');
+  if (!list || !section) return;
+
+  // Sort issues: critical first, then warning, then info
+  var sorted = issues.filter(function(i) { return !i.fixed; }).slice();
+  var order = { critical: 0, warning: 1, info: 2 };
+  sorted.sort(function(a, b) { return (order[a.sev] || 3) - (order[b.sev] || 3); });
+
+  // Show top 5
+  var top = sorted.slice(0, 5);
+  if (top.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  section.style.display = 'block';
+  list.innerHTML = '';
+  top.forEach(function(issue, idx) {
+    var sevLabel = issue.sev === 'critical' ? 'Critical' : issue.sev === 'warning' ? 'Warning' : 'Info';
+    var item = document.createElement('div');
+    item.className = 'fix-priority-item ' + issue.sev;
+    item.innerHTML = '<div class="fix-priority-num">' + (idx + 1) + '</div>'
+      + '<span>' + issue.title + '</span>'
+      + '<span class="fix-priority-sev">' + sevLabel + '</span>';
+    item.style.cursor = 'pointer';
+    item.onclick = function() {
+      var card = document.getElementById('issue-card-' + issue.id);
+      if (card) { card.scrollIntoView({ behavior: 'smooth', block: 'center' }); card.classList.add('open'); }
+    };
+    list.appendChild(item);
+  });
+}
+
+// ── SCORE EXPLANATION ──
+function renderScoreExplanation(score, criticals, warnings) {
+  var el = document.getElementById('scoreExplanation');
+  if (!el) return;
+  var text = '';
+  if (score >= 75) {
+    text = 'Your code looks good overall. ' + (warnings > 0 ? warnings + ' minor issue' + (warnings > 1 ? 's' : '') + ' to review.' : 'No major risks found.');
+  } else if (score >= 50) {
+    text = 'Your project has ' + criticals + ' critical issue' + (criticals > 1 ? 's' : '') + ' and ' + warnings + ' warning' + (warnings > 1 ? 's' : '') + ' that should be fixed before launch.';
+  } else {
+    text = 'Your project has ' + criticals + ' critical issue' + (criticals > 1 ? 's' : '') + ' including exposed secrets or unsafe code. Fix these before deploying.';
+  }
+  el.textContent = text;
+  el.style.display = 'block';
 }
 
 function buildIssueCard(issue, idx) {
