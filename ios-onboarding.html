@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VibeSafe — iOS onboarding prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #080C18;
+  --surface: #111827;
+  --surface2: #1A2438;
+  --border: #1E2D42;
+  --border2: #253650;
+  --cyan: #00D4FF;
+  --violet: #7C3AED;
+  --green: #10B981;
+  --text: #F1F5F9;
+  --text2: #94A3B8;
+  --text3: #64748B;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 20% 15%, rgba(0,212,255,0.14), transparent 35%),
+    radial-gradient(circle at 80% 25%, rgba(124,58,237,0.16), transparent 38%),
+    #050816;
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 40px 20px;
+}
+
+.phone {
+  width: 320px; height: 690px;
+  background: #000;
+  border-radius: 48px;
+  border: 1px solid #2a2a2a;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6), inset 0 0 0 6px #0a0a0a;
+  position: relative;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+.dynamic-island {
+  position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+  width: 90px; height: 26px; background: #000;
+  border-radius: 16px; z-index: 30;
+}
+
+.status-bar {
+  height: 46px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px 0 26px;
+  font-size: 0.78rem; font-weight: 600; color: #fff;
+  position: relative; z-index: 20;
+}
+
+.status-icons { display: flex; align-items: center; gap: 5px; }
+.status-icons svg { display: block; }
+
+.screens-viewport {
+  flex: 1; overflow: hidden; position: relative;
+}
+
+.screens-track {
+  display: flex; height: 100%;
+  transition: transform 0.32s cubic-bezier(.22,.61,.36,1);
+  will-change: transform;
+}
+
+.screen {
+  width: 320px; height: 100%; flex-shrink: 0;
+  display: flex; flex-direction: column;
+  background: var(--bg);
+  padding: 28px 26px 16px;
+  position: relative;
+}
+
+.skip-link {
+  position: absolute; top: 22px; right: 24px;
+  font-size: 0.78rem; color: var(--text3);
+  cursor: pointer; z-index: 5; background: none; border: none;
+}
+.skip-link:hover { color: var(--text2); }
+
+.screen-icon {
+  width: 84px; height: 84px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.1rem; margin: 30px auto 26px;
+  background: radial-gradient(circle, rgba(0,212,255,0.14), transparent 70%);
+  border: 1px solid rgba(0,212,255,0.18);
+  flex-shrink: 0;
+}
+.screen-icon.brand {
+  background: linear-gradient(135deg, var(--cyan), var(--violet));
+  border: none; font-size: 2.4rem;
+}
+.screen-icon.success {
+  background: radial-gradient(circle, rgba(16,185,129,0.16), transparent 70%);
+  border-color: rgba(16,185,129,0.25);
+}
+
+.screen-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.25rem; font-weight: 600; text-align: center;
+  margin-bottom: 10px; line-height: 1.3;
+}
+.screen-body {
+  font-size: 0.86rem; color: var(--text2); text-align: center;
+  line-height: 1.55; max-width: 250px; margin: 0 auto;
+}
+
+.screen-spacer { flex: 1; min-height: 0; }
+
+.repo-list { margin-top: 22px; display: flex; flex-direction: column; gap: 8px; }
+.repo-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 12px; border-radius: 10px;
+  background: var(--surface); border: 1px solid var(--border2);
+  cursor: pointer; transition: all 0.15s;
+}
+.repo-row.selected { border-color: var(--cyan); background: rgba(0,212,255,0.08); }
+.repo-icon { width: 26px; height: 26px; border-radius: 7px; background: var(--surface2); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; }
+.repo-name { font-size: 0.82rem; font-weight: 500; flex: 1; }
+.repo-radio { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--border2); flex-shrink: 0; position: relative; }
+.repo-row.selected .repo-radio { border-color: var(--cyan); }
+.repo-row.selected .repo-radio::after {
+  content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--cyan);
+}
+
+.gh-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 12px; margin-top: 24px;
+  background: var(--surface2); color: var(--text);
+  border: 1px solid var(--border2); border-radius: 11px;
+  font-size: 0.86rem; font-weight: 600; cursor: pointer;
+}
+
+.dialog-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(5,8,16,0.55);
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 28px;
+}
+.dialog-card {
+  width: 100%; background: #1c1c1e;
+  border-radius: 14px; overflow: hidden;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+.dialog-body { padding: 18px 16px 14px; }
+.dialog-title { font-size: 0.88rem; font-weight: 600; color: #fff; margin-bottom: 6px; line-height: 1.35; }
+.dialog-text { font-size: 0.78rem; color: #a1a1a6; line-height: 1.4; }
+.dialog-actions { display: flex; border-top: 1px solid #38383a; }
+.dialog-btn {
+  flex: 1; padding: 11px; background: none; border: none;
+  font-size: 0.86rem; color: #0a84ff; cursor: pointer;
+  border-right: 1px solid #38383a;
+}
+.dialog-btn:last-child { border-right: none; }
+.dialog-btn.bold { font-weight: 600; }
+
+.phone-footer {
+  flex-shrink: 0; padding: 8px 24px 6px;
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+}
+
+.dots { display: flex; gap: 6px; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border2); transition: all 0.2s; }
+.dot.active { width: 16px; background: var(--cyan); }
+
+.primary-btn {
+  width: 100%; padding: 13px; border: none; border-radius: 12px;
+  font-size: 0.9rem; font-weight: 700; color: #fff; cursor: pointer;
+  background: linear-gradient(135deg, var(--cyan), var(--violet));
+}
+.primary-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.home-indicator {
+  position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+  width: 120px; height: 4px; border-radius: 100px;
+  background: rgba(255,255,255,0.35);
+}
+
+.caption {
+  margin-top: 24px; text-align: center; font-size: 0.78rem; color: #555;
+}
+</style>
+</head>
+<body>
+
+<div>
+<div class="phone">
+  <div class="dynamic-island"></div>
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="status-icons">
+      <svg width="16" height="11" viewBox="0 0 16 11" fill="#fff"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="3" width="3" height="8" rx="0.5"/><rect x="13" y="0" width="3" height="11" rx="0.5"/></svg>
+      <svg width="20" height="11" viewBox="0 0 20 11" fill="none"><rect x="0.5" y="0.5" width="17" height="10" rx="2.5" stroke="#fff"/><rect x="2" y="2" width="14" height="7" rx="1.5" fill="#fff"/><rect x="18.5" y="3.5" width="1.3" height="4" rx="0.6" fill="#fff"/></svg>
+    </div>
+  </div>
+
+  <div class="screens-viewport" id="viewport">
+    <div class="screens-track" id="track">
+
+      <section class="screen">
+        <div class="screen-spacer"></div>
+        <div class="screen-icon brand">🛡️</div>
+        <div class="screen-title">VibeSafe</div>
+        <div class="screen-body">Catch bugs and vulnerabilities in AI-generated code before you ship.</div>
+        <div class="screen-spacer"></div>
+      </section>
+
+      <section class="screen">
+        <button class="skip-link" onclick="skipToSetup()">Skip</button>
+        <div class="screen-spacer"></div>
+        <div class="screen-icon">🔍</div>
+        <div class="screen-title">Catch vulnerabilities instantly</div>
+        <div class="screen-body">VibeSafe scans every line for exposed secrets, SQL injection, and other risks the moment you paste your code.</div>
+        <div class="screen-spacer"></div>
+      </section>
+
+      <section class="screen">
+        <button class="skip-link" onclick="skipToSetup()">Skip</button>
+        <div class="screen-spacer"></div>
+        <div class="screen-icon">⚡</div>
+        <div class="screen-title">Fix issues with one tap</div>
+        <div class="screen-body">Every issue comes with a ready fix. Apply it instantly or copy it straight into Cursor, Lovable, or Bolt.</div>
+        <div class="screen-spacer"></div>
+      </section>
+
+      <section class="screen">
+        <button class="skip-link" onclick="skipToSetup()">Skip</button>
+        <div class="screen-spacer"></div>
+        <div class="screen-icon">📊</div>
+        <div class="screen-title">Ship with confidence</div>
+        <div class="screen-body">Get a safety score for every scan, so you always know if your code is ready to deploy.</div>
+        <div class="screen-spacer"></div>
+      </section>
+
+      <section class="screen">
+        <div class="screen-spacer"></div>
+        <div class="screen-icon">
+          <svg width="34" height="34" viewBox="0 0 16 16" fill="#fff"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        </div>
+        <div class="screen-title">Connect your GitHub</div>
+        <div class="screen-body">Link your account so VibeSafe can scan repositories directly — read-only, never stored.</div>
+        <div class="screen-spacer"></div>
+        <button class="gh-btn" onclick="goTo(5)">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          Continue with GitHub
+        </button>
+      </section>
+
+      <section class="screen">
+        <div style="height:6px"></div>
+        <div class="screen-title" style="margin-top:8px">Choose a repo to scan</div>
+        <div class="screen-body">Pick a project to run your first scan on. You can add more anytime.</div>
+        <div class="repo-list" id="repoList">
+          <div class="repo-row" data-repo="vibesafe-api" onclick="selectRepo(this)">
+            <div class="repo-icon">📦</div><div class="repo-name">vibesafe-api</div><div class="repo-radio"></div>
+          </div>
+          <div class="repo-row" data-repo="my-react-app" onclick="selectRepo(this)">
+            <div class="repo-icon">⚛️</div><div class="repo-name">my-react-app</div><div class="repo-radio"></div>
+          </div>
+          <div class="repo-row" data-repo="checkout-service" onclick="selectRepo(this)">
+            <div class="repo-icon">💳</div><div class="repo-name">checkout-service</div><div class="repo-radio"></div>
+          </div>
+          <div class="repo-row" data-repo="internal-tools" onclick="selectRepo(this)">
+            <div class="repo-icon">🛠️</div><div class="repo-name">internal-tools</div><div class="repo-radio"></div>
+          </div>
+        </div>
+        <div class="screen-spacer"></div>
+      </section>
+
+      <section class="screen" style="padding:0">
+        <div class="dialog-backdrop">
+          <div class="dialog-card">
+            <div class="dialog-body">
+              <div class="dialog-title">"VibeSafe" Would Like to<br>Send You Notifications</div>
+              <div class="dialog-text">Notifications may include alerts, sounds, and icon badges. These can be configured in Settings.</div>
+            </div>
+            <div class="dialog-actions">
+              <button class="dialog-btn" onclick="goTo(7)">Don't Allow</button>
+              <button class="dialog-btn bold" onclick="goTo(7)">Allow</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen">
+        <div class="screen-spacer"></div>
+        <div class="screen-icon success">✅</div>
+        <div class="screen-title">You're all set</div>
+        <div class="screen-body">Your workspace is ready. Paste your first snippet or connect a repo to run your first scan.</div>
+        <div class="screen-spacer"></div>
+      </section>
+
+    </div>
+  </div>
+
+  <div class="phone-footer" id="footer">
+    <div class="dots" id="dots"></div>
+    <button class="primary-btn" id="primaryBtn" onclick="handlePrimary()">Get started</button>
+  </div>
+
+  <div class="home-indicator"></div>
+</div>
+<div class="caption">Interactive prototype — drag, or tap the button, to move between screens</div>
+</div>
+
+<script>
+var TOTAL = 8;
+var index = 0;
+var selectedRepo = null;
+
+var STEPS = [
+  { label: 'Get started' },
+  { label: 'Next' },
+  { label: 'Next' },
+  { label: 'Continue' },
+  { hideFooter: true },
+  { label: 'Continue', requiresRepo: true },
+  { hideFooter: true },
+  { label: 'Start scanning' }
+];
+
+var track = document.getElementById('track');
+var viewport = document.getElementById('viewport');
+var footer = document.getElementById('footer');
+var primaryBtn = document.getElementById('primaryBtn');
+var dotsWrap = document.getElementById('dots');
+
+for (var i = 0; i < TOTAL; i++) {
+  var d = document.createElement('div');
+  d.className = 'dot';
+  dotsWrap.appendChild(d);
+}
+
+var SCREEN_W = 320;
+
+function render() {
+  track.style.transform = 'translateX(' + (-index * SCREEN_W) + 'px)';
+  var dots = dotsWrap.querySelectorAll('.dot');
+  dots.forEach(function(d, i) { d.classList.toggle('active', i === index); });
+
+  var step = STEPS[index];
+  if (step.hideFooter) {
+    footer.style.opacity = '0';
+    footer.style.pointerEvents = 'none';
+  } else {
+    footer.style.opacity = '1';
+    footer.style.pointerEvents = 'all';
+    primaryBtn.textContent = step.label;
+    primaryBtn.disabled = !!(step.requiresRepo && !selectedRepo);
+  }
+}
+
+function goTo(i) {
+  index = Math.max(0, Math.min(TOTAL - 1, i));
+  render();
+}
+
+function handlePrimary() {
+  if (index === TOTAL - 1) {
+    goTo(0);
+    selectedRepo = null;
+    document.querySelectorAll('.repo-row').forEach(function(r) { r.classList.remove('selected'); });
+    return;
+  }
+  goTo(index + 1);
+}
+
+function skipToSetup() { goTo(4); }
+
+function selectRepo(el) {
+  document.querySelectorAll('.repo-row').forEach(function(r) { r.classList.remove('selected'); });
+  el.classList.add('selected');
+  selectedRepo = el.getAttribute('data-repo');
+  render();
+}
+
+var dragging = false, startX = 0, deltaX = 0;
+
+viewport.addEventListener('pointerdown', function(e) {
+  dragging = true; startX = e.clientX; deltaX = 0;
+  track.style.transition = 'none';
+  viewport.setPointerCapture(e.pointerId);
+});
+viewport.addEventListener('pointermove', function(e) {
+  if (!dragging) return;
+  deltaX = e.clientX - startX;
+  track.style.transform = 'translateX(' + (-index * SCREEN_W + deltaX) + 'px)';
+});
+viewport.addEventListener('pointerup', function() {
+  if (!dragging) return;
+  dragging = false;
+  track.style.transition = '';
+  if (deltaX < -55 && index < TOTAL - 1) index++;
+  else if (deltaX > 55 && index > 0) index--;
+  render();
+});
+viewport.addEventListener('pointercancel', function() {
+  dragging = false; track.style.transition = ''; render();
+});
+
+render();
+</script>
+</body>
+</html>
