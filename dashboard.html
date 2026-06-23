@@ -1937,6 +1937,7 @@ async function scanFromGitHub() {
     });
     window.vsPassedChecks = result.passed || [];
     window.vsSummary = result.summary || '';
+    window.vsFixedCode = result.fixedCode || result.fixed_code || '';
 
     document.getElementById('scanProgressFill').style.width = '100%';
     document.getElementById('scanPct').textContent = '100%';
@@ -2037,6 +2038,7 @@ async function startScan() {
     window.vsPassedChecks = result.passed || [];
     window.vsSummary = result.summary || '';
     window.vsDetectedLang = result.language || langName;
+    window.vsFixedCode = result.fixedCode || result.fixed_code || '';
 
     setTimeout(() => showResults(result.score), 400);
 
@@ -2506,17 +2508,30 @@ function fixAll() {
   const unfixed = issues.filter(i => !i.fixed);
   if (unfixed.length === 0) { showToast('Nothing to fix', 'info'); return; }
 
-  // Apply the corrected snippets to the editor, then RE-VERIFY with a real
-  // scan. We deliberately don't show an optimistic 100 — the rescan reports
-  // the true score of the actual fixed code.
+  var editor = document.getElementById('codeEditor');
+
+  // Best path: the API returned a full coherent corrected file. Use it directly
+  // — this resolves overlapping fixes that snippet replacement can't. (The
+  // backend must return `fixedCode`; until then we fall back below.)
+  var fullFix = (window.vsFixedCode || '').trim();
+  if (fullFix && editor) {
+    editor.value = fullFix;
+    if (typeof updateLineNumbers === 'function') updateLineNumbers();
+    showToast('Applied the full corrected code — rescanning to verify…', 'info');
+    setTimeout(function() { startScan(); }, 500);
+    return;
+  }
+
+  // Fallback: best-effort snippet replacement, then RE-VERIFY with a real scan.
+  // We deliberately don't show an optimistic 100 — the rescan reports the true
+  // score of the actual fixed code.
   var res = applyFixesToEditor();
   if (res.applied === 0) {
     showToast("Couldn't auto-apply these fixes to your code — use “Copy for Cursor / Lovable”", 'error');
     return;
   }
 
-  var msg = 'Applied fixes to your code — rescanning to verify…';
-  showToast(msg, 'info');
+  showToast('Applied fixes to your code — rescanning to verify…', 'info');
 
   // Re-run the real scanner on the corrected code so the score is honest.
   setTimeout(function() { startScan(); }, 500);
@@ -2758,12 +2773,17 @@ function applyFixesAndDownload() {
   if (!editor || !editor.value.trim()) { showToast('No code in the editor to fix', 'error'); return; }
   if (!issues || issues.length === 0) { showToast('Run a scan first', 'error'); return; }
 
-  var res = applyFixesToEditor();
-  var applied = res.applied, skipped = res.skipped;
-
-  if (applied === 0) {
-    showToast("Couldn't auto-apply fixes — use “Copy for Cursor / Lovable” instead", 'error');
-    return;
+  // Prefer the API's full corrected file when available; else snippet-apply.
+  var fullFix = (window.vsFixedCode || '').trim();
+  if (fullFix) {
+    editor.value = fullFix;
+    if (typeof updateLineNumbers === 'function') updateLineNumbers();
+  } else {
+    var res = applyFixesToEditor();
+    if (res.applied === 0) {
+      showToast("Couldn't auto-apply fixes — use “Copy for Cursor / Lovable” instead", 'error');
+      return;
+    }
   }
   var code = editor.value;
 
