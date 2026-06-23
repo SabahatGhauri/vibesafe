@@ -401,6 +401,43 @@ body {
 .mode-btn.active { background: var(--surface2); color: var(--cyan); }
 body.mode-beginner .tech-only { display: none !important; }
 
+/* ── #2 Category section headers ── */
+.cat-header {
+  display: flex; align-items: center; gap: 8px;
+  margin: 16px 0 8px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.cat-header.cat-first { margin-top: 0; }
+.cat-icon { font-size: 0.95rem; }
+.cat-name {
+  font-weight: 700; font-size: 0.76rem; letter-spacing: 0.04em;
+  color: var(--text); text-transform: uppercase;
+}
+.cat-count {
+  margin-left: auto; font-size: 0.72rem; font-weight: 700; color: var(--text2);
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 100px; padding: 1px 9px;
+}
+
+/* ── #12 Scan compare (vs last scan) ── */
+.scan-compare {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px 16px; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 16px 22px; flex-wrap: wrap;
+}
+.sc-title {
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
+  font-weight: 700; color: var(--text3); width: 100%; margin-bottom: -4px;
+}
+.sc-metric { display: flex; align-items: baseline; gap: 7px; font-size: 0.82rem; }
+.sc-from { color: var(--text3); }
+.sc-arrow { color: var(--text3); }
+.sc-to { font-weight: 700; color: var(--text); }
+.sc-delta { font-weight: 700; font-size: 0.76rem; padding: 1px 8px; border-radius: 100px; }
+.sc-delta.up   { background: var(--green-dim); color: var(--green); }
+.sc-delta.down { background: var(--red-dim);   color: var(--red); }
+.sc-delta.same { background: var(--surface2);  color: var(--text3); }
+
 .editor-footer {
   height: 28px; flex-shrink: 0;
   display: flex; align-items: center; gap: 16px;
@@ -1439,6 +1476,9 @@ document.addEventListener('click', function(e) {
           </div>
         </div>
 
+        <!-- Compare to last scan (hidden until there's history) -->
+        <div class="scan-compare" id="scanCompare" style="display:none"></div>
+
         <!-- Before-launch checklist (hidden until scan) -->
         <div class="launch-checklist" id="launchChecklist" style="display:none"></div>
 
@@ -1815,6 +1855,7 @@ function resetResults() {
   document.getElementById('resultsPanelTitle').textContent = 'Scan results';
   var lb = document.getElementById('launchBadge'); if (lb) lb.style.display = 'none';
   var lc = document.getElementById('launchChecklist'); if (lc) lc.style.display = 'none';
+  var scmp = document.getElementById('scanCompare'); if (scmp) scmp.style.display = 'none';
   var mt = document.getElementById('modeToggle'); if (mt) mt.style.display = 'none';
   clearEditorHighlights();
 }
@@ -1858,6 +1899,8 @@ async function scanFromGitHub() {
   document.getElementById('issuesList').style.display = 'none';
   document.getElementById('resultsFooter').style.display = 'none';
   document.getElementById('scanningState').style.display = 'flex';
+  var scmpG = document.getElementById('scanCompare'); if (scmpG) scmpG.style.display = 'none';
+  window.vsIsHistoryView = false; // fresh GitHub scan
   issues = [];
 
   var stepLabel = document.getElementById('scanStepLabel');
@@ -1927,6 +1970,8 @@ async function startScan() {
   var fp = document.getElementById('fixPriority'); if (fp) fp.style.display = 'none';
   var lb0 = document.getElementById('launchBadge'); if (lb0) lb0.style.display = 'none';
   var lc0 = document.getElementById('launchChecklist'); if (lc0) lc0.style.display = 'none';
+  var scmp0 = document.getElementById('scanCompare'); if (scmp0) scmp0.style.display = 'none';
+  window.vsIsHistoryView = false; // this is a fresh scan
   document.getElementById('exportBtn').style.display = 'none';
   issues = [];
 
@@ -2057,9 +2102,35 @@ function showResults(apiScore) {
     el.innerHTML = '<div style="font-size:2rem;margin-bottom:8px">✅</div><div style="font-weight:600;color:var(--green);margin-bottom:4px">No issues found</div><div style="font-size:0.78rem;color:var(--text3)">Your code looks clean and safe to ship.</div>';
     list.appendChild(el);
   } else {
-    issues.forEach((issue, idx) => {
-      const card = buildIssueCard(issue, idx);
-      setTimeout(() => list.appendChild(card), idx * 80);
+    // #2 Group issues into category sections (Security, Bugs, Runtime, …)
+    const groups = {};
+    issues.forEach(function(issue){
+      const c = categorizeIssue(issue);
+      (groups[c] = groups[c] || []).push(issue);
+    });
+    const rank = { critical: 3, warning: 2, info: 1 };
+    let visIdx = 0, firstHeader = true;
+    CATEGORY_ORDER.forEach(function(cat){
+      const groupIssues = groups[cat];
+      if (!groupIssues || !groupIssues.length) return;
+      groupIssues.sort(function(a, b){ return (rank[b.sev] || 0) - (rank[a.sev] || 0); });
+
+      const header = document.createElement('div');
+      header.className = 'cat-header' + (firstHeader ? ' cat-first' : '');
+      header.setAttribute('data-cat', cat);
+      header.innerHTML = '<span class="cat-icon">' + CATEGORY_META[cat].icon + '</span>'
+        + '<span class="cat-name">' + CATEGORY_META[cat].label + '</span>'
+        + '<span class="cat-count">' + groupIssues.length + '</span>';
+      list.appendChild(header);
+      firstHeader = false;
+
+      groupIssues.forEach(function(issue){
+        const card = buildIssueCard(issue, issues.indexOf(issue));
+        card.style.animationDelay = (visIdx * 60) + 'ms';
+        card.setAttribute('data-cat', cat);
+        list.appendChild(card);
+        visIdx++;
+      });
     });
   }
 
@@ -2094,6 +2165,8 @@ function showResults(apiScore) {
 
   // #15 badge + #5 checklist
   updateLaunchUI();
+  // #12 compare vs previous scan (read prev score BEFORE saveScanToHistory updates it)
+  renderScanCompare(score);
   // #14 Beginner/Developer toggle becomes available once there are results
   var mt = document.getElementById('modeToggle');
   if (mt) mt.style.display = issues.length > 0 ? 'inline-flex' : 'none';
@@ -2145,6 +2218,10 @@ function renderScanHistory(scans) {
     container.innerHTML = '<div style="padding:12px;font-size:0.78rem;color:var(--text3);text-align:center">No scans yet. Run your first scan!</div>';
     return;
   }
+  // #12 Remember the most recent saved scan to compare the next one against
+  window.vsPrevScore  = scans[0].score;
+  window.vsPrevIssues = scans[0].issues_count;
+
   container.innerHTML = '';
   scans.forEach(function(scan) {
     var cls = scan.score >= 75 ? 'good' : scan.score >= 50 ? 'warn' : 'bad';
@@ -2166,8 +2243,36 @@ function loadPastScan(scan) {
   issues = (scan.results.issues || []).map(function(i) { return Object.assign({}, i, { fixed: false }); });
   window.vsSummary = scan.results.summary || '';
   window.vsPassedChecks = scan.results.passed || [];
+  window.vsIsHistoryView = true; // viewing an old scan — don't show a "vs last" compare
   showResults(scan.score);
   showToast('Loaded scan from ' + new Date(scan.created_at).toLocaleDateString(), 'info');
+}
+
+// #12 Render the "compared to last scan" card (only for fresh scans with history)
+function renderScanCompare(newScore) {
+  var el = document.getElementById('scanCompare');
+  if (!el) return;
+  if (window.vsIsHistoryView || window.vsPrevScore == null) { el.style.display = 'none'; return; }
+
+  var prev = window.vsPrevScore;
+  var d = newScore - prev;
+  var dCls = d > 0 ? 'up' : d < 0 ? 'down' : 'same';
+  var dTxt = (d > 0 ? '↑ +' : d < 0 ? '↓ −' : '± ') + Math.abs(d);
+  var html = '<div class="sc-title">📊 Compared to your last scan</div>';
+  html += '<div class="sc-metric"><span class="sc-from">Score ' + prev + '</span>'
+       +  '<span class="sc-arrow">→</span><span class="sc-to">' + newScore + '</span>'
+       +  '<span class="sc-delta ' + dCls + '">' + dTxt + '</span></div>';
+
+  if (window.vsPrevIssues != null) {
+    var prevI = window.vsPrevIssues, newI = issues.length, di = prevI - newI;
+    var iCls = di > 0 ? 'up' : di < 0 ? 'down' : 'same';
+    var iTxt = di > 0 ? di + ' fewer' : di < 0 ? Math.abs(di) + ' more' : 'no change';
+    html += '<div class="sc-metric"><span class="sc-from">Issues ' + prevI + '</span>'
+         +  '<span class="sc-arrow">→</span><span class="sc-to">' + newI + '</span>'
+         +  '<span class="sc-delta ' + iCls + '">' + iTxt + '</span></div>';
+  }
+  el.innerHTML = html;
+  el.style.display = 'flex';
 }
 
 
@@ -2186,6 +2291,16 @@ function filterIssues(severity, btn) {
       var match = card.className.indexOf('severity-' + severity) !== -1;
       card.style.display = match ? '' : 'none';
     }
+  });
+
+  // #2 Hide category headers whose cards are all filtered out
+  document.querySelectorAll('.cat-header').forEach(function(header) {
+    var cat = header.getAttribute('data-cat');
+    var anyVisible = Array.prototype.some.call(
+      document.querySelectorAll('.issue-card[data-cat="' + cat + '"]'),
+      function(c) { return c.style.display !== 'none'; }
+    );
+    header.style.display = anyVisible ? '' : 'none';
   });
 }
 
@@ -2239,6 +2354,28 @@ function renderScoreExplanation(score, criticals, warnings) {
   }
   el.textContent = text;
   el.style.display = 'block';
+}
+
+// ── #2 ISSUE CATEGORIES ──
+// Map each issue into one of the 5 product categories by keyword. Detection
+// quality depends on how the scan API labels issue.type/title.
+var CATEGORY_META = {
+  security: { label: 'Security', icon: '🔒' },
+  bugs:     { label: 'Bugs',     icon: '🐛' },
+  runtime:  { label: 'Runtime',  icon: '⚡' },
+  packages: { label: 'Packages', icon: '📦' },
+  quality:  { label: 'Quality',  icon: '✨' }
+};
+var CATEGORY_ORDER = ['security', 'bugs', 'runtime', 'packages', 'quality'];
+
+function categorizeIssue(issue) {
+  var t = ((issue.type || '') + ' ' + (issue.title || '')).toLowerCase();
+  if (/secret|api.?key|\bkey\b|injection|xss|csrf|ssrf|\bauth|traversal|password|credential|token|sanitiz|insecure|vulnerab|\bcors\b|encrypt/.test(t)) return 'security';
+  if (/package|depend|import|module|\bversion|outdated|deprecat|hallucinat|requirement/.test(t)) return 'packages';
+  if (/runtime|await|\basync|null|undefined|promise|crash|exception|reference error|\brace\b|memory|unhandled|rejection/.test(t)) return 'runtime';
+  if (/syntax|bracket|paren|typo|missing|wrong|logic|\bbug|broken|unclosed|undeclared/.test(t)) return 'bugs';
+  if (/quality|messy|duplicat|unclear|style|naming|complex|readab|comparison|\bany\b|lint|magic number|dead code|console\.log/.test(t)) return 'quality';
+  return 'bugs';
 }
 
 function buildIssueCard(issue, idx) {
