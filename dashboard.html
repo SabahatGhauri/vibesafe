@@ -354,6 +354,53 @@ body {
 .highlight-line.hl-info { background: rgba(0,212,255,0.12); box-shadow: inset 3px 0 0 var(--cyan); }
 .code-editor { position: relative; z-index: 2; }
 
+/* ── #15 Launch readiness badge ── */
+.launch-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 14px; padding: 8px 18px; border-radius: 100px;
+  font-weight: 700; font-size: 0.85rem;
+}
+.launch-badge.ready    { background: var(--green-dim); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+.launch-badge.notready { background: rgba(245,158,11,0.12); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+
+/* ── #5 Before-launch checklist ── */
+.launch-checklist {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px 16px; margin-bottom: 14px;
+}
+.lc-title { font-weight: 700; font-size: 0.88rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.lc-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 7px 0; font-size: 0.82rem; color: var(--text2);
+  border-top: 1px solid var(--border);
+}
+.lc-item:first-of-type { border-top: none; }
+.lc-icon {
+  flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; margin-top: 1px;
+}
+.lc-pass .lc-icon { background: var(--green-dim); color: var(--green); }
+.lc-fail .lc-icon { background: var(--red-dim); color: var(--red); }
+.lc-fail > span:last-child { color: var(--text); }
+.lc-manual { cursor: pointer; }
+.lc-manual .lc-icon { background: var(--surface2); color: var(--text3); border: 1px solid var(--border2); }
+.lc-manual.checked .lc-icon { background: var(--green-dim); color: var(--green); border-color: transparent; }
+.lc-manual.checked > span:last-child { color: var(--text2); text-decoration: line-through; }
+
+/* ── #14 Beginner / Developer mode ── */
+.mode-toggle {
+  display: inline-flex; background: var(--bg2);
+  border: 1px solid var(--border2); border-radius: 8px; padding: 3px; gap: 2px;
+}
+.mode-btn {
+  padding: 5px 12px; border: none; background: none; color: var(--text3);
+  font-size: 0.76rem; font-weight: 600; border-radius: 6px; cursor: pointer;
+  font-family: 'Inter', sans-serif; transition: all 0.15s;
+}
+.mode-btn.active { background: var(--surface2); color: var(--cyan); }
+body.mode-beginner .tech-only { display: none !important; }
+
 .editor-footer {
   height: 28px; flex-shrink: 0;
   display: flex; align-items: center; gap: 16px;
@@ -1340,6 +1387,10 @@ document.addEventListener('click', function(e) {
           <span id="resultsPanelTitle">Scan results</span>
         </div>
         <div class="panel-actions" id="resultsPanelActions">
+          <div class="mode-toggle" id="modeToggle" style="display:none">
+            <button class="mode-btn active" id="modeBeginnerBtn" onclick="setMode('beginner')">Beginner</button>
+            <button class="mode-btn" id="modeDevBtn" onclick="setMode('developer')">Developer</button>
+          </div>
           <button class="btn btn-ghost" id="exportBtn" style="display:none" onclick="exportReport()">
             Export PDF
           </button>
@@ -1369,6 +1420,7 @@ document.addEventListener('click', function(e) {
               </div>
             </div>
             <div class="gauge-verdict" id="scoreVerdict">Scanning</div>
+            <div class="launch-badge" id="launchBadge" style="display:none"></div>
             <div class="score-explanation" id="scoreExplanation" style="display:none;font-size:0.78rem;color:var(--text3);text-align:center;margin-top:8px;padding:0 12px;line-height:1.5"></div>
           </div>
           <div class="score-stats">
@@ -1386,6 +1438,9 @@ document.addEventListener('click', function(e) {
             </div>
           </div>
         </div>
+
+        <!-- Before-launch checklist (hidden until scan) -->
+        <div class="launch-checklist" id="launchChecklist" style="display:none"></div>
 
         <!-- Empty state -->
         <div class="empty-state" id="emptyState">
@@ -1656,6 +1711,68 @@ function renderEditorHighlights() {
   ln.innerHTML = lnHtml;
 }
 
+// ── #14 BEGINNER / DEVELOPER MODE ──
+function setMode(mode) {
+  var beginner = mode === 'beginner';
+  document.body.classList.toggle('mode-beginner', beginner);
+  document.body.classList.toggle('mode-developer', !beginner);
+  var b = document.getElementById('modeBeginnerBtn'), d = document.getElementById('modeDevBtn');
+  if (b) b.classList.toggle('active', beginner);
+  if (d) d.classList.toggle('active', !beginner);
+  try { localStorage.setItem('vibesafe_mode', mode); } catch (e) {}
+}
+
+// Recompute the launch badge + checklist from the current (unfixed) issues.
+function updateLaunchUI() {
+  var badge = document.getElementById('launchBadge');
+  if (badge) {
+    var scoreEl = document.getElementById('scoreValue');
+    var score = scoreEl ? parseInt(scoreEl.textContent, 10) || 0 : 0;
+    var criticals = (issues || []).filter(function(i){ return !i.fixed && i.sev === 'critical'; }).length;
+    var ready = score >= 75 && criticals === 0;
+    badge.className = 'launch-badge ' + (ready ? 'ready' : 'notready');
+    badge.textContent = ready ? '✅ Ready to Launch' : '⚠️ Fix Before Launch';
+    badge.style.display = 'inline-flex';
+  }
+  renderLaunchChecklist();
+}
+
+// ── #5 BEFORE-LAUNCH CHECKLIST ──
+// Auto-checks are derived from scan results; the manual items are reminders the
+// user ticks off (a code scan can't verify responsiveness or device testing).
+function renderLaunchChecklist() {
+  var el = document.getElementById('launchChecklist');
+  if (!el) return;
+  var unfixed = (issues || []).filter(function(i){ return !i.fixed; });
+  function has(re) { return unfixed.some(function(i){ return re.test((i.type||'') + ' ' + (i.title||'')); }); }
+
+  var secrets  = has(/secret|api[\s-]?key|\bkey\b|credential|token|password/i);
+  var runtime  = has(/runtime|await|null|undefined|promise|crash|error handling|exception|reference/i);
+  var pkg      = has(/package|depend|import|module/i);
+  var critical = unfixed.some(function(i){ return i.sev === 'critical'; });
+
+  var auto = [
+    { label: 'No exposed API keys or secrets', pass: !secrets },
+    { label: 'No critical security issues',     pass: !critical },
+    { label: 'No app-breaking runtime errors',  pass: !runtime },
+    { label: 'No missing or broken packages',   pass: !pkg }
+  ];
+  var manual = ['Forms validate user input', 'Mobile responsive checked', 'Tested on a real device / browser'];
+
+  var html = '<div class="lc-title">🚀 Before-launch checklist</div>';
+  auto.forEach(function(it){
+    html += '<div class="lc-item ' + (it.pass ? 'lc-pass' : 'lc-fail') + '">'
+         +  '<span class="lc-icon">' + (it.pass ? '✓' : '!') + '</span>'
+         +  '<span>' + it.label + '</span></div>';
+  });
+  manual.forEach(function(label){
+    html += '<div class="lc-item lc-manual" onclick="this.classList.toggle(\'checked\')">'
+         +  '<span class="lc-icon">○</span><span>' + label + '</span></div>';
+  });
+  el.innerHTML = html;
+  el.style.display = 'block';
+}
+
 // ── EDITOR TABS ──
 function switchEditorTab(el, tab) {
   document.querySelectorAll('.etab').forEach(t => t.classList.remove('active'));
@@ -1696,6 +1813,10 @@ function resetResults() {
   document.getElementById('resultsFooter').style.display = 'none';
   document.getElementById('exportBtn').style.display = 'none';
   document.getElementById('resultsPanelTitle').textContent = 'Scan results';
+  var lb = document.getElementById('launchBadge'); if (lb) lb.style.display = 'none';
+  var lc = document.getElementById('launchChecklist'); if (lc) lc.style.display = 'none';
+  var mt = document.getElementById('modeToggle'); if (mt) mt.style.display = 'none';
+  clearEditorHighlights();
 }
 
 // ── START SCAN ──
@@ -1804,6 +1925,8 @@ async function startScan() {
   document.getElementById('scanBtn').disabled = true;
   var fb = document.getElementById('filterBar'); if (fb) fb.style.display = 'none';
   var fp = document.getElementById('fixPriority'); if (fp) fp.style.display = 'none';
+  var lb0 = document.getElementById('launchBadge'); if (lb0) lb0.style.display = 'none';
+  var lc0 = document.getElementById('launchChecklist'); if (lc0) lc0.style.display = 'none';
   document.getElementById('exportBtn').style.display = 'none';
   issues = [];
 
@@ -1969,6 +2092,12 @@ function showResults(apiScore) {
   renderScoreExplanation(score, criticals, warnings);
   renderEditorHighlights();
 
+  // #15 badge + #5 checklist
+  updateLaunchUI();
+  // #14 Beginner/Developer toggle becomes available once there are results
+  var mt = document.getElementById('modeToggle');
+  if (mt) mt.style.display = issues.length > 0 ? 'inline-flex' : 'none';
+
   showToast('Scan complete — ' + (issues.length === 0 ? 'no issues found!' : issues.length + ' issues found'), issues.length === 0 ? 'success' : 'info');
 
   // Save this scan to history
@@ -2124,14 +2253,14 @@ function buildIssueCard(issue, idx) {
       <div class="issue-meta">
         <div class="issue-type">${issue.type}</div>
         <div class="issue-title">${issue.title}</div>
-        <div class="issue-line">${issue.line}</div>
+        <div class="issue-line tech-only">${issue.line}</div>
       </div>
       <span class="sev-pill sev-pill-${issue.sev}">${issue.sev === 'critical' ? 'High' : issue.sev === 'warning' ? 'Medium' : 'Low'}</span>
       <div class="issue-chevron">▶</div>
     </div>
     <div class="issue-body">
       <div class="issue-desc">${issue.desc}</div>
-      <div class="code-snippet">
+      <div class="code-snippet tech-only">
         <div class="del">− ${issue.before}</div>
         <div class="add">+ ${issue.after}</div>
       </div>
@@ -2173,6 +2302,7 @@ function fixIssue(id) {
   // Update score and clear this line's highlight (issue is resolved)
   updateScore();
   renderEditorHighlights();
+  updateLaunchUI();
   showToast(`Fixed: ${issue.title}`, 'success');
 
   // Update header count
@@ -2260,6 +2390,12 @@ function showToast(msg, type='info') {
 // ── INIT ──
 updateLineNumbers();
 document.getElementById('codeEditor').focus();
+// Apply saved view mode (default: beginner — simple English first)
+(function(){
+  var saved = 'beginner';
+  try { saved = localStorage.getItem('vibesafe_mode') || 'beginner'; } catch (e) {}
+  setMode(saved);
+})();
 // Ready — paste your code and click Run Scan
 
 // ── AI-READY FIX EXPORT ──
