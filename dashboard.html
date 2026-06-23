@@ -2504,21 +2504,24 @@ function fixIssue(id) {
 
 function fixAll() {
   const unfixed = issues.filter(i => !i.fixed);
-  unfixed.forEach((issue, idx) => {
-    setTimeout(() => fixIssue(issue.id), idx * 300);
-  });
-  showToast(`Auto-fixing ${unfixed.length} issues...`, 'success');
-  // After the cards finish, apply the corrected snippets to the editor too —
-  // otherwise "Rescan after fixes" re-scans the original code and the issues
-  // come straight back.
-  setTimeout(function() {
-    var res = applyFixesToEditor();
-    if (res.applied > 0) {
-      var msg = 'Applied ' + res.applied + ' fix' + (res.applied > 1 ? 'es' : '') + ' to your code';
-      if (res.skipped > 0) msg += ' · ' + res.skipped + ' need manual review (Copy for Cursor / Lovable)';
-      showToast(msg, res.skipped > 0 ? 'info' : 'success');
-    }
-  }, unfixed.length * 300 + 150);
+  if (unfixed.length === 0) { showToast('Nothing to fix', 'info'); return; }
+
+  // Apply the corrected snippets to the editor, then RE-VERIFY with a real
+  // scan. We deliberately don't show an optimistic 100 — the rescan reports
+  // the true score of the actual fixed code.
+  var res = applyFixesToEditor();
+  if (res.applied === 0) {
+    showToast("Couldn't auto-apply these fixes to your code — use “Copy for Cursor / Lovable”", 'error');
+    return;
+  }
+
+  var msg = 'Applied ' + res.applied + ' fix' + (res.applied > 1 ? 'es' : '');
+  if (res.skipped > 0) msg += ' · ' + res.skipped + ' couldn’t be auto-applied';
+  msg += ' — rescanning to verify…';
+  showToast(msg, 'info');
+
+  // Re-run the real scanner on the corrected code so the score is honest.
+  setTimeout(function() { startScan(); }, 500);
 }
 
 function updateScore() {
