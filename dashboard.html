@@ -2149,6 +2149,15 @@ function showResults(apiScore) {
   document.getElementById('resultsFooter').style.display = 'block';
   document.getElementById('exportBtn').style.display = 'flex';
 
+  // Reset the "Auto-fix all" button for this fresh result (it gets disabled
+  // and relabelled once everything is fixed — re-enable it for the new scan).
+  fixedCount = 0;
+  var fab = document.getElementById('fixAllBtn');
+  if (fab) {
+    fab.disabled = issues.length === 0;
+    fab.textContent = issues.length === 0 ? '✅ Nothing to fix' : '⚡ Auto-fix all issues';
+  }
+
   const title = issues.length === 0
     ? 'All clear ✓'
     : issues.length + ' issue' + (issues.length > 1 ? 's' : '') + ' found';
