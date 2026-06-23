@@ -1409,6 +1409,9 @@ document.addEventListener('click', function(e) {
         <button class="fix-all-btn" id="fixAllBtn" onclick="fixAll()">
           ⚡ Auto-fix all issues
         </button>
+        <button class="fix-all-btn" id="applyDownloadBtn" onclick="applyFixesAndDownload()" style="margin-top:8px;background:var(--surface2);color:var(--violet);border:1px solid rgba(124,58,237,0.4);box-shadow:none">
+          💾 Apply fixes &amp; download code
+        </button>
         <button class="fix-all-btn" id="copyFixesBtn" onclick="copyFixesForAI()" style="margin-top:8px;background:var(--surface2);color:var(--cyan);border:1px solid rgba(0,212,255,0.3);box-shadow:none">
           📋 Copy all fixes for Cursor / Lovable
         </button>
@@ -1601,6 +1604,18 @@ function resetResults() {
 
 const SCAN_API_URL = 'https://vibesafe-api.vercel.app/api/scan'; // Relative URL — same domain as your Vercel deployment
 
+// Normalize whatever the scan API returns into the 3 severities the UI styles:
+// 'critical' | 'warning' | 'info'. The API may return e.g. "CRITICAL", "High",
+// "error", "Medium" — without this, the CSS classes (.severity-critical etc.)
+// never match and issues render with no red/amber colour.
+function normalizeSeverity(raw) {
+  var s = String(raw || '').trim().toLowerCase();
+  if (['critical','crit','high','severe','error','danger','blocker'].indexOf(s) !== -1) return 'critical';
+  if (['warning','warn','medium','moderate','major'].indexOf(s) !== -1) return 'warning';
+  if (['info','low','note','minor','suggestion','notice'].indexOf(s) !== -1) return 'info';
+  return s === 'critical' || s === 'warning' || s === 'info' ? s : 'warning';
+}
+
 async function scanFromGitHub() {
   var urlInput = document.getElementById('githubUrlInput');
   var url = urlInput.value.trim();
@@ -1650,7 +1665,7 @@ async function scanFromGitHub() {
 
     issues = (result.issues || []).map(function(issue, idx) {
       return {
-        id: idx + 1, sev: issue.severity || 'warning', type: issue.type || 'Issue',
+        id: idx + 1, sev: normalizeSeverity(issue.severity), type: issue.type || 'Issue',
         title: issue.title || 'Unknown issue', line: issue.line || '', desc: issue.description || '',
         impact: issue.impact || '', before: issue.before || '', after: issue.after || '',
         fix: issue.fix_explanation || 'Apply the suggested fix.', fixed: false
@@ -1738,7 +1753,7 @@ async function startScan() {
     // Map API results to our issue format
     issues = (result.issues || []).map((issue, idx) => ({
       id: idx + 1,
-      sev: issue.severity || 'warning',
+      sev: normalizeSeverity(issue.severity),
       type: issue.type || 'Issue',
       title: issue.title || 'Unknown issue',
       line: issue.line || 'Unknown line',
@@ -2043,7 +2058,9 @@ function fixIssue(id) {
   fixedCount++;
 
   const card = document.getElementById(`issue-card-${id}`);
-  card.className = 'issue-card severity-fixed';
+  // Keep the card expanded so the "Fixed" confirmation (which lives inside the
+  // collapsible .issue-body) is actually visible after fixing.
+  card.className = 'issue-card severity-fixed open';
 
   const fixBtn = document.getElementById(`fix-btn-${id}`);
   fixBtn.parentElement.innerHTML = `
@@ -2249,6 +2266,61 @@ function copyFixesForAI() {
     document.body.removeChild(ta);
     showToast('Fixes copied to clipboard!', 'success');
   });
+}
+
+// ── APPLY FIXES TO EDITOR + DOWNLOAD ──
+// Replaces each issue's `before` snippet with its `after` snippet directly in
+// the editor, then downloads the corrected file. Some API fixes are snippet-
+// level or paraphrased, so we report how many applied vs couldn't be matched
+// and steer the user to the Cursor/Lovable copy route for the rest.
+var LANG_EXT = { js:'js', ts:'ts', py:'py', java:'java', cs:'cs' };
+
+function applyFixesAndDownload() {
+  var editor = document.getElementById('codeEditor');
+  if (!editor || !editor.value.trim()) { showToast('No code in the editor to fix', 'error'); return; }
+  if (!issues || issues.length === 0) { showToast('Run a scan first', 'error'); return; }
+
+  var code = editor.value;
+  var applied = 0, skipped = 0;
+
+  issues.forEach(function(issue) {
+    var before = (issue.before || '').trim();
+    var after  = (issue.after  || '').trim();
+    // Only safe to auto-apply when we have both snippets and the exact
+    // `before` text is present in the code.
+    if (before && after && code.indexOf(before) !== -1) {
+      code = code.replace(before, after);
+      applied++;
+    } else if (before || after) {
+      skipped++;
+    }
+  });
+
+  if (applied === 0) {
+    showToast("Couldn't auto-apply fixes — use “Copy for Cursor / Lovable” instead", 'error');
+    return;
+  }
+
+  // Write the corrected code back into the editor and refresh line numbers
+  editor.value = code;
+  if (typeof updateLineNumbers === 'function') updateLineNumbers();
+
+  // Trigger a download of the corrected file
+  var langVal = document.getElementById('langSelect').value;
+  var ext = LANG_EXT[langVal] || 'txt';
+  var blob = new Blob([code], { type: 'text/plain;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'vibesafe-fixed.' + ext;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+
+  var msg = 'Applied ' + applied + ' fix' + (applied > 1 ? 'es' : '') + ' & downloaded';
+  if (skipped > 0) msg += ' · ' + skipped + ' need manual review (use Copy for Cursor / Lovable)';
+  showToast(msg, skipped > 0 ? 'info' : 'success');
 }
 </script>
 </body>
