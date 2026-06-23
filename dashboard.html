@@ -2508,6 +2508,17 @@ function fixAll() {
     setTimeout(() => fixIssue(issue.id), idx * 300);
   });
   showToast(`Auto-fixing ${unfixed.length} issues...`, 'success');
+  // After the cards finish, apply the corrected snippets to the editor too —
+  // otherwise "Rescan after fixes" re-scans the original code and the issues
+  // come straight back.
+  setTimeout(function() {
+    var res = applyFixesToEditor();
+    if (res.applied > 0) {
+      var msg = 'Applied ' + res.applied + ' fix' + (res.applied > 1 ? 'es' : '') + ' to your code';
+      if (res.skipped > 0) msg += ' · ' + res.skipped + ' need manual review (Copy for Cursor / Lovable)';
+      showToast(msg, res.skipped > 0 ? 'info' : 'success');
+    }
+  }, unfixed.length * 300 + 150);
 }
 
 function updateScore() {
@@ -2528,6 +2539,13 @@ function updateScore() {
 
   document.getElementById('critCount').textContent = crits;
   document.getElementById('warnCount').textContent = warns;
+
+  // Keep the verdict label + explanation in sync with the new score
+  // (otherwise they stay frozen on the original "At risk" after fixing).
+  var verdict = score >= 75 ? 'Good' : score >= 50 ? 'Needs work' : 'At risk';
+  var ve = document.getElementById('scoreVerdict');
+  if (ve) { ve.textContent = verdict; ve.className = 'gauge-verdict ' + cls; }
+  renderScoreExplanation(score, crits, warns);
 }
 
 // ── SIDEBAR PAGES ──
@@ -2699,19 +2717,17 @@ function copyFixesForAI() {
 // and steer the user to the Cursor/Lovable copy route for the rest.
 var LANG_EXT = { js:'js', ts:'ts', py:'py', java:'java', cs:'cs' };
 
-function applyFixesAndDownload() {
+// Replace each issue's `before` snippet with its `after` in the editor.
+// Returns how many applied vs. couldn't be matched. Shared by "Apply &
+// download" and "Auto-fix all" so both actually correct the code.
+function applyFixesToEditor() {
   var editor = document.getElementById('codeEditor');
-  if (!editor || !editor.value.trim()) { showToast('No code in the editor to fix', 'error'); return; }
-  if (!issues || issues.length === 0) { showToast('Run a scan first', 'error'); return; }
-
+  if (!editor) return { applied: 0, skipped: 0 };
   var code = editor.value;
   var applied = 0, skipped = 0;
-
   issues.forEach(function(issue) {
     var before = (issue.before || '').trim();
     var after  = (issue.after  || '').trim();
-    // Only safe to auto-apply when we have both snippets and the exact
-    // `before` text is present in the code.
     if (before && after && code.indexOf(before) !== -1) {
       code = code.replace(before, after);
       applied++;
@@ -2719,15 +2735,26 @@ function applyFixesAndDownload() {
       skipped++;
     }
   });
+  if (applied > 0) {
+    editor.value = code;
+    if (typeof updateLineNumbers === 'function') updateLineNumbers();
+  }
+  return { applied: applied, skipped: skipped };
+}
+
+function applyFixesAndDownload() {
+  var editor = document.getElementById('codeEditor');
+  if (!editor || !editor.value.trim()) { showToast('No code in the editor to fix', 'error'); return; }
+  if (!issues || issues.length === 0) { showToast('Run a scan first', 'error'); return; }
+
+  var res = applyFixesToEditor();
+  var applied = res.applied, skipped = res.skipped;
 
   if (applied === 0) {
     showToast("Couldn't auto-apply fixes — use “Copy for Cursor / Lovable” instead", 'error');
     return;
   }
-
-  // Write the corrected code back into the editor and refresh line numbers
-  editor.value = code;
-  if (typeof updateLineNumbers === 'function') updateLineNumbers();
+  var code = editor.value;
 
   // Trigger a download of the corrected file
   var langVal = document.getElementById('langSelect').value;
