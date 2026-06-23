@@ -2302,6 +2302,46 @@ function filterIssues(severity, btn) {
     );
     header.style.display = anyVisible ? '' : 'none';
   });
+
+  // Scroll to the first matching result so the filter visibly "jumps" there.
+  // Prefer its category header (so the section title shows), else the card itself.
+  var firstCard = Array.prototype.filter.call(
+    document.querySelectorAll('.issue-card'),
+    function(c) { return c.style.display !== 'none'; }
+  )[0];
+  if (firstCard) {
+    var cat = firstCard.getAttribute('data-cat');
+    var header = cat ? document.querySelector('.cat-header[data-cat="' + cat + '"]') : null;
+    var target = (header && header.style.display !== 'none') ? header : firstCard;
+    scrollResultsToTarget(target);
+  } else {
+    // No matches (e.g. "Fixed" with nothing fixed yet) — show a brief hint
+    showToast('No ' + severity + ' issues', 'info');
+  }
+}
+
+// Scroll whichever element actually scrolls (the results pane on desktop, or
+// the page itself on narrow screens) so `target` sits near the top of the view.
+// Uses direct scrollTop assignment — scrollIntoView/scrollTo are unreliable
+// across the nested scroll containers in this layout.
+function scrollResultsToTarget(target) {
+  // Find the nearest ancestor that is actually scrollable right now.
+  var p = target.parentElement, container = null;
+  while (p && p !== document.body && p !== document.documentElement) {
+    var cs = getComputedStyle(p);
+    if (/(auto|scroll)/.test(cs.overflowY) && p.scrollHeight > p.clientHeight + 4) { container = p; break; }
+    p = p.parentElement;
+  }
+  var rectTop = target.getBoundingClientRect().top;
+  if (container) {
+    // Inner pane (desktop two-pane layout): align target near the pane's top.
+    var newTop = container.scrollTop + (rectTop - container.getBoundingClientRect().top) - 12;
+    container.scrollTop = Math.max(0, newTop);
+  } else {
+    // Whole page scrolls (narrow / mobile): clear the fixed top bar.
+    var se = document.scrollingElement || document.documentElement;
+    se.scrollTop = Math.max(0, se.scrollTop + rectTop - 90);
+  }
 }
 
 // ── FIX PRIORITY ──
