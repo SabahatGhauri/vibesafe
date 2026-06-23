@@ -2182,10 +2182,16 @@ function showResults(apiScore) {
   var mt = document.getElementById('modeToggle');
   if (mt) mt.style.display = issues.length > 0 ? 'inline-flex' : 'none';
 
-  showToast('Scan complete — ' + (issues.length === 0 ? 'no issues found!' : issues.length + ' issues found'), issues.length === 0 ? 'success' : 'info');
+  // Quieter during an auto-fix loop (it shows its own pass/complete toasts).
+  if (!window.__autoFixLoop) {
+    showToast('Scan complete — ' + (issues.length === 0 ? 'no issues found!' : issues.length + ' issues found'), issues.length === 0 ? 'success' : 'info');
+  }
 
   // Save this scan to history
   saveScanToHistory(apiScore);
+
+  // #auto-fix: if we're mid auto-fix loop, decide whether to run another pass.
+  continueFixLoopIfNeeded(score);
 }
 
 // ── SCAN HISTORY (Supabase) ──
@@ -2504,37 +2510,65 @@ function fixIssue(id) {
   }
 }
 
+// Auto-fix loops: apply the corrected code, rescan to verify, and if issues
+// remain keep going — until we hit the target score, run out of improvements,
+// or reach the pass cap. Each pass is a real scan, so the score is always honest.
+var VS_FIX_TARGET = 95;
+var VS_FIX_MAX_PASSES = 3;
+
 function fixAll() {
   const unfixed = issues.filter(i => !i.fixed);
   if (unfixed.length === 0) { showToast('Nothing to fix', 'info'); return; }
+  window.__fixPass = 0;
+  // Baseline is the CURRENT score, so a pass that doesn't beat it stops the loop.
+  window.__lastFixScore = parseInt((document.getElementById('scoreValue') || {}).textContent, 10) || 0;
+  window.__autoFixLoop = true;
+  runFixPass();
+}
 
+function runFixPass() {
   var editor = document.getElementById('codeEditor');
 
   // Best path: the API returned a full coherent corrected file. Use it directly
-  // — this resolves overlapping fixes that snippet replacement can't. (The
-  // backend must return `fixedCode`; until then we fall back below.)
+  // — this resolves overlapping fixes that snippet replacement can't.
   var fullFix = (window.vsFixedCode || '').trim();
   if (fullFix && editor) {
     editor.value = fullFix;
     if (typeof updateLineNumbers === 'function') updateLineNumbers();
-    showToast('Applied the full corrected code — rescanning to verify…', 'info');
-    setTimeout(function() { startScan(); }, 500);
-    return;
+  } else {
+    // Fallback: best-effort snippet replacement.
+    var res = applyFixesToEditor();
+    if (res.applied === 0) {
+      window.__autoFixLoop = false;
+      showToast("Couldn't auto-apply these fixes to your code — use “Copy for Cursor / Lovable”", 'error');
+      return;
+    }
   }
 
-  // Fallback: best-effort snippet replacement, then RE-VERIFY with a real scan.
-  // We deliberately don't show an optimistic 100 — the rescan reports the true
-  // score of the actual fixed code.
-  var res = applyFixesToEditor();
-  if (res.applied === 0) {
-    showToast("Couldn't auto-apply these fixes to your code — use “Copy for Cursor / Lovable”", 'error');
-    return;
-  }
-
-  showToast('Applied fixes to your code — rescanning to verify…', 'info');
-
-  // Re-run the real scanner on the corrected code so the score is honest.
+  window.__fixPass = (window.__fixPass || 0) + 1;
+  showToast('Auto-fixing — pass ' + window.__fixPass + ', rescanning to verify…', 'info');
   setTimeout(function() { startScan(); }, 500);
+}
+
+// Called at the end of showResults. Decides whether to run another fix pass.
+function continueFixLoopIfNeeded(score) {
+  if (!window.__autoFixLoop) return;
+  var s = (typeof score === 'number') ? score : (parseInt((document.getElementById('scoreValue') || {}).textContent, 10) || 0);
+  var remaining = issues.length;
+  var improved = s > (window.__lastFixScore == null ? -1 : window.__lastFixScore);
+
+  var done = s >= VS_FIX_TARGET || remaining === 0 || window.__fixPass >= VS_FIX_MAX_PASSES || !improved;
+  if (done) {
+    window.__autoFixLoop = false;
+    if (s >= VS_FIX_TARGET || remaining === 0) {
+      showToast('Auto-fix complete — score ' + s + '/100 🎉', 'success');
+    } else {
+      showToast('Auto-fix done — got you to ' + s + '/100. ' + remaining + ' issue' + (remaining !== 1 ? 's' : '') + ' need a closer look (try Copy for Cursor / Lovable).', 'info');
+    }
+    return;
+  }
+  window.__lastFixScore = s;
+  setTimeout(function() { runFixPass(); }, 700);
 }
 
 function updateScore() {
