@@ -2515,9 +2515,7 @@ function fixAll() {
     return;
   }
 
-  var msg = 'Applied ' + res.applied + ' fix' + (res.applied > 1 ? 'es' : '');
-  if (res.skipped > 0) msg += ' · ' + res.skipped + ' couldn’t be auto-applied';
-  msg += ' — rescanning to verify…';
+  var msg = 'Applied fixes to your code — rescanning to verify…';
   showToast(msg, 'info');
 
   // Re-run the real scanner on the corrected code so the score is honest.
@@ -2728,16 +2726,26 @@ function applyFixesToEditor() {
   if (!editor) return { applied: 0, skipped: 0 };
   var code = editor.value;
   var applied = 0, skipped = 0;
-  issues.forEach(function(issue) {
+
+  // The API often returns OVERLAPPING fixes (e.g. a line-level "add await" that
+  // sits inside a block-level "add error handling"). Apply the LONGEST `before`
+  // snippets first so the most comprehensive fix wins; smaller overlapping ones
+  // then no longer match and are absorbed rather than breaking the block.
+  var ordered = (issues || []).slice().sort(function(a, b) {
+    return (String(b.before || '').length) - (String(a.before || '').length);
+  });
+
+  ordered.forEach(function(issue) {
     var before = (issue.before || '').trim();
     var after  = (issue.after  || '').trim();
     if (before && after && code.indexOf(before) !== -1) {
       code = code.replace(before, after);
       applied++;
     } else if (before || after) {
-      skipped++;
+      skipped++; // either no snippet, or already absorbed by a larger fix
     }
   });
+
   if (applied > 0) {
     editor.value = code;
     if (typeof updateLineNumbers === 'function') updateLineNumbers();
