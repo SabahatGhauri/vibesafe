@@ -326,7 +326,33 @@ body {
   color: var(--text3); text-align: right;
   pointer-events: none; user-select: none;
   overflow: hidden;
+  white-space: pre;
+  z-index: 2;
 }
+/* gutter numbers for lines that have an issue */
+.line-numbers .ln-crit { color: var(--red); font-weight: 700; }
+.line-numbers .ln-warn { color: var(--amber); font-weight: 700; }
+.line-numbers .ln-info { color: var(--cyan); font-weight: 700; }
+
+/* highlight layer sits behind the (transparent) textarea and paints a
+   coloured bar across each line that has an issue. Metrics MUST match
+   .code-editor exactly so bars line up with the code. */
+.highlight-layer {
+  position: absolute; inset: 0;
+  padding: 16px 16px 16px 56px;
+  margin: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem; line-height: 1.75;
+  white-space: pre;
+  pointer-events: none; user-select: none;
+  overflow: hidden;
+  z-index: 1;
+}
+.highlight-line { height: 1.75em; border-radius: 3px; }
+.highlight-line.hl-crit { background: rgba(239,68,68,0.16); box-shadow: inset 3px 0 0 var(--red); }
+.highlight-line.hl-warn { background: rgba(245,158,11,0.15); box-shadow: inset 3px 0 0 var(--amber); }
+.highlight-line.hl-info { background: rgba(0,212,255,0.12); box-shadow: inset 3px 0 0 var(--cyan); }
+.code-editor { position: relative; z-index: 2; }
 
 .editor-footer {
   height: 28px; flex-shrink: 0;
@@ -1243,6 +1269,7 @@ document.addEventListener('click', function(e) {
       </div>
 
       <div class="code-area-wrap" id="editorTab">
+        <div class="highlight-layer" id="highlightLayer"></div>
         <div class="line-numbers" id="lineNumbers">1</div>
         <textarea
           class="code-editor"
@@ -1542,18 +1569,91 @@ const ISSUES_DATA = {
 const LANG_NAMES = { js:'JavaScript', ts:'TypeScript', py:'Python', java:'Java', cs:'.NET / C#' };
 
 // ── LINE NUMBERS ──
-function updateLineNumbers() {
+// Editing the code invalidates any scan highlights, so clearHl=true resets them.
+function updateLineNumbers(clearHl) {
   const ta = document.getElementById('codeEditor');
   const lines = ta.value.split('\n');
   document.getElementById('lineCount').textContent = lines.length;
   document.getElementById('charCount').textContent = ta.value.length;
   const ln = document.getElementById('lineNumbers');
   ln.textContent = lines.map((_,i) => i+1).join('\n');
+  if (clearHl !== false) clearEditorHighlights();
 }
 
 function syncScroll() {
   const ta = document.getElementById('codeEditor');
   document.getElementById('lineNumbers').scrollTop = ta.scrollTop;
+  var hl = document.getElementById('highlightLayer');
+  if (hl) { hl.scrollTop = ta.scrollTop; hl.scrollLeft = ta.scrollLeft; }
+}
+
+// ── EDITOR ERROR HIGHLIGHTS ──
+// Parse a line reference like "Line 12" / "lines 4-6" → first line number.
+function parseIssueLine(ref) {
+  var m = String(ref || '').match(/\d+/);
+  return m ? parseInt(m[0], 10) : null;
+}
+
+function clearEditorHighlights() {
+  var hl = document.getElementById('highlightLayer');
+  if (hl) hl.innerHTML = '';
+  // reset gutter to plain numbers
+  var ta = document.getElementById('codeEditor');
+  var ln = document.getElementById('lineNumbers');
+  if (ta && ln) ln.textContent = ta.value.split('\n').map(function(_,i){return i+1;}).join('\n');
+}
+
+// Paint a coloured bar on every line that has an issue, and tint its gutter
+// number. critical→red, warning→yellow, info→cyan; lines with no issue are
+// left untouched. Highest severity wins when a line has multiple issues.
+function renderEditorHighlights() {
+  var ta = document.getElementById('codeEditor');
+  var hl = document.getElementById('highlightLayer');
+  var ln = document.getElementById('lineNumbers');
+  if (!ta || !hl || !ln) return;
+
+  var totalLines = ta.value.split('\n').length;
+  var rank = { critical: 3, warning: 2, info: 1 };
+  var lineSev = {}; // lineNo -> severity (only unfixed issues)
+
+  (issues || []).forEach(function(issue) {
+    if (issue.fixed) return;
+    var n = parseIssueLine(issue.line);
+    if (!n || n > totalLines) return;
+    if (!lineSev[n] || rank[issue.sev] > rank[lineSev[n]]) lineSev[n] = issue.sev;
+  });
+
+  var sevClass = { critical: 'crit', warning: 'warn', info: 'info' };
+
+  // Match the textarea's ACTUAL computed line-height + top padding so bars line
+  // up exactly (responsive CSS can change the editor font-size).
+  var taCS = getComputedStyle(ta);
+  var lhPx = taCS.lineHeight;
+  hl.style.paddingTop = taCS.paddingTop;
+  hl.style.lineHeight = lhPx;
+
+  // Build the highlight bars (one block per line, coloured only where flagged)
+  var barsHtml = '';
+  for (var i = 1; i <= totalLines; i++) {
+    var sev = lineSev[i];
+    var base = 'highlight-line' + (sev ? ' hl-' + sevClass[sev] : '');
+    barsHtml += '<div class="' + base + '" style="height:' + lhPx + '"></div>';
+  }
+  hl.innerHTML = barsHtml;
+  hl.scrollTop = ta.scrollTop; hl.scrollLeft = ta.scrollLeft;
+
+  // Tint the gutter numbers for flagged lines (match editor line-height too)
+  ln.style.lineHeight = lhPx;
+  ln.style.paddingTop = taCS.paddingTop;
+  var lnHtml = '';
+  for (var j = 1; j <= totalLines; j++) {
+    var s = lineSev[j];
+    lnHtml += s
+      ? '<span class="ln-' + sevClass[s] + '">' + j + '</span>'
+      : '<span>' + j + '</span>';
+    if (j < totalLines) lnHtml += '\n';
+  }
+  ln.innerHTML = lnHtml;
 }
 
 // ── EDITOR TABS ──
@@ -1867,6 +1967,7 @@ function showResults(apiScore) {
   if (filterBar) filterBar.style.display = issues.length > 0 ? 'flex' : 'none';
   renderFixPriority();
   renderScoreExplanation(score, criticals, warnings);
+  renderEditorHighlights();
 
   showToast('Scan complete — ' + (issues.length === 0 ? 'no issues found!' : issues.length + ' issues found'), issues.length === 0 ? 'success' : 'info');
 
@@ -2069,8 +2170,9 @@ function fixIssue(id) {
     </div>
   `;
 
-  // Update score
+  // Update score and clear this line's highlight (issue is resolved)
   updateScore();
+  renderEditorHighlights();
   showToast(`Fixed: ${issue.title}`, 'success');
 
   // Update header count
