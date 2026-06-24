@@ -2108,6 +2108,20 @@ function showResults(apiScore) {
     ? Math.max(5, Math.min(100, Math.round(apiScore)))
     : Math.max(5, 100 - criticals * 18 - warnings * 8);
 
+  // During an auto-fix loop, don't reveal intermediate passes. Keep the working
+  // overlay up and immediately start the next pass — only the final pass is shown.
+  if (window.__autoFixLoop && willLoopContinue(score)) {
+    var stepEl = document.getElementById('scanStepLabel');
+    var subEl = document.getElementById('scanSubLabel');
+    if (stepEl) stepEl.textContent = 'Auto-fixing & re-checking…';
+    if (subEl) subEl.textContent = 'Deep pass ' + (window.__fixPass || 1) + ' of ' + VS_FIX_MAX_PASSES + ' — scanning harder than a normal one-shot check';
+    document.getElementById('scanProgressFill').style.width = '100%';
+    document.getElementById('scanningState').style.display = 'flex';
+    window.__lastFixScore = score;
+    setTimeout(function() { runFixPass(); }, 700);
+    return;
+  }
+
   document.getElementById('scanningState').style.display = 'none';
 
   const cls = score >= 75 ? 'good' : score >= 50 ? 'warn' : 'bad';
@@ -2236,17 +2250,19 @@ function showResults(apiScore) {
   // Save this scan to history
   saveScanToHistory(apiScore);
 
-  // #auto-fix: if we're mid auto-fix loop, decide whether to run another pass.
-  continueFixLoopIfNeeded(score);
+  // Auto-fix loop has ended by the time we reach here (continuing passes return
+  // early above). Finalize and explain anything still unfixed.
+  var wasAutoFix = finalizeAutoFix(score);
 
-  // Low-score popup: surface the critical flaws (but not while auto-fixing).
-  if (!window.__autoFixLoop) showLowScoreModal(score);
+  // Low-score popup: surface the critical flaws (and, after an auto-fix run,
+  // explain why they couldn't be fixed automatically).
+  showLowScoreModal(score, wasAutoFix);
 }
 
 // ── LOW-SCORE "WHY" POPUP ──
 // Pops up after a scan when there are critical flaws, summarising why the score
 // is low. Skipped while the auto-fix loop is running.
-function showLowScoreModal(score) {
+function showLowScoreModal(score, afterAutoFix) {
   var overlay = document.getElementById('lowScoreModal');
   var card = document.getElementById('lowScoreModalCard');
   if (!overlay || !card) return;
@@ -2256,16 +2272,21 @@ function showLowScoreModal(score) {
 
   var warns = (issues || []).filter(function(i) { return !i.fixed && i.sev === 'warning'; }).length;
   var cls = score >= 50 ? 'warn' : 'bad';
+  var title = afterAutoFix ? 'What auto-fix couldn’t fully solve' : 'Why your score is low';
 
   var html = '<button class="vs-modal-close" onclick="closeLowScoreModal()" aria-label="Close">✕</button>'
     + '<div class="vs-modal-head"><span class="vs-modal-ico">⚠️</span>'
-    + '<span class="vs-modal-title">Why your score is low</span>'
+    + '<span class="vs-modal-title">' + title + '</span>'
     + '<span class="vs-modal-score ' + cls + '">' + score + '/100</span></div>';
 
-  if (window.vsSummary) html += '<div class="vs-modal-sub">' + window.vsSummary + '</div>';
+  if (afterAutoFix) {
+    html += '<div class="vs-modal-sub">VibeSafe ran a <strong style="color:var(--text)">deep ' + (window.__fixPass || 1) + '-pass scan</strong> and fixed everything it safely could. '
+      + (crit.length > 1 ? 'These remaining issues need' : 'This remaining issue needs') + ' <strong style="color:var(--text)">your judgment</strong> — it depends on your app’s context (business logic, access rules, or external setup) that an automated fixer shouldn’t guess at.</div>';
+  } else if (window.vsSummary) {
+    html += '<div class="vs-modal-sub">' + window.vsSummary + '</div>';
+  }
 
-  html += '<div class="vs-modal-section-label">' + crit.length + ' critical flaw'
-    + (crit.length > 1 ? 's' : '') + ' to fix before launch</div>';
+  html += '<div class="vs-modal-section-label">' + (afterAutoFix ? 'Biggest blocker' + (crit.length > 1 ? 's still open' : ' still open') : crit.length + ' critical flaw' + (crit.length > 1 ? 's' : '') + ' to fix before launch') + '</div>';
 
   crit.forEach(function(i) {
     html += '<div class="vs-flaw"><span class="vs-flaw-ico">🔴</span><div>'
@@ -2279,9 +2300,19 @@ function showLowScoreModal(score) {
       + '+ ' + warns + ' warning' + (warns > 1 ? 's also need' : ' also needs') + ' attention.</div>';
   }
 
-  html += '<div class="vs-modal-actions">'
-    + '<button class="vs-modal-btn primary" onclick="closeLowScoreModal(); fixAll();">⚡ Auto-fix all</button>'
-    + '<button class="vs-modal-btn ghost" onclick="closeLowScoreModal()">Review myself</button></div>';
+  // Positioning: VibeSafe scans harder than typical one-shot tools.
+  html += '<div style="font-size:0.74rem;color:var(--text3);margin-top:14px;padding-top:12px;border-top:1px solid var(--border);line-height:1.5">'
+    + '🛡️ VibeSafe ran a <strong style="color:var(--cyan)">multi-pass deep scan</strong> — most scanners check only once. If we still flag something, it’s genuinely worth a look.</div>';
+
+  if (afterAutoFix) {
+    html += '<div class="vs-modal-actions">'
+      + '<button class="vs-modal-btn primary" onclick="closeLowScoreModal(); copyFixesForAI();">📋 Copy for Cursor / Lovable</button>'
+      + '<button class="vs-modal-btn ghost" onclick="closeLowScoreModal()">Review myself</button></div>';
+  } else {
+    html += '<div class="vs-modal-actions">'
+      + '<button class="vs-modal-btn primary" onclick="closeLowScoreModal(); fixAll();">⚡ Auto-fix all</button>'
+      + '<button class="vs-modal-btn ghost" onclick="closeLowScoreModal()">Review myself</button></div>';
+  }
 
   card.innerHTML = html;
   overlay.classList.add('open');
@@ -2654,24 +2685,27 @@ function runFixPass() {
 }
 
 // Called at the end of showResults. Decides whether to run another fix pass.
-function continueFixLoopIfNeeded(score) {
-  if (!window.__autoFixLoop) return;
-  var s = (typeof score === 'number') ? score : (parseInt((document.getElementById('scoreValue') || {}).textContent, 10) || 0);
+// Should the auto-fix loop run another pass? (continue handled in showResults)
+function willLoopContinue(score) {
+  if (!window.__autoFixLoop) return false;
   var remaining = issues.length;
-  var improved = s > (window.__lastFixScore == null ? -1 : window.__lastFixScore);
+  var improved = score > (window.__lastFixScore == null ? -1 : window.__lastFixScore);
+  return !(score >= VS_FIX_TARGET || remaining === 0 || window.__fixPass >= VS_FIX_MAX_PASSES || !improved);
+}
 
-  var done = s >= VS_FIX_TARGET || remaining === 0 || window.__fixPass >= VS_FIX_MAX_PASSES || !improved;
-  if (done) {
-    window.__autoFixLoop = false;
-    if (s >= VS_FIX_TARGET || remaining === 0) {
-      showToast('Auto-fix complete — score ' + s + '/100 🎉', 'success');
-    } else {
-      showToast('Auto-fix done — got you to ' + s + '/100. ' + remaining + ' issue' + (remaining !== 1 ? 's' : '') + ' need a closer look (try Copy for Cursor / Lovable).', 'info');
-    }
-    return;
+// Called once the loop has stopped (final pass). Returns true if this scan was
+// the end of an auto-fix run, so the caller can explain remaining issues.
+function finalizeAutoFix(score) {
+  if (!window.__autoFixLoop) return false;
+  window.__autoFixLoop = false;
+  var remaining = issues.length;
+  var passes = window.__fixPass || 1;
+  if (score >= VS_FIX_TARGET || remaining === 0) {
+    showToast('Deep auto-fix complete — ' + score + '/100 after ' + passes + ' pass' + (passes > 1 ? 'es' : '') + '. VibeSafe scans deeper than typical one-shot tools 🎉', 'success');
+  } else {
+    showToast('Deep scan done — ' + passes + ' passes, score ' + score + '/100. ' + remaining + ' issue' + (remaining !== 1 ? 's' : '') + ' need a human eye.', 'info');
   }
-  window.__lastFixScore = s;
-  setTimeout(function() { runFixPass(); }, 700);
+  return true;
 }
 
 function updateScore() {
