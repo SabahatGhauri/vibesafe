@@ -1434,17 +1434,17 @@ document.addEventListener('click', function(e) {
       <div class="code-area-wrap" id="urlTab" style="display:none; align-items:center; justify-content:center; flex-direction:column; gap:14px; padding:32px;">
         <div style="font-size:2.5rem">🔗</div>
         <div style="font-weight:600">Scan from GitHub URL</div>
-        <div style="font-size:0.8rem; color:var(--text3); text-align:center; max-width:420px">
-          Paste a link to a specific file in a public GitHub repo. VibeSafe fetches it (read-only) and scans it instantly.
+        <div style="font-size:0.8rem; color:var(--text3); text-align:center; max-width:440px">
+          Paste a <strong style="color:var(--text2)">whole repo</strong> or a <strong style="color:var(--text2)">single file</strong> from a public GitHub repo. VibeSafe reads it (read-only), scans every source file, and checks your dependencies for known vulnerabilities.
         </div>
         <div style="display:flex; gap:8px; width:100%; max-width:440px;">
-          <input type="text" id="githubUrlInput" placeholder="https://github.com/user/repo/blob/main/app.js"
+          <input type="text" id="githubUrlInput" placeholder="https://github.com/user/repo"
             style="flex:1; padding:9px 12px; background:var(--surface2); border:1px solid var(--border2); border-radius:7px; color:var(--text); font-size:0.82rem; outline:none; font-family:'Inter',sans-serif;"
             onkeydown="if(event.key==='Enter')scanFromGitHub()"
           >
           <button class="btn btn-primary" id="githubFetchBtn" onclick="scanFromGitHub()">Scan</button>
         </div>
-        <div style="font-size:0.72rem; color:var(--text3)">Example: github.com/expressjs/express/blob/master/lib/router/route.js</div>
+        <div style="font-size:0.72rem; color:var(--text3)">Whole repo: github.com/user/repo · Single file: …/blob/main/app.js</div>
       </div>
 
       <div class="editor-footer">
@@ -1992,11 +1992,12 @@ async function scanFromGitHub() {
     window.vsPassedChecks = result.passed || [];
     window.vsSummary = result.summary || '';
     window.vsFixedCode = result.fixedCode || result.fixed_code || '';
+    window.vsFilesScanned = result.filesScanned || 0;
 
     document.getElementById('scanProgressFill').style.width = '100%';
     document.getElementById('scanPct').textContent = '100%';
     setTimeout(function() { showResults(result.score); }, 300);
-    showToast('Scanned from GitHub successfully', 'success');
+    showToast(result.filesScanned ? ('Scanned ' + result.filesScanned + ' files from GitHub') : 'Scanned from GitHub successfully', 'success');
   } catch (err) {
     document.getElementById('scanningState').style.display = 'none';
     document.getElementById('emptyState').style.display = 'flex';
