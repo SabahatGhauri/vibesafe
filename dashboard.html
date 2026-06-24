@@ -401,6 +401,47 @@ body {
 .mode-btn.active { background: var(--surface2); color: var(--cyan); }
 body.mode-beginner .tech-only { display: none !important; }
 
+/* ── Low-score "why" popup ── */
+.vs-modal-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(4,8,18,0.72); backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.vs-modal-overlay.open { display: flex; animation: vsFade 0.18s ease; }
+@keyframes vsFade { from { opacity: 0; } to { opacity: 1; } }
+.vs-modal {
+  width: 100%; max-width: 460px; max-height: 86vh; overflow-y: auto;
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 16px; padding: 24px; position: relative;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.6);
+}
+.vs-modal-close {
+  position: absolute; top: 14px; right: 14px; width: 28px; height: 28px;
+  border-radius: 7px; border: 1px solid var(--border2); background: var(--bg2);
+  color: var(--text2); cursor: pointer; font-size: 0.95rem; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+}
+.vs-modal-close:hover { color: var(--text); border-color: var(--red); }
+.vs-modal-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; padding-right: 32px; }
+.vs-modal-ico { font-size: 1.5rem; }
+.vs-modal-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 700; }
+.vs-modal-score { margin-left: auto; font-weight: 800; font-size: 1.05rem; }
+.vs-modal-score.bad { color: var(--red); }
+.vs-modal-score.warn { color: var(--amber); }
+.vs-modal-sub { font-size: 0.85rem; color: var(--text2); line-height: 1.6; margin-bottom: 16px; }
+.vs-modal-section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; color: var(--red); margin-bottom: 8px; }
+.vs-flaw { display: flex; gap: 10px; padding: 10px 12px; border-radius: 10px; background: var(--red-dim); border: 1px solid rgba(239,68,68,0.2); margin-bottom: 8px; }
+.vs-flaw-ico { flex-shrink: 0; }
+.vs-flaw-title { font-weight: 600; font-size: 0.85rem; color: #FCA5A5; margin-bottom: 2px; }
+.vs-flaw-meta { font-size: 0.72rem; color: var(--text3); margin-bottom: 3px; }
+.vs-flaw-why { font-size: 0.78rem; color: var(--text2); line-height: 1.45; }
+.vs-modal-actions { display: flex; gap: 10px; margin-top: 18px; }
+.vs-modal-btn { flex: 1; padding: 11px; border-radius: 9px; font-family: 'Inter', sans-serif; font-size: 0.86rem; font-weight: 700; cursor: pointer; border: none; }
+.vs-modal-btn.primary { background: var(--cyan); color: var(--bg); }
+.vs-modal-btn.primary:hover { background: #33DCFF; }
+.vs-modal-btn.ghost { background: var(--surface2); color: var(--text); border: 1px solid var(--border2); }
+.vs-modal-btn.ghost:hover { border-color: var(--cyan); }
+
 /* ── #2 Category section headers ── */
 .cat-header {
   display: flex; align-items: center; gap: 8px;
@@ -1549,6 +1590,11 @@ document.addEventListener('click', function(e) {
 <!-- TOAST CONTAINER -->
 <div class="toast-wrap" id="toastWrap"></div>
 
+<!-- LOW-SCORE "WHY" POPUP -->
+<div class="vs-modal-overlay" id="lowScoreModal" onclick="if(event.target===this)closeLowScoreModal()">
+  <div class="vs-modal" id="lowScoreModalCard"></div>
+</div>
+
 <script>
 // ── STATE ──
 let issues = [];
@@ -2192,7 +2238,64 @@ function showResults(apiScore) {
 
   // #auto-fix: if we're mid auto-fix loop, decide whether to run another pass.
   continueFixLoopIfNeeded(score);
+
+  // Low-score popup: surface the critical flaws (but not while auto-fixing).
+  if (!window.__autoFixLoop) showLowScoreModal(score);
 }
+
+// ── LOW-SCORE "WHY" POPUP ──
+// Pops up after a scan when there are critical flaws, summarising why the score
+// is low. Skipped while the auto-fix loop is running.
+function showLowScoreModal(score) {
+  var overlay = document.getElementById('lowScoreModal');
+  var card = document.getElementById('lowScoreModalCard');
+  if (!overlay || !card) return;
+
+  var crit = (issues || []).filter(function(i) { return !i.fixed && i.sev === 'critical'; });
+  if (crit.length === 0) return; // only show when there's a real flaw to explain
+
+  var warns = (issues || []).filter(function(i) { return !i.fixed && i.sev === 'warning'; }).length;
+  var cls = score >= 50 ? 'warn' : 'bad';
+
+  var html = '<button class="vs-modal-close" onclick="closeLowScoreModal()" aria-label="Close">✕</button>'
+    + '<div class="vs-modal-head"><span class="vs-modal-ico">⚠️</span>'
+    + '<span class="vs-modal-title">Why your score is low</span>'
+    + '<span class="vs-modal-score ' + cls + '">' + score + '/100</span></div>';
+
+  if (window.vsSummary) html += '<div class="vs-modal-sub">' + window.vsSummary + '</div>';
+
+  html += '<div class="vs-modal-section-label">' + crit.length + ' critical flaw'
+    + (crit.length > 1 ? 's' : '') + ' to fix before launch</div>';
+
+  crit.forEach(function(i) {
+    html += '<div class="vs-flaw"><span class="vs-flaw-ico">🔴</span><div>'
+      + '<div class="vs-flaw-title">' + (i.title || 'Critical issue') + '</div>'
+      + '<div class="vs-flaw-meta">' + (i.type || '') + (i.line ? ' · ' + i.line : '') + '</div>'
+      + '<div class="vs-flaw-why">' + (i.impact || i.desc || '') + '</div></div></div>';
+  });
+
+  if (warns > 0) {
+    html += '<div style="font-size:0.78rem;color:var(--text3);margin-top:6px">'
+      + '+ ' + warns + ' warning' + (warns > 1 ? 's also need' : ' also needs') + ' attention.</div>';
+  }
+
+  html += '<div class="vs-modal-actions">'
+    + '<button class="vs-modal-btn primary" onclick="closeLowScoreModal(); fixAll();">⚡ Auto-fix all</button>'
+    + '<button class="vs-modal-btn ghost" onclick="closeLowScoreModal()">Review myself</button></div>';
+
+  card.innerHTML = html;
+  overlay.classList.add('open');
+}
+
+function closeLowScoreModal() {
+  var overlay = document.getElementById('lowScoreModal');
+  if (overlay) overlay.classList.remove('open');
+}
+
+// Esc closes the popup
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeLowScoreModal();
+});
 
 // ── SCAN HISTORY (Supabase) ──
 async function saveScanToHistory(score) {
