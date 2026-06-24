@@ -1211,6 +1211,7 @@ let currentUser = null;
     if (em) em.textContent = email;
     // Load scan history once logged in
     if (typeof loadScanHistory === 'function') loadScanHistory();
+    if (typeof renderPlanCard === 'function') renderPlanCard();
   });
 })();
 
@@ -1356,15 +1357,15 @@ document.addEventListener('click', function(e) {
     <div class="sidebar-footer">
       <div class="plan-card">
         <div class="plan-label">Current plan</div>
-        <div class="plan-name">Starter (Free)</div>
-        <div class="plan-bar-track">
-          <div class="plan-bar-fill"></div>
+        <div class="plan-name" id="planName">Starter (Free)</div>
+        <div class="plan-bar-track" id="planBarTrack">
+          <div class="plan-bar-fill" id="planBarFill"></div>
         </div>
         <div class="plan-meta">
-          <span>1 of 3 scans used</span>
-          <span>resets Jun 30</span>
+          <span id="planScansUsed">0 of 3 scans used</span>
+          <span id="planResets">resets monthly</span>
         </div>
-        <button class="upgrade-btn" onclick="window.open('https://buy.stripe.com/test_8x25kFdvx9Zi0rifNN9EI00','_blank')">
+        <button class="upgrade-btn" id="upgradeBtn" onclick="upgradeToPro()">
           Upgrade to Pro →
         </button>
       </div>
@@ -1602,6 +1603,31 @@ document.addEventListener('click', function(e) {
 <!-- LOW-SCORE "WHY" POPUP -->
 <div class="vs-modal-overlay" id="lowScoreModal" onclick="if(event.target===this)closeLowScoreModal()">
   <div class="vs-modal" id="lowScoreModalCard"></div>
+</div>
+
+<!-- MONITORING (PRO) POPUP -->
+<div class="vs-modal-overlay" id="monitorModal" onclick="if(event.target===this)closeMonitoring()">
+  <div class="vs-modal" id="monitorModalCard" style="max-width:440px"></div>
+</div>
+
+<!-- UPGRADE TO PRO POPUP -->
+<div class="vs-modal-overlay" id="upgradeModal" onclick="if(event.target===this)closeUpgradeModal()">
+  <div class="vs-modal" style="max-width:420px">
+    <button class="vs-modal-close" onclick="closeUpgradeModal()" aria-label="Close">✕</button>
+    <div class="vs-modal-head"><span class="vs-modal-ico">🚀</span><span class="vs-modal-title">You’ve used your free scans</span></div>
+    <div class="vs-modal-sub">The free plan includes <strong style="color:var(--text)">3 scans per month</strong>. Upgrade to <strong style="color:var(--cyan)">Pro</strong> for:</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:6px">
+      <div style="font-size:0.85rem;color:var(--text2)">✓ Unlimited scans</div>
+      <div style="font-size:0.85rem;color:var(--text2)">✓ Continuous monitoring &amp; alerts</div>
+      <div style="font-size:0.85rem;color:var(--text2)">✓ Whole-repo &amp; dependency scanning</div>
+      <div style="font-size:0.85rem;color:var(--text2)">✓ Priority support</div>
+    </div>
+    <div class="vs-modal-actions">
+      <button class="vs-modal-btn primary" onclick="upgradeToPro()">⚡ Upgrade to Pro</button>
+      <button class="vs-modal-btn ghost" onclick="closeUpgradeModal()">Maybe later</button>
+    </div>
+    <div style="font-size:0.7rem;color:var(--text3);margin-top:10px;text-align:center">Free monthly scans reset on the 1st.</div>
+  </div>
 </div>
 
 <script>
@@ -1965,6 +1991,9 @@ async function scanFromGitHub() {
     return;
   }
 
+  // Free plan: enforce the scan limit
+  if (!(await consumeScanOrBlock())) return;
+
   var btn = document.getElementById('githubFetchBtn');
   btn.disabled = true;
   btn.textContent = 'Fetching...';
@@ -2035,9 +2064,100 @@ async function scanFromGitHub() {
   }
 }
 
+// ── PLAN / SCAN LIMIT (Free = 3 scans/month, Pro = unlimited) ──
+var FREE_SCAN_LIMIT = 3;
+function vsMonthKey() { var d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1); }
+
+function getPlanState() {
+  var meta = (typeof currentUser !== 'undefined' && currentUser && currentUser.user_metadata) || {};
+  var plan = meta.plan, used = meta.scans_used, period = meta.scans_period;
+  try {
+    if (plan == null) plan = localStorage.getItem('vs_plan');
+    if (used == null) used = localStorage.getItem('vs_scans_used');
+    if (period == null) period = localStorage.getItem('vs_scans_period');
+  } catch (e) {}
+  plan = (plan === 'pro') ? 'pro' : 'free';
+  used = parseInt(used || 0, 10) || 0;
+  if (period !== vsMonthKey()) { used = 0; period = vsMonthKey(); } // monthly reset
+  return { plan: plan, used: used, period: period };
+}
+
+async function setPlanState(patch) {
+  var next = Object.assign({}, getPlanState(), patch);
+  try {
+    localStorage.setItem('vs_plan', next.plan);
+    localStorage.setItem('vs_scans_used', String(next.used));
+    localStorage.setItem('vs_scans_period', next.period);
+  } catch (e) {}
+  if (typeof currentUser !== 'undefined' && currentUser && typeof sbClient !== 'undefined' && sbClient) {
+    try {
+      await sbClient.auth.updateUser({ data: { plan: next.plan, scans_used: next.used, scans_period: next.period } });
+      currentUser.user_metadata = Object.assign({}, currentUser.user_metadata, { plan: next.plan, scans_used: next.used, scans_period: next.period });
+    } catch (e) {}
+  }
+  return next;
+}
+
+function isPro() { return getPlanState().plan === 'pro'; }
+
+// Consume one scan for free users; block + prompt upgrade when over the limit.
+async function consumeScanOrBlock() {
+  var st = getPlanState();
+  if (st.plan === 'pro') return true;
+  if (st.used >= FREE_SCAN_LIMIT) { showUpgradeModal(); renderPlanCard(); return false; }
+  await setPlanState({ used: st.used + 1 });
+  renderPlanCard();
+  return true;
+}
+
+function renderPlanCard() {
+  var st = getPlanState();
+  var name = document.getElementById('planName');
+  var used = document.getElementById('planScansUsed');
+  var resets = document.getElementById('planResets');
+  var fill = document.getElementById('planBarFill');
+  var btn = document.getElementById('upgradeBtn');
+  var track = document.getElementById('planBarTrack');
+  if (st.plan === 'pro') {
+    if (name) name.textContent = 'Pro';
+    if (used) used.textContent = 'Unlimited scans';
+    if (resets) resets.textContent = '✓ active';
+    if (fill) fill.style.width = '100%';
+    if (track) track.style.display = 'none';
+    if (btn) btn.style.display = 'none';
+  } else {
+    if (name) name.textContent = 'Starter (Free)';
+    if (used) used.textContent = st.used + ' of ' + FREE_SCAN_LIMIT + ' scans used';
+    if (resets) resets.textContent = 'resets monthly';
+    if (fill) fill.style.width = Math.min(100, (st.used / FREE_SCAN_LIMIT) * 100) + '%';
+    if (track) track.style.display = '';
+    if (btn) { btn.style.display = ''; btn.textContent = 'Upgrade to Pro →'; }
+  }
+}
+
+// Grant Pro (payment intentionally skipped — wire Stripe here later)
+async function upgradeToPro() {
+  await setPlanState({ plan: 'pro' });
+  renderPlanCard();
+  closeUpgradeModal();
+  showToast('You’re on Pro — unlimited scans unlocked 🎉', 'success');
+}
+
+function showUpgradeModal() {
+  var o = document.getElementById('upgradeModal');
+  if (o) o.classList.add('open');
+}
+function closeUpgradeModal() {
+  var o = document.getElementById('upgradeModal');
+  if (o) o.classList.remove('open');
+}
+
 async function startScan() {
   const code = document.getElementById('codeEditor').value.trim();
   if (!code) { showToast('Please paste some code first', 'error'); return; }
+
+  // Free plan: enforce the scan limit (auto-fix rescans don't count)
+  if (!window.__autoFixLoop) { if (!(await consumeScanOrBlock())) return; }
 
   const lang = document.getElementById('langSelect').value;
   const langName = LANG_NAMES[lang] || 'code';
@@ -2365,9 +2485,13 @@ function closeLowScoreModal() {
   if (overlay) overlay.classList.remove('open');
 }
 
-// Esc closes the popup
+// Esc closes any open popup
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeLowScoreModal();
+  if (e.key === 'Escape') {
+    closeLowScoreModal();
+    if (typeof closeUpgradeModal === 'function') closeUpgradeModal();
+    if (typeof closeMonitoring === 'function') closeMonitoring();
+  }
 });
 
 // ── SCAN HISTORY (Supabase) ──
@@ -2791,10 +2915,59 @@ function setPage(page, evt) {
     document.getElementById('codeEditor').focus();
     showToast('Ready for a new scan', 'info');
   } else if (page === 'history') {
-    showToast('Scan history — 4 previous scans', 'info');
+    if (typeof loadScanHistory === 'function') loadScanHistory();
+    var hl = document.getElementById('historyList'); if (hl) hl.style.display = 'block';
+    showToast('Showing your scan history', 'info');
   } else if (page === 'monitor') {
-    showToast('Continuous monitoring with email alerts — coming in Pro', 'info');
+    if (isPro()) { showMonitoring(); }
+    else { showToast('Continuous monitoring is a Pro feature', 'info'); showUpgradeModal(); }
   }
+}
+
+// ── MONITORING (Pro) ──
+function showMonitoring() {
+  var overlay = document.getElementById('monitorModal');
+  var card = document.getElementById('monitorModalCard');
+  if (!overlay || !card) return;
+  var alertsOn = false;
+  try { alertsOn = localStorage.getItem('vs_monitor_alerts') === '1'; } catch (e) {}
+  var html = '<button class="vs-modal-close" onclick="closeMonitoring()" aria-label="Close">✕</button>'
+    + '<div class="vs-modal-head"><span class="vs-modal-ico">📡</span><span class="vs-modal-title">Continuous Monitoring</span>'
+    + '<span class="vs-modal-score" style="color:var(--green)">PRO</span></div>'
+    + '<div class="vs-modal-sub">Monitoring is <strong style="color:var(--green)">active</strong> for your account. Every scan you run is tracked so you can watch your security score over time.</div>'
+    + '<div style="display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;margin-bottom:12px">'
+    + '<div><div style="font-size:0.85rem;font-weight:600">Email me when a scan finds critical issues</div>'
+    + '<div style="font-size:0.72rem;color:var(--text3)">Sent to your account email after each scan</div></div>'
+    + '<button id="monAlertsToggle" onclick="toggleMonitorAlerts()" style="cursor:pointer;border:none;border-radius:100px;width:46px;height:26px;background:' + (alertsOn ? 'var(--green)' : 'var(--border2)') + ';position:relative;transition:background .2s">'
+    + '<span style="position:absolute;top:3px;left:' + (alertsOn ? '23px' : '3px') + ';width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s"></span></button></div>'
+    + '<div id="monActivity" style="font-size:0.8rem;color:var(--text2)">Loading recent activity…</div>';
+  card.innerHTML = html;
+  overlay.classList.add('open');
+  // fill recent activity from saved scans
+  if (currentUser && sbClient) {
+    sbClient.from('scans').select('score,created_at,issues_count').order('created_at', { ascending: false }).limit(5)
+      .then(function (res) {
+        var rows = (res && res.data) || [];
+        var el = document.getElementById('monActivity');
+        if (!el) return;
+        if (!rows.length) { el.innerHTML = '<div style="color:var(--text3)">No scans yet — run your first scan to start tracking.</div>'; return; }
+        el.innerHTML = '<div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text3);font-weight:700;margin-bottom:8px">Recent activity</div>'
+          + rows.map(function (r) {
+            var d = new Date(r.created_at).toLocaleDateString([], { month: 'short', day: 'numeric' });
+            var cls = r.score >= 75 ? 'var(--green)' : r.score >= 50 ? 'var(--amber)' : 'var(--red)';
+            return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid var(--border)"><span>' + d + ' · ' + r.issues_count + ' issues</span><strong style="color:' + cls + '">' + r.score + '/100</strong></div>';
+          }).join('');
+      });
+  } else {
+    var el = document.getElementById('monActivity'); if (el) el.textContent = 'Run a scan to start tracking your security trend.';
+  }
+}
+function closeMonitoring() { var o = document.getElementById('monitorModal'); if (o) o.classList.remove('open'); }
+function toggleMonitorAlerts() {
+  var on = false;
+  try { on = localStorage.getItem('vs_monitor_alerts') === '1'; localStorage.setItem('vs_monitor_alerts', on ? '0' : '1'); } catch (e) {}
+  showMonitoring(); // re-render with new state
+  showToast(on ? 'Email alerts turned off' : 'Email alerts turned on', 'success');
 }
 
 // ── LANG DISPLAY ──
@@ -2824,6 +2997,7 @@ function showToast(msg, type='info') {
 // ── INIT ──
 updateLineNumbers();
 updateGithubBtnState();
+if (typeof renderPlanCard === 'function') renderPlanCard();
 document.getElementById('codeEditor').focus();
 // Apply saved view mode (default: beginner — simple English first)
 (function(){
