@@ -36,6 +36,16 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.vibesafe.info/how-it-works.html</loc>
+    <lastmod>2026-06-29</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/security.html</loc>
+    <lastmod>2026-06-29</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.vibesafe.info/faq.html</loc>
     <lastmod>2026-06-29</lastmod>
     <priority>0.6</priority>

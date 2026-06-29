@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How VibeSafe Works | AI Code Security Scanner</title>
+<meta name="description" content="How VibeSafe scans your AI-built app: paste code or a GitHub repo, get a plain-English security report in seconds, apply fixes, and rescan before you launch.">
+<link rel="canonical" href="https://www.vibesafe.info/how-it-works.html">
+<meta property="og:title" content="How VibeSafe Works | AI Code Security Scanner">
+<meta property="og:description" content="Paste your code, get a plain-English security report, fix it, rescan, launch.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/how-it-works.html">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.vibesafe.info/og-image.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"HowTo","name":"How VibeSafe scans an AI-built app","description":"The steps VibeSafe follows to scan code for security issues and help you fix them before launch.","step":[
+{"@type":"HowToStep","name":"Paste your code or connect GitHub","text":"Paste a code snippet, upload a file, or paste a public GitHub repo URL for a full-repo scan."},
+{"@type":"HowToStep","name":"Run the scan","text":"VibeSafe analyzes your code for exposed secrets, security vulnerabilities, runtime errors, and missing packages in about 10 seconds."},
+{"@type":"HowToStep","name":"Read the plain-English report","text":"Every issue shows the exact line, what could go wrong, and a severity level — no security jargon."},
+{"@type":"HowToStep","name":"Apply fixes","text":"Review the before-and-after diff for each issue and apply fixes individually or all at once."},
+{"@type":"HowToStep","name":"Rescan and check the launch checklist","text":"VibeSafe rescans to confirm the fixes worked and shows a launch checklist of what's left before you ship."}
+]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--cyan),var(--violet));display:flex;align-items:center;justify-content:center;font-size:15px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4vw,2.7rem);line-height:1.15;letter-spacing:-0.02em;margin-bottom:18px}
+.lead{font-size:1.1rem;color:var(--text2);margin-bottom:26px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;margin:0 0 8px}
+p{color:var(--text2);margin-bottom:16px}
+.step-list{display:flex;flex-direction:column;gap:18px;margin:30px 0}
+.step{display:flex;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px}
+.step-num{flex-shrink:0;width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--cyan),var(--violet));display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--bg);font-size:0.95rem}
+.step-body p{margin-bottom:0;font-size:0.92rem}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><span class="logo-icon">🛡️</span> VibeSafe</a>
+  <a href="/login.html" class="nav-cta">Scan your code</a>
+</nav>
+<main>
+  <p class="eyebrow">How It Works</p>
+  <h1>From pasted code to a safe launch, in five steps</h1>
+  <p class="lead">VibeSafe is built so a non-technical founder can run a real security scan without learning any security terminology. Here's exactly what happens when you use it.</p>
+
+  <div class="step-list">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h2>Paste your code or connect GitHub</h2>
+        <p>Paste a snippet, upload a file, or drop in a public GitHub repo URL. Pro plans can scan an entire repository in one pass.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h2>VibeSafe runs the scan</h2>
+        <p>In about 10 seconds, it checks for exposed API keys and secrets, common vulnerability patterns (SQL injection, XSS, weak auth), runtime errors like missing awaits, and missing or vulnerable dependencies.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h2>You get a plain-English report</h2>
+        <p>Every issue shows the exact line, a severity level (critical / warning / info), what could realistically go wrong, and — where relevant — the matching OWASP category. No CVE IDs to look up, no jargon.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h2>You review and apply fixes</h2>
+        <p>Each issue comes with a before-and-after diff. Apply fixes one at a time or all at once — VibeSafe never changes your code without showing you exactly what's changing.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h2>Rescan and check the launch checklist</h2>
+        <p>After fixing, VibeSafe automatically rescans to confirm the issues are actually resolved — not just marked as fixed — and shows a launch checklist covering what's left, including manual checks like mobile testing.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <a href="/login.html">Try it free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">3 free scans every month, no credit card required</p>
+  </div>
+
+  <div class="disclaimer"><strong>An honest note.</strong> VibeSafe is a fast first-pass scanner, not a substitute for a full professional security audit or penetration test. See our <a href="/security.html" style="color:var(--cyan)">Security page</a> for what it does and doesn't cover.</div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related guides:</p>
+  <div class="related">
+    <a href="/security.html">Security & data handling</a>
+    <a href="/ai-code-security-scanner.html">AI code security scanner</a>
+    <a href="/pre-launch-security-checklist.html">Pre-launch checklist</a>
+    <a href="/free-security-checklist.html">Free printable checklist</a>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/legal.html">Privacy &amp; Terms</a> · <a href="/faq.html">FAQ</a>
+</footer>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security & Data Handling | VibeSafe</title>
+<meta name="description" content="How VibeSafe handles your code and data: what's stored, what isn't, how scans work, and an honest list of what VibeSafe does not do.">
+<link rel="canonical" href="https://www.vibesafe.info/security.html">
+<meta property="og:title" content="Security & Data Handling | VibeSafe">
+<meta property="og:description" content="What VibeSafe stores, what it doesn't, and what it does and doesn't protect against.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/security.html">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.vibesafe.info/og-image.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Does VibeSafe store my code?","acceptedAnswer":{"@type":"Answer","text":"No. Code submitted for scanning is processed in memory and discarded once the scan completes. It is never used to train AI models and never shared with third parties. Only your scan results (issues found, score, summary) are saved to your account."}},
+{"@type":"Question","name":"What does VibeSafe protect against?","acceptedAnswer":{"@type":"Answer","text":"VibeSafe scans for exposed secrets and API keys, common vulnerability patterns like SQL injection and XSS, weak authentication patterns, missing or vulnerable dependencies, and runtime errors such as missing awaits and unhandled promise rejections."}},
+{"@type":"Question","name":"What does VibeSafe NOT do?","acceptedAnswer":{"@type":"Answer","text":"VibeSafe does not perform a full penetration test, does not guarantee 100% vulnerability coverage, does not replace a professional security audit, and does not monitor your production environment in real time on the free or Pro plans."}},
+{"@type":"Question","name":"Is my data encrypted?","acceptedAnswer":{"@type":"Answer","text":"Yes. All traffic to and from VibeSafe is encrypted over HTTPS/TLS. Authentication is handled by Supabase Auth, and payment data (where applicable) is never stored on VibeSafe's servers."}}
+]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--cyan),var(--violet));display:flex;align-items:center;justify-content:center;font-size:15px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4vw,2.7rem);line-height:1.15;letter-spacing:-0.02em;margin-bottom:18px}
+.lead{font-size:1.1rem;color:var(--text2);margin-bottom:26px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;margin:30px 0 10px}
+p{color:var(--text2);margin-bottom:16px}
+ul{list-style:none;margin:0 0 18px}
+li{padding:8px 0 8px 28px;position:relative;border-bottom:1px solid var(--border);color:var(--text2)}
+li::before{content:'✓';position:absolute;left:0;color:var(--cyan);font-weight:700}
+.not-do li::before{content:'✗';color:var(--red)}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><span class="logo-icon">🛡️</span> VibeSafe</a>
+  <a href="/login.html" class="nav-cta">Scan your code</a>
+</nav>
+<main>
+  <p class="eyebrow">Security &amp; Data Handling</p>
+  <h1>What VibeSafe protects, and an honest list of what it doesn't</h1>
+  <p class="lead">Trust matters more when a tool is looking at your code. Here's exactly what VibeSafe checks for, how your data is handled, and where its limits are — no marketing spin.</p>
+
+  <h2>What VibeSafe scans for</h2>
+  <ul>
+    <li>Exposed API keys, tokens, and hardcoded secrets</li>
+    <li>SQL injection and cross-site scripting (XSS) patterns</li>
+    <li>Weak or missing authentication checks</li>
+    <li>Missing, outdated, or known-vulnerable dependencies</li>
+    <li>Runtime errors — missing awaits, unhandled promise rejections, null risks</li>
+    <li>Database misconfigurations (e.g. missing Row-Level Security in Supabase)</li>
+  </ul>
+
+  <h2>How your code and data are handled</h2>
+  <ul>
+    <li>Code submitted for scanning is processed in memory and discarded after the scan</li>
+    <li>Your code is never used to train AI models</li>
+    <li>Your code is never shared with third parties</li>
+    <li>Only scan results (score, issue summary) are stored in your account — not raw code</li>
+    <li>All traffic is encrypted over HTTPS/TLS</li>
+    <li>Authentication is handled by Supabase Auth; you can delete your account and data anytime</li>
+  </ul>
+
+  <h2>What VibeSafe does <em>not</em> do</h2>
+  <ul class="not-do">
+    <li>Does not perform a full penetration test</li>
+    <li>Does not guarantee 100% vulnerability coverage — no scanner can</li>
+    <li>Does not replace a professional security audit for high-risk applications (fintech, healthcare, etc.)</li>
+    <li>Does not continuously monitor your live, deployed app in real time</li>
+    <li>Does not fix architectural or design-level security issues automatically — those are flagged, not auto-fixed</li>
+  </ul>
+
+  <div class="cta-box">
+    <a href="/login.html">Run a free scan →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">See exactly what it finds in your own code — 3 free scans/month</p>
+  </div>
+
+  <div class="disclaimer"><strong>An honest note.</strong> VibeSafe catches the most common, most dangerous mistakes in AI-generated code quickly. For anything handling sensitive user data at scale, combine it with a professional security review. See our full <a href="/legal.html" style="color:var(--cyan)">Privacy Policy</a> for legal detail.</div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related guides:</p>
+  <div class="related">
+    <a href="/how-it-works.html">How VibeSafe works</a>
+    <a href="/ai-code-security-scanner.html">AI code security scanner</a>
+    <a href="/supabase-security-checklist.html">Supabase security checklist</a>
+    <a href="/exposed-api-key-scanner.html">Exposed API keys</a>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/legal.html">Privacy &amp; Terms</a> · <a href="/faq.html">FAQ</a>
+</footer>
+</body>
+</html>
