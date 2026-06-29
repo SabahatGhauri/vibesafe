@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lovable vs Bolt vs Cursor vs Replit: What's Missing From Every AI Builder's Output | VibeSafe</title>
+<meta name="description" content="We looked at the security gaps that show up regardless of which AI coding tool generated the code. Here's what's consistently missing across Lovable, Bolt, Cursor, and Replit output.">
+<link rel="canonical" href="https://www.vibesafe.info/blog/lovable-bolt-cursor-replit-security-compared.html">
+<meta property="og:title" content="Lovable vs Bolt vs Cursor vs Replit: What's Missing From Every AI Builder's Output">
+<meta property="og:description" content="The security gaps that show up regardless of which AI coding tool you use.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/blog/lovable-bolt-cursor-replit-security-compared.html">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.vibesafe.info/og-image.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting",
+"headline":"Lovable vs Bolt vs Cursor vs Replit: What's Missing From Every AI Builder's Output",
+"description":"The security gaps that show up regardless of which AI coding tool generated the code.",
+"datePublished":"2026-06-29","dateModified":"2026-06-29",
+"author":{"@type":"Organization","name":"VibeSafe"},
+"publisher":{"@type":"Organization","name":"VibeSafe","logo":{"@type":"ImageObject","url":"https://www.vibesafe.info/favicon.svg"}},
+"mainEntityOfPage":"https://www.vibesafe.info/blog/lovable-bolt-cursor-replit-security-compared.html"}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--cyan),var(--violet));display:flex;align-items:center;justify-content:center;font-size:15px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+article{max-width:700px;margin:0 auto;padding:52px 5% 70px}
+.post-tag{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,4vw,2.5rem);line-height:1.2;letter-spacing:-0.02em;margin-bottom:14px}
+.byline{font-size:0.82rem;color:var(--text3);margin-bottom:32px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;margin:34px 0 10px}
+p{color:var(--text2);margin-bottom:16px}
+ul{margin:0 0 18px 20px;color:var(--text2)}
+li{margin-bottom:8px}
+strong{color:var(--text)}
+table{width:100%;border-collapse:collapse;margin:20px 0 28px;font-size:0.85rem}
+th{background:var(--surface2);color:var(--text2);padding:10px 14px;text-align:left;font-weight:600;border-bottom:1px solid var(--border2)}
+td{padding:10px 14px;color:var(--text2);border-bottom:1px solid var(--border)}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><span class="logo-icon">🛡️</span> VibeSafe</a>
+  <a href="/login.html" class="nav-cta">Scan your code</a>
+</nav>
+<article>
+  <p class="post-tag">Comparison</p>
+  <h1>Lovable vs Bolt vs Cursor vs Replit: what's missing from every AI builder's output</h1>
+  <p class="byline">VibeSafe · June 29, 2026 · 8 min read</p>
+
+  <p>Founders building with Lovable, Bolt, Cursor, or Replit often ask which one is "more secure." It's a reasonable question, but it's also the wrong frame. After scanning code generated across all of these tools, the more useful finding isn't which one is worse — it's how consistent the gaps are <em>regardless</em> of which tool produced the code.</p>
+
+  <div class="disclaimer"><strong>An honest note on methodology.</strong> This isn't a controlled benchmark with a fixed test suite scored identically across tools — that kind of rigorous comparison would need a much larger, continuously updated study. This is a pattern observation based on the kinds of code these tools commonly produce. Treat it as a guide to what to check, not a scorecard ranking one tool above another.</div>
+
+  <h2>The pattern that shows up everywhere</h2>
+  <p>All four tools are excellent at producing code that <em>works</em> — that's the whole value proposition, and they deliver on it. None of them are built to ask "who shouldn't be able to access this?" by default, because that requires understanding a threat model the tool doesn't have visibility into. The result is a predictable set of gaps that show up no matter which tool you used:</p>
+
+  <table>
+    <thead><tr><th>Common gap</th><th>Why it happens regardless of tool</th></tr></thead>
+    <tbody>
+      <tr><td>Hardcoded secrets</td><td>Fastest way to get a demo working; environment variable setup is an extra step the prompt didn't ask for</td></tr>
+      <tr><td>Missing database access rules</td><td>Requires explicit backend configuration (e.g. Supabase RLS) that isn't implied by a frontend-focused prompt</td></tr>
+      <tr><td>Client-only validation</td><td>The visible behavior (form rejects bad input) looks correct without a matching server-side check</td></tr>
+      <tr><td>Unguarded async code</td><td>Missing <code>await</code>s and unhandled promise rejections don't show up until specific timing or failure conditions occur</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Where the tools genuinely differ</h2>
+  <p>The meaningful differences between these tools aren't really about security defaults — they're about workflow and integration:</p>
+  <ul>
+    <li><strong>Lovable and Bolt</strong> are oriented around full-app scaffolding with an integrated backend (often Supabase), which means database access rules become relevant almost immediately — and are correspondingly easy to forget.</li>
+    <li><strong>Cursor</strong> operates more like an AI-augmented editor inside an existing codebase, so the security posture often depends more on the existing project's conventions than on Cursor itself.</li>
+    <li><strong>Replit</strong> spans both — quick scaffolding and ongoing editing — with the added wrinkle that projects are frequently public by default, which raises the stakes on anything hardcoded.</li>
+  </ul>
+
+  <h2>What this means practically</h2>
+  <p>Don't pick a tool based on a security ranking — pick based on what you're building, and then run the same checklist regardless of which one you used: no hardcoded secrets, database rules enabled, server-side validation on anything that matters, and a scan for missing or vulnerable dependencies. The tool you chose doesn't determine your risk nearly as much as whether anyone checked before you launched.</p>
+
+  <div class="cta-box">
+    <a href="/login.html">Scan your AI-built app free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">Works on output from any AI coding tool — 3 free scans/month</p>
+  </div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related reading:</p>
+  <div class="related">
+    <a href="/vibe-coding-security.html">Is vibe coding safe?</a>
+    <a href="/supabase-security-checklist.html">Supabase security checklist</a>
+    <a href="/pre-launch-security-checklist.html">Pre-launch checklist</a>
+    <a href="/blog.html">More articles</a>
+  </div>
+</article>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/legal.html">Privacy &amp; Terms</a> · <a href="/faq.html">FAQ</a>
+</footer>
+</body>
+</html>

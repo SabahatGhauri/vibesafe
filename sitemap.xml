@@ -46,6 +46,26 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.vibesafe.info/blog.html</loc>
+    <lastmod>2026-06-29</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/blog/why-ai-generated-code-has-security-bugs.html</loc>
+    <lastmod>2026-06-29</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/blog/exposed-api-key-real-world-disasters.html</loc>
+    <lastmod>2026-06-29</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/blog/lovable-bolt-cursor-replit-security-compared.html</loc>
+    <lastmod>2026-06-29</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.vibesafe.info/faq.html</loc>
     <lastmod>2026-06-29</lastmod>
     <priority>0.6</priority>

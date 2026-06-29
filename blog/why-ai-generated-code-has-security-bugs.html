@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why AI-Generated Code Has More Security Bugs Than You Think | VibeSafe</title>
+<meta name="description" content="AI coding tools optimize for code that runs, not code that's safe. Here's exactly why AI-generated code tends to ship with security bugs, and what to check before launch.">
+<link rel="canonical" href="https://www.vibesafe.info/blog/why-ai-generated-code-has-security-bugs.html">
+<meta property="og:title" content="Why AI-Generated Code Has More Security Bugs Than You Think">
+<meta property="og:description" content="AI coding tools optimize for code that runs, not code that's safe. Here's why that gap exists.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/blog/why-ai-generated-code-has-security-bugs.html">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.vibesafe.info/og-image.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting",
+"headline":"Why AI-Generated Code Has More Security Bugs Than You Think",
+"description":"AI coding tools optimize for code that runs, not code that's safe. Here's exactly why that gap exists and what it means for your app.",
+"datePublished":"2026-06-29","dateModified":"2026-06-29",
+"author":{"@type":"Organization","name":"VibeSafe"},
+"publisher":{"@type":"Organization","name":"VibeSafe","logo":{"@type":"ImageObject","url":"https://www.vibesafe.info/favicon.svg"}},
+"mainEntityOfPage":"https://www.vibesafe.info/blog/why-ai-generated-code-has-security-bugs.html"}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--cyan),var(--violet));display:flex;align-items:center;justify-content:center;font-size:15px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+article{max-width:700px;margin:0 auto;padding:52px 5% 70px}
+.post-tag{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,4vw,2.5rem);line-height:1.2;letter-spacing:-0.02em;margin-bottom:14px}
+.byline{font-size:0.82rem;color:var(--text3);margin-bottom:32px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;margin:34px 0 12px}
+p{color:var(--text2);margin-bottom:16px}
+ul{margin:0 0 18px 20px;color:var(--text2)}
+li{margin-bottom:8px}
+strong{color:var(--text)}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><span class="logo-icon">🛡️</span> VibeSafe</a>
+  <a href="/login.html" class="nav-cta">Scan your code</a>
+</nav>
+<article>
+  <p class="post-tag">Security</p>
+  <h1>Why AI-generated code has more security bugs than you think</h1>
+  <p class="byline">VibeSafe · June 29, 2026 · 7 min read</p>
+
+  <p>Ask an AI coding tool to build a login page, and within seconds you'll have one that works. Click it, type a password, get logged in. From the outside, it looks done. Underneath, there's a decent chance it's storing that password insecurely, skipping rate limiting, or trusting the browser to enforce access control it should be enforcing on the server.</p>
+
+  <p>This isn't a flaw unique to one tool. It's a structural property of how these models are trained and what they're optimized to do.</p>
+
+  <h2>AI models are trained to produce working code, not safe code</h2>
+  <p>Large language models learn from enormous amounts of public code — tutorials, Stack Overflow answers, open-source repos, blog posts. A huge fraction of that training data was written to demonstrate a concept quickly, not to be production-hardened. A Stack Overflow answer showing how to query a database will often concatenate a variable straight into the SQL string, because the point of the answer is "here's how queries work," not "here's how to prevent SQL injection."</p>
+  <p>When a model generates new code, it's pattern-matching against that corpus. The shortcuts baked into millions of educational examples become the model's defaults — unless the prompt specifically asks for security, which most "build me an app" prompts don't.</p>
+
+  <h2>The feedback loop rewards speed, not safety</h2>
+  <p>Vibe coding tools are judged, in the moment, by one thing: does the app work when you click around it? Security issues are almost invisible at that stage. An exposed API key doesn't crash your app. A missing Row-Level Security policy doesn't throw an error in the browser. Debug mode left on doesn't show up in the demo. These are exactly the kinds of issues that only matter once a real, sometimes hostile, user shows up — which is after the tool has already declared success.</p>
+
+  <h2>The model doesn't know your threat model</h2>
+  <p>A human security review asks: who can access this, what's the worst thing they could do, and what happens if they try? An AI generating code from a short prompt has no idea if you're building a internal prototype or a fintech product handling real money. It defaults to the simplest version that satisfies the literal request, which is rarely the most defensive version.</p>
+
+  <h2>The most common patterns we see</h2>
+  <ul>
+    <li><strong>Hardcoded secrets</strong> — API keys and database credentials written directly into source files instead of environment variables, because that's the fastest way to "make it work" in a demo</li>
+    <li><strong>Missing database access rules</strong> — especially with Supabase/Postgres backends, where Row-Level Security has to be explicitly turned on and is easy to skip entirely</li>
+    <li><strong>Client-side-only validation</strong> — checks that run in the browser and can be trivially bypassed, with no matching check on the server</li>
+    <li><strong>Unhandled async errors</strong> — missing <code>await</code>s and unguarded promises that fail silently until real traffic hits an edge case</li>
+  </ul>
+
+  <h2>This isn't a reason to avoid AI coding tools</h2>
+  <p>Lovable, Bolt, Cursor, Replit, and similar tools are genuinely changing who gets to build software — that's a good thing. The fix isn't "don't use AI to code," it's adding a deliberate safety check before you ship, the same way you'd review a contractor's work even if you trust the contractor. A quick scan that catches the predictable list above — exposed secrets, missing access rules, unguarded async code, vulnerable dependencies — closes most of the realistic risk in minutes, without needing to become a security engineer.</p>
+
+  <div class="cta-box">
+    <a href="/login.html">Scan your AI-built app free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">3 free scans every month, no credit card required</p>
+  </div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related reading:</p>
+  <div class="related">
+    <a href="/vibe-coding-security.html">Is vibe coding safe?</a>
+    <a href="/ai-code-security-scanner.html">AI code security scanner</a>
+    <a href="/how-it-works.html">How VibeSafe works</a>
+    <a href="/blog.html">More articles</a>
+  </div>
+</article>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/legal.html">Privacy &amp; Terms</a> · <a href="/faq.html">FAQ</a>
+</footer>
+</body>
+</html>
