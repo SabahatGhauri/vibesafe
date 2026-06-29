@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exposed API Key Scanner | VibeSafe</title>
+<meta name="description" content="Find exposed API keys, tokens, and secrets in your AI-generated code before they leak. VibeSafe scans for hardcoded credentials and shows how to fix them.">
+<meta name="keywords" content="exposed API key scanner, find exposed API keys, hardcoded secrets, secret scanner, leaked API key">
+<link rel="canonical" href="https://www.vibesafe.info/exposed-api-key-scanner.html">
+<meta property="og:title" content="Exposed API Key Scanner | VibeSafe">
+<meta property="og:description" content="Detect hardcoded API keys and secrets in your code before they leak.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/exposed-api-key-scanner.html">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is an exposed API key?","acceptedAnswer":{"@type":"Answer","text":"An exposed API key is a secret credential (like a Stripe, OpenAI, or database key) hardcoded directly in your source code or committed to a repository, where anyone who sees the code can copy and abuse it."}},
+{"@type":"Question","name":"Why are exposed API keys dangerous?","acceptedAnswer":{"@type":"Answer","text":"A leaked key lets attackers run up charges on your account, access your database, or impersonate your app. Bots scan public repositories for keys within minutes of a commit."}},
+{"@type":"Question","name":"How do I find exposed API keys in my code?","acceptedAnswer":{"@type":"Answer","text":"Run an exposed API key scanner like VibeSafe, which detects hardcoded secrets and shows how to move them into environment variables."}}
+]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--cyan),var(--violet));display:flex;align-items:center;justify-content:center;font-size:15px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4vw,2.7rem);line-height:1.15;letter-spacing:-0.02em;margin-bottom:18px}
+.lead{font-size:1.1rem;color:var(--text2);margin-bottom:26px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.35rem;margin:36px 0 14px}
+p{color:var(--text2);margin-bottom:16px}
+ul{list-style:none;margin:0 0 18px}
+li{padding:8px 0 8px 28px;position:relative;border-bottom:1px solid var(--border);color:var(--text2)}
+li::before{content:'✓';position:absolute;left:0;color:var(--cyan);font-weight:700}
+code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.faq-q{font-weight:600;color:var(--text);margin:20px 0 6px}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><span class="logo-icon">🛡️</span> VibeSafe</a>
+  <a href="/login.html" class="nav-cta">Scan your code</a>
+</nav>
+<main>
+  <p class="eyebrow">Exposed API Key Scanner</p>
+  <h1>Find exposed API keys before they leak</h1>
+  <p class="lead">AI coding tools love to hardcode secrets — a live Stripe key here, an OpenAI token there. VibeSafe scans your code for exposed API keys and credentials and shows you exactly how to secure them, in plain English.</p>
+
+  <div class="cta-box">
+    <a href="/login.html">Scan for exposed keys free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">3 free scans every month · Your code is never stored</p>
+  </div>
+
+  <h2>What is an exposed API key?</h2>
+  <p>An exposed (or "hardcoded") API key is a secret credential written directly into your source code — for example <code>const key = "sk_live_…"</code> — instead of being loaded from a secure environment variable. Anyone who can see the code, including a public GitHub repo or your browser's "view source", can copy it.</p>
+
+  <h2>Why it's dangerous</h2>
+  <p>Automated bots scan public repositories for keys within <em>minutes</em> of a commit. A leaked key can let attackers run up huge charges on your Stripe or OpenAI account, read or delete your database, or impersonate your app. It's one of the most common — and most expensive — mistakes in AI-built apps.</p>
+
+  <h2>Keys VibeSafe looks for</h2>
+  <ul>
+    <li>Stripe, OpenAI, and other live service keys</li>
+    <li>Supabase and Firebase keys and database URLs</li>
+    <li>JWT secrets and auth tokens</li>
+    <li>Database passwords and connection strings</li>
+    <li>Generic high-entropy secrets hardcoded in source</li>
+  </ul>
+
+  <h2>How to fix an exposed key</h2>
+  <p>Move it to an environment variable and load it at runtime — e.g. <code>process.env.STRIPE_KEY</code> (JavaScript) or <code>os.environ.get("STRIPE_KEY")</code> (Python) — add <code>.env</code> to <code>.gitignore</code>, and <strong>rotate the key</strong> (generate a new one), because the old one may already be compromised. VibeSafe shows this fix for every key it finds and can apply it automatically.</p>
+
+  <h2>Questions</h2>
+  <p class="faq-q">Does it scan my whole repo?</p>
+  <p>Yes — paste a public GitHub repo URL and VibeSafe scans every source and config file for secrets.</p>
+
+  <div class="disclaimer"><strong>An honest note.</strong> VibeSafe catches common exposed secrets quickly, but it's a first line of defense, not a replacement for a full secret-management and security audit.</div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related guides:</p>
+  <div class="related">
+    <a href="/ai-code-security-scanner.html">AI code security scanner</a>
+    <a href="/vibe-coding-security.html">Is vibe coding safe?</a>
+    <a href="/pre-launch-security-checklist.html">Pre-launch checklist</a>
+    <a href="/supabase-security-checklist.html">Supabase security</a>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/legal.html">Privacy &amp; Terms</a> · <a href="/faq.html">FAQ</a>
+</footer>
+</body>
+</html>

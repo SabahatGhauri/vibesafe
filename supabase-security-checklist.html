@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supabase Security Checklist for AI-Built Apps | VibeSafe</title>
+<meta name="description" content="A Supabase security checklist for AI-built apps: Row-Level Security, policies, exposed keys, storage buckets, and auth. Check your database before launch.">
+<meta name="keywords" content="Supabase security checklist, Supabase security scan, Supabase RLS, secure Supabase database, Supabase row level security">
+<link rel="canonical" href="https://www.vibesafe.info/supabase-security-checklist.html">
+<meta property="og:title" content="Supabase Security Checklist for AI-Built Apps">
+<meta property="og:description" content="Check Row-Level Security, policies, keys, and storage before you launch a Supabase app.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/supabase-security-checklist.html">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is Supabase Row-Level Security?","acceptedAnswer":{"@type":"Answer","text":"Row-Level Security (RLS) is a Postgres feature Supabase uses to enforce, at the database level, which rows a user can read or write. Without RLS policies, anyone with your public key can often read or modify every row in a table."}},
+{"@type":"Question","name":"Is it safe to expose the Supabase anon key?","acceptedAnswer":{"@type":"Answer","text":"The anon (publishable) key is meant to be public and is safe to ship in your frontend — but only if Row-Level Security is enabled. The service_role key must never be exposed in client code."}},
+{"@type":"Question","name":"How do I check my Supabase app is secure?","acceptedAnswer":{"@type":"Answer","text":"Verify RLS is enabled on every table, write policies that scope data to the logged-in user, keep the service_role key server-side, and scan your code for exposed keys and weak access rules."}}
+]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--cyan),var(--violet));display:flex;align-items:center;justify-content:center;font-size:15px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4vw,2.7rem);line-height:1.15;letter-spacing:-0.02em;margin-bottom:18px}
+.lead{font-size:1.1rem;color:var(--text2);margin-bottom:26px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;margin:30px 0 10px}
+p{color:var(--text2);margin-bottom:16px}
+.check{list-style:none;margin:0 0 8px}
+.check li{padding:10px 0 10px 30px;position:relative;border-bottom:1px solid var(--border);color:var(--text2)}
+.check li::before{content:'☐';position:absolute;left:0;color:var(--cyan);font-weight:700;font-size:1.05rem}
+code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.faq-q{font-weight:600;color:var(--text);margin:20px 0 6px}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><span class="logo-icon">🛡️</span> VibeSafe</a>
+  <a href="/login.html" class="nav-cta">Scan your code</a>
+</nav>
+<main>
+  <p class="eyebrow">Supabase Security Checklist</p>
+  <h1>Supabase security checklist for AI-built apps</h1>
+  <p class="lead">Supabase is the most popular backend for vibe-coded apps — and missing database rules are the <strong>#1 cause of vibe-coding data breaches</strong>. Use this checklist to make sure your Supabase project doesn't leak user data before you launch.</p>
+
+  <h2>1. Row-Level Security (RLS)</h2>
+  <ul class="check">
+    <li>RLS is <strong>enabled</strong> on every table that holds user data</li>
+    <li>Each table has a policy scoping rows to <code>auth.uid()</code> — users see only their own data</li>
+    <li>No table is left "open" with RLS off (the default leaves data readable with the anon key)</li>
+  </ul>
+
+  <h2>2. Keys</h2>
+  <ul class="check">
+    <li>Only the <strong>anon / publishable</strong> key is used in frontend code</li>
+    <li>The <strong>service_role</strong> key is never shipped to the browser — server-side only</li>
+    <li>No keys hardcoded outside environment variables</li>
+  </ul>
+
+  <h2>3. Storage buckets</h2>
+  <ul class="check">
+    <li>Buckets aren't public unless they're meant to be</li>
+    <li>Storage policies restrict who can upload, read, and delete</li>
+  </ul>
+
+  <h2>4. Auth &amp; access</h2>
+  <ul class="check">
+    <li>Email confirmation / sign-in configured correctly</li>
+    <li>Sensitive actions check the user's identity on the server, not just the client</li>
+  </ul>
+
+  <div class="cta-box">
+    <a href="/login.html">Scan your Supabase app code free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">VibeSafe flags missing RLS, exposed keys &amp; weak rules — 3 free scans/month</p>
+  </div>
+
+  <p>VibeSafe reads your app's code for the patterns that signal these problems — the <code>service_role</code> key in frontend code, queries that rely on client-side filtering instead of RLS, and hardcoded Supabase URLs and keys — and explains each fix in plain English.</p>
+
+  <div class="disclaimer"><strong>An honest note.</strong> A code scan catches common Supabase misconfigurations, but always confirm RLS and policies directly in your Supabase dashboard too. VibeSafe is a first safety check, not a full audit.</div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related guides:</p>
+  <div class="related">
+    <a href="/ai-code-security-scanner.html">AI code security scanner</a>
+    <a href="/vibe-coding-security.html">Is vibe coding safe?</a>
+    <a href="/pre-launch-security-checklist.html">Pre-launch checklist</a>
+    <a href="/exposed-api-key-scanner.html">Exposed API keys</a>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/legal.html">Privacy &amp; Terms</a> · <a href="/faq.html">FAQ</a>
+</footer>
+</body>
+</html>

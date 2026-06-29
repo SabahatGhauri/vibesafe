@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pre-Launch Security Checklist for AI-Built Apps | VibeSafe</title>
+<meta name="description" content="A simple pre-launch security checklist for AI-built apps: API keys, database rules, authentication, environment variables, packages, runtime errors, and more.">
+<meta name="keywords" content="app security checklist before launch, pre-launch security scan, AI-built app security, security checklist for founders">
+<link rel="canonical" href="https://www.vibesafe.info/pre-launch-security-checklist.html">
+<meta property="og:title" content="Pre-Launch Security Checklist for AI-Built Apps">
+<meta property="og:description" content="Everything to check before you ship an AI-built app — in plain English.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/pre-launch-security-checklist.html">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"HowTo","name":"Pre-Launch Security Checklist for AI-Built Apps","description":"Steps to check an AI-built app for security issues before launch.","step":[
+{"@type":"HowToStep","name":"Remove exposed secrets","text":"Move every hardcoded API key, token, and password into environment variables."},
+{"@type":"HowToStep","name":"Lock down the database","text":"Enable Row-Level Security and access rules so users can only read their own data."},
+{"@type":"HowToStep","name":"Check authentication","text":"Ensure auth checks run on the server, not only in the browser."},
+{"@type":"HowToStep","name":"Verify packages","text":"Confirm every imported package exists and has no known vulnerabilities."},
+{"@type":"HowToStep","name":"Catch runtime errors","text":"Find missing awaits, null risks, and unhandled errors before users do."}
+]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--cyan),var(--violet));display:flex;align-items:center;justify-content:center;font-size:15px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4vw,2.7rem);line-height:1.15;letter-spacing:-0.02em;margin-bottom:18px}
+.lead{font-size:1.1rem;color:var(--text2);margin-bottom:26px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;margin:30px 0 10px}
+p{color:var(--text2);margin-bottom:16px}
+.check{list-style:none;margin:0 0 8px}
+.check li{padding:10px 0 10px 30px;position:relative;border-bottom:1px solid var(--border);color:var(--text2)}
+.check li::before{content:'☐';position:absolute;left:0;color:var(--cyan);font-weight:700;font-size:1.05rem}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><span class="logo-icon">🛡️</span> VibeSafe</a>
+  <a href="/login.html" class="nav-cta">Scan your code</a>
+</nav>
+<main>
+  <p class="eyebrow">Pre-Launch Security Checklist</p>
+  <h1>The pre-launch security checklist for AI-built apps</h1>
+  <p class="lead">Before you share your AI-built app with real users, run through this checklist. It covers the issues that most often slip past AI coding tools — written for founders and no-code builders, no security background needed.</p>
+
+  <h2>1. Secrets &amp; API keys</h2>
+  <ul class="check">
+    <li>No API keys, tokens, or passwords hardcoded in the source</li>
+    <li>All secrets loaded from environment variables (.env), not committed to git</li>
+  </ul>
+
+  <h2>2. Database &amp; access rules</h2>
+  <ul class="check">
+    <li>Row-Level Security (or equivalent) enabled on every table</li>
+    <li>Users can only read and write their own data</li>
+    <li>No publicly readable/writable database or storage buckets</li>
+  </ul>
+
+  <h2>3. Authentication</h2>
+  <ul class="check">
+    <li>Auth checks happen on the server, not only in the browser</li>
+    <li>Protected pages and API routes actually require a valid session</li>
+  </ul>
+
+  <h2>4. Packages &amp; dependencies</h2>
+  <ul class="check">
+    <li>Every imported package actually exists (no hallucinated imports)</li>
+    <li>No dependencies with known vulnerabilities</li>
+  </ul>
+
+  <h2>5. Runtime &amp; reliability</h2>
+  <ul class="check">
+    <li>No missing awaits or unhandled promise rejections</li>
+    <li>Network calls and JSON parsing wrapped in error handling</li>
+  </ul>
+
+  <h2>6. Final launch check</h2>
+  <ul class="check">
+    <li>No console errors on the live site</li>
+    <li>Mobile responsive and tested on a real device</li>
+    <li>A clean security scan with no critical issues</li>
+  </ul>
+
+  <div class="cta-box">
+    <a href="/login.html">Run the checklist automatically →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">VibeSafe checks most of this for you in seconds — 3 free scans/month</p>
+  </div>
+
+  <p>VibeSafe automates the technical items above: it scans your code for exposed secrets, weak database rules, missing packages, and runtime errors, then gives you a clear pass/fail with plain-English fixes — and the manual items (mobile, device testing) as a checklist after each scan.</p>
+
+  <div class="disclaimer"><strong>An honest note.</strong> This checklist and VibeSafe help you catch common pre-launch risks early. They don't replace a full professional security audit or penetration test.</div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related guides:</p>
+  <div class="related">
+    <a href="/ai-code-security-scanner.html">AI code security scanner</a>
+    <a href="/vibe-coding-security.html">Is vibe coding safe?</a>
+    <a href="/exposed-api-key-scanner.html">Exposed API keys</a>
+    <a href="/supabase-security-checklist.html">Supabase security</a>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/legal.html">Privacy &amp; Terms</a> · <a href="/faq.html">FAQ</a>
+</footer>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Is Vibe Coding Safe? Security Checklist for AI-Built Apps | VibeSafe</title>
+<meta name="description" content="Learn how to check vibe-coded apps for exposed keys, database risks, runtime errors, missing packages, and security issues before launch.">
+<meta name="keywords" content="vibe coding security, is vibe coding safe, AI-built app security, secure AI-generated app, no-code app security">
+<link rel="canonical" href="https://www.vibesafe.info/vibe-coding-security.html">
+<meta property="og:title" content="Is Vibe Coding Safe? Security Guide for AI-Built Apps">
+<meta property="og:description" content="What to check in vibe-coded apps before launch: exposed keys, database rules, runtime errors, and more.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/vibe-coding-security.html">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is vibe coding safe?","acceptedAnswer":{"@type":"Answer","text":"Vibe coding (building apps with AI) is safe to ship only after you check the generated code. AI tools frequently leave exposed API keys, weak database rules, missing packages, and runtime errors. Scanning the code before launch catches these common problems."}},
+{"@type":"Question","name":"What are the biggest security risks in AI-built apps?","acceptedAnswer":{"@type":"Answer","text":"The most common are exposed API keys and secrets, missing database access rules (like Supabase Row-Level Security), missing or hallucinated packages, unhandled runtime errors, and broken authentication or access control."}},
+{"@type":"Question","name":"How do I check if my vibe-coded app is secure?","acceptedAnswer":{"@type":"Answer","text":"Run an AI code security scanner like VibeSafe that reviews your code for exposed secrets, OWASP Top 10 risks, vulnerable dependencies, and runtime errors, then explains the fixes in plain English."}}
+]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--cyan),var(--violet));display:flex;align-items:center;justify-content:center;font-size:15px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4vw,2.7rem);line-height:1.15;letter-spacing:-0.02em;margin-bottom:18px}
+.lead{font-size:1.1rem;color:var(--text2);margin-bottom:26px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.35rem;margin:36px 0 14px}
+p{color:var(--text2);margin-bottom:16px}
+ul{list-style:none;margin:0 0 18px}
+li{padding:8px 0 8px 28px;position:relative;border-bottom:1px solid var(--border);color:var(--text2)}
+li::before{content:'✓';position:absolute;left:0;color:var(--cyan);font-weight:700}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.faq-q{font-weight:600;color:var(--text);margin:20px 0 6px}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><span class="logo-icon">🛡️</span> VibeSafe</a>
+  <a href="/login.html" class="nav-cta">Scan your code</a>
+</nav>
+<main>
+  <p class="eyebrow">Vibe Coding Security</p>
+  <h1>Is vibe coding safe?</h1>
+  <p class="lead">Vibe coding — building apps by prompting AI tools — is incredibly fast, but the code it produces isn't automatically safe to ship. The short answer: it's safe <em>after</em> you check it. Here's what tends to go wrong and how to verify your app before launch.</p>
+
+  <div class="cta-box">
+    <a href="/login.html">Scan your vibe-coded app free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">3 free scans every month · No credit card required</p>
+  </div>
+
+  <h2>Why AI-built apps are risky at launch</h2>
+  <p>AI generates code that <em>looks</em> finished and runs fine in preview. The problems are the ones you can't see without reading the code: secrets baked into the source, a database anyone can read, or an error that only triggers when a real user does something unexpected. For a non-technical builder, these are invisible until something breaks — or leaks.</p>
+
+  <h2>The most common vibe-coding security risks</h2>
+  <ul>
+    <li><strong>Exposed API keys &amp; secrets</strong> — live keys hardcoded in the source, visible to anyone who views the code.</li>
+    <li><strong>Missing database rules</strong> — Supabase/Firebase tables with no Row-Level Security, so one user can read everyone's data.</li>
+    <li><strong>Missing or hallucinated packages</strong> — imports for packages that don't exist or are outdated and vulnerable.</li>
+    <li><strong>Runtime errors</strong> — missing awaits and unhandled errors that crash the app for real users.</li>
+    <li><strong>Broken authentication</strong> — client-side-only checks or inverted access logic that lets anyone in.</li>
+  </ul>
+
+  <h2>How to check if your app is safe</h2>
+  <p>You don't need to be a developer. Run your code through an AI code security scanner that reads it for these exact issues and explains them simply:</p>
+  <ul>
+    <li>Paste or upload your code, or connect a public GitHub repo.</li>
+    <li>Review the flagged issues — each one says what it is and why it matters.</li>
+    <li>Apply the suggested fixes, re-scan, and launch with more confidence.</li>
+  </ul>
+
+  <h2>Questions builders ask</h2>
+  <p class="faq-q">Is vibe coding safe for production?</p>
+  <p>It can be — once you've scanned the code and fixed exposed secrets, database rules, and runtime errors. The danger is shipping unchecked.</p>
+  <p class="faq-q">Do I need to know how to code?</p>
+  <p>No. VibeSafe explains every issue in plain English and offers one-click fixes.</p>
+
+  <div class="disclaimer"><strong>An honest note.</strong> VibeSafe is a fast pre-launch safety check, not a replacement for a full professional security audit or penetration test.</div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related guides:</p>
+  <div class="related">
+    <a href="/ai-code-security-scanner.html">AI code security scanner</a>
+    <a href="/pre-launch-security-checklist.html">Pre-launch checklist</a>
+    <a href="/exposed-api-key-scanner.html">Exposed API keys</a>
+    <a href="/supabase-security-checklist.html">Supabase security</a>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/legal.html">Privacy &amp; Terms</a> · <a href="/faq.html">FAQ</a>
+</footer>
+</body>
+</html>
