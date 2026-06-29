@@ -252,6 +252,29 @@
     position: relative;
   }
 
+  .scan-demo-glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 130%; height: 130%;
+    transform: translate(-50%, -50%);
+    background:
+      radial-gradient(ellipse 55% 55% at 35% 30%, rgba(0,212,255,0.35), transparent 70%),
+      radial-gradient(ellipse 55% 55% at 70% 75%, rgba(124,58,237,0.32), transparent 70%);
+    filter: blur(40px);
+    z-index: -1;
+    pointer-events: none;
+    animation: scan-glow-pulse 6s ease-in-out infinite;
+  }
+
+  @keyframes scan-glow-pulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scan-demo-glow { animation: none; }
+  }
+
   .scan-demo {
     background: var(--surface);
     border: 1px solid var(--border2);
@@ -733,6 +756,7 @@
     display: grid; grid-template-columns: repeat(3, 1fr);
     gap: 20px; max-width: 1000px; margin: 0 auto;
     align-items: start;
+    perspective: 1500px;
   }
 
   .pricing-card {
@@ -740,13 +764,27 @@
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     padding: 32px 28px;
-    position: relative; transition: all 0.2s;
+    position: relative;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.3s;
+    transform-style: preserve-3d;
+    will-change: transform;
   }
 
   .pricing-card.popular {
     border-color: var(--cyan);
     background: var(--surface2);
     box-shadow: 0 0 40px rgba(0,212,255,0.1);
+  }
+
+  .pricing-card.tilting {
+    box-shadow: 0 26px 50px rgba(0,0,0,0.45), 0 0 0 1px rgba(0,212,255,0.06);
+  }
+  .pricing-card.popular.tilting {
+    box-shadow: 0 26px 50px rgba(0,0,0,0.45), 0 0 50px rgba(0,212,255,0.18);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pricing-card { transform: none !important; }
   }
 
   .popular-badge {
@@ -1073,6 +1111,7 @@
 
     <!-- DASHBOARD SCREENSHOT -->
     <div class="scan-demo-wrap" id="scanDemoStage">
+    <div class="scan-demo-glow"></div>
     <div class="scan-demo" id="scanDemo">
       <img src="/assets/dashboard-screenshot.png" alt="VibeSafe scan dashboard showing a security score of 42/100 with a critical exposed-secret issue and two warnings" loading="eager" style="display:block;width:100%;height:auto;">
     </div>
@@ -1853,6 +1892,41 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     animateTilt();
+  }
+
+  // ── 3D TILT ON PRICING CARDS ──
+  if (!prefersReducedMotion) {
+    document.querySelectorAll('.pricing-card').forEach(function(card) {
+      var pTargetX = 0, pTargetY = 0, pCurrentX = 0, pCurrentY = 0, pRunning = false;
+
+      function animatePricingTilt() {
+        pCurrentX += (pTargetX - pCurrentX) * 0.12;
+        pCurrentY += (pTargetY - pCurrentY) * 0.12;
+        card.style.transform = 'rotateX(' + pCurrentY + 'deg) rotateY(' + pCurrentX + 'deg) scale3d(1.02,1.02,1.02)';
+        if (Math.abs(pTargetX - pCurrentX) > 0.05 || Math.abs(pTargetY - pCurrentY) > 0.05 || pTargetX !== 0 || pTargetY !== 0) {
+          requestAnimationFrame(animatePricingTilt);
+        } else {
+          pRunning = false;
+        }
+      }
+
+      card.addEventListener('mousemove', function(e) {
+        var rect = card.getBoundingClientRect();
+        var px = (e.clientX - rect.left) / rect.width - 0.5;
+        var py = (e.clientY - rect.top) / rect.height - 0.5;
+        pTargetX = px * 12;
+        pTargetY = py * -10;
+        card.classList.add('tilting');
+        if (!pRunning) { pRunning = true; animatePricingTilt(); }
+      });
+
+      card.addEventListener('mouseleave', function() {
+        pTargetX = 0;
+        pTargetY = 0;
+        card.classList.remove('tilting');
+        if (!pRunning) { pRunning = true; animatePricingTilt(); }
+      });
+    });
   }
 });
 
