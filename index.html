@@ -137,12 +137,16 @@
     position: absolute; top: 20%; left: 15%;
     width: 500px; height: 500px; border-radius: 50%;
     background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+    transition: transform 0.3s ease-out;
+    will-change: transform;
   }
 
   .hero-glow-2 {
     position: absolute; top: 30%; right: 10%;
     width: 400px; height: 400px; border-radius: 50%;
     background: radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 70%);
+    transition: transform 0.3s ease-out;
+    will-change: transform;
   }
 
   .hero-inner {
@@ -243,12 +247,68 @@
 
 
   /* ── SCAN DEMO WIDGET ── */
+  .scan-demo-wrap {
+    perspective: 1200px;
+    position: relative;
+  }
+
   .scan-demo {
     background: var(--surface);
     border: 1px solid var(--border2);
     border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,212,255,0.05);
+    transform-style: preserve-3d;
+    transition: box-shadow 0.3s ease;
+    will-change: transform;
+  }
+
+  .scan-demo.tilting {
+    box-shadow: 0 30px 70px rgba(0,0,0,0.6), 0 0 40px rgba(0,212,255,0.12), 0 0 0 1px rgba(0,212,255,0.08);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scan-demo { transform: none !important; }
+  }
+
+  /* ── FLOATING CHIPS ── */
+  .floating-chip {
+    position: absolute;
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    box-shadow: 0 16px 32px rgba(0,0,0,0.45);
+    font-size: 0.78rem;
+    z-index: 2;
+    animation: chip-float 4s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .fc-icon { font-size: 16px; }
+  .fc-title { font-weight: 600; color: var(--text); }
+  .fc-sub { color: var(--text3); font-size: 0.7rem; }
+
+  .chip-issue {
+    top: -18px; left: -28px;
+    animation-delay: 0s;
+  }
+  .chip-score {
+    bottom: 18px; right: -32px;
+    animation-delay: 1.2s;
+  }
+
+  @keyframes chip-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  @media (max-width: 1100px) {
+    .chip-issue { left: -10px; }
+    .chip-score { right: -10px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .floating-chip { animation: none; }
   }
 
   .demo-topbar {
@@ -388,9 +448,33 @@
   .score-bad { background: var(--red-dim); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
 
   /* ── SECTIONS SHARED ── */
-  section { padding: 100px 5%; }
+  section { padding: 100px 5%; position: relative; }
 
-  .container { max-width: 1200px; margin: 0 auto; }
+  .container { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+
+  /* ── SCROLL TINT ── */
+  .section-tint {
+    position: absolute; inset: 0; z-index: 0;
+    pointer-events: none; opacity: 0;
+    transition: opacity 1.2s ease;
+  }
+  .section-tint.active { opacity: 1; }
+  .section-tint.tint-red {
+    background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(239,68,68,0.07), transparent 70%);
+  }
+  .section-tint.tint-cyan {
+    background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0,212,255,0.07), transparent 70%);
+  }
+  .section-tint.tint-violet {
+    background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(124,58,237,0.08), transparent 70%);
+  }
+  .section-tint.tint-mix {
+    background: radial-gradient(ellipse 90% 60% at 50% 0%, rgba(0,212,255,0.06), transparent 50%),
+                radial-gradient(ellipse 90% 60% at 50% 100%, rgba(124,58,237,0.07), transparent 50%);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .section-tint { transition: none; }
+  }
 
   .section-eyebrow {
     font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em;
@@ -987,102 +1071,21 @@
       </div>
     </div>
 
-    <!-- LIVE DEMO WIDGET -->
+    <!-- DASHBOARD SCREENSHOT -->
+    <div class="scan-demo-wrap" id="scanDemoStage">
     <div class="scan-demo" id="scanDemo">
-      <div class="demo-topbar">
-        <span class="demo-dot dot-red"></span>
-        <span class="demo-dot dot-yellow"></span>
-        <span class="demo-dot dot-green"></span>
-        <span class="demo-title">vibesafe — live scan</span>
-      </div>
-      <div class="demo-body">
-        <div class="demo-tabs">
-          <button class="demo-tab active" onclick="switchTab(this, 'code')">Code</button>
-          <button class="demo-tab" onclick="switchTab(this, 'results')">Issues (3)</button>
-          <button class="demo-tab" onclick="switchTab(this, 'fixed')">Fixed ✓</button>
-        </div>
+      <img src="/assets/dashboard-screenshot.png" alt="VibeSafe scan dashboard showing a security score of 42/100 with a critical exposed-secret issue and two warnings" loading="eager" style="display:block;width:100%;height:auto;">
+    </div>
 
-        <div id="tab-code">
-          <div class="code-preview">
-            <div class="code-line"><span class="ln">1</span><span><span class="code-kw">const</span> getUser = <span class="code-kw">async</span> (id) => {</span></div>
-            <div class="code-line"><span class="ln">2</span><span>  <span class="code-kw">const</span> res = <span class="code-kw">await</span> <span class="code-fn">fetch</span>(<span class="code-str">`/api/users/${id}`</span>)</span></div>
-            <div class="code-line"><span class="ln">3</span><span class="code-err">  <span class="code-kw">const</span> data = res.json()  <span style="color:#444">// ← missing await</span></span></div>
-            <div class="code-line"><span class="ln">4</span><span>  <span class="code-kw">return</span> data.user</span></div>
-            <div class="code-line"><span class="ln">5</span><span>}</span></div>
-            <div class="code-line" style="margin-top:8px"><span class="ln">6</span><span><span class="code-kw">const</span> key = <span class="code-str">"sk_live_4xK9..."</span> <span style="color:#444">// ← exposed secret</span></span></div>
-            <div class="code-line"><span class="ln">7</span><span><span class="code-fn">connectDB</span>(key)</span></div>
-          </div>
-        </div>
+    <div class="floating-chip chip-issue">
+      <span class="fc-icon">🔴</span>
+      <div><div class="fc-title">Critical issue found</div><div class="fc-sub">Exposed API key on line 6</div></div>
+    </div>
 
-        <div id="tab-results" style="display:none">
-          <div class="scan-bar-wrap">
-            <div class="scan-bar-label">
-              <span>Scanning...</span>
-              <span id="scanPct">0%</span>
-            </div>
-            <div class="scan-bar-track">
-              <div class="scan-bar-fill" id="scanFill" style="width:0%"></div>
-            </div>
-          </div>
-
-          <div class="issue-cards" id="issueCards">
-            <div class="issue-card err" id="issue1">
-              <span class="issue-icon">🔴</span>
-              <div class="issue-text">
-                <div class="issue-title err">Missing await on line 3</div>
-                <div class="issue-desc">res.json() returns a Promise. Without await, data is always undefined — your app will silently break.</div>
-              </div>
-              <button class="fix-btn">Auto-fix</button>
-            </div>
-            <div class="issue-card err" id="issue2">
-              <span class="issue-icon">🔴</span>
-              <div class="issue-text">
-                <div class="issue-title err">API key exposed in source code</div>
-                <div class="issue-desc">Hardcoded secret on line 6 will be visible in your repo and to anyone who views source.</div>
-              </div>
-              <button class="fix-btn">Auto-fix</button>
-            </div>
-            <div class="issue-card warn" id="issue3">
-              <span class="issue-icon">🟡</span>
-              <div class="issue-text">
-                <div class="issue-title warn">No error handling on fetch</div>
-                <div class="issue-desc">If the API call fails, your app will crash with an unhandled rejection. Add try/catch.</div>
-              </div>
-              <button class="fix-btn">Auto-fix</button>
-            </div>
-          </div>
-        </div>
-
-        <div id="tab-fixed" style="display:none">
-          <div class="code-preview">
-            <div class="code-line"><span class="ln">1</span><span><span class="code-kw">const</span> getUser = <span class="code-kw">async</span> (id) => {</span></div>
-            <div class="code-line"><span class="ln">2</span><span>  <span class="code-kw">try</span> {</span></div>
-            <div class="code-line"><span class="ln">3</span><span class="code-ok">    <span class="code-kw">const</span> res = <span class="code-kw">await</span> <span class="code-fn">fetch</span>(<span class="code-str">`/api/users/${id}`</span>)</span></div>
-            <div class="code-line"><span class="ln">4</span><span class="code-ok">    <span class="code-kw">const</span> data = <span class="code-kw">await</span> res.json()</span></div>
-            <div class="code-line"><span class="ln">5</span><span>    <span class="code-kw">return</span> data.user</span></div>
-            <div class="code-line"><span class="ln">6</span><span>  } <span class="code-kw">catch</span> (err) { <span class="code-fn">console</span>.error(err) }</span></div>
-            <div class="code-line"><span class="ln">7</span><span>}</span></div>
-            <div class="code-line" style="margin-top:8px"><span class="ln">8</span><span class="code-ok"><span class="code-kw">const</span> key = process.env.<span class="code-str">API_KEY</span> <span style="color:#444">// ✓ from .env</span></span></div>
-          </div>
-          <div class="issue-card ok" style="opacity:1;transform:none">
-            <span class="issue-icon">✅</span>
-            <div class="issue-text">
-              <div class="issue-title ok">All 3 issues fixed</div>
-              <div class="issue-desc">Your app is in better shape for launch. Security score: 94/100.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="demo-footer">
-          <div class="demo-score">
-            <span>Security score</span>
-            <span class="score-badge score-bad" id="scoreDisplay">42 / 100</span>
-          </div>
-          <button class="btn btn-primary" style="padding:7px 16px;font-size:0.78rem" onclick="runDemo()">
-            Run scan ▶
-          </button>
-        </div>
-      </div>
+    <div class="floating-chip chip-score">
+      <span class="fc-icon">🛡️</span>
+      <div><div class="fc-title">Security score</div><div class="fc-sub">42 / 100 · at risk</div></div>
+    </div>
     </div>
   </div>
 </section>
@@ -1110,6 +1113,7 @@
 
 <!-- PROBLEM -->
 <section class="problem-section" id="problem">
+  <div class="section-tint tint-red"></div>
   <div class="container">
     <div class="problem-grid">
       <div>
@@ -1148,6 +1152,7 @@
 
 <!-- TRUST -->
 <section style="padding:96px 5%;background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%)" id="trust">
+  <div class="section-tint tint-cyan"></div>
   <div class="container" style="max-width:920px">
     <div style="text-align:center;margin-bottom:52px">
       <p class="section-eyebrow">Trust &amp; Privacy</p>
@@ -1196,6 +1201,7 @@
 
 <!-- HOW IT WORKS -->
 <section class="how-section" id="how">
+  <div class="section-tint tint-violet"></div>
   <div class="container">
     <div style="text-align:center; max-width:600px; margin:0 auto 0">
       <p class="section-eyebrow">How it works</p>
@@ -1226,6 +1232,7 @@
 
 <!-- FEATURES -->
 <section class="features-section" id="features">
+  <div class="section-tint tint-cyan"></div>
   <div class="container">
     <div class="features-header">
       <div>
@@ -1277,6 +1284,7 @@
 
 <!-- INTEGRATIONS -->
 <section class="integrations-section">
+  <div class="section-tint tint-violet"></div>
   <div class="container">
     <p class="section-eyebrow">Works with your stack</p>
     <h2 class="section-title">Plug in to any vibe coding tool</h2>
@@ -1295,6 +1303,7 @@
 
 <!-- PRICING -->
 <section class="pricing-section" id="pricing">
+  <div class="section-tint tint-cyan"></div>
   <div class="container">
     <div class="pricing-header">
       <p class="section-eyebrow">Pricing</p>
@@ -1400,6 +1409,7 @@
 
 <!-- TESTIMONIALS -->
 <section class="testimonials-section">
+  <div class="section-tint tint-violet"></div>
   <div class="container">
     <div class="testimonials-header">
       <p class="section-eyebrow">What builders say</p>
@@ -1445,6 +1455,7 @@
 
 <!-- CTA -->
 <section class="cta-section" id="waitlist">
+  <div class="section-tint tint-mix"></div>
   <div class="container">
     <div class="cta-inner">
 
@@ -1523,48 +1534,6 @@
 
 <script>
 // VIBESAFE — ALL JAVASCRIPT
-
-// DEMO TAB SWITCHER
-function switchTab(el, tab) {
-  document.querySelectorAll('.demo-tab').forEach(function(t) { t.classList.remove('active'); });
-  el.classList.add('active');
-  ['code','results','fixed'].forEach(function(t) {
-    var e = document.getElementById('tab-' + t);
-    if (e) e.style.display = t === tab ? 'block' : 'none';
-  });
-  var s = document.getElementById('scoreDisplay');
-  if (s) {
-    s.textContent = tab === 'fixed' ? '94 / 100' : '42 / 100';
-    s.className = tab === 'fixed' ? 'score-badge score-ok' : 'score-badge score-bad';
-  }
-}
-
-function runDemo() {
-  document.querySelectorAll('.demo-tab').forEach(function(t, i) { t.classList.toggle('active', i === 1); });
-  ['code','results','fixed'].forEach(function(t) {
-    var e = document.getElementById('tab-' + t);
-    if (e) e.style.display = t === 'results' ? 'block' : 'none';
-  });
-  ['issue1','issue2','issue3'].forEach(function(id) {
-    var e = document.getElementById(id);
-    if (e) e.classList.remove('visible');
-  });
-  var fill = document.getElementById('scanFill');
-  var pct = document.getElementById('scanPct');
-  if (!fill || !pct) return;
-  fill.style.width = '0%';
-  pct.textContent = '0%';
-  var p = 0;
-  var iv = setInterval(function() {
-    p += 2;
-    fill.style.width = p + '%';
-    pct.textContent = p + '%';
-    if (p >= 35) { var e = document.getElementById('issue1'); if (e) e.classList.add('visible'); }
-    if (p >= 65) { var e = document.getElementById('issue2'); if (e) e.classList.add('visible'); }
-    if (p >= 90) { var e = document.getElementById('issue3'); if (e) e.classList.add('visible'); }
-    if (p >= 100) { clearInterval(iv); pct.textContent = 'Done'; }
-  }, 30);
-}
 
 // BILLING TOGGLE
 var vsIsAnnual = false;
@@ -1837,7 +1806,54 @@ document.addEventListener('DOMContentLoaded', function() {
     el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
     obs.observe(el);
   });
-  setTimeout(runDemo, 1200);
+
+  // ── SCROLL-BASED SECTION TINT ──
+  var tintObs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      e.target.classList.toggle('active', e.isIntersecting);
+    });
+  }, { threshold: 0, rootMargin: '-40% 0px -40% 0px' });
+  document.querySelectorAll('.section-tint').forEach(function(el) {
+    tintObs.observe(el);
+  });
+
+  // ── 3D TILT + PARALLAX ON HERO (smoothed lerp, like ClearBooks hero-3d-stage) ──
+  var tiltStage = document.getElementById('scanDemoStage');
+  var tiltCard = document.getElementById('scanDemo');
+  var glow1 = document.querySelector('.hero-glow-1');
+  var glow2 = document.querySelector('.hero-glow-2');
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (tiltStage && tiltCard && !prefersReducedMotion) {
+    var targetX = 0, targetY = 0, currentX = 0, currentY = 0;
+
+    function animateTilt() {
+      currentX += (targetX - currentX) * 0.08;
+      currentY += (targetY - currentY) * 0.08;
+      tiltCard.style.transform =
+        'rotateX(' + currentY + 'deg) rotateY(' + currentX + 'deg) scale3d(1.015,1.015,1.015)';
+      if (glow1) glow1.style.transform = 'translate(' + (currentX * -4) + 'px,' + (currentY * 4) + 'px)';
+      if (glow2) glow2.style.transform = 'translate(' + (currentX * 5) + 'px,' + (currentY * -5) + 'px)';
+      requestAnimationFrame(animateTilt);
+    }
+
+    tiltStage.addEventListener('mousemove', function(e) {
+      var rect = tiltStage.getBoundingClientRect();
+      var px = (e.clientX - rect.left) / rect.width - 0.5;
+      var py = (e.clientY - rect.top) / rect.height - 0.5;
+      targetX = px * 16;
+      targetY = py * -12;
+      tiltCard.classList.add('tilting');
+    });
+
+    tiltStage.addEventListener('mouseleave', function() {
+      targetX = 0;
+      targetY = 0;
+      tiltCard.classList.remove('tilting');
+    });
+
+    animateTilt();
+  }
 });
 
 // ── STRIPE CHECKOUT (Payment Links) ──
