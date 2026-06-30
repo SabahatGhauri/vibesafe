@@ -204,9 +204,17 @@ body{
     <input type="email" class="form-input" id="emailInput" placeholder="you@example.com" autocomplete="email">
   </div>
 
-  <div class="form-group">
-    <label class="form-label">Password</label>
+  <div class="form-group" id="passwordGroup">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <label class="form-label" style="margin-bottom:0">Password</label>
+      <a href="#" id="forgotLink" onclick="switchTab('forgot');return false;" style="font-size:0.75rem;color:var(--text3);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='var(--cyan)'" onmouseout="this.style.color='var(--text3)'">Forgot password?</a>
+    </div>
     <input type="password" class="form-input" id="passwordInput" placeholder="••••••••" autocomplete="current-password">
+  </div>
+
+  <div class="form-group" id="confirmGroup" style="display:none">
+    <label class="form-label">New password</label>
+    <input type="password" class="form-input" id="confirmInput" placeholder="Choose a new password" autocomplete="new-password">
   </div>
 
   <button class="auth-btn" id="authBtn" onclick="handleAuth()">
@@ -239,8 +247,19 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let mode = 'login';
 
-// Check if already logged in
+// Check if already logged in, or if returning from a password reset email
 (async function() {
+  // Supabase puts recovery tokens in the URL hash
+  const hash = window.location.hash;
+  if (hash.includes('type=recovery')) {
+    // Let Supabase exchange the token, then switch to reset mode
+    supabaseClient.auth.onAuthStateChange(function(event) {
+      if (event === 'PASSWORD_RECOVERY') {
+        switchTab('reset');
+      }
+    });
+    return;
+  }
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (session) {
     window.location.href = '/dashboard.html';
@@ -249,16 +268,48 @@ let mode = 'login';
 
 function switchTab(newMode) {
   mode = newMode;
-  document.getElementById('tabLogin').classList.toggle('active', mode === 'login');
-  document.getElementById('tabSignup').classList.toggle('active', mode === 'signup');
-  document.getElementById('nameGroup').style.display = mode === 'signup' ? 'block' : 'none';
-  document.getElementById('authTitle').textContent = mode === 'login' ? 'Welcome back' : 'Create your account';
-  document.getElementById('authSub').textContent = mode === 'login' ? 'Sign in to access your scans' : 'Start scanning your code for free';
-  document.getElementById('authBtnText').textContent = mode === 'login' ? 'Sign in' : 'Create account';
-  document.getElementById('passwordInput').setAttribute('autocomplete', mode === 'login' ? 'current-password' : 'new-password');
-  document.getElementById('authFooter').innerHTML = mode === 'login'
-    ? 'Don\'t have an account? <a href="#" onclick="switchTab(\'signup\');return false;">Sign up free</a>'
-    : 'Already have an account? <a href="#" onclick="switchTab(\'login\');return false;">Sign in</a>';
+  var isForgot = mode === 'forgot';
+  var isReset  = mode === 'reset';
+  var isLogin  = mode === 'login';
+  var isSignup = mode === 'signup';
+
+  // Tabs visible only for login/signup
+  document.querySelector('.auth-tabs').style.display = (isForgot || isReset) ? 'none' : 'flex';
+  document.getElementById('tabLogin').classList.toggle('active', isLogin);
+  document.getElementById('tabSignup').classList.toggle('active', isSignup);
+
+  // Social buttons hidden for forgot/reset
+  document.querySelector('.social-row').style.display = (isForgot || isReset) ? 'none' : 'flex';
+  document.querySelector('.auth-divider').style.display = (isForgot || isReset) ? 'none' : 'flex';
+
+  // Fields
+  document.getElementById('nameGroup').style.display      = isSignup ? 'block' : 'none';
+  document.getElementById('passwordGroup').style.display  = (isForgot) ? 'none' : 'block';
+  document.getElementById('confirmGroup').style.display   = isReset ? 'block' : 'none';
+  document.getElementById('forgotLink').style.display     = isLogin ? 'inline' : 'none';
+
+  // Titles
+  var titles = { login: 'Welcome back', signup: 'Create your account', forgot: 'Reset your password', reset: 'Set new password' };
+  var subs   = { login: 'Sign in to access your scans', signup: 'Start scanning your code for free', forgot: 'Enter your email and we\'ll send a reset link', reset: 'Choose a new password for your account' };
+  document.getElementById('authTitle').textContent = titles[mode];
+  document.getElementById('authSub').textContent   = subs[mode];
+
+  // Button
+  var btnLabels = { login: 'Sign in', signup: 'Create account', forgot: 'Send reset link', reset: 'Set new password' };
+  document.getElementById('authBtnText').textContent = btnLabels[mode];
+  document.getElementById('authBtn').disabled = false;
+
+  // Autocomplete
+  document.getElementById('passwordInput').setAttribute('autocomplete', isLogin ? 'current-password' : 'new-password');
+
+  // Footer
+  var footers = {
+    login:  'Don\'t have an account? <a href="#" onclick="switchTab(\'signup\');return false;">Sign up free</a>',
+    signup: 'Already have an account? <a href="#" onclick="switchTab(\'login\');return false;">Sign in</a>',
+    forgot: '<a href="#" onclick="switchTab(\'login\');return false;">← Back to sign in</a>',
+    reset:  ''
+  };
+  document.getElementById('authFooter').innerHTML = footers[mode];
   hideMsg();
 }
 
@@ -278,6 +329,51 @@ async function handleOAuth(provider) {
   }
 }
 
+async function sendReset() {
+  const email = document.getElementById('emailInput').value.trim();
+  if (!email) { showMsg('Please enter your email address.', 'error'); return; }
+  const btn = document.getElementById('authBtn');
+  const btnText = document.getElementById('authBtnText');
+  btn.disabled = true;
+  btnText.innerHTML = '<span class="spinner"></span>';
+  hideMsg();
+  try {
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/login.html'
+    });
+    if (error) throw error;
+    showMsg('Reset link sent! Check your email inbox (and spam folder).', 'success');
+    btnText.textContent = 'Send reset link';
+    btn.disabled = false;
+  } catch (err) {
+    showMsg(err.message || 'Could not send reset email. Try again.', 'error');
+    btnText.textContent = 'Send reset link';
+    btn.disabled = false;
+  }
+}
+
+async function handleReset() {
+  const password = document.getElementById('confirmInput').value;
+  if (!password || password.length < 6) {
+    showMsg('Password must be at least 6 characters.', 'error'); return;
+  }
+  const btn = document.getElementById('authBtn');
+  const btnText = document.getElementById('authBtnText');
+  btn.disabled = true;
+  btnText.innerHTML = '<span class="spinner"></span>';
+  hideMsg();
+  try {
+    const { error } = await supabaseClient.auth.updateUser({ password: password });
+    if (error) throw error;
+    showMsg('Password updated! Redirecting to your dashboard...', 'success');
+    setTimeout(function() { window.location.href = '/dashboard.html'; }, 1500);
+  } catch (err) {
+    showMsg(err.message || 'Could not update password. Please request a new reset link.', 'error');
+    btnText.textContent = 'Set new password';
+    btn.disabled = false;
+  }
+}
+
 function showMsg(text, type) {
   const msg = document.getElementById('authMsg');
   msg.textContent = text;
@@ -289,6 +385,9 @@ function hideMsg() {
 }
 
 async function handleAuth() {
+  if (mode === 'forgot') { await sendReset(); return; }
+  if (mode === 'reset')  { await handleReset(); return; }
+
   const email = document.getElementById('emailInput').value.trim();
   const password = document.getElementById('passwordInput').value;
   const name = document.getElementById('nameInput').value.trim();
@@ -352,11 +451,10 @@ async function handleAuth() {
 }
 
 // Enter key submits
-document.getElementById('passwordInput').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') handleAuth();
-});
-document.getElementById('emailInput').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') handleAuth();
+['emailInput','passwordInput','confirmInput','nameInput'].forEach(function(id) {
+  document.getElementById(id).addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') handleAuth();
+  });
 });
 </script>
 </body>
