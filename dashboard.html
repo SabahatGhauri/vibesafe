@@ -8,10 +8,34 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="theme.css">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+:root {
+  --bg:       #080C18;
+  --bg2:      #0D1220;
+  --surface:  #111827;
+  --surface2: #1A2438;
+  --surface3: #1F2D42;
+  --border:   #1E2D42;
+  --border2:  #253650;
+  --cyan:     #00D4FF;
+  --cyan-dim: rgba(0,212,255,0.10);
+  --cyan-glow:rgba(0,212,255,0.22);
+  --violet:   #7C3AED;
+  --violet-dim:rgba(124,58,237,0.14);
+  --green:    #10B981;
+  --green-dim:rgba(16,185,129,0.11);
+  --amber:    #F59E0B;
+  --amber-dim:rgba(245,158,11,0.11);
+  --red:      #EF4444;
+  --red-dim:  rgba(239,68,68,0.11);
+  --text:     #F1F5F9;
+  --text2:    #94A3B8;
+  --text3:    #64748B;
+  --r:        10px;
+  --r-lg:     14px;
+}
 
 html, body { height: 100%; overflow: hidden; }
 body {
@@ -239,7 +263,6 @@ body {
   font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 600;
   cursor: pointer; transition: all 0.18s; border: none;
 }
-.btn:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; filter: grayscale(0.3); }
 
 .btn-ghost {
   background: var(--surface2); color: var(--text);
@@ -327,166 +350,7 @@ body {
   color: var(--text3); text-align: right;
   pointer-events: none; user-select: none;
   overflow: hidden;
-  white-space: pre;
-  z-index: 2;
 }
-/* gutter numbers for lines that have an issue */
-.line-numbers .ln-crit { color: var(--red); font-weight: 700; }
-.line-numbers .ln-warn { color: var(--amber); font-weight: 700; }
-.line-numbers .ln-info { color: var(--cyan); font-weight: 700; }
-
-/* highlight layer sits behind the (transparent) textarea and paints a
-   coloured bar across each line that has an issue. Metrics MUST match
-   .code-editor exactly so bars line up with the code. */
-.highlight-layer {
-  position: absolute; inset: 0;
-  padding: 16px 16px 16px 56px;
-  margin: 0;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8rem; line-height: 1.75;
-  white-space: pre;
-  pointer-events: none; user-select: none;
-  overflow: hidden;
-  z-index: 1;
-}
-.highlight-line { height: 1.75em; border-radius: 3px; }
-.highlight-line.hl-crit { background: rgba(239,68,68,0.16); box-shadow: inset 3px 0 0 var(--red); }
-.highlight-line.hl-warn { background: rgba(245,158,11,0.15); box-shadow: inset 3px 0 0 var(--amber); }
-.highlight-line.hl-info { background: rgba(0,212,255,0.12); box-shadow: inset 3px 0 0 var(--cyan); }
-.code-editor { position: relative; z-index: 2; }
-
-/* ── #15 Launch readiness badge ── */
-.launch-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  margin-top: 14px; padding: 8px 18px; border-radius: 100px;
-  font-weight: 700; font-size: 0.85rem;
-}
-.launch-badge.ready    { background: var(--green-dim); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
-.launch-badge.notready { background: rgba(245,158,11,0.12); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
-
-/* ── #5 Before-launch checklist ── */
-.launch-checklist {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 12px; padding: 14px 16px; margin-bottom: 14px;
-}
-.lc-title { font-weight: 700; font-size: 0.88rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-.lc-item {
-  display: flex; align-items: flex-start; gap: 10px;
-  padding: 7px 0; font-size: 0.82rem; color: var(--text2);
-  border-top: 1px solid var(--border);
-}
-.lc-item:first-of-type { border-top: none; }
-.lc-icon {
-  flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.7rem; font-weight: 700; margin-top: 1px;
-}
-.lc-pass .lc-icon { background: var(--green-dim); color: var(--green); }
-.lc-fail .lc-icon { background: var(--red-dim); color: var(--red); }
-.lc-fail > span:last-child { color: var(--text); }
-.lc-manual { cursor: pointer; }
-.lc-manual .lc-icon { background: var(--surface2); color: var(--text3); border: 1px solid var(--border2); }
-.lc-manual.checked .lc-icon { background: var(--green-dim); color: var(--green); border-color: transparent; }
-.lc-manual.checked > span:last-child { color: var(--text2); text-decoration: line-through; }
-
-/* ── #14 Beginner / Developer mode ── */
-.mode-toggle {
-  display: inline-flex; background: var(--bg2);
-  border: 1px solid var(--border2); border-radius: 8px; padding: 3px; gap: 2px;
-}
-.mode-btn {
-  padding: 5px 12px; border: none; background: none; color: var(--text3);
-  font-size: 0.76rem; font-weight: 600; border-radius: 6px; cursor: pointer;
-  font-family: 'Inter', sans-serif; transition: all 0.15s;
-}
-.mode-btn.active { background: var(--surface2); color: var(--cyan); }
-body.mode-beginner .tech-only { display: none !important; }
-
-/* OWASP category tag on an issue */
-.owasp-tag {
-  display: inline-block; margin-bottom: 10px;
-  font-size: 0.72rem; font-weight: 600; color: #A78BFA;
-  background: var(--violet-dim); border: 1px solid rgba(124,58,237,0.25);
-  border-radius: 100px; padding: 2px 10px;
-}
-
-/* ── Low-score "why" popup ── */
-.vs-modal-overlay {
-  position: fixed; inset: 0; z-index: 1000;
-  background: rgba(4,8,18,0.72); backdrop-filter: blur(4px);
-  display: none; align-items: center; justify-content: center; padding: 20px;
-}
-.vs-modal-overlay.open { display: flex; animation: vsFade 0.18s ease; }
-@keyframes vsFade { from { opacity: 0; } to { opacity: 1; } }
-.vs-modal {
-  width: 100%; max-width: 460px; max-height: 86vh; overflow-y: auto;
-  background: var(--surface); border: 1px solid var(--border2);
-  border-radius: 16px; padding: 24px; position: relative;
-  box-shadow: 0 24px 70px rgba(0,0,0,0.6);
-}
-.vs-modal-close {
-  position: absolute; top: 14px; right: 14px; width: 28px; height: 28px;
-  border-radius: 7px; border: 1px solid var(--border2); background: var(--bg2);
-  color: var(--text2); cursor: pointer; font-size: 0.95rem; line-height: 1;
-  display: flex; align-items: center; justify-content: center;
-}
-.vs-modal-close:hover { color: var(--text); border-color: var(--red); }
-.vs-modal-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; padding-right: 32px; }
-.vs-modal-ico { font-size: 1.5rem; }
-.vs-modal-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 700; }
-.vs-modal-score { margin-left: auto; font-weight: 800; font-size: 1.05rem; }
-.vs-modal-score.bad { color: var(--red); }
-.vs-modal-score.warn { color: var(--amber); }
-.vs-modal-sub { font-size: 0.85rem; color: var(--text2); line-height: 1.6; margin-bottom: 16px; }
-.vs-modal-section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; color: var(--red); margin-bottom: 8px; }
-.vs-flaw { display: flex; gap: 10px; padding: 10px 12px; border-radius: 10px; background: var(--red-dim); border: 1px solid rgba(239,68,68,0.2); margin-bottom: 8px; }
-.vs-flaw-ico { flex-shrink: 0; }
-.vs-flaw-title { font-weight: 600; font-size: 0.85rem; color: #FCA5A5; margin-bottom: 2px; }
-.vs-flaw-meta { font-size: 0.72rem; color: var(--text3); margin-bottom: 3px; }
-.vs-flaw-why { font-size: 0.78rem; color: var(--text2); line-height: 1.45; }
-.vs-modal-actions { display: flex; gap: 10px; margin-top: 18px; }
-.vs-modal-btn { flex: 1; padding: 11px; border-radius: 9px; font-family: 'Inter', sans-serif; font-size: 0.86rem; font-weight: 700; cursor: pointer; border: none; }
-.vs-modal-btn.primary { background: var(--cyan); color: var(--bg); }
-.vs-modal-btn.primary:hover { background: #33DCFF; }
-.vs-modal-btn.ghost { background: var(--surface2); color: var(--text); border: 1px solid var(--border2); }
-.vs-modal-btn.ghost:hover { border-color: var(--cyan); }
-
-/* ── #2 Category section headers ── */
-.cat-header {
-  display: flex; align-items: center; gap: 8px;
-  margin: 16px 0 8px; padding-bottom: 6px;
-  border-bottom: 1px solid var(--border);
-}
-.cat-header.cat-first { margin-top: 0; }
-.cat-icon { font-size: 0.95rem; }
-.cat-name {
-  font-weight: 700; font-size: 0.76rem; letter-spacing: 0.04em;
-  color: var(--text); text-transform: uppercase;
-}
-.cat-count {
-  margin-left: auto; font-size: 0.72rem; font-weight: 700; color: var(--text2);
-  background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: 100px; padding: 1px 9px;
-}
-
-/* ── #12 Scan compare (vs last scan) ── */
-.scan-compare {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 12px; padding: 12px 16px; margin-bottom: 14px;
-  display: flex; align-items: center; gap: 16px 22px; flex-wrap: wrap;
-}
-.sc-title {
-  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
-  font-weight: 700; color: var(--text3); width: 100%; margin-bottom: -4px;
-}
-.sc-metric { display: flex; align-items: baseline; gap: 7px; font-size: 0.82rem; }
-.sc-from { color: var(--text3); }
-.sc-arrow { color: var(--text3); }
-.sc-to { font-weight: 700; color: var(--text); }
-.sc-delta { font-weight: 700; font-size: 0.76rem; padding: 1px 8px; border-radius: 100px; }
-.sc-delta.up   { background: var(--green-dim); color: var(--green); }
-.sc-delta.down { background: var(--red-dim);   color: var(--red); }
-.sc-delta.same { background: var(--surface2);  color: var(--text3); }
 
 .editor-footer {
   height: 28px; flex-shrink: 0;
@@ -1191,6 +1055,8 @@ const SUPABASE_URL = 'https://uxsmmpujxbzdgxxburxr.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_hgCpN6tsYqEiCkyvJm06qQ_1Ddlvznn';
 const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let currentUser = null;
+let currentPlan = 'free';
+const FREE_SCAN_LIMIT = 3;
 
 // Require login — redirect to login page if not authenticated
 (async function() {
@@ -1211,9 +1077,87 @@ let currentUser = null;
     if (em) em.textContent = email;
     // Load scan history once logged in
     if (typeof loadScanHistory === 'function') loadScanHistory();
-    if (typeof renderPlanCard === 'function') renderPlanCard();
+    if (typeof loadProfile === 'function') loadProfile();
   });
 })();
+
+// ── PLAN / BILLING ──
+// TODO: replace with your LIVE Stripe Payment Link once created (this is a TEST link)
+const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_8x25kFdvx9Zi0rifNN9EI00';
+
+function upgradeToPro() {
+  if (!currentUser) return;
+  var url = STRIPE_PAYMENT_LINK + '?client_reference_id=' + encodeURIComponent(currentUser.id);
+  window.open(url, '_blank');
+}
+
+async function loadProfile() {
+  if (!currentUser || !sbClient) return;
+  try {
+    var res = await sbClient.from('vibesafe_plans').select('plan').eq('id', currentUser.id).maybeSingle();
+    currentPlan = (res.data && res.data.plan) || 'free';
+    renderPlanCard(currentPlan);
+    await updateScanUsage();
+  } catch (err) {
+    console.log('Could not load profile:', err);
+  }
+}
+
+async function getScansThisMonth() {
+  if (!currentUser || !sbClient) return 0;
+  var start = new Date();
+  start.setDate(1); start.setHours(0,0,0,0);
+  var res = await sbClient.from('scans').select('id', { count: 'exact', head: true })
+    .eq('user_id', currentUser.id)
+    .gte('created_at', start.toISOString());
+  return res.count || 0;
+}
+
+async function updateScanUsage() {
+  if (currentPlan === 'pro') return;
+  var used = await getScansThisMonth();
+  var metaEl = document.getElementById('planMeta');
+  var barFill = document.getElementById('planBarFill');
+  if (metaEl) metaEl.innerHTML = '<span>' + used + ' of ' + FREE_SCAN_LIMIT + ' scans used this month</span>';
+  if (barFill) barFill.style.width = Math.min(100, (used / FREE_SCAN_LIMIT) * 100) + '%';
+}
+
+async function checkScanLimit() {
+  if (currentPlan === 'pro') return true;
+  var used = await getScansThisMonth();
+  if (used >= FREE_SCAN_LIMIT) {
+    showToast('You have used all ' + FREE_SCAN_LIMIT + ' free scans this month. Upgrade to Pro for unlimited scans.', 'error');
+    var upgradeBtn = document.getElementById('upgradeBtn');
+    if (upgradeBtn) {
+      upgradeBtn.style.animation = 'none';
+      upgradeBtn.style.boxShadow = '0 0 0 3px rgba(0,212,255,0.4)';
+      setTimeout(function() { upgradeBtn.style.boxShadow = ''; }, 2000);
+    }
+    return false;
+  }
+  return true;
+}
+
+function renderPlanCard(plan) {
+  var nameEl = document.getElementById('planName');
+  var metaEl = document.getElementById('planMeta');
+  var barFill = document.getElementById('planBarFill');
+  var upgradeBtn = document.getElementById('upgradeBtn');
+  if (!nameEl) return;
+
+  if (plan === 'pro') {
+    nameEl.textContent = 'Pro';
+    if (barFill) barFill.style.width = '100%';
+    if (metaEl) metaEl.innerHTML = '<span>Unlimited scans</span>';
+    if (upgradeBtn) {
+      upgradeBtn.textContent = "You're on Pro ✓";
+      upgradeBtn.disabled = true;
+      upgradeBtn.style.opacity = '0.6';
+      upgradeBtn.style.cursor = 'default';
+      upgradeBtn.onclick = null;
+    }
+  }
+}
 
 function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
@@ -1325,6 +1269,9 @@ document.addEventListener('click', function(e) {
       <button class="sidebar-item" onclick="setPage('monitor', event)">
         <span class="si-icon">📡</span> Monitoring
       </button>
+      <button class="sidebar-item" onclick="setPage('team', event)">
+        <span class="si-icon">👥</span> Team
+      </button>
     </div>
 
     <div class="sidebar-sep"></div>
@@ -1358,12 +1305,12 @@ document.addEventListener('click', function(e) {
       <div class="plan-card">
         <div class="plan-label">Current plan</div>
         <div class="plan-name" id="planName">Starter (Free)</div>
-        <div class="plan-bar-track" id="planBarTrack">
+        <div class="plan-bar-track">
           <div class="plan-bar-fill" id="planBarFill"></div>
         </div>
-        <div class="plan-meta">
-          <span id="planScansUsed">0 of 3 scans used</span>
-          <span id="planResets">resets monthly</span>
+        <div class="plan-meta" id="planMeta">
+          <span>1 of 3 scans used</span>
+          <span>resets Jun 30</span>
         </div>
         <button class="upgrade-btn" id="upgradeBtn" onclick="upgradeToPro()">
           Upgrade to Pro →
@@ -1390,6 +1337,7 @@ document.addEventListener('click', function(e) {
             <option value="cs">.NET / C#</option>
           </select>
           <button class="btn btn-ghost" onclick="clearEditor()">Clear</button>
+          <button class="btn btn-ghost" onclick="loadSample()">Load sample</button>
           <button class="btn btn-primary" id="scanBtn" onclick="startScan()">
             ▶ Run scan
           </button>
@@ -1400,10 +1348,10 @@ document.addEventListener('click', function(e) {
         <button class="etab active" onclick="switchEditorTab(this,'editor')">Editor</button>
         <button class="etab" onclick="switchEditorTab(this,'upload')">Upload file</button>
         <button class="etab" onclick="switchEditorTab(this,'url')">From URL</button>
+        <button class="etab" onclick="switchEditorTab(this,'liveurl')">🌐 Live URL</button>
       </div>
 
       <div class="code-area-wrap" id="editorTab">
-        <div class="highlight-layer" id="highlightLayer"></div>
         <div class="line-numbers" id="lineNumbers">1</div>
         <textarea
           class="code-editor"
@@ -1435,18 +1383,39 @@ document.addEventListener('click', function(e) {
       <div class="code-area-wrap" id="urlTab" style="display:none; align-items:center; justify-content:center; flex-direction:column; gap:14px; padding:32px;">
         <div style="font-size:2.5rem">🔗</div>
         <div style="font-weight:600">Scan from GitHub URL</div>
-        <div style="font-size:0.8rem; color:var(--text3); text-align:center; max-width:440px">
-          Paste a <strong style="color:var(--text2)">whole repo</strong> or a <strong style="color:var(--text2)">single file</strong> from a public GitHub repo. VibeSafe reads it (read-only), scans every source file, and checks your dependencies for known vulnerabilities.
+        <div style="font-size:0.8rem; color:var(--text3); text-align:center; max-width:420px">
+          Paste a link to a specific file in any GitHub repo. Public repos work for everyone — private repos work if you signed in with GitHub.
         </div>
         <div style="display:flex; gap:8px; width:100%; max-width:440px;">
-          <input type="text" id="githubUrlInput" placeholder="https://github.com/user/repo"
+          <input type="text" id="githubUrlInput" placeholder="https://github.com/user/repo/blob/main/app.js"
             style="flex:1; padding:9px 12px; background:var(--surface2); border:1px solid var(--border2); border-radius:7px; color:var(--text); font-size:0.82rem; outline:none; font-family:'Inter',sans-serif;"
-            oninput="updateGithubBtnState()"
             onkeydown="if(event.key==='Enter')scanFromGitHub()"
           >
           <button class="btn btn-primary" id="githubFetchBtn" onclick="scanFromGitHub()">Scan</button>
         </div>
-        <div style="font-size:0.72rem; color:var(--text3)">Whole repo: github.com/user/repo · Single file: …/blob/main/app.js</div>
+        <div style="font-size:0.72rem; color:var(--text3)">Example: github.com/expressjs/express/blob/master/lib/router/route.js</div>
+      </div>
+
+      <div class="code-area-wrap" id="liveurlTab" style="display:none; align-items:center; justify-content:center; flex-direction:column; gap:14px; padding:32px;">
+        <div style="font-size:2.5rem">🌐</div>
+        <div style="font-weight:600">Scan your live deployed app</div>
+        <div style="font-size:0.8rem; color:var(--text3); text-align:center; max-width:460px">
+          Enter your app's URL and VibeSafe will check it for missing security headers, exposed paths, HTTPS issues, and more — without touching your code.
+        </div>
+        <div style="display:flex; gap:8px; width:100%; max-width:480px;">
+          <input type="text" id="liveUrlInput" placeholder="https://yourapp.vercel.app"
+            style="flex:1; padding:9px 12px; background:var(--surface2); border:1px solid var(--border2); border-radius:7px; color:var(--text); font-size:0.82rem; outline:none; font-family:'Inter',sans-serif;"
+            onkeydown="if(event.key==='Enter')scanLiveUrl()"
+          >
+          <button class="btn btn-primary" id="liveUrlBtn" onclick="scanLiveUrl()">Scan</button>
+        </div>
+        <div style="display:flex; gap:16px; font-size:0.72rem; color:var(--text3); flex-wrap:wrap; justify-content:center;">
+          <span>✓ Security headers</span>
+          <span>✓ HTTPS enforcement</span>
+          <span>✓ Exposed paths</span>
+          <span>✓ CORS config</span>
+          <span>✓ Cookie flags</span>
+        </div>
       </div>
 
       <div class="editor-footer">
@@ -1475,10 +1444,6 @@ document.addEventListener('click', function(e) {
           <span id="resultsPanelTitle">Scan results</span>
         </div>
         <div class="panel-actions" id="resultsPanelActions">
-          <div class="mode-toggle" id="modeToggle" style="display:none">
-            <button class="mode-btn active" id="modeBeginnerBtn" onclick="setMode('beginner')">Beginner</button>
-            <button class="mode-btn" id="modeDevBtn" onclick="setMode('developer')">Developer</button>
-          </div>
           <button class="btn btn-ghost" id="exportBtn" style="display:none" onclick="exportReport()">
             Export PDF
           </button>
@@ -1508,7 +1473,6 @@ document.addEventListener('click', function(e) {
               </div>
             </div>
             <div class="gauge-verdict" id="scoreVerdict">Scanning</div>
-            <div class="launch-badge" id="launchBadge" style="display:none"></div>
             <div class="score-explanation" id="scoreExplanation" style="display:none;font-size:0.78rem;color:var(--text3);text-align:center;margin-top:8px;padding:0 12px;line-height:1.5"></div>
           </div>
           <div class="score-stats">
@@ -1526,12 +1490,6 @@ document.addEventListener('click', function(e) {
             </div>
           </div>
         </div>
-
-        <!-- Compare to last scan (hidden until there's history) -->
-        <div class="scan-compare" id="scanCompare" style="display:none"></div>
-
-        <!-- Before-launch checklist (hidden until scan) -->
-        <div class="launch-checklist" id="launchChecklist" style="display:none"></div>
 
         <!-- Empty state -->
         <div class="empty-state" id="emptyState">
@@ -1582,53 +1540,63 @@ document.addEventListener('click', function(e) {
         <button class="fix-all-btn" id="fixAllBtn" onclick="fixAll()">
           ⚡ Auto-fix all issues
         </button>
-        <button class="fix-all-btn" id="applyDownloadBtn" onclick="applyFixesAndDownload()" style="margin-top:8px;background:var(--surface2);color:var(--violet);border:1px solid rgba(124,58,237,0.4);box-shadow:none">
-          💾 Apply fixes &amp; download code
-        </button>
         <button class="fix-all-btn" id="copyFixesBtn" onclick="copyFixesForAI()" style="margin-top:8px;background:var(--surface2);color:var(--cyan);border:1px solid rgba(0,212,255,0.3);box-shadow:none">
           📋 Copy all fixes for Cursor / Lovable
         </button>
         <button class="fix-all-btn" id="rescanBtn" onclick="startScan()" style="margin-top:8px;background:var(--surface2);color:var(--green);border:1px solid rgba(16,185,129,0.3);box-shadow:none">
           🔄 Rescan after fixes
         </button>
+        <p style="margin-top:10px;font-size:0.7rem;line-height:1.5;color:var(--text3);text-align:center">
+          VibeSafe helps detect common code risks and issues, but scan results may not be complete. Always review important apps with a qualified developer or security professional before production launch.
+        </p>
       </div>
 
     </div>
   </div>
 </div>
 
-<!-- TOAST CONTAINER -->
-<div class="toast-wrap" id="toastWrap"></div>
-
-<!-- LOW-SCORE "WHY" POPUP -->
-<div class="vs-modal-overlay" id="lowScoreModal" onclick="if(event.target===this)closeLowScoreModal()">
-  <div class="vs-modal" id="lowScoreModalCard"></div>
-</div>
-
-<!-- MONITORING (PRO) POPUP -->
-<div class="vs-modal-overlay" id="monitorModal" onclick="if(event.target===this)closeMonitoring()">
-  <div class="vs-modal" id="monitorModalCard" style="max-width:440px"></div>
-</div>
-
-<!-- UPGRADE TO PRO POPUP -->
-<div class="vs-modal-overlay" id="upgradeModal" onclick="if(event.target===this)closeUpgradeModal()">
-  <div class="vs-modal" style="max-width:420px">
-    <button class="vs-modal-close" onclick="closeUpgradeModal()" aria-label="Close">✕</button>
-    <div class="vs-modal-head"><span class="vs-modal-ico">🚀</span><span class="vs-modal-title">You’ve used your free scans</span></div>
-    <div class="vs-modal-sub">The free plan includes <strong style="color:var(--text)">3 scans per month</strong>. Upgrade to <strong style="color:var(--cyan)">Pro</strong> for:</div>
-    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:6px">
-      <div style="font-size:0.85rem;color:var(--text2)">✓ Unlimited scans</div>
-      <div style="font-size:0.85rem;color:var(--text2)">✓ Continuous monitoring &amp; alerts</div>
-      <div style="font-size:0.85rem;color:var(--text2)">✓ Whole-repo &amp; dependency scanning</div>
-      <div style="font-size:0.85rem;color:var(--text2)">✓ Priority support</div>
+<!-- TEAM PANEL OVERLAY -->
+<div id="teamPanel" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;padding:32px 24px;">
+  <div style="max-width:740px;margin:0 auto;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;">
+      <button onclick="closeTeamPanel()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">← Back</button>
+      <h2 style="margin:0;font-size:1.3rem;font-weight:700;">👥 Team</h2>
     </div>
-    <div class="vs-modal-actions">
-      <button class="vs-modal-btn primary" onclick="upgradeToPro()">⚡ Upgrade to Pro</button>
-      <button class="vs-modal-btn ghost" onclick="closeUpgradeModal()">Maybe later</button>
+
+    <!-- Invite -->
+    <div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:20px;margin-bottom:20px;">
+      <div style="font-weight:600;margin-bottom:4px;">Invite a team member</div>
+      <div style="font-size:0.8rem;color:var(--text3);margin-bottom:14px;">They'll get an email to join your VibeSafe team and can view shared scan history.</div>
+      <div style="display:flex;gap:8px;">
+        <input type="email" id="inviteEmailInput" placeholder="colleague@company.com"
+          style="flex:1;padding:9px 12px;background:var(--surface2);border:1px solid var(--border2);border-radius:7px;color:var(--text);font-size:0.82rem;outline:none;font-family:'Inter',sans-serif;"
+          onkeydown="if(event.key==='Enter')sendTeamInvite()"
+        >
+        <button class="btn btn-primary" id="inviteBtn" onclick="sendTeamInvite()">Send invite</button>
+      </div>
+      <div id="inviteStatus" style="font-size:0.78rem;margin-top:8px;min-height:18px;"></div>
     </div>
-    <div style="font-size:0.7rem;color:var(--text3);margin-top:10px;text-align:center">Free monthly scans reset on the 1st.</div>
+
+    <!-- Members -->
+    <div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:20px;margin-bottom:20px;">
+      <div style="font-weight:600;margin-bottom:14px;">Team members</div>
+      <div id="teamMembersList">
+        <div style="font-size:0.8rem;color:var(--text3);text-align:center;padding:16px 0;">Loading...</div>
+      </div>
+    </div>
+
+    <!-- Shared scan history -->
+    <div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:20px;">
+      <div style="font-weight:600;margin-bottom:14px;">Shared scan history</div>
+      <div id="teamScanHistory">
+        <div style="font-size:0.8rem;color:var(--text3);text-align:center;padding:16px 0;">Loading...</div>
+      </div>
+    </div>
   </div>
 </div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-wrap" id="toastWrap"></div>
 
 <script>
 // ── STATE ──
@@ -1745,183 +1713,25 @@ const ISSUES_DATA = {
 const LANG_NAMES = { js:'JavaScript', ts:'TypeScript', py:'Python', java:'Java', cs:'.NET / C#' };
 
 // ── LINE NUMBERS ──
-// Editing the code invalidates any scan highlights, so clearHl=true resets them.
-function updateLineNumbers(clearHl) {
+function updateLineNumbers() {
   const ta = document.getElementById('codeEditor');
   const lines = ta.value.split('\n');
   document.getElementById('lineCount').textContent = lines.length;
   document.getElementById('charCount').textContent = ta.value.length;
   const ln = document.getElementById('lineNumbers');
   ln.textContent = lines.map((_,i) => i+1).join('\n');
-  if (clearHl !== false) clearEditorHighlights();
-  updateScanButtonState();
-}
-
-// Run-scan button is enabled only when there's code that hasn't already been
-// scanned. After a scan (or auto-fix), it stays disabled until the editor
-// content changes (typing, file upload, new sample, etc.).
-function updateScanButtonState() {
-  var btn = document.getElementById('scanBtn');
-  if (!btn) return;
-  if (window.__scanning) { btn.disabled = true; return; }
-  var ta = document.getElementById('codeEditor');
-  var code = ta ? (ta.value || '').trim() : '';
-  btn.disabled = (code.length === 0) || (code === window.__lastScannedCode);
-}
-
-// Same idea for the GitHub "Scan" button: disabled until the URL changes.
-function updateGithubBtnState() {
-  var btn = document.getElementById('githubFetchBtn');
-  var inp = document.getElementById('githubUrlInput');
-  if (!btn || !inp) return;
-  if (btn.textContent === 'Fetching...') return; // mid-scan
-  var url = (inp.value || '').trim();
-  btn.disabled = (url.length === 0) || (url === window.__lastScannedUrl);
 }
 
 function syncScroll() {
   const ta = document.getElementById('codeEditor');
   document.getElementById('lineNumbers').scrollTop = ta.scrollTop;
-  var hl = document.getElementById('highlightLayer');
-  if (hl) { hl.scrollTop = ta.scrollTop; hl.scrollLeft = ta.scrollLeft; }
-}
-
-// ── EDITOR ERROR HIGHLIGHTS ──
-// Parse a line reference like "Line 12" / "lines 4-6" → first line number.
-function parseIssueLine(ref) {
-  var m = String(ref || '').match(/\d+/);
-  return m ? parseInt(m[0], 10) : null;
-}
-
-function clearEditorHighlights() {
-  var hl = document.getElementById('highlightLayer');
-  if (hl) hl.innerHTML = '';
-  // reset gutter to plain numbers
-  var ta = document.getElementById('codeEditor');
-  var ln = document.getElementById('lineNumbers');
-  if (ta && ln) ln.textContent = ta.value.split('\n').map(function(_,i){return i+1;}).join('\n');
-}
-
-// Paint a coloured bar on every line that has an issue, and tint its gutter
-// number. critical→red, warning→yellow, info→cyan; lines with no issue are
-// left untouched. Highest severity wins when a line has multiple issues.
-function renderEditorHighlights() {
-  var ta = document.getElementById('codeEditor');
-  var hl = document.getElementById('highlightLayer');
-  var ln = document.getElementById('lineNumbers');
-  if (!ta || !hl || !ln) return;
-
-  var totalLines = ta.value.split('\n').length;
-  var rank = { critical: 3, warning: 2, info: 1 };
-  var lineSev = {}; // lineNo -> severity (only unfixed issues)
-
-  (issues || []).forEach(function(issue) {
-    if (issue.fixed) return;
-    var n = parseIssueLine(issue.line);
-    if (!n || n > totalLines) return;
-    if (!lineSev[n] || rank[issue.sev] > rank[lineSev[n]]) lineSev[n] = issue.sev;
-  });
-
-  var sevClass = { critical: 'crit', warning: 'warn', info: 'info' };
-
-  // Match the textarea's ACTUAL computed line-height + top padding so bars line
-  // up exactly (responsive CSS can change the editor font-size).
-  var taCS = getComputedStyle(ta);
-  var lhPx = taCS.lineHeight;
-  hl.style.paddingTop = taCS.paddingTop;
-  hl.style.lineHeight = lhPx;
-
-  // Build the highlight bars (one block per line, coloured only where flagged)
-  var barsHtml = '';
-  for (var i = 1; i <= totalLines; i++) {
-    var sev = lineSev[i];
-    var base = 'highlight-line' + (sev ? ' hl-' + sevClass[sev] : '');
-    barsHtml += '<div class="' + base + '" style="height:' + lhPx + '"></div>';
-  }
-  hl.innerHTML = barsHtml;
-  hl.scrollTop = ta.scrollTop; hl.scrollLeft = ta.scrollLeft;
-
-  // Tint the gutter numbers for flagged lines (match editor line-height too)
-  ln.style.lineHeight = lhPx;
-  ln.style.paddingTop = taCS.paddingTop;
-  var lnHtml = '';
-  for (var j = 1; j <= totalLines; j++) {
-    var s = lineSev[j];
-    lnHtml += s
-      ? '<span class="ln-' + sevClass[s] + '">' + j + '</span>'
-      : '<span>' + j + '</span>';
-    if (j < totalLines) lnHtml += '\n';
-  }
-  ln.innerHTML = lnHtml;
-}
-
-// ── #14 BEGINNER / DEVELOPER MODE ──
-function setMode(mode) {
-  var beginner = mode === 'beginner';
-  document.body.classList.toggle('mode-beginner', beginner);
-  document.body.classList.toggle('mode-developer', !beginner);
-  var b = document.getElementById('modeBeginnerBtn'), d = document.getElementById('modeDevBtn');
-  if (b) b.classList.toggle('active', beginner);
-  if (d) d.classList.toggle('active', !beginner);
-  try { localStorage.setItem('vibesafe_mode', mode); } catch (e) {}
-}
-
-// Recompute the launch badge + checklist from the current (unfixed) issues.
-function updateLaunchUI() {
-  var badge = document.getElementById('launchBadge');
-  if (badge) {
-    var scoreEl = document.getElementById('scoreValue');
-    var score = scoreEl ? parseInt(scoreEl.textContent, 10) || 0 : 0;
-    var criticals = (issues || []).filter(function(i){ return !i.fixed && i.sev === 'critical'; }).length;
-    var ready = score >= 75 && criticals === 0;
-    badge.className = 'launch-badge ' + (ready ? 'ready' : 'notready');
-    badge.textContent = ready ? '✅ Ready to Launch' : '⚠️ Fix Before Launch';
-    badge.style.display = 'inline-flex';
-  }
-  renderLaunchChecklist();
-}
-
-// ── #5 BEFORE-LAUNCH CHECKLIST ──
-// Auto-checks are derived from scan results; the manual items are reminders the
-// user ticks off (a code scan can't verify responsiveness or device testing).
-function renderLaunchChecklist() {
-  var el = document.getElementById('launchChecklist');
-  if (!el) return;
-  var unfixed = (issues || []).filter(function(i){ return !i.fixed; });
-  function has(re) { return unfixed.some(function(i){ return re.test((i.type||'') + ' ' + (i.title||'')); }); }
-
-  var secrets  = has(/secret|api[\s-]?key|\bkey\b|credential|token|password/i);
-  var runtime  = has(/runtime|await|null|undefined|promise|crash|error handling|exception|reference/i);
-  var pkg      = has(/package|depend|import|module/i);
-  var critical = unfixed.some(function(i){ return i.sev === 'critical'; });
-
-  var auto = [
-    { label: 'No exposed API keys or secrets', pass: !secrets },
-    { label: 'No critical security issues',     pass: !critical },
-    { label: 'No app-breaking runtime errors',  pass: !runtime },
-    { label: 'No missing or broken packages',   pass: !pkg }
-  ];
-  var manual = ['Forms validate user input', 'Mobile responsive checked', 'Tested on a real device / browser'];
-
-  var html = '<div class="lc-title">🚀 Before-launch checklist</div>';
-  auto.forEach(function(it){
-    html += '<div class="lc-item ' + (it.pass ? 'lc-pass' : 'lc-fail') + '">'
-         +  '<span class="lc-icon">' + (it.pass ? '✓' : '!') + '</span>'
-         +  '<span>' + it.label + '</span></div>';
-  });
-  manual.forEach(function(label){
-    html += '<div class="lc-item lc-manual" onclick="this.classList.toggle(\'checked\')">'
-         +  '<span class="lc-icon">○</span><span>' + label + '</span></div>';
-  });
-  el.innerHTML = html;
-  el.style.display = 'block';
 }
 
 // ── EDITOR TABS ──
 function switchEditorTab(el, tab) {
   document.querySelectorAll('.etab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
-  const tabs = { editor:'editorTab', upload:'uploadTab', url:'urlTab' };
+  const tabs = { editor:'editorTab', upload:'uploadTab', url:'urlTab', liveurl:'liveurlTab' };
   Object.entries(tabs).forEach(([k,id]) => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -1957,11 +1767,6 @@ function resetResults() {
   document.getElementById('resultsFooter').style.display = 'none';
   document.getElementById('exportBtn').style.display = 'none';
   document.getElementById('resultsPanelTitle').textContent = 'Scan results';
-  var lb = document.getElementById('launchBadge'); if (lb) lb.style.display = 'none';
-  var lc = document.getElementById('launchChecklist'); if (lc) lc.style.display = 'none';
-  var scmp = document.getElementById('scanCompare'); if (scmp) scmp.style.display = 'none';
-  var mt = document.getElementById('modeToggle'); if (mt) mt.style.display = 'none';
-  clearEditorHighlights();
 }
 
 // ── START SCAN ──
@@ -1969,18 +1774,6 @@ function resetResults() {
 // Calls the secure Vercel Edge Function — your API key never touches the browser
 
 const SCAN_API_URL = 'https://vibesafe-api.vercel.app/api/scan'; // Relative URL — same domain as your Vercel deployment
-
-// Normalize whatever the scan API returns into the 3 severities the UI styles:
-// 'critical' | 'warning' | 'info'. The API may return e.g. "CRITICAL", "High",
-// "error", "Medium" — without this, the CSS classes (.severity-critical etc.)
-// never match and issues render with no red/amber colour.
-function normalizeSeverity(raw) {
-  var s = String(raw || '').trim().toLowerCase();
-  if (['critical','crit','high','severe','error','danger','blocker'].indexOf(s) !== -1) return 'critical';
-  if (['warning','warn','medium','moderate','major'].indexOf(s) !== -1) return 'warning';
-  if (['info','low','note','minor','suggestion','notice'].indexOf(s) !== -1) return 'info';
-  return s === 'critical' || s === 'warning' || s === 'info' ? s : 'warning';
-}
 
 async function scanFromGitHub() {
   var urlInput = document.getElementById('githubUrlInput');
@@ -1991,8 +1784,8 @@ async function scanFromGitHub() {
     return;
   }
 
-  // Free plan: enforce the scan limit
-  if (!(await consumeScanOrBlock())) return;
+  var allowed = await checkScanLimit();
+  if (!allowed) return;
 
   var btn = document.getElementById('githubFetchBtn');
   btn.disabled = true;
@@ -2006,8 +1799,6 @@ async function scanFromGitHub() {
   document.getElementById('issuesList').style.display = 'none';
   document.getElementById('resultsFooter').style.display = 'none';
   document.getElementById('scanningState').style.display = 'flex';
-  var scmpG = document.getElementById('scanCompare'); if (scmpG) scmpG.style.display = 'none';
-  window.vsIsHistoryView = false; // fresh GitHub scan
   issues = [];
 
   var stepLabel = document.getElementById('scanStepLabel');
@@ -2018,10 +1809,13 @@ async function scanFromGitHub() {
   document.getElementById('scanPct').textContent = '20%';
 
   try {
+    const { data: { session: ghSession } } = await sbClient.auth.getSession();
+    const ghToken = ghSession ? ghSession.access_token : '';
+    const ghProviderToken = (ghSession && ghSession.provider_token) ? ghSession.provider_token : '';
     var response = await fetch(SCAN_API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ githubUrl: url })
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ghToken },
+      body: JSON.stringify({ githubUrl: url, githubToken: ghProviderToken })
     });
 
     if (!response.ok) {
@@ -2036,128 +1830,71 @@ async function scanFromGitHub() {
 
     issues = (result.issues || []).map(function(issue, idx) {
       return {
-        id: idx + 1, sev: normalizeSeverity(issue.severity), type: issue.type || 'Issue',
+        id: idx + 1, sev: issue.severity || 'warning', type: issue.type || 'Issue',
         title: issue.title || 'Unknown issue', line: issue.line || '', desc: issue.description || '',
         impact: issue.impact || '', before: issue.before || '', after: issue.after || '',
-        fix: issue.fix_explanation || 'Apply the suggested fix.', owasp: issue.owasp || '', fixed: false
+        fix: issue.fix_explanation || 'Apply the suggested fix.', fixed: false
       };
     });
     window.vsPassedChecks = result.passed || [];
     window.vsSummary = result.summary || '';
-    window.vsFixedCode = result.fixedCode || result.fixed_code || '';
-    window.vsFilesScanned = result.filesScanned || 0;
-
-    window.__lastScannedUrl = url; // don't allow re-scanning the same URL until it changes
 
     document.getElementById('scanProgressFill').style.width = '100%';
     document.getElementById('scanPct').textContent = '100%';
     setTimeout(function() { showResults(result.score); }, 300);
-    showToast(result.filesScanned ? ('Scanned ' + result.filesScanned + ' files from GitHub') : 'Scanned from GitHub successfully', 'success');
+    showToast('Scanned from GitHub successfully', 'success');
   } catch (err) {
     document.getElementById('scanningState').style.display = 'none';
     document.getElementById('emptyState').style.display = 'flex';
-    window.__lastScannedUrl = null; // scan failed — allow a retry
     showToast(err.message || 'GitHub scan failed', 'error');
   } finally {
+    btn.disabled = false;
     btn.textContent = 'Scan';
-    updateGithubBtnState();
   }
 }
 
-// ── PLAN / SCAN LIMIT (Free = 3 scans/month, Pro = unlimited) ──
-var FREE_SCAN_LIMIT = 3;
-function vsMonthKey() { var d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1); }
+async function scanLiveUrl() {
+  var allowed = await checkScanLimit();
+  if (!allowed) return;
 
-function getPlanState() {
-  var meta = (typeof currentUser !== 'undefined' && currentUser && currentUser.user_metadata) || {};
-  var plan = meta.plan, used = meta.scans_used, period = meta.scans_period;
+  var urlInput = document.getElementById('liveUrlInput');
+  var url = urlInput ? urlInput.value.trim() : '';
+  if (!url) { showToast('Please enter a URL to scan', 'error'); return; }
+
+  var btn = document.getElementById('liveUrlBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Scanning...'; }
+
   try {
-    if (plan == null) plan = localStorage.getItem('vs_plan');
-    if (used == null) used = localStorage.getItem('vs_scans_used');
-    if (period == null) period = localStorage.getItem('vs_scans_period');
-  } catch (e) {}
-  plan = (plan === 'pro') ? 'pro' : 'free';
-  used = parseInt(used || 0, 10) || 0;
-  if (period !== vsMonthKey()) { used = 0; period = vsMonthKey(); } // monthly reset
-  return { plan: plan, used: used, period: period };
-}
+    const { data: { session: liveSession } } = await sbClient.auth.getSession();
+    const authToken = liveSession ? liveSession.access_token : '';
 
-async function setPlanState(patch) {
-  var next = Object.assign({}, getPlanState(), patch);
-  try {
-    localStorage.setItem('vs_plan', next.plan);
-    localStorage.setItem('vs_scans_used', String(next.used));
-    localStorage.setItem('vs_scans_period', next.period);
-  } catch (e) {}
-  if (typeof currentUser !== 'undefined' && currentUser && typeof sbClient !== 'undefined' && sbClient) {
-    try {
-      await sbClient.auth.updateUser({ data: { plan: next.plan, scans_used: next.used, scans_period: next.period } });
-      currentUser.user_metadata = Object.assign({}, currentUser.user_metadata, { plan: next.plan, scans_used: next.used, scans_period: next.period });
-    } catch (e) {}
+    const response = await fetch('https://vibesafe-api.vercel.app/api/scan-url', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+      body: JSON.stringify({ url })
+    });
+
+    const result = await response.json();
+    if (!response.ok) { showToast(result.error || 'Scan failed', 'error'); return; }
+
+    // Reuse the existing results renderer — map DAST result to code-scan shape
+    currentResult = result;
+    renderResults(result);
+    await updateScanUsage();
+    showToast('Live URL scan complete', 'success');
+  } catch (err) {
+    showToast('Could not reach the scan API. Try again.', 'error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Scan'; }
   }
-  return next;
-}
-
-function isPro() { return getPlanState().plan === 'pro'; }
-
-// Consume one scan for free users; block + prompt upgrade when over the limit.
-async function consumeScanOrBlock() {
-  var st = getPlanState();
-  if (st.plan === 'pro') return true;
-  if (st.used >= FREE_SCAN_LIMIT) { showUpgradeModal(); renderPlanCard(); return false; }
-  await setPlanState({ used: st.used + 1 });
-  renderPlanCard();
-  return true;
-}
-
-function renderPlanCard() {
-  var st = getPlanState();
-  var name = document.getElementById('planName');
-  var used = document.getElementById('planScansUsed');
-  var resets = document.getElementById('planResets');
-  var fill = document.getElementById('planBarFill');
-  var btn = document.getElementById('upgradeBtn');
-  var track = document.getElementById('planBarTrack');
-  if (st.plan === 'pro') {
-    if (name) name.textContent = 'Pro';
-    if (used) used.textContent = 'Unlimited scans';
-    if (resets) resets.textContent = '✓ active';
-    if (fill) fill.style.width = '100%';
-    if (track) track.style.display = 'none';
-    if (btn) btn.style.display = 'none';
-  } else {
-    if (name) name.textContent = 'Starter (Free)';
-    if (used) used.textContent = st.used + ' of ' + FREE_SCAN_LIMIT + ' scans used';
-    if (resets) resets.textContent = 'resets monthly';
-    if (fill) fill.style.width = Math.min(100, (st.used / FREE_SCAN_LIMIT) * 100) + '%';
-    if (track) track.style.display = '';
-    if (btn) { btn.style.display = ''; btn.textContent = 'Upgrade to Pro →'; }
-  }
-}
-
-// Grant Pro (payment intentionally skipped — wire Stripe here later)
-async function upgradeToPro() {
-  await setPlanState({ plan: 'pro' });
-  renderPlanCard();
-  closeUpgradeModal();
-  showToast('You’re on Pro — unlimited scans unlocked 🎉', 'success');
-}
-
-function showUpgradeModal() {
-  var o = document.getElementById('upgradeModal');
-  if (o) o.classList.add('open');
-}
-function closeUpgradeModal() {
-  var o = document.getElementById('upgradeModal');
-  if (o) o.classList.remove('open');
 }
 
 async function startScan() {
   const code = document.getElementById('codeEditor').value.trim();
   if (!code) { showToast('Please paste some code first', 'error'); return; }
 
-  // Free plan: enforce the scan limit (auto-fix rescans don't count)
-  if (!window.__autoFixLoop) { if (!(await consumeScanOrBlock())) return; }
+  const allowed = await checkScanLimit();
+  if (!allowed) return;
 
   const lang = document.getElementById('langSelect').value;
   const langName = LANG_NAMES[lang] || 'code';
@@ -2168,15 +1905,9 @@ async function startScan() {
   document.getElementById('issuesList').style.display = 'none';
   document.getElementById('resultsFooter').style.display = 'none';
   document.getElementById('scanningState').style.display = 'flex';
-  window.__scanning = true;
-  window.__lastScannedCode = code; // mark this content as scanned (don't allow a duplicate scan)
   document.getElementById('scanBtn').disabled = true;
   var fb = document.getElementById('filterBar'); if (fb) fb.style.display = 'none';
   var fp = document.getElementById('fixPriority'); if (fp) fp.style.display = 'none';
-  var lb0 = document.getElementById('launchBadge'); if (lb0) lb0.style.display = 'none';
-  var lc0 = document.getElementById('launchChecklist'); if (lc0) lc0.style.display = 'none';
-  var scmp0 = document.getElementById('scanCompare'); if (scmp0) scmp0.style.display = 'none';
-  window.vsIsHistoryView = false; // this is a fresh scan
   document.getElementById('exportBtn').style.display = 'none';
   issues = [];
 
@@ -2203,9 +1934,11 @@ async function startScan() {
 
   try {
     // Call the secure backend
+    const { data: { session: scanSession } } = await sbClient.auth.getSession();
+    const authToken = scanSession ? scanSession.access_token : '';
     const response = await fetch(SCAN_API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
       body: JSON.stringify({ code, language: langName }),
     });
 
@@ -2226,7 +1959,7 @@ async function startScan() {
     // Map API results to our issue format
     issues = (result.issues || []).map((issue, idx) => ({
       id: idx + 1,
-      sev: normalizeSeverity(issue.severity),
+      sev: issue.severity || 'warning',
       type: issue.type || 'Issue',
       title: issue.title || 'Unknown issue',
       line: issue.line || 'Unknown line',
@@ -2235,7 +1968,6 @@ async function startScan() {
       before: issue.before || '',
       after: issue.after || '',
       fix: issue.fix_explanation || 'Apply the suggested fix.',
-      owasp: issue.owasp || '',
       fixed: false,
     }));
 
@@ -2243,7 +1975,6 @@ async function startScan() {
     window.vsPassedChecks = result.passed || [];
     window.vsSummary = result.summary || '';
     window.vsDetectedLang = result.language || langName;
-    window.vsFixedCode = result.fixedCode || result.fixed_code || '';
 
     setTimeout(() => showResults(result.score), 400);
 
@@ -2251,9 +1982,7 @@ async function startScan() {
     clearInterval(progressInterval);
     document.getElementById('scanningState').style.display = 'none';
     document.getElementById('emptyState').style.display = 'flex';
-    window.__scanning = false;
-    window.__lastScannedCode = null; // scan failed — allow a retry of the same code
-    updateScanButtonState();
+    document.getElementById('scanBtn').disabled = false;
     showToast(err.message || 'Scan failed. Please try again.', 'error');
     console.error('Scan error:', err);
   }
@@ -2268,20 +1997,6 @@ function showResults(apiScore) {
   const score = apiScore !== undefined
     ? Math.max(5, Math.min(100, Math.round(apiScore)))
     : Math.max(5, 100 - criticals * 18 - warnings * 8);
-
-  // During an auto-fix loop, don't reveal intermediate passes. Keep the working
-  // overlay up and immediately start the next pass — only the final pass is shown.
-  if (window.__autoFixLoop && willLoopContinue(score)) {
-    var stepEl = document.getElementById('scanStepLabel');
-    var subEl = document.getElementById('scanSubLabel');
-    if (stepEl) stepEl.textContent = 'Auto-fixing & re-checking…';
-    if (subEl) subEl.textContent = 'Deep pass ' + (window.__fixPass || 1) + ' of ' + VS_FIX_MAX_PASSES + ' — scanning harder than a normal one-shot check';
-    document.getElementById('scanProgressFill').style.width = '100%';
-    document.getElementById('scanningState').style.display = 'flex';
-    window.__lastFixScore = score;
-    setTimeout(function() { runFixPass(); }, 700);
-    return;
-  }
 
   document.getElementById('scanningState').style.display = 'none';
 
@@ -2325,35 +2040,9 @@ function showResults(apiScore) {
     el.innerHTML = '<div style="font-size:2rem;margin-bottom:8px">✅</div><div style="font-weight:600;color:var(--green);margin-bottom:4px">No issues found</div><div style="font-size:0.78rem;color:var(--text3)">Your code looks clean and safe to ship.</div>';
     list.appendChild(el);
   } else {
-    // #2 Group issues into category sections (Security, Bugs, Runtime, …)
-    const groups = {};
-    issues.forEach(function(issue){
-      const c = categorizeIssue(issue);
-      (groups[c] = groups[c] || []).push(issue);
-    });
-    const rank = { critical: 3, warning: 2, info: 1 };
-    let visIdx = 0, firstHeader = true;
-    CATEGORY_ORDER.forEach(function(cat){
-      const groupIssues = groups[cat];
-      if (!groupIssues || !groupIssues.length) return;
-      groupIssues.sort(function(a, b){ return (rank[b.sev] || 0) - (rank[a.sev] || 0); });
-
-      const header = document.createElement('div');
-      header.className = 'cat-header' + (firstHeader ? ' cat-first' : '');
-      header.setAttribute('data-cat', cat);
-      header.innerHTML = '<span class="cat-icon">' + CATEGORY_META[cat].icon + '</span>'
-        + '<span class="cat-name">' + CATEGORY_META[cat].label + '</span>'
-        + '<span class="cat-count">' + groupIssues.length + '</span>';
-      list.appendChild(header);
-      firstHeader = false;
-
-      groupIssues.forEach(function(issue){
-        const card = buildIssueCard(issue, issues.indexOf(issue));
-        card.style.animationDelay = (visIdx * 60) + 'ms';
-        card.setAttribute('data-cat', cat);
-        list.appendChild(card);
-        visIdx++;
-      });
+    issues.forEach((issue, idx) => {
+      const card = buildIssueCard(issue, idx);
+      setTimeout(() => list.appendChild(card), idx * 80);
     });
   }
 
@@ -2372,21 +2061,11 @@ function showResults(apiScore) {
   document.getElementById('resultsFooter').style.display = 'block';
   document.getElementById('exportBtn').style.display = 'flex';
 
-  // Reset the "Auto-fix all" button for this fresh result (it gets disabled
-  // and relabelled once everything is fixed — re-enable it for the new scan).
-  fixedCount = 0;
-  var fab = document.getElementById('fixAllBtn');
-  if (fab) {
-    fab.disabled = issues.length === 0;
-    fab.textContent = issues.length === 0 ? '✅ Nothing to fix' : '⚡ Auto-fix all issues';
-  }
-
   const title = issues.length === 0
     ? 'All clear ✓'
     : issues.length + ' issue' + (issues.length > 1 ? 's' : '') + ' found';
   document.getElementById('resultsPanelTitle').textContent = title;
-  window.__scanning = false;
-  updateScanButtonState(); // keep Run scan disabled — this exact code was just scanned
+  document.getElementById('scanBtn').disabled = false;
   scanDone = true;
 
   // Show filter bar and fix priority
@@ -2394,110 +2073,18 @@ function showResults(apiScore) {
   if (filterBar) filterBar.style.display = issues.length > 0 ? 'flex' : 'none';
   renderFixPriority();
   renderScoreExplanation(score, criticals, warnings);
-  renderEditorHighlights();
 
-  // #15 badge + #5 checklist
-  updateLaunchUI();
-  // #12 compare vs previous scan (read prev score BEFORE saveScanToHistory updates it)
-  renderScanCompare(score);
-  // #14 Beginner/Developer toggle becomes available once there are results
-  var mt = document.getElementById('modeToggle');
-  if (mt) mt.style.display = issues.length > 0 ? 'inline-flex' : 'none';
-
-  // Quieter during an auto-fix loop (it shows its own pass/complete toasts).
-  if (!window.__autoFixLoop) {
-    showToast('Scan complete — ' + (issues.length === 0 ? 'no issues found!' : issues.length + ' issues found'), issues.length === 0 ? 'success' : 'info');
-  }
+  showToast('Scan complete — ' + (issues.length === 0 ? 'no issues found!' : issues.length + ' issues found'), issues.length === 0 ? 'success' : 'info');
 
   // Save this scan to history
   saveScanToHistory(apiScore);
-
-  // Auto-fix loop has ended by the time we reach here (continuing passes return
-  // early above). Finalize and explain anything still unfixed.
-  var wasAutoFix = finalizeAutoFix(score);
-
-  // Low-score popup: surface the critical flaws (and, after an auto-fix run,
-  // explain why they couldn't be fixed automatically).
-  showLowScoreModal(score, wasAutoFix);
 }
-
-// ── LOW-SCORE "WHY" POPUP ──
-// Pops up after a scan when there are critical flaws, summarising why the score
-// is low. Skipped while the auto-fix loop is running.
-function showLowScoreModal(score, afterAutoFix) {
-  var overlay = document.getElementById('lowScoreModal');
-  var card = document.getElementById('lowScoreModalCard');
-  if (!overlay || !card) return;
-
-  var crit = (issues || []).filter(function(i) { return !i.fixed && i.sev === 'critical'; });
-  if (crit.length === 0) return; // only show when there's a real flaw to explain
-
-  var warns = (issues || []).filter(function(i) { return !i.fixed && i.sev === 'warning'; }).length;
-  var cls = score >= 50 ? 'warn' : 'bad';
-  var title = afterAutoFix ? 'What auto-fix couldn’t fully solve' : 'Why your score is low';
-
-  var html = '<button class="vs-modal-close" onclick="closeLowScoreModal()" aria-label="Close">✕</button>'
-    + '<div class="vs-modal-head"><span class="vs-modal-ico">⚠️</span>'
-    + '<span class="vs-modal-title">' + title + '</span>'
-    + '<span class="vs-modal-score ' + cls + '">' + score + '/100</span></div>';
-
-  if (afterAutoFix) {
-    html += '<div class="vs-modal-sub">VibeSafe ran a <strong style="color:var(--text)">deep ' + (window.__fixPass || 1) + '-pass scan</strong> and fixed everything it safely could. '
-      + (crit.length > 1 ? 'These remaining issues need' : 'This remaining issue needs') + ' <strong style="color:var(--text)">your judgment</strong> — it depends on your app’s context (business logic, access rules, or external setup) that an automated fixer shouldn’t guess at.</div>';
-  } else if (window.vsSummary) {
-    html += '<div class="vs-modal-sub">' + window.vsSummary + '</div>';
-  }
-
-  html += '<div class="vs-modal-section-label">' + (afterAutoFix ? 'Biggest blocker' + (crit.length > 1 ? 's still open' : ' still open') : crit.length + ' critical flaw' + (crit.length > 1 ? 's' : '') + ' to fix before launch') + '</div>';
-
-  crit.forEach(function(i) {
-    html += '<div class="vs-flaw"><span class="vs-flaw-ico">🔴</span><div>'
-      + '<div class="vs-flaw-title">' + (i.title || 'Critical issue') + '</div>'
-      + '<div class="vs-flaw-meta">' + (i.type || '') + (i.line ? ' · ' + i.line : '') + '</div>'
-      + '<div class="vs-flaw-why">' + (i.impact || i.desc || '') + '</div></div></div>';
-  });
-
-  if (warns > 0) {
-    html += '<div style="font-size:0.78rem;color:var(--text3);margin-top:6px">'
-      + '+ ' + warns + ' warning' + (warns > 1 ? 's also need' : ' also needs') + ' attention.</div>';
-  }
-
-  // Positioning: VibeSafe scans harder than typical one-shot tools.
-  html += '<div style="font-size:0.74rem;color:var(--text3);margin-top:14px;padding-top:12px;border-top:1px solid var(--border);line-height:1.5">'
-    + '🛡️ VibeSafe ran a <strong style="color:var(--cyan)">multi-pass deep scan</strong> — most scanners check only once. If we still flag something, it’s genuinely worth a look.</div>';
-
-  if (afterAutoFix) {
-    html += '<div class="vs-modal-actions">'
-      + '<button class="vs-modal-btn primary" onclick="closeLowScoreModal(); copyFixesForAI();">📋 Copy for Cursor / Lovable</button>'
-      + '<button class="vs-modal-btn ghost" onclick="closeLowScoreModal()">Review myself</button></div>';
-  } else {
-    html += '<div class="vs-modal-actions">'
-      + '<button class="vs-modal-btn primary" onclick="closeLowScoreModal(); fixAll();">⚡ Auto-fix all</button>'
-      + '<button class="vs-modal-btn ghost" onclick="closeLowScoreModal()">Review myself</button></div>';
-  }
-
-  card.innerHTML = html;
-  overlay.classList.add('open');
-}
-
-function closeLowScoreModal() {
-  var overlay = document.getElementById('lowScoreModal');
-  if (overlay) overlay.classList.remove('open');
-}
-
-// Esc closes any open popup
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    closeLowScoreModal();
-    if (typeof closeUpgradeModal === 'function') closeUpgradeModal();
-    if (typeof closeMonitoring === 'function') closeMonitoring();
-  }
-});
 
 // ── SCAN HISTORY (Supabase) ──
 async function saveScanToHistory(score) {
   if (!currentUser || !sbClient) return;
   try {
+    await updateScanUsage();
     var lang = LANG_NAMES[document.getElementById('langSelect').value] || 'code';
     await sbClient.from('scans').insert({
       user_id: currentUser.id,
@@ -2535,10 +2122,6 @@ function renderScanHistory(scans) {
     container.innerHTML = '<div style="padding:12px;font-size:0.78rem;color:var(--text3);text-align:center">No scans yet. Run your first scan!</div>';
     return;
   }
-  // #12 Remember the most recent saved scan to compare the next one against
-  window.vsPrevScore  = scans[0].score;
-  window.vsPrevIssues = scans[0].issues_count;
-
   container.innerHTML = '';
   scans.forEach(function(scan) {
     var cls = scan.score >= 75 ? 'good' : scan.score >= 50 ? 'warn' : 'bad';
@@ -2560,36 +2143,8 @@ function loadPastScan(scan) {
   issues = (scan.results.issues || []).map(function(i) { return Object.assign({}, i, { fixed: false }); });
   window.vsSummary = scan.results.summary || '';
   window.vsPassedChecks = scan.results.passed || [];
-  window.vsIsHistoryView = true; // viewing an old scan — don't show a "vs last" compare
   showResults(scan.score);
   showToast('Loaded scan from ' + new Date(scan.created_at).toLocaleDateString(), 'info');
-}
-
-// #12 Render the "compared to last scan" card (only for fresh scans with history)
-function renderScanCompare(newScore) {
-  var el = document.getElementById('scanCompare');
-  if (!el) return;
-  if (window.vsIsHistoryView || window.vsPrevScore == null) { el.style.display = 'none'; return; }
-
-  var prev = window.vsPrevScore;
-  var d = newScore - prev;
-  var dCls = d > 0 ? 'up' : d < 0 ? 'down' : 'same';
-  var dTxt = (d > 0 ? '↑ +' : d < 0 ? '↓ −' : '± ') + Math.abs(d);
-  var html = '<div class="sc-title">📊 Compared to your last scan</div>';
-  html += '<div class="sc-metric"><span class="sc-from">Score ' + prev + '</span>'
-       +  '<span class="sc-arrow">→</span><span class="sc-to">' + newScore + '</span>'
-       +  '<span class="sc-delta ' + dCls + '">' + dTxt + '</span></div>';
-
-  if (window.vsPrevIssues != null) {
-    var prevI = window.vsPrevIssues, newI = issues.length, di = prevI - newI;
-    var iCls = di > 0 ? 'up' : di < 0 ? 'down' : 'same';
-    var iTxt = di > 0 ? di + ' fewer' : di < 0 ? Math.abs(di) + ' more' : 'no change';
-    html += '<div class="sc-metric"><span class="sc-from">Issues ' + prevI + '</span>'
-         +  '<span class="sc-arrow">→</span><span class="sc-to">' + newI + '</span>'
-         +  '<span class="sc-delta ' + iCls + '">' + iTxt + '</span></div>';
-  }
-  el.innerHTML = html;
-  el.style.display = 'flex';
 }
 
 
@@ -2609,56 +2164,6 @@ function filterIssues(severity, btn) {
       card.style.display = match ? '' : 'none';
     }
   });
-
-  // #2 Hide category headers whose cards are all filtered out
-  document.querySelectorAll('.cat-header').forEach(function(header) {
-    var cat = header.getAttribute('data-cat');
-    var anyVisible = Array.prototype.some.call(
-      document.querySelectorAll('.issue-card[data-cat="' + cat + '"]'),
-      function(c) { return c.style.display !== 'none'; }
-    );
-    header.style.display = anyVisible ? '' : 'none';
-  });
-
-  // Scroll to the first matching result so the filter visibly "jumps" there.
-  // Prefer its category header (so the section title shows), else the card itself.
-  var firstCard = Array.prototype.filter.call(
-    document.querySelectorAll('.issue-card'),
-    function(c) { return c.style.display !== 'none'; }
-  )[0];
-  if (firstCard) {
-    var cat = firstCard.getAttribute('data-cat');
-    var header = cat ? document.querySelector('.cat-header[data-cat="' + cat + '"]') : null;
-    var target = (header && header.style.display !== 'none') ? header : firstCard;
-    scrollResultsToTarget(target);
-  } else {
-    // No matches (e.g. "Fixed" with nothing fixed yet) — show a brief hint
-    showToast('No ' + severity + ' issues', 'info');
-  }
-}
-
-// Scroll whichever element actually scrolls (the results pane on desktop, or
-// the page itself on narrow screens) so `target` sits near the top of the view.
-// Uses direct scrollTop assignment — scrollIntoView/scrollTo are unreliable
-// across the nested scroll containers in this layout.
-function scrollResultsToTarget(target) {
-  // Find the nearest ancestor that is actually scrollable right now.
-  var p = target.parentElement, container = null;
-  while (p && p !== document.body && p !== document.documentElement) {
-    var cs = getComputedStyle(p);
-    if (/(auto|scroll)/.test(cs.overflowY) && p.scrollHeight > p.clientHeight + 4) { container = p; break; }
-    p = p.parentElement;
-  }
-  var rectTop = target.getBoundingClientRect().top;
-  if (container) {
-    // Inner pane (desktop two-pane layout): align target near the pane's top.
-    var newTop = container.scrollTop + (rectTop - container.getBoundingClientRect().top) - 12;
-    container.scrollTop = Math.max(0, newTop);
-  } else {
-    // Whole page scrolls (narrow / mobile): clear the fixed top bar.
-    var se = document.scrollingElement || document.documentElement;
-    se.scrollTop = Math.max(0, se.scrollTop + rectTop - 90);
-  }
 }
 
 // ── FIX PRIORITY ──
@@ -2713,28 +2218,6 @@ function renderScoreExplanation(score, criticals, warnings) {
   el.style.display = 'block';
 }
 
-// ── #2 ISSUE CATEGORIES ──
-// Map each issue into one of the 5 product categories by keyword. Detection
-// quality depends on how the scan API labels issue.type/title.
-var CATEGORY_META = {
-  security: { label: 'Security', icon: '🔒' },
-  bugs:     { label: 'Bugs',     icon: '🐛' },
-  runtime:  { label: 'Runtime',  icon: '⚡' },
-  packages: { label: 'Packages', icon: '📦' },
-  quality:  { label: 'Quality',  icon: '✨' }
-};
-var CATEGORY_ORDER = ['security', 'bugs', 'runtime', 'packages', 'quality'];
-
-function categorizeIssue(issue) {
-  var t = ((issue.type || '') + ' ' + (issue.title || '')).toLowerCase();
-  if (/secret|api.?key|\bkey\b|injection|xss|csrf|ssrf|\bauth|traversal|password|credential|token|sanitiz|insecure|vulnerab|\bcors\b|encrypt/.test(t)) return 'security';
-  if (/package|depend|import|module|\bversion|outdated|deprecat|hallucinat|requirement/.test(t)) return 'packages';
-  if (/runtime|await|\basync|null|undefined|promise|crash|exception|reference error|\brace\b|memory|unhandled|rejection/.test(t)) return 'runtime';
-  if (/syntax|bracket|paren|typo|missing|wrong|logic|\bbug|broken|unclosed|undeclared/.test(t)) return 'bugs';
-  if (/quality|messy|duplicat|unclear|style|naming|complex|readab|comparison|\bany\b|lint|magic number|dead code|console\.log/.test(t)) return 'quality';
-  return 'bugs';
-}
-
 function buildIssueCard(issue, idx) {
   const card = document.createElement('div');
   card.className = `issue-card severity-${issue.sev}`;
@@ -2747,15 +2230,14 @@ function buildIssueCard(issue, idx) {
       <div class="issue-meta">
         <div class="issue-type">${issue.type}</div>
         <div class="issue-title">${issue.title}</div>
-        <div class="issue-line tech-only">${issue.line}</div>
+        <div class="issue-line">${issue.line}</div>
       </div>
       <span class="sev-pill sev-pill-${issue.sev}">${issue.sev === 'critical' ? 'High' : issue.sev === 'warning' ? 'Medium' : 'Low'}</span>
       <div class="issue-chevron">▶</div>
     </div>
     <div class="issue-body">
       <div class="issue-desc">${issue.desc}</div>
-      ${issue.owasp ? `<div class="owasp-tag tech-only">🛡️ ${issue.owasp}</div>` : ''}
-      <div class="code-snippet tech-only">
+      <div class="code-snippet">
         <div class="del">− ${issue.before}</div>
         <div class="add">+ ${issue.after}</div>
       </div>
@@ -2783,9 +2265,7 @@ function fixIssue(id) {
   fixedCount++;
 
   const card = document.getElementById(`issue-card-${id}`);
-  // Keep the card expanded so the "Fixed" confirmation (which lives inside the
-  // collapsible .issue-body) is actually visible after fixing.
-  card.className = 'issue-card severity-fixed open';
+  card.className = 'issue-card severity-fixed';
 
   const fixBtn = document.getElementById(`fix-btn-${id}`);
   fixBtn.parentElement.innerHTML = `
@@ -2794,10 +2274,8 @@ function fixIssue(id) {
     </div>
   `;
 
-  // Update score and clear this line's highlight (issue is resolved)
+  // Update score
   updateScore();
-  renderEditorHighlights();
-  updateLaunchUI();
   showToast(`Fixed: ${issue.title}`, 'success');
 
   // Update header count
@@ -2811,68 +2289,12 @@ function fixIssue(id) {
   }
 }
 
-// Auto-fix loops: apply the corrected code, rescan to verify, and if issues
-// remain keep going — until we hit the target score, run out of improvements,
-// or reach the pass cap. Each pass is a real scan, so the score is always honest.
-var VS_FIX_TARGET = 95;
-var VS_FIX_MAX_PASSES = 3;
-
 function fixAll() {
   const unfixed = issues.filter(i => !i.fixed);
-  if (unfixed.length === 0) { showToast('Nothing to fix', 'info'); return; }
-  window.__fixPass = 0;
-  // Baseline is the CURRENT score, so a pass that doesn't beat it stops the loop.
-  window.__lastFixScore = parseInt((document.getElementById('scoreValue') || {}).textContent, 10) || 0;
-  window.__autoFixLoop = true;
-  runFixPass();
-}
-
-function runFixPass() {
-  var editor = document.getElementById('codeEditor');
-
-  // Best path: the API returned a full coherent corrected file. Use it directly
-  // — this resolves overlapping fixes that snippet replacement can't.
-  var fullFix = (window.vsFixedCode || '').trim();
-  if (fullFix && editor) {
-    editor.value = fullFix;
-    if (typeof updateLineNumbers === 'function') updateLineNumbers();
-  } else {
-    // Fallback: best-effort snippet replacement.
-    var res = applyFixesToEditor();
-    if (res.applied === 0) {
-      window.__autoFixLoop = false;
-      showToast("Couldn't auto-apply these fixes to your code — use “Copy for Cursor / Lovable”", 'error');
-      return;
-    }
-  }
-
-  window.__fixPass = (window.__fixPass || 0) + 1;
-  showToast('Auto-fixing — pass ' + window.__fixPass + ', rescanning to verify…', 'info');
-  setTimeout(function() { startScan(); }, 500);
-}
-
-// Called at the end of showResults. Decides whether to run another fix pass.
-// Should the auto-fix loop run another pass? (continue handled in showResults)
-function willLoopContinue(score) {
-  if (!window.__autoFixLoop) return false;
-  var remaining = issues.length;
-  var improved = score > (window.__lastFixScore == null ? -1 : window.__lastFixScore);
-  return !(score >= VS_FIX_TARGET || remaining === 0 || window.__fixPass >= VS_FIX_MAX_PASSES || !improved);
-}
-
-// Called once the loop has stopped (final pass). Returns true if this scan was
-// the end of an auto-fix run, so the caller can explain remaining issues.
-function finalizeAutoFix(score) {
-  if (!window.__autoFixLoop) return false;
-  window.__autoFixLoop = false;
-  var remaining = issues.length;
-  var passes = window.__fixPass || 1;
-  if (score >= VS_FIX_TARGET || remaining === 0) {
-    showToast('Deep auto-fix complete — ' + score + '/100 after ' + passes + ' pass' + (passes > 1 ? 'es' : '') + '. VibeSafe scans deeper than typical one-shot tools 🎉', 'success');
-  } else {
-    showToast('Deep scan done — ' + passes + ' passes, score ' + score + '/100. ' + remaining + ' issue' + (remaining !== 1 ? 's' : '') + ' need a human eye.', 'info');
-  }
-  return true;
+  unfixed.forEach((issue, idx) => {
+    setTimeout(() => fixIssue(issue.id), idx * 300);
+  });
+  showToast(`Auto-fixing ${unfixed.length} issues...`, 'success');
 }
 
 function updateScore() {
@@ -2893,13 +2315,6 @@ function updateScore() {
 
   document.getElementById('critCount').textContent = crits;
   document.getElementById('warnCount').textContent = warns;
-
-  // Keep the verdict label + explanation in sync with the new score
-  // (otherwise they stay frozen on the original "At risk" after fixing).
-  var verdict = score >= 75 ? 'Good' : score >= 50 ? 'Needs work' : 'At risk';
-  var ve = document.getElementById('scoreVerdict');
-  if (ve) { ve.textContent = verdict; ve.className = 'gauge-verdict ' + cls; }
-  renderScoreExplanation(score, crits, warns);
 }
 
 // ── SIDEBAR PAGES ──
@@ -2915,59 +2330,169 @@ function setPage(page, evt) {
     document.getElementById('codeEditor').focus();
     showToast('Ready for a new scan', 'info');
   } else if (page === 'history') {
-    if (typeof loadScanHistory === 'function') loadScanHistory();
-    var hl = document.getElementById('historyList'); if (hl) hl.style.display = 'block';
-    showToast('Showing your scan history', 'info');
+    showToast('Scan history — 4 previous scans', 'info');
   } else if (page === 'monitor') {
-    if (isPro()) { showMonitoring(); }
-    else { showToast('Continuous monitoring is a Pro feature', 'info'); showUpgradeModal(); }
+    showToast('Continuous monitoring with email alerts — coming in Pro', 'info');
+  } else if (page === 'team') {
+    openTeamPanel();
   }
 }
 
-// ── MONITORING (Pro) ──
-function showMonitoring() {
-  var overlay = document.getElementById('monitorModal');
-  var card = document.getElementById('monitorModalCard');
-  if (!overlay || !card) return;
-  var alertsOn = false;
-  try { alertsOn = localStorage.getItem('vs_monitor_alerts') === '1'; } catch (e) {}
-  var html = '<button class="vs-modal-close" onclick="closeMonitoring()" aria-label="Close">✕</button>'
-    + '<div class="vs-modal-head"><span class="vs-modal-ico">📡</span><span class="vs-modal-title">Continuous Monitoring</span>'
-    + '<span class="vs-modal-score" style="color:var(--green)">PRO</span></div>'
-    + '<div class="vs-modal-sub">Monitoring is <strong style="color:var(--green)">active</strong> for your account. Every scan you run is tracked so you can watch your security score over time.</div>'
-    + '<div style="display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;margin-bottom:12px">'
-    + '<div><div style="font-size:0.85rem;font-weight:600">Email me when a scan finds critical issues</div>'
-    + '<div style="font-size:0.72rem;color:var(--text3)">Sent to your account email after each scan</div></div>'
-    + '<button id="monAlertsToggle" onclick="toggleMonitorAlerts()" style="cursor:pointer;border:none;border-radius:100px;width:46px;height:26px;background:' + (alertsOn ? 'var(--green)' : 'var(--border2)') + ';position:relative;transition:background .2s">'
-    + '<span style="position:absolute;top:3px;left:' + (alertsOn ? '23px' : '3px') + ';width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s"></span></button></div>'
-    + '<div id="monActivity" style="font-size:0.8rem;color:var(--text2)">Loading recent activity…</div>';
-  card.innerHTML = html;
-  overlay.classList.add('open');
-  // fill recent activity from saved scans
-  if (currentUser && sbClient) {
-    sbClient.from('scans').select('score,created_at,issues_count').order('created_at', { ascending: false }).limit(5)
-      .then(function (res) {
-        var rows = (res && res.data) || [];
-        var el = document.getElementById('monActivity');
-        if (!el) return;
-        if (!rows.length) { el.innerHTML = '<div style="color:var(--text3)">No scans yet — run your first scan to start tracking.</div>'; return; }
-        el.innerHTML = '<div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text3);font-weight:700;margin-bottom:8px">Recent activity</div>'
-          + rows.map(function (r) {
-            var d = new Date(r.created_at).toLocaleDateString([], { month: 'short', day: 'numeric' });
-            var cls = r.score >= 75 ? 'var(--green)' : r.score >= 50 ? 'var(--amber)' : 'var(--red)';
-            return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid var(--border)"><span>' + d + ' · ' + r.issues_count + ' issues</span><strong style="color:' + cls + '">' + r.score + '/100</strong></div>';
-          }).join('');
-      });
-  } else {
-    var el = document.getElementById('monActivity'); if (el) el.textContent = 'Run a scan to start tracking your security trend.';
+// ── TEAM PANEL ──
+function openTeamPanel() {
+  document.getElementById('teamPanel').style.display = 'block';
+  loadTeamMembers();
+  loadTeamScanHistory();
+}
+
+function closeTeamPanel() {
+  document.getElementById('teamPanel').style.display = 'none';
+  // Re-activate scan sidebar item
+  document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+  document.querySelector('.sidebar-item[onclick*="scan"]').classList.add('active');
+}
+
+async function sendTeamInvite() {
+  var email = document.getElementById('inviteEmailInput').value.trim();
+  var status = document.getElementById('inviteStatus');
+  var btn = document.getElementById('inviteBtn');
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    status.style.color = 'var(--red, #EF4444)';
+    status.textContent = 'Please enter a valid email address.';
+    return;
+  }
+  if (!currentUser || !sbClient) return;
+
+  btn.disabled = true; btn.textContent = 'Sending...';
+  status.textContent = '';
+
+  try {
+    // Get or create team for this user
+    var teamId = await getOrCreateTeam();
+    if (!teamId) throw new Error('Could not create team.');
+
+    // Insert pending invite
+    var { error } = await sbClient.from('team_members').insert({
+      team_id: teamId,
+      invited_email: email,
+      invited_by: currentUser.id,
+      status: 'pending',
+    });
+    if (error && error.code !== '23505') throw error; // ignore duplicate
+
+    // Send magic-link invite via Supabase Auth admin (edge function) or show manual link
+    // For now: insert into invites table and show confirmation
+    status.style.color = 'var(--green, #10B981)';
+    status.textContent = '✓ Invite recorded. Share your team link with ' + email + ' to get them set up.';
+    document.getElementById('inviteEmailInput').value = '';
+    loadTeamMembers();
+  } catch (err) {
+    status.style.color = 'var(--red, #EF4444)';
+    status.textContent = err.message || 'Could not send invite. Try again.';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Send invite';
   }
 }
-function closeMonitoring() { var o = document.getElementById('monitorModal'); if (o) o.classList.remove('open'); }
-function toggleMonitorAlerts() {
-  var on = false;
-  try { on = localStorage.getItem('vs_monitor_alerts') === '1'; localStorage.setItem('vs_monitor_alerts', on ? '0' : '1'); } catch (e) {}
-  showMonitoring(); // re-render with new state
-  showToast(on ? 'Email alerts turned off' : 'Email alerts turned on', 'success');
+
+async function getOrCreateTeam() {
+  // Check if user already owns a team
+  var { data: owned } = await sbClient.from('teams').select('id').eq('owner_id', currentUser.id).limit(1);
+  if (owned && owned.length > 0) return owned[0].id;
+
+  // Check if user is a member of a team
+  var { data: member } = await sbClient.from('team_members').select('team_id').eq('user_id', currentUser.id).limit(1);
+  if (member && member.length > 0) return member[0].team_id;
+
+  // Create a new team
+  var { data: newTeam, error } = await sbClient.from('teams').insert({
+    owner_id: currentUser.id,
+    name: (currentUser.email || 'My Team').split('@')[0] + "'s team",
+  }).select('id').single();
+  if (error) throw error;
+
+  // Add owner as first member
+  await sbClient.from('team_members').insert({
+    team_id: newTeam.id,
+    user_id: currentUser.id,
+    invited_email: currentUser.email,
+    status: 'active',
+    role: 'owner',
+  }).catch(() => {});
+
+  return newTeam.id;
+}
+
+async function loadTeamMembers() {
+  var container = document.getElementById('teamMembersList');
+  if (!currentUser || !sbClient) return;
+
+  var teamId = await getOrCreateTeam().catch(() => null);
+  if (!teamId) {
+    container.innerHTML = '<div style="font-size:0.8rem;color:var(--text3);text-align:center;padding:12px 0;">Could not load team.</div>';
+    return;
+  }
+
+  var { data: members } = await sbClient.from('team_members').select('*').eq('team_id', teamId).order('created_at');
+  if (!members || members.length === 0) {
+    container.innerHTML = '<div style="font-size:0.8rem;color:var(--text3);text-align:center;padding:12px 0;">No members yet. Invite someone above.</div>';
+    return;
+  }
+
+  container.innerHTML = members.map(function(m) {
+    var badge = m.status === 'active'
+      ? '<span style="font-size:0.7rem;padding:2px 7px;border-radius:4px;background:rgba(16,185,129,0.12);color:#10B981;">' + (m.role || 'member') + '</span>'
+      : '<span style="font-size:0.7rem;padding:2px 7px;border-radius:4px;background:rgba(245,158,11,0.12);color:#F59E0B;">pending</span>';
+    return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border1);">' +
+      '<div style="width:32px;height:32px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:0.9rem;font-weight:600;">' +
+        (m.invited_email || '?').charAt(0).toUpperCase() +
+      '</div>' +
+      '<div style="flex:1;">' +
+        '<div style="font-size:0.83rem;font-weight:500;">' + (m.invited_email || 'Unknown') + '</div>' +
+      '</div>' + badge + '</div>';
+  }).join('');
+}
+
+async function loadTeamScanHistory() {
+  var container = document.getElementById('teamScanHistory');
+  if (!currentUser || !sbClient) return;
+
+  var teamId = await getOrCreateTeam().catch(() => null);
+  if (!teamId) return;
+
+  // Get all user_ids in team
+  var { data: members } = await sbClient.from('team_members').select('user_id').eq('team_id', teamId).eq('status', 'active');
+  var userIds = (members || []).map(function(m) { return m.user_id; }).filter(Boolean);
+  if (userIds.length === 0) userIds = [currentUser.id];
+
+  var { data: scans } = await sbClient.from('scans').select('*').in('user_id', userIds).order('created_at', { ascending: false }).limit(30);
+
+  if (!scans || scans.length === 0) {
+    container.innerHTML = '<div style="font-size:0.8rem;color:var(--text3);text-align:center;padding:16px 0;">No team scans yet.</div>';
+    return;
+  }
+
+  container.innerHTML = '<table style="width:100%;border-collapse:collapse;font-size:0.8rem;">' +
+    '<thead><tr style="color:var(--text3);border-bottom:1px solid var(--border1);">' +
+    '<th style="text-align:left;padding:6px 8px;font-weight:500;">Member</th>' +
+    '<th style="text-align:left;padding:6px 8px;font-weight:500;">Type</th>' +
+    '<th style="text-align:center;padding:6px 8px;font-weight:500;">Score</th>' +
+    '<th style="text-align:center;padding:6px 8px;font-weight:500;">Issues</th>' +
+    '<th style="text-align:left;padding:6px 8px;font-weight:500;">Date</th>' +
+    '</tr></thead><tbody>' +
+    scans.map(function(s) {
+      var cls = s.score >= 75 ? '#10B981' : s.score >= 50 ? '#F59E0B' : '#EF4444';
+      var date = new Date(s.created_at).toLocaleDateString([], { month:'short', day:'numeric' });
+      var email = (s.user_id === currentUser.id) ? 'You' : (s.user_id || '').slice(0, 8) + '…';
+      var label = s.scan_type === 'url' ? '🌐 ' + (s.target || 'URL') : (s.language || 'Code') + ' scan';
+      return '<tr style="border-bottom:1px solid var(--border1);">' +
+        '<td style="padding:7px 8px;color:var(--text2);">' + email + '</td>' +
+        '<td style="padding:7px 8px;">' + label + '</td>' +
+        '<td style="padding:7px 8px;text-align:center;font-weight:600;color:' + cls + ';">' + (s.score || '—') + '</td>' +
+        '<td style="padding:7px 8px;text-align:center;color:var(--text2);">' + (s.issues_count || 0) + '</td>' +
+        '<td style="padding:7px 8px;color:var(--text3);">' + date + '</td>' +
+        '</tr>';
+    }).join('') +
+    '</tbody></table>';
 }
 
 // ── LANG DISPLAY ──
@@ -2996,15 +2521,7 @@ function showToast(msg, type='info') {
 
 // ── INIT ──
 updateLineNumbers();
-updateGithubBtnState();
-if (typeof renderPlanCard === 'function') renderPlanCard();
 document.getElementById('codeEditor').focus();
-// Apply saved view mode (default: beginner — simple English first)
-(function(){
-  var saved = 'beginner';
-  try { saved = localStorage.getItem('vibesafe_mode') || 'beginner'; } catch (e) {}
-  setMode(saved);
-})();
 // Ready — paste your code and click Run Scan
 
 // ── AI-READY FIX EXPORT ──
@@ -3113,85 +2630,6 @@ function copyFixesForAI() {
     document.body.removeChild(ta);
     showToast('Fixes copied to clipboard!', 'success');
   });
-}
-
-// ── APPLY FIXES TO EDITOR + DOWNLOAD ──
-// Replaces each issue's `before` snippet with its `after` snippet directly in
-// the editor, then downloads the corrected file. Some API fixes are snippet-
-// level or paraphrased, so we report how many applied vs couldn't be matched
-// and steer the user to the Cursor/Lovable copy route for the rest.
-var LANG_EXT = { js:'js', ts:'ts', py:'py', java:'java', cs:'cs' };
-
-// Replace each issue's `before` snippet with its `after` in the editor.
-// Returns how many applied vs. couldn't be matched. Shared by "Apply &
-// download" and "Auto-fix all" so both actually correct the code.
-function applyFixesToEditor() {
-  var editor = document.getElementById('codeEditor');
-  if (!editor) return { applied: 0, skipped: 0 };
-  var code = editor.value;
-  var applied = 0, skipped = 0;
-
-  // The API often returns OVERLAPPING fixes (e.g. a line-level "add await" that
-  // sits inside a block-level "add error handling"). Apply the LONGEST `before`
-  // snippets first so the most comprehensive fix wins; smaller overlapping ones
-  // then no longer match and are absorbed rather than breaking the block.
-  var ordered = (issues || []).slice().sort(function(a, b) {
-    return (String(b.before || '').length) - (String(a.before || '').length);
-  });
-
-  ordered.forEach(function(issue) {
-    var before = (issue.before || '').trim();
-    var after  = (issue.after  || '').trim();
-    if (before && after && code.indexOf(before) !== -1) {
-      code = code.replace(before, after);
-      applied++;
-    } else if (before || after) {
-      skipped++; // either no snippet, or already absorbed by a larger fix
-    }
-  });
-
-  if (applied > 0) {
-    editor.value = code;
-    if (typeof updateLineNumbers === 'function') updateLineNumbers();
-  }
-  return { applied: applied, skipped: skipped };
-}
-
-function applyFixesAndDownload() {
-  var editor = document.getElementById('codeEditor');
-  if (!editor || !editor.value.trim()) { showToast('No code in the editor to fix', 'error'); return; }
-  if (!issues || issues.length === 0) { showToast('Run a scan first', 'error'); return; }
-
-  // Prefer the API's full corrected file when available; else snippet-apply.
-  var fullFix = (window.vsFixedCode || '').trim();
-  if (fullFix) {
-    editor.value = fullFix;
-    if (typeof updateLineNumbers === 'function') updateLineNumbers();
-  } else {
-    var res = applyFixesToEditor();
-    if (res.applied === 0) {
-      showToast("Couldn't auto-apply fixes — use “Copy for Cursor / Lovable” instead", 'error');
-      return;
-    }
-  }
-  var code = editor.value;
-
-  // Trigger a download of the corrected file
-  var langVal = document.getElementById('langSelect').value;
-  var ext = LANG_EXT[langVal] || 'txt';
-  var blob = new Blob([code], { type: 'text/plain;charset=utf-8' });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = 'vibesafe-fixed.' + ext;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
-
-  var msg = 'Applied ' + applied + ' fix' + (applied > 1 ? 'es' : '') + ' & downloaded';
-  if (skipped > 0) msg += ' · ' + skipped + ' need manual review (use Copy for Cursor / Lovable)';
-  showToast(msg, skipped > 0 ? 'info' : 'success');
 }
 </script>
 </body>
