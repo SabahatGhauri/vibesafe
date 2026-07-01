@@ -1933,7 +1933,7 @@ async function startScan() {
       document.getElementById('scanSubLabel').textContent = sub;
       stepIdx++;
     }
-  }, 900);
+  }, 1800);
 
   try {
     // Call the secure backend
@@ -1954,10 +1954,11 @@ async function startScan() {
 
     const result = await response.json();
 
-    // Complete the progress bar
+    // Complete the progress bar briefly then show results
     document.getElementById('scanProgressFill').style.width = '100%';
     document.getElementById('scanPct').textContent = '100%';
     document.getElementById('scanStepLabel').textContent = 'Scan complete!';
+    await new Promise(r => setTimeout(r, 400));
 
     // Map API results to our issue format
     issues = (result.issues || []).map((issue, idx) => ({
