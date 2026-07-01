@@ -75,11 +75,12 @@
     0 0 40px rgba(0, 212, 255, 0.1);
 }
 
-/* Buttons: lift + glow on hover */
-.nav-cta,
+/* Buttons: lift + glow on hover (a.nav-cta only — on index.html .nav-cta is a container div) */
+a.nav-cta,
 .cta-box a,
 .cta-btn,
-.btn-primary,
+a.btn-primary,
+button.btn-primary,
 .gate-btn,
 .print-btn {
   transition: transform 0.25s cubic-bezier(0.22, 0.61, 0.36, 1),
@@ -87,10 +88,11 @@
               background 0.25s ease !important;
 }
 
-.nav-cta:hover,
+a.nav-cta:hover,
 .cta-box a:hover,
 .cta-btn:hover,
-.btn-primary:hover {
+a.btn-primary:hover,
+button.btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(0, 212, 255, 0.35);
 }
