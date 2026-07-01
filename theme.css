@@ -32,3 +32,110 @@
   --r:    10px;
   --r-lg: 14px;
 }
+
+/* ── GLOBAL POLISH: 3D hover, glow, smooth transitions ──
+   Applies to shared card classes used across all VibeSafe pages */
+
+.cta-box,
+.post-card,
+.unique-card,
+.verdict-card,
+.use-case-card,
+.step,
+.purpose-card,
+.diff-card,
+.stat-box,
+.gate-card {
+  transition: transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
+              box-shadow 0.35s ease,
+              border-color 0.35s ease;
+  will-change: transform;
+}
+
+.post-card:hover,
+.unique-card:hover,
+.verdict-card:hover,
+.use-case-card:hover,
+.step:hover,
+.purpose-card:hover,
+.diff-card:hover,
+.stat-box:hover {
+  transform: translateY(-4px) scale(1.012);
+  border-color: rgba(0, 212, 255, 0.35) !important;
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.45),
+    0 0 24px rgba(0, 212, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.cta-box:hover {
+  border-color: rgba(0, 212, 255, 0.4) !important;
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(0, 212, 255, 0.1);
+}
+
+/* Buttons: lift + glow on hover */
+.nav-cta,
+.cta-box a,
+.cta-btn,
+.btn-primary,
+.gate-btn,
+.print-btn {
+  transition: transform 0.25s cubic-bezier(0.22, 0.61, 0.36, 1),
+              box-shadow 0.25s ease,
+              background 0.25s ease !important;
+}
+
+.nav-cta:hover,
+.cta-box a:hover,
+.cta-btn:hover,
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 212, 255, 0.35);
+}
+
+/* Related-guide pills: fill on hover */
+.related a {
+  transition: all 0.25s ease;
+}
+.related a:hover {
+  background: rgba(0, 212, 255, 0.1);
+  border-color: rgba(0, 212, 255, 0.45) !important;
+  transform: translateY(-2px);
+}
+
+/* Checklist rows: subtle slide on hover */
+.check li,
+main ul li {
+  transition: padding-left 0.25s ease, color 0.25s ease;
+}
+.check li:hover {
+  padding-left: 34px;
+  color: var(--text);
+}
+
+/* Headings entrance shimmer for gradient text */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Table rows glow */
+.comparison-table tbody tr {
+  transition: background 0.25s ease;
+}
+.comparison-table tbody tr:hover {
+  background: rgba(0, 212, 255, 0.03);
+}
+
+/* Smooth page fade-in */
+@media (prefers-reduced-motion: no-preference) {
+  body {
+    animation: page-fade 0.5s ease;
+  }
+  @keyframes page-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}
