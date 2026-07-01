@@ -44,7 +44,18 @@ body{
   padding:36px 32px;
   position:relative;z-index:10;
   box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  transition:transform 0.3s cubic-bezier(0.22,0.61,0.36,1),box-shadow 0.3s ease;
+  will-change:transform;
 }
+.auth-card::before{
+  content:'';position:absolute;inset:-1px;border-radius:19px;z-index:-1;
+  background:linear-gradient(135deg,rgba(0,212,255,0.4),transparent 30%,transparent 70%,rgba(124,58,237,0.4));
+  opacity:0;transition:opacity 0.4s ease;
+}
+.auth-card:hover{
+  box-shadow:0 24px 70px rgba(0,0,0,0.55),0 0 40px rgba(0,212,255,0.06);
+}
+.auth-card:hover::before{opacity:1}
 
 .auth-logo{
   display:flex;align-items:center;justify-content:center;gap:9px;
