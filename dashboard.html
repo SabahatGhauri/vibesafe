@@ -505,6 +505,7 @@ body {
   flex: 1; display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   gap: 20px; padding: 32px;
+  opacity: 1; transition: opacity 0.4s ease;
 }
 
 .scan-ring {
@@ -542,7 +543,7 @@ body {
 .scan-progress-fill {
   height: 100%; border-radius: 100px;
   background: linear-gradient(90deg, var(--cyan), var(--violet));
-  transition: width 0.3s ease;
+  transition: width 1.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 0 8px var(--cyan-glow);
 }
 
@@ -1980,7 +1981,9 @@ async function startScan() {
     window.vsSummary = result.summary || '';
     window.vsDetectedLang = result.language || langName;
 
-    setTimeout(() => showResults(result.score), 400);
+    const scanningEl = document.getElementById('scanningState');
+    scanningEl.style.opacity = '0';
+    setTimeout(() => { scanningEl.style.display = 'none'; showResults(result.score); }, 500);
 
   } catch (err) {
     clearInterval(progressInterval);
@@ -2002,7 +2005,7 @@ function showResults(apiScore) {
     ? Math.max(5, Math.min(100, Math.round(apiScore)))
     : Math.max(5, 100 - criticals * 18 - warnings * 8);
 
-  document.getElementById('scanningState').style.display = 'none';
+  // scanningState already faded out before showResults was called
 
   const cls = score >= 75 ? 'good' : score >= 50 ? 'warn' : 'bad';
   const verdict = score >= 75 ? 'Good' : score >= 50 ? 'Needs work' : 'At risk';
@@ -2026,6 +2029,12 @@ function showResults(apiScore) {
   document.getElementById('warnCount').textContent = warnings;
   document.getElementById('passCount').textContent = passed;
   document.getElementById('scoreHeader').style.display = 'block';
+
+  // Fade in results panel
+  const rp = document.getElementById('resultsPanel');
+  rp.style.opacity = '0';
+  rp.style.transition = 'opacity 0.5s ease';
+  requestAnimationFrame(() => requestAnimationFrame(() => { rp.style.opacity = '1'; }));
 
   const list = document.getElementById('issuesList');
   list.innerHTML = '';
