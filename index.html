@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VibeSafe | AI Code Security Scanner for AI-Built Apps</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj4KPGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwRDRGRiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzdDM0FFRCIvPgo8L2xpbmVhckdyYWRpZW50PjwvZGVmcz4KPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIHJ4PSIyMiIgZmlsbD0iIzA4MEMxOCIvPgo8cGF0aCBkPSJNNTAgMTggTDc0IDI4IEw3NCA1MiBRNzQgNzAgNTAgODAgUTI2IDcwIDI2IDUyIEwyNiAyOCBaIiBmaWxsPSJ1cmwoI2cpIi8+Cjxwb2x5bGluZSBwb2ludHM9IjM4LDUwIDQ2LDYwIDY0LDM4IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4=">
-<meta name="description" content="VibeSafe helps scan AI-generated code for exposed API keys, runtime errors, missing packages, weak security settings, and risky issues before launch — explained in plain English.">
+<meta name="description" content="VibeSafe scans AI-generated code and live deployments for exposed API keys, SQL injection, Supabase RLS issues, prompt injection, and more. GitHub Action, VS Code extension, team features. Plain-English fixes.">
 <meta name="keywords" content="AI code security scanner, AI-generated code security, scan AI-generated code, vibe coding security, AI-built app security, pre-launch security scan, exposed API key scanner">
 <meta property="og:title" content="VibeSafe | AI Code Security Scanner for AI-Built Apps">
 <meta property="og:description" content="Scan AI-generated code for exposed API keys, runtime errors, missing packages, and weak security settings before you launch. Plain-English results.">
@@ -57,7 +57,7 @@
   "@type": "FAQPage",
   "mainEntity": [
     { "@type": "Question", "name": "Is vibe coding safe?", "acceptedAnswer": { "@type": "Answer", "text": "AI-built (vibe-coded) apps ship fast but often contain exposed API keys, weak database rules, missing packages, and runtime errors. VibeSafe scans your AI-generated code for these issues before you launch and explains the fixes in plain English." } },
-    { "@type": "Question", "name": "What does VibeSafe check?", "acceptedAnswer": { "@type": "Answer", "text": "VibeSafe checks for exposed secrets and API keys, SQL injection and other OWASP Top 10 risks, missing or vulnerable dependencies, runtime errors like missing awaits, and weak security settings." } },
+    { "@type": "Question", "name": "What does VibeSafe check?", "acceptedAnswer": { "@type": "Answer", "text": "VibeSafe checks for exposed secrets and API keys, SQL injection and other OWASP Top 10 risks, Supabase RLS misconfigurations, hallucinated packages, prompt injection risks, runtime errors like missing awaits, and weak security settings. It also scans live deployed URLs for missing security headers, HTTPS issues, exposed paths, and CORS misconfigurations." } },
     { "@type": "Question", "name": "Does VibeSafe store my code?", "acceptedAnswer": { "@type": "Answer", "text": "No. Your code is scanned over an encrypted connection and is not stored after the scan, and it is never used to train AI models." } },
     { "@type": "Question", "name": "Is VibeSafe a replacement for a professional security audit?", "acceptedAnswer": { "@type": "Answer", "text": "No. VibeSafe is a fast pre-launch safety check that catches common problems early. It does not replace a full manual security audit, penetration test, or compliance review." } }
   ]
@@ -364,9 +364,18 @@
     animation-delay: 1.2s;
   }
 
+  .chip-score .fc-sub {
+    animation: score-pulse 2.5s ease-in-out infinite;
+  }
+
   @keyframes chip-float {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-8px); }
+  }
+
+  @keyframes score-pulse {
+    0%, 100% { color: #EF4444; opacity: 1; }
+    50% { color: #F97316; opacity: 0.7; }
   }
 
   @media (max-width: 1100px) {
@@ -1109,14 +1118,9 @@
 
   <div class="hero-inner">
     <div class="hero-content">
-      <div class="hero-badge">
-        <span class="badge-dot"></span>
-        Now live · Free to start
-      </div>
-
       <h1 class="hero-title">
-        Check your AI-built app<br>
-        <span class="highlight">before you launch.</span>
+        Your Stripe key is exposed.<br>
+        <span class="highlight">VibeSafe finds it first.</span>
       </h1>
 
       <p class="hero-sub">
@@ -1175,21 +1179,10 @@
 
 <!-- STATS STRIP -->
 <div class="stats-strip">
-  <div class="stats-inner">
-    <div class="stat-item">
+  <div class="stats-inner" style="justify-content:center">
+    <div class="stat-item" style="text-align:center;max-width:520px">
       <div class="stat-num">45%</div>
-      <div class="stat-label">of AI-generated code contains security vulnerabilities</div>
-      <div class="stat-source">2026 Security Audit</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">63%</div>
-      <div class="stat-label">of vibe coders have no technical background</div>
-      <div class="stat-source">Synergy Labs 2026</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">$4.7B</div>
-      <div class="stat-label">vibe coding market — growing 38% annually</div>
-      <div class="stat-source">Market analysis 2026</div>
+      <div class="stat-label" style="font-size:1rem">of AI-generated apps contain at least one exploitable vulnerability — <em>is yours one of them?</em></div>
     </div>
   </div>
 </div>
@@ -1324,74 +1317,95 @@
       </div>
       <p class="section-sub">Built specifically for non-technical founders who need production-grade quality without the engineering team.</p>
     </div>
+    <!-- Founder-first cards -->
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon">🔐</div>
-        <div class="feature-title">Security vulnerability scan</div>
-        <div class="feature-desc">Detects exposed API keys, SQL injection risks, XSS vulnerabilities, and insecure authentication patterns before they reach production.</div>
-        <span class="feature-tag tag-cyan">Critical</span>
+        <div class="feature-title">Finds your exposed secrets</div>
+        <div class="feature-desc">Catches exposed API keys, Stripe secrets, database passwords, and auth tokens in your code before anyone else does — one of these going live can cost you everything.</div>
+        <span class="feature-tag tag-cyan">Most common</span>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">🐛</div>
-        <div class="feature-title">Runtime error detection</div>
-        <div class="feature-desc">Catches missing awaits, null pointer exceptions, unhandled rejections, and type mismatches that only surface when real users hit your app.</div>
+        <div class="feature-icon">💥</div>
+        <div class="feature-title">Stops crashes before launch</div>
+        <div class="feature-desc">Finds the silent bugs that only appear when real users hit your app — missing awaits, unhandled errors, broken flows. Your AI tool wrote them. VibeSafe finds them.</div>
         <span class="feature-tag tag-cyan">Critical</span>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">📦</div>
-        <div class="feature-title">Auto dependency installer</div>
-        <div class="feature-desc">Identifies missing or outdated packages and suggests the correct versions to install — for Python, JavaScript, TypeScript, and more.</div>
-        <span class="feature-tag tag-violet">Auto-fix</span>
       </div>
       <div class="feature-card">
         <div class="feature-icon">💬</div>
-        <div class="feature-title">Plain-English explanations</div>
-        <div class="feature-desc">Every issue is explained in plain language — what it is, why it's a problem, and exactly what happens if you ignore it. No jargon, ever.</div>
+        <div class="feature-title">Explains everything in plain English</div>
+        <div class="feature-desc">Every issue tells you what it is, why it matters, and what happens if you ignore it. No jargon, no guesswork — written for founders, not engineers.</div>
         <span class="feature-tag tag-green">Founder-first</span>
       </div>
       <div class="feature-card">
         <div class="feature-icon">📊</div>
-        <div class="feature-title">Safety score & report</div>
-        <div class="feature-desc">Get a 0–100 safety score with a full report you can share with investors, clients, or your technical advisor to prove your app is solid.</div>
+        <div class="feature-title">Safety score you can share</div>
+        <div class="feature-desc">Get a 0–100 score with a full report. Show investors, clients, or a technical advisor that your app is solid — without needing to explain the code yourself.</div>
         <span class="feature-tag tag-green">Founder-first</span>
       </div>
-      <div class="feature-card">
-        <div class="feature-icon">🔁</div>
-        <div class="feature-title">Continuous monitoring</div>
-        <div class="feature-desc">Connect your repo and VibeSafe automatically scans every new deployment. Ship fast and stay safe without thinking about it.</div>
-        <span class="feature-tag tag-violet">Pro</span>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🌐</div>
-        <div class="feature-title">Live URL / DAST scanning</div>
-        <div class="feature-desc">Scan your deployed app for missing security headers, HTTPS issues, exposed paths, CORS misconfigurations, and insecure cookie flags — without touching your code.</div>
-        <span class="feature-tag tag-cyan">New</span>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">⚙️</div>
-        <div class="feature-title">CI/CD GitHub Action</div>
-        <div class="feature-desc">Auto-scan every push and pull request. Results post as a PR comment with a score table and critical issues listed. Blocks merges on critical findings.</div>
-        <span class="feature-tag tag-cyan">New</span>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🧩</div>
-        <div class="feature-title">VS Code & Cursor extension</div>
-        <div class="feature-desc">Scan the current file with Ctrl+Shift+V. Get inline squiggles on every flagged line, a results panel with before/after fixes, and an optional scan-on-save mode.</div>
-        <span class="feature-tag tag-cyan">New</span>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">👥</div>
-        <div class="feature-title">Team collaboration</div>
-        <div class="feature-desc">Invite your team, share scan history, and see every member's scans in one place. Perfect for founders working with a developer or agency.</div>
-        <span class="feature-tag tag-violet">Pro</span>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🐱</div>
-        <div class="feature-title">Private GitHub repo scanning</div>
-        <div class="feature-desc">Sign in with GitHub and scan any private repo file directly from the URL tab — no copy-paste needed, no credentials exposed.</div>
-        <span class="feature-tag tag-cyan">New</span>
+    </div>
+
+    <!-- Technical toggle -->
+    <div style="margin-top:28px;text-align:center">
+      <button onclick="toggleTechFeatures()" id="techToggleBtn" style="background:none;border:1px solid var(--border2);color:var(--text2);font-family:'Inter',sans-serif;font-size:0.85rem;padding:10px 22px;border-radius:100px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'">
+        For technical users ↓
+      </button>
+    </div>
+
+    <div id="techFeatures" style="display:none;margin-top:20px">
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🌐</div>
+          <div class="feature-title">Live URL / DAST scanning</div>
+          <div class="feature-desc">Scan your deployed app for missing security headers, HTTPS issues, exposed paths, CORS misconfigurations, and insecure cookie flags — without touching your code.</div>
+          <span class="feature-tag tag-cyan">New</span>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚙️</div>
+          <div class="feature-title">CI/CD GitHub Action</div>
+          <div class="feature-desc">Auto-scan every push and pull request. Results post as a PR comment with a score table and critical issues listed. Blocks merges on critical findings.</div>
+          <span class="feature-tag tag-cyan">New</span>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🧩</div>
+          <div class="feature-title">VS Code & Cursor extension</div>
+          <div class="feature-desc">Scan the current file with Ctrl+Shift+V. Get inline squiggles on every flagged line, a results panel with before/after fixes, and an optional scan-on-save mode.</div>
+          <span class="feature-tag tag-cyan">New</span>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🐱</div>
+          <div class="feature-title">Private GitHub repo scanning</div>
+          <div class="feature-desc">Sign in with GitHub and scan any private repo file directly from the URL tab — no copy-paste needed, no credentials exposed.</div>
+          <span class="feature-tag tag-cyan">New</span>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👥</div>
+          <div class="feature-title">Team collaboration</div>
+          <div class="feature-desc">Invite your team, share scan history, and see every member's scans in one place. Perfect for founders working with a developer or agency.</div>
+          <span class="feature-tag tag-violet">Pro</span>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔁</div>
+          <div class="feature-title">Supabase RLS check</div>
+          <div class="feature-desc">The #1 cause of vibe-coded app breaches. VibeSafe always flags misconfigured Row Level Security as critical — before your data is exposed.</div>
+          <span class="feature-tag tag-cyan">Critical</span>
+        </div>
       </div>
     </div>
+
+    <script>
+    function toggleTechFeatures() {
+      var el = document.getElementById('techFeatures');
+      var btn = document.getElementById('techToggleBtn');
+      if (el.style.display === 'none') {
+        el.style.display = 'block';
+        btn.textContent = 'For technical users ↑';
+      } else {
+        el.style.display = 'none';
+        btn.textContent = 'For technical users ↓';
+      }
+    }
+    </script>
   </div>
 </section>
 
@@ -1450,14 +1464,16 @@
         <div style="height:28px"></div>
         <div class="plan-divider"></div>
         <ul class="plan-features">
-          <li class="plan-feature"><span class="feat-check">✓</span> 5 scans per month</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> 3 scans per month</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Security vulnerability scan</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Plain-English explanations</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Live URL / DAST scanning</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> GitHub URL &amp; private repo scan</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Runtime error detection</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Basic safety score (0–100)</li>
-          <li class="plan-feature"><span class="feat-x">–</span> Auto-fix</li>
-          <li class="plan-feature"><span class="feat-x">–</span> PDF safety report</li>
-          <li class="plan-feature"><span class="feat-x">–</span> GitHub integration</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Plain-English explanations</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Safety score (0–100)</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> VS Code &amp; Cursor extension</li>
+          <li class="plan-feature"><span class="feat-x">–</span> Team collaboration</li>
+          <li class="plan-feature"><span class="feat-x">–</span> Shared scan history</li>
         </ul>
         <button class="plan-btn plan-btn-outline" onclick="window.location.href='/login.html'">Get started free</button>
       </div>
@@ -1478,13 +1494,13 @@
         <ul class="plan-features">
           <li class="plan-feature"><span class="feat-check">✓</span> Unlimited scans</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Full security scan suite</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> One-click auto-fix</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Dependency auto-installer</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> PDF safety report</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> GitHub integration</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Vercel &amp; Netlify integration</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Code quality analysis</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Fix history &amp; audit log</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Live URL / DAST scanning</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Private GitHub repo scanning</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> CI/CD GitHub Action</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> VS Code &amp; Cursor extension</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Team collaboration (up to 5)</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Shared team scan history</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Safety score &amp; scan history</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Email support (24h)</li>
         </ul>
         <button class="plan-btn plan-btn-primary" id="pro-btn" onclick="startCheckout('pro')">Start 15-day free trial</button>
@@ -1530,12 +1546,26 @@
       <p class="section-eyebrow">What builders say</p>
       <h2 class="section-title">Founders already sleeping better</h2>
     </div>
+
+    <!-- PULLQUOTE -->
+    <div style="max-width:720px;margin:0 auto 52px;text-align:center;padding:36px 40px;background:var(--surface);border:1px solid rgba(0,212,255,0.15);border-radius:20px;position:relative;">
+      <div style="font-size:4rem;line-height:1;color:var(--cyan);opacity:0.25;position:absolute;top:12px;left:24px;font-family:Georgia,serif">"</div>
+      <p style="font-family:'Space Grotesk',sans-serif;font-size:1.35rem;font-weight:600;color:var(--text);line-height:1.5;margin-bottom:20px;position:relative;z-index:1;">VibeSafe found an exposed Stripe key before I launched.<br>Literally saved my business.</p>
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--violet));display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:var(--bg)">SK</div>
+        <div style="text-align:left">
+          <div style="font-size:0.85rem;font-weight:600;color:var(--text)">Sara K.</div>
+          <div style="font-size:0.75rem;color:var(--text3)">Founder, ContentFlow</div>
+        </div>
+      </div>
+    </div>
+
     <div class="testimonials-grid">
       <div class="testimonial-card">
         <div class="testimonial-stars">★★★★★</div>
         <p class="testimonial-text">"I built my entire SaaS on Lovable in 3 days. VibeSafe found 8 security issues I had no idea existed — including an exposed Stripe key. Literally saved my business before launch."</p>
         <div class="testimonial-author">
-          <div class="author-avatar">SK</div>
+          <div class="author-avatar" style="background:linear-gradient(135deg,#00D4FF,#0891B2)">SK</div>
           <div>
             <div class="author-name">Sara K.</div>
             <div class="author-role">Founder, ContentFlow</div>
@@ -1546,7 +1576,7 @@
         <div class="testimonial-stars">★★★★★</div>
         <p class="testimonial-text">"As a non-technical founder, I was flying blind on code quality. VibeSafe gives me the confidence to ship knowing my app won't blow up. The plain-English explanations are genuinely helpful."</p>
         <div class="testimonial-author">
-          <div class="author-avatar">MR</div>
+          <div class="author-avatar" style="background:linear-gradient(135deg,#7C3AED,#A855F7)">MR</div>
           <div>
             <div class="author-name">Marcus R.</div>
             <div class="author-role">Founder, TaskLift</div>
@@ -1557,7 +1587,7 @@
         <div class="testimonial-stars">★★★★★</div>
         <p class="testimonial-text">"My Bolt app crashed on the first real user session. After VibeSafe, zero production issues for 6 weeks straight. It found the missing await that was causing everything to silently fail."</p>
         <div class="testimonial-author">
-          <div class="author-avatar">JT</div>
+          <div class="author-avatar" style="background:linear-gradient(135deg,#10B981,#059669)">JT</div>
           <div>
             <div class="author-name">Jamie T.</div>
             <div class="author-role">Indie hacker</div>
