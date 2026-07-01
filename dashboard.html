@@ -1114,7 +1114,7 @@ async function getScansThisMonth() {
 }
 
 async function updateScanUsage() {
-  if (currentPlan === 'pro') return;
+  if (currentPlan === 'pro' || currentPlan === 'team') return;
   var used = await getScansThisMonth();
   var metaEl = document.getElementById('planMeta');
   var barFill = document.getElementById('planBarFill');
@@ -1123,7 +1123,7 @@ async function updateScanUsage() {
 }
 
 async function checkScanLimit() {
-  if (currentPlan === 'pro') return true;
+  if (currentPlan === 'pro' || currentPlan === 'team') return true;
   var used = await getScansThisMonth();
   if (used >= FREE_SCAN_LIMIT) {
     showToast('You have used all ' + FREE_SCAN_LIMIT + ' free scans this month. Upgrade to Pro for unlimited scans.', 'error');
@@ -1145,12 +1145,12 @@ function renderPlanCard(plan) {
   var upgradeBtn = document.getElementById('upgradeBtn');
   if (!nameEl) return;
 
-  if (plan === 'pro') {
-    nameEl.textContent = 'Pro';
+  if (plan === 'pro' || plan === 'team') {
+    nameEl.textContent = plan === 'team' ? 'Team' : 'Pro';
     if (barFill) barFill.style.width = '100%';
     if (metaEl) metaEl.innerHTML = '<span>Unlimited scans</span>';
     if (upgradeBtn) {
-      upgradeBtn.textContent = "You're on Pro ✓";
+      upgradeBtn.textContent = plan === 'team' ? "You're on Team ✓" : "You're on Pro ✓";
       upgradeBtn.disabled = true;
       upgradeBtn.style.opacity = '0.6';
       upgradeBtn.style.cursor = 'default';
