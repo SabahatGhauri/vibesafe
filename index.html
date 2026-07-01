@@ -1187,22 +1187,29 @@
         <div class="demo-scan-btn" id="demoScanBtn">▶ Run scan</div>
       </div>
 
-      <!-- Stage 2: Scanning animation -->
+      <!-- Stage 2: Scanning — beam sweeps over the actual code -->
       <div id="demoStage2" class="demo-stage" style="display:none;">
         <div class="demo-topbar">
           <div class="demo-dots"><span></span><span></span><span></span></div>
           <div class="demo-filename">Scanning auth.js…</div>
         </div>
-        <div style="padding:28px 20px">
-          <div class="demo-scan-line" style="animation-delay:0s"></div>
-          <div class="demo-scan-line" style="animation-delay:0.15s;width:85%"></div>
-          <div class="demo-scan-line" style="animation-delay:0.3s;width:70%"></div>
-          <div class="demo-scan-line" style="animation-delay:0.45s;width:90%"></div>
-          <div class="demo-scan-line" style="animation-delay:0.6s;width:60%"></div>
-          <div style="margin-top:24px;display:flex;align-items:center;gap:10px">
-            <div class="demo-spinner"></div>
-            <span style="font-size:0.78rem;color:var(--text3)">Analysing with Claude Sonnet…</span>
+        <div class="demo-scan-zone">
+          <div class="demo-code demo-code-dim">
+            <div class="code-line"><span class="ln">1</span><span class="kw">const</span> supabase = createClient(url, key)</div>
+            <div class="code-line"><span class="ln">2</span><span class="cm">// stripe secret key</span></div>
+            <div class="code-line"><span class="ln">3</span><span class="kw">const</span> sk = <span class="str">"sk_live_4xKj9mN..."</span></div>
+            <div class="code-line"><span class="ln">4</span></div>
+            <div class="code-line"><span class="ln">5</span><span class="kw">async function</span> <span class="fn">getUser</span>(id) {</div>
+            <div class="code-line"><span class="ln">6</span>  <span class="kw">const</span> data = <span class="kw">await</span> supabase</div>
+            <div class="code-line"><span class="ln">7</span>    .from(<span class="str">'users'</span>).select(<span class="str">'*'</span>)</div>
+            <div class="code-line"><span class="ln">8</span>  <span class="kw">return</span> data</div>
+            <div class="code-line"><span class="ln">9</span>}</div>
           </div>
+          <div class="demo-scan-beam"></div>
+        </div>
+        <div class="demo-scan-status">
+          <div class="demo-spinner"></div>
+          <span id="demoScanStatusText">Checking for exposed secrets…</span>
         </div>
       </div>
 
@@ -1217,17 +1224,26 @@
             <span style="font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3)">Safety score</span>
             <span style="font-size:1.1rem;font-weight:700;color:#EF4444;font-family:'Space Grotesk',sans-serif" id="demoScore">0</span>
           </div>
-          <div class="demo-issue-card critical">
+          <div class="demo-issue-card critical" id="demoCard1">
             <div class="dic-badge">CRITICAL</div>
             <div class="dic-title">Exposed Stripe secret key</div>
             <div class="dic-desc">Hardcoded on line 3 — anyone with your code can charge cards</div>
           </div>
-          <div class="demo-issue-card warning">
+          <div class="demo-issue-card warning" id="demoCard2">
             <div class="dic-badge warn-badge">WARNING</div>
             <div class="dic-title">Missing RLS on users table</div>
             <div class="dic-desc">SELECT * without row-level security — users can read each other's data</div>
           </div>
         </div>
+      </div>
+
+      <!-- Stage progress indicator -->
+      <div class="demo-steps">
+        <div class="demo-step-dot active" id="demoDot1"><span>Code</span></div>
+        <div class="demo-step-line" id="demoLine1"></div>
+        <div class="demo-step-dot" id="demoDot2"><span>Scan</span></div>
+        <div class="demo-step-line" id="demoLine2"></div>
+        <div class="demo-step-dot" id="demoDot3"><span>Results</span></div>
       </div>
 
     </div><!-- /scan-demo -->
@@ -1275,19 +1291,30 @@
 }
 .demo-scan-btn:hover { opacity:0.85 }
 
-.demo-scan-line {
-  height:8px;width:100%;background:var(--border2);border-radius:4px;
-  margin-bottom:10px;overflow:hidden;position:relative;
+/* Scanning stage: beam sweeps over the real code */
+.demo-scan-zone { position:relative;overflow:hidden }
+.demo-code-dim .code-line { opacity:0.45 }
+.demo-scan-beam {
+  position:absolute;left:0;right:0;top:0;height:34px;
+  background:linear-gradient(180deg,transparent,rgba(0,212,255,0.14) 45%,rgba(0,212,255,0.28) 50%,rgba(0,212,255,0.14) 55%,transparent);
+  border-top:1px solid rgba(0,212,255,0.35);
+  border-bottom:1px solid rgba(0,212,255,0.35);
+  box-shadow:0 0 24px rgba(0,212,255,0.25);
+  animation:beam-sweep 2.2s ease-in-out infinite;
+  pointer-events:none;
 }
-.demo-scan-line::after {
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent,var(--cyan),transparent);
-  animation:scan-sweep 1.2s ease-in-out infinite;
+@keyframes beam-sweep {
+  0%   { top:-34px; opacity:0 }
+  8%   { opacity:1 }
+  92%  { opacity:1 }
+  100% { top:100%; opacity:0 }
 }
-@keyframes scan-sweep {
-  0% { transform:translateX(-100%) }
-  100% { transform:translateX(200%) }
+.demo-scan-status {
+  display:flex;align-items:center;gap:10px;
+  padding:12px 16px 16px;
+  font-size:0.76rem;color:var(--text3);
 }
+#demoScanStatusText { transition:opacity 0.3s ease }
 
 .demo-spinner {
   width:16px;height:16px;border-radius:50%;
@@ -1296,9 +1323,59 @@
 }
 @keyframes spin { to { transform:rotate(360deg) } }
 
-.demo-issue-card { border-radius:8px;padding:10px 12px;margin-bottom:8px }
+.demo-issue-card {
+  border-radius:8px;padding:10px 12px;margin-bottom:8px;
+  opacity:0;transform:translateY(10px);
+  transition:opacity 0.6s ease,transform 0.6s cubic-bezier(0.22,0.61,0.36,1);
+}
+.demo-issue-card.shown { opacity:1;transform:translateY(0) }
 .demo-issue-card.critical { background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2) }
 .demo-issue-card.warning { background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2) }
+
+/* Stage 1: code lines reveal one by one */
+#demoStage1 .code-line {
+  opacity:0;transform:translateX(-6px);
+  transition:opacity 0.4s ease,transform 0.4s ease;
+}
+#demoStage1 .code-line.revealed { opacity:1;transform:translateX(0) }
+#demoStage1 .code-line.highlight-bad,
+#demoStage1 .code-line.highlight-warn { background:transparent;border-left-color:transparent }
+#demoStage1 .code-line.highlight-bad.flagged {
+  background:rgba(239,68,68,0.1);border-left:2px solid #EF4444;
+  transition:background 0.6s ease,border-color 0.6s ease;
+}
+#demoStage1 .code-line.highlight-warn.flagged {
+  background:rgba(245,158,11,0.08);border-left:2px solid #F59E0B;
+  transition:background 0.6s ease,border-color 0.6s ease;
+}
+
+/* Stage progress indicator */
+.demo-steps {
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 16px 14px;border-top:1px solid var(--border);
+}
+.demo-step-dot {
+  display:flex;align-items:center;gap:6px;
+  font-size:0.66rem;font-weight:600;color:var(--text3);
+  transition:color 0.5s ease;
+}
+.demo-step-dot::before {
+  content:'';width:7px;height:7px;border-radius:50%;
+  background:var(--border2);transition:background 0.5s ease,box-shadow 0.5s ease;
+}
+.demo-step-dot.active { color:var(--cyan) }
+.demo-step-dot.active::before { background:var(--cyan);box-shadow:0 0 8px rgba(0,212,255,0.6) }
+.demo-step-dot.done { color:var(--text2) }
+.demo-step-dot.done::before { background:var(--text2) }
+.demo-step-line {
+  width:34px;height:1px;background:var(--border2);
+  position:relative;overflow:hidden;
+}
+.demo-step-line::after {
+  content:'';position:absolute;inset:0;background:var(--cyan);
+  transform:scaleX(0);transform-origin:left;transition:transform 0.8s ease;
+}
+.demo-step-line.filled::after { transform:scaleX(1) }
 .dic-badge { font-size:0.62rem;font-weight:700;letter-spacing:0.08em;color:#EF4444;margin-bottom:4px }
 .warn-badge { color:#F59E0B }
 .dic-title { font-size:0.78rem;font-weight:600;color:var(--text);margin-bottom:3px }
@@ -1307,9 +1384,11 @@
 
 <script>
 (function() {
-  var stage = 1;
   var scoreTarget = 42;
-  var loop;
+  var timers = [];
+
+  function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+  function clearTimers() { timers.forEach(clearTimeout); timers = []; }
 
   function showStage(n) {
     [1,2,3].forEach(function(i) {
@@ -1321,8 +1400,49 @@
         el.classList.remove('active');
         setTimeout(function() {
           if (!el.classList.contains('active')) el.style.display = 'none';
-        }, 650);
+        }, 1300);
       }
+    });
+    // Progress indicator
+    [1,2,3].forEach(function(i) {
+      var dot = document.getElementById('demoDot' + i);
+      dot.classList.toggle('active', i === n);
+      dot.classList.toggle('done', i < n);
+    });
+    document.getElementById('demoLine1').classList.toggle('filled', n >= 2);
+    document.getElementById('demoLine2').classList.toggle('filled', n >= 3);
+  }
+
+  function revealCodeLines() {
+    var lines = document.querySelectorAll('#demoStage1 .code-line');
+    lines.forEach(function(line, i) {
+      later(function() { line.classList.add('revealed'); }, 200 + i * 180);
+    });
+    // After all lines are in, flag the problem lines
+    later(function() {
+      document.querySelectorAll('#demoStage1 .highlight-bad, #demoStage1 .highlight-warn')
+        .forEach(function(l) { l.classList.add('flagged'); });
+    }, 200 + lines.length * 180 + 500);
+  }
+
+  function resetCodeLines() {
+    document.querySelectorAll('#demoStage1 .code-line').forEach(function(l) {
+      l.classList.remove('revealed', 'flagged');
+    });
+  }
+
+  function cycleScanStatus() {
+    var texts = [
+      'Checking for exposed secrets…',
+      'Checking database access rules…',
+      'Analysing with Claude Sonnet…'
+    ];
+    var el = document.getElementById('demoScanStatusText');
+    texts.forEach(function(t, i) {
+      later(function() {
+        el.style.opacity = '0';
+        setTimeout(function() { el.textContent = t; el.style.opacity = '1'; }, 300);
+      }, i * 1600);
     });
   }
 
@@ -1330,52 +1450,74 @@
     var el = document.getElementById('demoScore');
     var current = 0;
     var interval = setInterval(function() {
-      current += 3;
+      current += 2;
       if (current >= scoreTarget) { current = scoreTarget; clearInterval(interval); }
       el.textContent = current + ' / 100';
-    }, 40);
+    }, 50);
+    timers.push(interval);
+  }
+
+  function showCards() {
+    later(function() { document.getElementById('demoCard1').classList.add('shown'); }, 500);
+    later(function() { document.getElementById('demoCard2').classList.add('shown'); }, 1100);
+  }
+
+  function resetCards() {
+    document.getElementById('demoCard1').classList.remove('shown');
+    document.getElementById('demoCard2').classList.remove('shown');
+    document.getElementById('demoScore').textContent = '0';
   }
 
   function showChips() {
     var issue = document.getElementById('demoChipIssue');
     var score = document.getElementById('demoChipScore');
-    issue.style.transition = 'opacity 0.5s';
+    issue.style.transition = 'opacity 0.6s';
     issue.style.opacity = '1';
-    setTimeout(function() {
-      score.style.transition = 'opacity 0.5s';
+    later(function() {
+      score.style.transition = 'opacity 0.6s';
       score.style.opacity = '1';
-    }, 400);
+    }, 600);
   }
 
   function hideChips() {
-    var issue = document.getElementById('demoChipIssue');
-    var score = document.getElementById('demoChipScore');
-    issue.style.transition = 'opacity 0.3s';
-    score.style.transition = 'opacity 0.3s';
-    issue.style.opacity = '0';
-    score.style.opacity = '0';
+    ['demoChipIssue','demoChipScore'].forEach(function(id) {
+      var el = document.getElementById(id);
+      el.style.transition = 'opacity 0.4s';
+      el.style.opacity = '0';
+    });
   }
 
   function runDemo() {
+    clearTimers();
     hideChips();
+    resetCards();
+    resetCodeLines();
     showStage(1);
-    setTimeout(function() {
+    revealCodeLines();
+
+    // Stage 1 → 2 after code fully revealed and flagged
+    later(function() {
       showStage(2);
-      setTimeout(function() {
+      cycleScanStatus();
+
+      // Stage 2 → 3 after scan sweep
+      later(function() {
         showStage(3);
         animateScore();
-        showChips();
-        // Restart after 8s
-        setTimeout(function() { runDemo(); }, 8000);
-      }, 4000);
-    }, 3500);
+        showCards();
+        later(showChips, 1400);
+
+        // Hold results, then loop
+        later(runDemo, 9000);
+      }, 5000);
+    }, 4200);
   }
 
   // Kick off when hero is visible
   var observer = new IntersectionObserver(function(entries) {
     if (entries[0].isIntersecting) {
       observer.disconnect();
-      setTimeout(runDemo, 800);
+      setTimeout(runDemo, 600);
     }
   }, { threshold: 0.3 });
 
