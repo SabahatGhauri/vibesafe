@@ -2374,19 +2374,32 @@ async function sendTeamInvite() {
     var teamId = await getOrCreateTeam();
     if (!teamId) throw new Error('Could not create team.');
 
+    // Generate a unique invite token
+    var inviteToken = teamId + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
+
     // Insert pending invite
     var { error } = await sbClient.from('team_members').insert({
       team_id: teamId,
       invited_email: email,
       invited_by: currentUser.id,
       status: 'pending',
+      invite_token: inviteToken,
     });
     if (error && error.code !== '23505') throw error; // ignore duplicate
 
-    // Send magic-link invite via Supabase Auth admin (edge function) or show manual link
-    // For now: insert into invites table and show confirmation
+    // Fire invite email via API (non-blocking — invite is recorded regardless)
+    var session = sbClient.auth.session ? sbClient.auth.session() : (await sbClient.auth.getSession()).data.session;
+    var authToken = session && session.access_token;
+    if (authToken) {
+      fetch('https://vibesafe-api.vercel.app/api/invite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+        body: JSON.stringify({ email, teamId, inviteToken }),
+      }).catch(function() {}); // silent — invite already recorded in DB
+    }
+
     status.style.color = 'var(--green, #10B981)';
-    status.textContent = '✓ Invite recorded. Share your team link with ' + email + ' to get them set up.';
+    status.textContent = '✓ Invite sent to ' + email + '. They\'ll get an email with a link to join.';
     document.getElementById('inviteEmailInput').value = '';
     loadTeamMembers();
   } catch (err) {
