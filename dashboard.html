@@ -2385,7 +2385,13 @@ async function sendTeamInvite() {
       status: 'pending',
       invite_token: inviteToken,
     });
-    if (error && error.code !== '23505') throw error; // ignore duplicate
+    if (error && error.code === '23505') {
+      // Row already exists — update the token so the new email link works
+      var { error: upErr } = await sbClient.from('team_members')
+        .update({ invite_token: inviteToken, status: 'pending' })
+        .eq('team_id', teamId).eq('invited_email', email);
+      if (upErr) throw upErr;
+    } else if (error) throw error;
 
     // Fire invite email via API (non-blocking — invite is recorded regardless)
     var session = sbClient.auth.session ? sbClient.auth.session() : (await sbClient.auth.getSession()).data.session;
