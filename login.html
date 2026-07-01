@@ -170,7 +170,7 @@ body{
   </a>
 
   <h1 class="auth-title" id="authTitle">Welcome back</h1>
-  <div class="auth-sub" id="authSub">Sign in to access your scans</div>
+  <div class="auth-sub" id="authSub">Your code is never stored — results only, always private.</div>
 
   <div class="auth-tabs">
     <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Sign in</button>
@@ -310,7 +310,7 @@ function switchTab(newMode) {
 
   // Titles
   var titles = { login: 'Welcome back', signup: 'Create your account', forgot: 'Reset your password', reset: 'Set new password' };
-  var subs   = { login: 'Sign in to access your scans', signup: 'Start scanning your code for free', forgot: 'Enter your email and we\'ll send a reset link', reset: 'Choose a new password for your account' };
+  var subs   = { login: 'Your code is never stored — results only, always private.', signup: 'Start your first scan in 30 seconds. No card required.', forgot: 'Enter your email and we\'ll send a reset link', reset: 'Choose a new password for your account' };
   document.getElementById('authTitle').textContent = titles[mode];
   document.getElementById('authSub').textContent   = subs[mode];
 

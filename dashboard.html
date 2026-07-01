@@ -1287,6 +1287,9 @@ document.addEventListener('click', function(e) {
       <button class="sidebar-item" onclick="switchEditorTab(document.querySelectorAll('.etab')[0],'editor')">
         <span class="si-icon">📝</span> Paste code
       </button>
+      <button class="sidebar-item" onclick="switchEditorTab(document.querySelectorAll('.etab')[3],'liveurl')">
+        <span class="si-icon">🌐</span> Live URL
+      </button>
     </div>
 
     <div class="sidebar-sep"></div>
@@ -2459,15 +2462,19 @@ async function loadTeamScanHistory() {
   var teamId = await getOrCreateTeam().catch(() => null);
   if (!teamId) return;
 
-  // Get all user_ids in team
+  // Always include the team owner + any active members
   var { data: members } = await sbClient.from('team_members').select('user_id').eq('team_id', teamId).eq('status', 'active');
   var userIds = (members || []).map(function(m) { return m.user_id; }).filter(Boolean);
-  if (userIds.length === 0) userIds = [currentUser.id];
+  if (!userIds.includes(currentUser.id)) userIds.unshift(currentUser.id);
 
-  var { data: scans } = await sbClient.from('scans').select('*').in('user_id', userIds).order('created_at', { ascending: false }).limit(30);
+  var { data: scans, error: scanErr } = await sbClient.from('scans').select('*').in('user_id', userIds).order('created_at', { ascending: false }).limit(30);
 
+  if (scanErr) {
+    container.innerHTML = '<div style="font-size:0.8rem;color:var(--red,#EF4444);text-align:center;padding:16px 0;">Could not load scan history.</div>';
+    return;
+  }
   if (!scans || scans.length === 0) {
-    container.innerHTML = '<div style="font-size:0.8rem;color:var(--text3);text-align:center;padding:16px 0;">No team scans yet.</div>';
+    container.innerHTML = '<div style="font-size:0.8rem;color:var(--text3);text-align:center;padding:16px 0;">No scans yet — run your first scan to see it here.</div>';
     return;
   }
 
