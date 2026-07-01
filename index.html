@@ -294,6 +294,11 @@
   .scan-demo-wrap {
     perspective: 1200px;
     position: relative;
+    pointer-events: none;
+  }
+
+  .scan-demo-wrap .scan-demo {
+    pointer-events: auto;
   }
 
   .scan-demo-glow {
@@ -2158,8 +2163,8 @@ document.addEventListener('DOMContentLoaded', function() {
       requestAnimationFrame(animateTilt);
     }
 
-    tiltStage.addEventListener('mousemove', function(e) {
-      var rect = tiltStage.getBoundingClientRect();
+    tiltCard.addEventListener('mousemove', function(e) {
+      var rect = tiltCard.getBoundingClientRect();
       var px = (e.clientX - rect.left) / rect.width - 0.5;
       var py = (e.clientY - rect.top) / rect.height - 0.5;
       targetX = px * 16;
@@ -2167,7 +2172,7 @@ document.addEventListener('DOMContentLoaded', function() {
       tiltCard.classList.add('tilting');
     });
 
-    tiltStage.addEventListener('mouseleave', function() {
+    tiltCard.addEventListener('mouseleave', function() {
       targetX = 0;
       targetY = 0;
       tiltCard.classList.remove('tilting');
