@@ -1179,10 +1179,21 @@
 
 <!-- STATS STRIP -->
 <div class="stats-strip">
-  <div class="stats-inner" style="justify-content:center">
-    <div class="stat-item" style="text-align:center;max-width:520px">
+  <div class="stats-inner">
+    <div class="stat-item">
       <div class="stat-num">45%</div>
-      <div class="stat-label" style="font-size:1rem">of AI-generated apps contain at least one exploitable vulnerability — <em>is yours one of them?</em></div>
+      <div class="stat-label">of AI-generated code contains security vulnerabilities</div>
+      <div class="stat-source">2026 Security Audit</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">63%</div>
+      <div class="stat-label">of vibe coders have no technical background</div>
+      <div class="stat-source">Synergy Labs 2026</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">$4.7B</div>
+      <div class="stat-label">vibe coding market — growing 38% annually</div>
+      <div class="stat-source">Market analysis 2026</div>
     </div>
   </div>
 </div>
@@ -1317,95 +1328,74 @@
       </div>
       <p class="section-sub">Built specifically for non-technical founders who need production-grade quality without the engineering team.</p>
     </div>
-    <!-- Founder-first cards -->
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon">🔐</div>
-        <div class="feature-title">Finds your exposed secrets</div>
-        <div class="feature-desc">Catches exposed API keys, Stripe secrets, database passwords, and auth tokens in your code before anyone else does — one of these going live can cost you everything.</div>
-        <span class="feature-tag tag-cyan">Most common</span>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">💥</div>
-        <div class="feature-title">Stops crashes before launch</div>
-        <div class="feature-desc">Finds the silent bugs that only appear when real users hit your app — missing awaits, unhandled errors, broken flows. Your AI tool wrote them. VibeSafe finds them.</div>
+        <div class="feature-title">Security vulnerability scan</div>
+        <div class="feature-desc">Detects exposed API keys, SQL injection risks, XSS vulnerabilities, and insecure authentication patterns before they reach production.</div>
         <span class="feature-tag tag-cyan">Critical</span>
       </div>
       <div class="feature-card">
+        <div class="feature-icon">🐛</div>
+        <div class="feature-title">Runtime error detection</div>
+        <div class="feature-desc">Catches missing awaits, null pointer exceptions, unhandled rejections, and type mismatches that only surface when real users hit your app.</div>
+        <span class="feature-tag tag-cyan">Critical</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <div class="feature-title">Auto dependency installer</div>
+        <div class="feature-desc">Identifies missing or outdated packages and suggests the correct versions to install — for Python, JavaScript, TypeScript, and more.</div>
+        <span class="feature-tag tag-violet">Auto-fix</span>
+      </div>
+      <div class="feature-card">
         <div class="feature-icon">💬</div>
-        <div class="feature-title">Explains everything in plain English</div>
-        <div class="feature-desc">Every issue tells you what it is, why it matters, and what happens if you ignore it. No jargon, no guesswork — written for founders, not engineers.</div>
+        <div class="feature-title">Plain-English explanations</div>
+        <div class="feature-desc">Every issue is explained in plain language — what it is, why it's a problem, and exactly what happens if you ignore it. No jargon, ever.</div>
         <span class="feature-tag tag-green">Founder-first</span>
       </div>
       <div class="feature-card">
         <div class="feature-icon">📊</div>
-        <div class="feature-title">Safety score you can share</div>
-        <div class="feature-desc">Get a 0–100 score with a full report. Show investors, clients, or a technical advisor that your app is solid — without needing to explain the code yourself.</div>
+        <div class="feature-title">Safety score & report</div>
+        <div class="feature-desc">Get a 0–100 safety score with a full report you can share with investors, clients, or your technical advisor to prove your app is solid.</div>
         <span class="feature-tag tag-green">Founder-first</span>
       </div>
-    </div>
-
-    <!-- Technical toggle -->
-    <div style="margin-top:28px;text-align:center">
-      <button onclick="toggleTechFeatures()" id="techToggleBtn" style="background:none;border:1px solid var(--border2);color:var(--text2);font-family:'Inter',sans-serif;font-size:0.85rem;padding:10px 22px;border-radius:100px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'">
-        For technical users ↓
-      </button>
-    </div>
-
-    <div id="techFeatures" style="display:none;margin-top:20px">
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">🌐</div>
-          <div class="feature-title">Live URL / DAST scanning</div>
-          <div class="feature-desc">Scan your deployed app for missing security headers, HTTPS issues, exposed paths, CORS misconfigurations, and insecure cookie flags — without touching your code.</div>
-          <span class="feature-tag tag-cyan">New</span>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">⚙️</div>
-          <div class="feature-title">CI/CD GitHub Action</div>
-          <div class="feature-desc">Auto-scan every push and pull request. Results post as a PR comment with a score table and critical issues listed. Blocks merges on critical findings.</div>
-          <span class="feature-tag tag-cyan">New</span>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🧩</div>
-          <div class="feature-title">VS Code & Cursor extension</div>
-          <div class="feature-desc">Scan the current file with Ctrl+Shift+V. Get inline squiggles on every flagged line, a results panel with before/after fixes, and an optional scan-on-save mode.</div>
-          <span class="feature-tag tag-cyan">New</span>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🐱</div>
-          <div class="feature-title">Private GitHub repo scanning</div>
-          <div class="feature-desc">Sign in with GitHub and scan any private repo file directly from the URL tab — no copy-paste needed, no credentials exposed.</div>
-          <span class="feature-tag tag-cyan">New</span>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">👥</div>
-          <div class="feature-title">Team collaboration</div>
-          <div class="feature-desc">Invite your team, share scan history, and see every member's scans in one place. Perfect for founders working with a developer or agency.</div>
-          <span class="feature-tag tag-violet">Pro</span>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🔁</div>
-          <div class="feature-title">Supabase RLS check</div>
-          <div class="feature-desc">The #1 cause of vibe-coded app breaches. VibeSafe always flags misconfigured Row Level Security as critical — before your data is exposed.</div>
-          <span class="feature-tag tag-cyan">Critical</span>
-        </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔁</div>
+        <div class="feature-title">Continuous monitoring</div>
+        <div class="feature-desc">Connect your repo and VibeSafe automatically scans every new deployment. Ship fast and stay safe without thinking about it.</div>
+        <span class="feature-tag tag-violet">Pro</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <div class="feature-title">Live URL / DAST scanning</div>
+        <div class="feature-desc">Scan your deployed app for missing security headers, HTTPS issues, exposed paths, CORS misconfigurations, and insecure cookie flags — without touching your code.</div>
+        <span class="feature-tag tag-cyan">New</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚙️</div>
+        <div class="feature-title">CI/CD GitHub Action</div>
+        <div class="feature-desc">Auto-scan every push and pull request. Results post as a PR comment with a score table and critical issues listed. Blocks merges on critical findings.</div>
+        <span class="feature-tag tag-cyan">New</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🧩</div>
+        <div class="feature-title">VS Code & Cursor extension</div>
+        <div class="feature-desc">Scan the current file with Ctrl+Shift+V. Get inline squiggles on every flagged line, a results panel with before/after fixes, and an optional scan-on-save mode.</div>
+        <span class="feature-tag tag-cyan">New</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👥</div>
+        <div class="feature-title">Team collaboration</div>
+        <div class="feature-desc">Invite your team, share scan history, and see every member's scans in one place. Perfect for founders working with a developer or agency.</div>
+        <span class="feature-tag tag-violet">Pro</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🐱</div>
+        <div class="feature-title">Private GitHub repo scanning</div>
+        <div class="feature-desc">Sign in with GitHub and scan any private repo file directly from the URL tab — no copy-paste needed, no credentials exposed.</div>
+        <span class="feature-tag tag-cyan">New</span>
       </div>
     </div>
-
-    <script>
-    function toggleTechFeatures() {
-      var el = document.getElementById('techFeatures');
-      var btn = document.getElementById('techToggleBtn');
-      if (el.style.display === 'none') {
-        el.style.display = 'block';
-        btn.textContent = 'For technical users ↑';
-      } else {
-        el.style.display = 'none';
-        btn.textContent = 'For technical users ↓';
-      }
-    }
-    </script>
   </div>
 </section>
 
