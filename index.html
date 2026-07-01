@@ -39,6 +39,14 @@
     "Runtime error detection",
     "Missing / vulnerable dependency checks",
     "OWASP Top 10 security checks",
+    "Supabase RLS misconfiguration detection",
+    "Hallucinated package detection (slopsquatting)",
+    "Prompt injection risk detection",
+    "Live URL / DAST scanning for deployed apps",
+    "GitHub Action CI/CD integration",
+    "VS Code extension with inline diagnostics",
+    "Private GitHub repo scanning",
+    "Team collaboration and shared scan history",
     "Plain-English fixes and pre-launch safety score"
   ]
 }
@@ -1353,6 +1361,36 @@
         <div class="feature-desc">Connect your repo and VibeSafe automatically scans every new deployment. Ship fast and stay safe without thinking about it.</div>
         <span class="feature-tag tag-violet">Pro</span>
       </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <div class="feature-title">Live URL / DAST scanning</div>
+        <div class="feature-desc">Scan your deployed app for missing security headers, HTTPS issues, exposed paths, CORS misconfigurations, and insecure cookie flags — without touching your code.</div>
+        <span class="feature-tag tag-cyan">New</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚙️</div>
+        <div class="feature-title">CI/CD GitHub Action</div>
+        <div class="feature-desc">Auto-scan every push and pull request. Results post as a PR comment with a score table and critical issues listed. Blocks merges on critical findings.</div>
+        <span class="feature-tag tag-cyan">New</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🧩</div>
+        <div class="feature-title">VS Code & Cursor extension</div>
+        <div class="feature-desc">Scan the current file with Ctrl+Shift+V. Get inline squiggles on every flagged line, a results panel with before/after fixes, and an optional scan-on-save mode.</div>
+        <span class="feature-tag tag-cyan">New</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👥</div>
+        <div class="feature-title">Team collaboration</div>
+        <div class="feature-desc">Invite your team, share scan history, and see every member's scans in one place. Perfect for founders working with a developer or agency.</div>
+        <span class="feature-tag tag-violet">Pro</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🐱</div>
+        <div class="feature-title">Private GitHub repo scanning</div>
+        <div class="feature-desc">Sign in with GitHub and scan any private repo file directly from the URL tab — no copy-paste needed, no credentials exposed.</div>
+        <span class="feature-tag tag-cyan">New</span>
+      </div>
     </div>
   </div>
 </section>
@@ -1368,10 +1406,12 @@
       <a href="https://bolt.new" target="_blank" class="integration-pill"><span class="pill-emoji">⚡</span> Bolt.new <span class="pill-status">✓ Supported</span></a>
       <a href="https://cursor.com" target="_blank" class="integration-pill"><span class="pill-emoji">🖥️</span> Cursor <span class="pill-status">✓ Supported</span></a>
       <a href="https://replit.com" target="_blank" class="integration-pill"><span class="pill-emoji">🔵</span> Replit <span class="pill-status">✓ Supported</span></a>
-      <a href="https://github.com" target="_blank" class="integration-pill"><span class="pill-emoji">🐱</span> GitHub <span class="pill-status pill-soon">Coming soon</span></a>
-      <a href="https://vercel.com" target="_blank" class="integration-pill"><span class="pill-emoji">🌐</span> Vercel <span class="pill-status pill-soon">Coming soon</span></a>
+      <a href="https://github.com" target="_blank" class="integration-pill"><span class="pill-emoji">🐱</span> GitHub <span class="pill-status">✓ Supported</span></a>
+      <a href="https://vercel.com" target="_blank" class="integration-pill"><span class="pill-emoji">🌐</span> Vercel <span class="pill-status">✓ Supported</span></a>
       <div class="integration-pill"><span class="pill-emoji">🐍</span> Python <span class="pill-status">✓ Supported</span></div>
       <div class="integration-pill"><span class="pill-emoji">🟨</span> JavaScript <span class="pill-status">✓ Supported</span></div>
+      <div class="integration-pill"><span class="pill-emoji">🧩</span> VS Code <span class="pill-status">✓ Extension</span></div>
+      <div class="integration-pill"><span class="pill-emoji">🖱️</span> Cursor <span class="pill-status">✓ Extension</span></div>
     </div>
   </div>
 </section>
