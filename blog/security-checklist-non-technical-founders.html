@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Security Checklist for Non-Technical Founders (Launch Week Edition) | VibeSafe</title>
+<meta name="description" content="A launch-week security checklist for non-technical founders: the seven checks that prevent the most common AI-built app disasters, in plain English.">
+<meta name="keywords" content="security checklist founders, non-technical founder security, launch security checklist, vibe-coded apps security">
+<link rel="canonical" href="https://www.vibesafe.info/blog/security-checklist-non-technical-founders">
+<meta property="og:title" content="The Security Checklist for Non-Technical Founders | VibeSafe">
+<meta property="og:description" content="Seven checks, one hour — the launch-week routine that prevents the most common AI-built app disasters.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/blog/security-checklist-non-technical-founders">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"The Security Checklist for Non-Technical Founders (Launch Week Edition)","description":"The seven checks that prevent the most common AI-built app disasters.","datePublished":"2026-07-02","author":{"@type":"Organization","name":"VibeSafe"},"publisher":{"@type":"Organization","name":"VibeSafe","url":"https://www.vibesafe.info"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,2.5rem);line-height:1.18;letter-spacing:-0.02em;margin-bottom:18px}
+.lead{font-size:1.08rem;color:var(--text2);margin-bottom:26px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;margin:32px 0 12px}
+p{color:var(--text2);margin-bottom:16px}
+.check{list-style:none;margin:0 0 18px}
+.check li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid var(--border);color:var(--text2)}
+.check li::before{content:'☐';position:absolute;left:0;color:var(--cyan);font-weight:700}
+code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+.meta-row{font-size:0.82rem;color:var(--text3);margin-bottom:28px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt=""> VibeSafe</a>
+  <a href="/login.html" class="nav-cta">Scan your code</a>
+</nav>
+<main>
+  <p class="eyebrow">Founders</p>
+  <h1>The launch-week security checklist for non-technical founders</h1>
+  <div class="meta-row">6 min read · VibeSafe Blog</div>
+  <p class="lead">You don't need to become a security engineer to launch safely. You need seven checks, one hour, and the discipline to actually run them before the launch tweet. Here they are.</p>
+
+  <h2>The seven checks</h2>
+  <ul class="check">
+    <li><strong>1. The stranger test</strong> — open your app logged out in a private window; confirm nothing private renders and direct URLs to account pages bounce to login</li>
+    <li><strong>2. The secrets sweep</strong> — search code for <code>sk_live</code>, <code>sk-</code>, <code>AKIA</code>, <code>service_role</code>; any literal match gets moved to environment variables and rotated</li>
+    <li><strong>3. The database rules check</strong> — Supabase/Firebase dashboard: access rules enabled on every table, scoped to the logged-in user</li>
+    <li><strong>4. The dependency check</strong> — every imported package exists and isn't known-vulnerable</li>
+    <li><strong>5. The crash check</strong> — no console errors on the live site; forms handle bad input without dying</li>
+    <li><strong>6. The mobile check</strong> — tested on a real phone, not just the responsive preview</li>
+    <li><strong>7. The scan</strong> — an automated security scan shows zero critical issues; keep the report</li>
+  </ul>
+
+  <h2>What to do with findings</h2>
+  <p>Fix criticals before launch, full stop — they're the exposed keys and open databases that end companies. Warnings can ship with a plan to fix in week one. Keep the scan report: it's your evidence of diligence for investors, clients, and your own peace of mind.</p>
+
+  <h2>The habit that matters more than the checklist</h2>
+  <p>AI-built apps change wholesale with every regeneration — last week's fixes can vanish in this week's prompt. Re-run the checklist (or at least the scan) after every significant AI-generated change. One founder-hour per launch; that's the entire cost of not being a cautionary tale.</p>
+  <p><a href="/login.html" style="color:var(--cyan)">VibeSafe</a> automates checks 2, 4, 5, and 7 in about ten seconds each, in plain English — and the launch checklist in the dashboard tracks the manual ones.</p>
+
+  <div class="cta-box">
+    <a href="/login.html">Run your launch-week scan free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">3 free scans every month · Your code is never stored</p>
+  </div>
+
+  <div class="disclaimer"><strong>An honest note.</strong> VibeSafe helps catch the most common risks in AI-built apps quickly. It doesn't replace a professional security audit for high-risk applications.</div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related:</p>
+  <div class="related">
+    <a href="/pre-launch-security-checklist.html">Pre-launch checklist</a>
+    <a href="/free-security-checklist.html">Printable checklist</a>
+    <a href="/blog/is-vibe-coding-safe-honest-answer.html">Is vibe coding safe?</a>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/blog.html">Blog</a> · <a href="/legal.html">Privacy &amp; Terms</a>
+</footer>
+</body>
+</html>

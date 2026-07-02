@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supabase RLS Explained for Founders (No Database Degree Required) | VibeSafe</title>
+<meta name="description" content="Row-Level Security is the difference between a private database and a public one. A plain-English explanation of Supabase RLS for non-technical founders.">
+<meta name="keywords" content="Supabase RLS explained, Supabase Row Level Security, Supabase security, vibe-coded apps security">
+<link rel="canonical" href="https://www.vibesafe.info/blog/supabase-rls-explained-for-founders">
+<meta property="og:title" content="Supabase RLS Explained for Founders | VibeSafe">
+<meta property="og:description" content="What RLS does, why AI tools keep leaving it off, and the two-step fix — in plain English.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/blog/supabase-rls-explained-for-founders">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Supabase RLS Explained for Founders","description":"A plain-English explanation of Supabase Row-Level Security for non-technical founders.","datePublished":"2026-07-02","author":{"@type":"Organization","name":"VibeSafe"},"publisher":{"@type":"Organization","name":"VibeSafe","url":"https://www.vibesafe.info"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,2.5rem);line-height:1.18;letter-spacing:-0.02em;margin-bottom:18px}
+.lead{font-size:1.08rem;color:var(--text2);margin-bottom:26px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;margin:32px 0 12px}
+p{color:var(--text2);margin-bottom:16px}
+ul.plain{margin:0 0 18px 18px;color:var(--text2)}
+ul.plain li{margin-bottom:8px}
+code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+.meta-row{font-size:0.82rem;color:var(--text3);margin-bottom:28px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt=""> VibeSafe</a>
+  <a href="/login.html" class="nav-cta">Scan your code</a>
+</nav>
+<main>
+  <p class="eyebrow">Supabase</p>
+  <h1>Supabase RLS, explained like you're a founder — not a DBA</h1>
+  <div class="meta-row">6 min read · VibeSafe Blog</div>
+  <p class="lead">Row-Level Security is the single most important switch in your Supabase project. Here's what it does, why AI tools keep leaving it off, and how to set it up in plain English.</p>
+
+  <h2>The mental model</h2>
+  <p>Your Supabase database is a filing cabinet in a public hallway. The <em>anon key</em> that ships in your frontend is a hallway pass — everyone who visits your app has one. <strong>RLS policies are the locks on each drawer.</strong> Without them, the hallway pass opens everything: every user's rows, every table, read and often write.</p>
+
+  <h2>Why AI tools leave it off</h2>
+  <p>An app with RLS enabled and no policies written returns <em>no data at all</em> — which looks broken in a demo. So generated code often works around it: RLS disabled, filtering done in the frontend with <code>.eq('user_id', ...)</code>. That filter is a suggestion, not a rule — anyone can remove it and query the whole table.</p>
+
+  <h2>The two-step fix</h2>
+  <p><strong>Step 1:</strong> enable RLS on every table (Supabase dashboard → table → RLS toggle, or <code>ALTER TABLE x ENABLE ROW LEVEL SECURITY;</code>).</p>
+  <p><strong>Step 2:</strong> write a policy per table that scopes rows to the logged-in user:</p>
+  <p><code>CREATE POLICY "own rows" ON todos FOR ALL USING (auth.uid() = user_id);</code></p>
+  <p>That one line means: this drawer only opens for the person whose name is on the folder.</p>
+
+  <h2>The three mistakes to avoid</h2>
+  <ul class="plain">
+    <li><strong>Policies on some tables, not all</strong> — attackers look for the one you forgot.</li>
+    <li><strong>Using the service_role key in frontend code</strong> — that key bypasses RLS entirely; it must live server-side only.</li>
+    <li><strong>Trusting frontend filters</strong> — if the rule isn't in the database, it isn't a rule.</li>
+  </ul>
+  <p>A scan with <a href="/login.html" style="color:var(--cyan)">VibeSafe</a> flags the code-side patterns (service_role in frontend, client-side-only filtering) — and always confirm the RLS toggles directly in your Supabase dashboard.</p>
+
+  <div class="cta-box">
+    <a href="/login.html">Scan your Supabase app free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">3 free scans every month · Your code is never stored</p>
+  </div>
+
+  <div class="disclaimer"><strong>An honest note.</strong> VibeSafe helps catch the most common risks in AI-built apps quickly. It doesn't replace a professional security audit for high-risk applications.</div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related:</p>
+  <div class="related">
+    <a href="/supabase-security-checklist.html">Supabase security checklist</a>
+    <a href="/lovable-security-checklist.html">Lovable checklist</a>
+    <a href="/vibe-coding-security.html">Is vibe coding safe?</a>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/blog.html">Blog</a> · <a href="/legal.html">Privacy &amp; Terms</a>
+</footer>
+</body>
+</html>

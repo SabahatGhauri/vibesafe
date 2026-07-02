@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Find Exposed API Keys in Your Code (Before Bots Do) | VibeSafe</title>
+<meta name="description" content="Bots find leaked API keys within minutes. Here's how to find exposed keys in your own code first — the patterns to search for and how to fix each one.">
+<meta name="keywords" content="find exposed API keys, exposed API key scanner, leaked API key, hardcoded secrets">
+<link rel="canonical" href="https://www.vibesafe.info/blog/how-to-find-exposed-api-keys-in-code">
+<meta property="og:title" content="How to Find Exposed API Keys in Your Code (Before Bots Do) | VibeSafe">
+<meta property="og:description" content="The patterns to search for, where keys hide in AI-built apps, and the three-step fix.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/blog/how-to-find-exposed-api-keys-in-code">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"How to Find Exposed API Keys in Your Code (Before Bots Do)","description":"The patterns to search for and how to fix exposed keys in AI-built apps.","datePublished":"2026-07-02","author":{"@type":"Organization","name":"VibeSafe"},"publisher":{"@type":"Organization","name":"VibeSafe","url":"https://www.vibesafe.info"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,2.5rem);line-height:1.18;letter-spacing:-0.02em;margin-bottom:18px}
+.lead{font-size:1.08rem;color:var(--text2);margin-bottom:26px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;margin:32px 0 12px}
+p{color:var(--text2);margin-bottom:16px}
+ul.plain{margin:0 0 18px 18px;color:var(--text2)}
+ul.plain li{margin-bottom:8px}
+.check{list-style:none;margin:0 0 18px}
+.check li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid var(--border);color:var(--text2)}
+.check li::before{content:'☐';position:absolute;left:0;color:var(--cyan);font-weight:700}
+code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+.meta-row{font-size:0.82rem;color:var(--text3);margin-bottom:28px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt=""> VibeSafe</a>
+  <a href="/login.html" class="nav-cta">Scan your code</a>
+</nav>
+<main>
+  <p class="eyebrow">Secrets</p>
+  <h1>How to find exposed API keys in your code — before bots do</h1>
+  <div class="meta-row">5 min read · VibeSafe Blog</div>
+  <p class="lead">Automated scrapers monitor public repositories and deployed JavaScript bundles around the clock. A leaked key is typically found and abused within minutes, not days. Here's how to beat them to it.</p>
+
+  <h2>Where keys hide in AI-built apps</h2>
+  <ul class="plain">
+    <li><strong>Directly in components</strong> — the AI needed a key to make the demo work, so it pasted yours in.</li>
+    <li><strong>In config files</strong> — a "temporary" constants file that shipped to production.</li>
+    <li><strong>In the deployed bundle</strong> — anything in frontend code is visible to every visitor via view-source, even if the repo is private.</li>
+    <li><strong>In git history</strong> — a key committed once and later "removed" is still in the history.</li>
+  </ul>
+
+  <h2>The search patterns</h2>
+  <p>Search your project for these strings: <code>sk_live</code> (Stripe), <code>sk-</code> (OpenAI), <code>AKIA</code> (AWS), <code>service_role</code> (Supabase), <code>AIza</code> (Google), plus generic patterns like <code>apiKey =</code> and <code>password =</code> with quoted values. Any literal match in source code is a finding.</p>
+
+  <h2>Fixing a found key — three steps, not one</h2>
+  <ul class="check">
+    <li><strong>Move it</strong> — load the key from an environment variable on the server side</li>
+    <li><strong>Ignore it</strong> — make sure <code>.env</code> is in <code>.gitignore</code></li>
+    <li><strong>Rotate it</strong> — generate a new key at the provider; the old one must be treated as compromised the moment it touched code</li>
+  </ul>
+  <p>Skipping rotation is the classic mistake: removing the key from your code doesn't remove it from the scrapers that already copied it.</p>
+
+  <h2>Automate the hunt</h2>
+  <p><a href="/login.html" style="color:var(--cyan)">VibeSafe</a> detects exposed keys across languages and providers, shows the exact line, and explains the fix — and it flags high-entropy strings that don't match known prefixes but look like secrets. Free to run, results in seconds.</p>
+
+  <div class="cta-box">
+    <a href="/login.html">Scan for exposed keys free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">3 free scans every month · Your code is never stored</p>
+  </div>
+
+  <div class="disclaimer"><strong>An honest note.</strong> VibeSafe helps catch the most common risks in AI-built apps quickly. It doesn't replace a professional security audit for high-risk applications.</div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related:</p>
+  <div class="related">
+    <a href="/exposed-api-key-scanner.html">Exposed API key scanner</a>
+    <a href="/blog/exposed-api-key-real-world-disasters.html">Real key-leak disasters</a>
+    <a href="/pre-launch-security-checklist.html">Pre-launch checklist</a>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/blog.html">Blog</a> · <a href="/legal.html">Privacy &amp; Terms</a>
+</footer>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hallucinated Packages: The AI Coding Risk Nobody Checks For | VibeSafe</title>
+<meta name="description" content="AI tools sometimes import packages that don't exist — and attackers register those names. What slopsquatting is, why it works, and how to protect your app.">
+<meta name="keywords" content="hallucinated packages, slopsquatting, AI package hallucination, supply chain attack AI code">
+<link rel="canonical" href="https://www.vibesafe.info/blog/hallucinated-packages-slopsquatting">
+<meta property="og:title" content="Hallucinated Packages: The AI Coding Risk Nobody Checks For | VibeSafe">
+<meta property="og:description" content="What slopsquatting is, why it beats normal defenses, and how to protect your app.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/blog/hallucinated-packages-slopsquatting">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Hallucinated Packages: The AI Coding Risk Nobody Checks For","description":"What slopsquatting is, why it works, and how to protect your AI-built app.","datePublished":"2026-07-02","author":{"@type":"Organization","name":"VibeSafe"},"publisher":{"@type":"Organization","name":"VibeSafe","url":"https://www.vibesafe.info"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,2.5rem);line-height:1.18;letter-spacing:-0.02em;margin-bottom:18px}
+.lead{font-size:1.08rem;color:var(--text2);margin-bottom:26px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;margin:32px 0 12px}
+p{color:var(--text2);margin-bottom:16px}
+ul.plain{margin:0 0 18px 18px;color:var(--text2)}
+ul.plain li{margin-bottom:8px}
+.check{list-style:none;margin:0 0 18px}
+.check li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid var(--border);color:var(--text2)}
+.check li::before{content:'☐';position:absolute;left:0;color:var(--cyan);font-weight:700}
+code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+.meta-row{font-size:0.82rem;color:var(--text3);margin-bottom:28px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt=""> VibeSafe</a>
+  <a href="/login.html" class="nav-cta">Scan your code</a>
+</nav>
+<main>
+  <p class="eyebrow">Supply Chain</p>
+  <h1>Hallucinated packages: the AI coding risk nobody checks for</h1>
+  <div class="meta-row">5 min read · VibeSafe Blog</div>
+  <p class="lead">Ask an AI for code and it will sometimes import a library that doesn't exist — a plausible name it invented. Attackers know this, and they're registering those names. This is slopsquatting, and it's the quietest risk in AI-built apps.</p>
+
+  <h2>How the attack works</h2>
+  <p>LLMs hallucinate package names that <em>sound</em> right — plausible variations of real library names, or entirely invented utilities. Researchers found the same fake names recur across many users' generations. So attackers register those names on npm and PyPI with malicious payloads. The next founder whose AI imports the name runs <code>npm install</code> — and executes attacker code with full access to their machine and secrets.</p>
+
+  <h2>Why it beats normal defenses</h2>
+  <p>Traditional vulnerability scanners check <em>known</em> packages against CVE databases. A slopsquatted package isn't a known package with a bug — it's a legitimate-looking upload doing exactly what its author intended. Nothing is "vulnerable"; everything is hostile.</p>
+
+  <h2>The tell-tale signs</h2>
+  <ul class="plain">
+    <li>Package published very recently, with few downloads</li>
+    <li>Name suspiciously close to a popular library</li>
+    <li>No repository link, empty README, single maintainer</li>
+    <li>Install scripts (<code>postinstall</code>) doing network calls</li>
+  </ul>
+
+  <h2>How to protect yourself</h2>
+  <ul class="check">
+    <li>Before installing anything an AI suggested, look it up on npm/PyPI — does it exist, is it established?</li>
+    <li>Prefer packages you've heard of; treat novel names in generated code as unverified</li>
+    <li>Commit lockfiles so installs are reproducible</li>
+    <li>Scan generated code — <a href="/login.html" style="color:var(--cyan)">VibeSafe</a> flags imports that don't match known registries</li>
+  </ul>
+
+  <div class="cta-box">
+    <a href="/login.html">Scan your code free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">3 free scans every month · Your code is never stored</p>
+  </div>
+
+  <div class="disclaimer"><strong>An honest note.</strong> VibeSafe helps catch the most common risks in AI-built apps quickly. It doesn't replace a professional security audit for high-risk applications.</div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related:</p>
+  <div class="related">
+    <a href="/blog/why-ai-generated-code-has-security-bugs.html">Why AI code has bugs</a>
+    <a href="/ai-code-security-scanner.html">AI code scanner</a>
+    <a href="/cursor-security-checklist.html">Cursor checklist</a>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/blog.html">Blog</a> · <a href="/legal.html">Privacy &amp; Terms</a>
+</footer>
+</body>
+</html>
