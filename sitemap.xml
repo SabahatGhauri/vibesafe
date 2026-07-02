@@ -71,6 +71,21 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://www.vibesafe.info/lovable-security-checklist.html</loc>
+    <lastmod>2026-07-02</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/bolt-security-checklist.html</loc>
+    <lastmod>2026-07-02</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/cursor-security-checklist.html</loc>
+    <lastmod>2026-07-02</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.vibesafe.info/vs-snyk.html</loc>
     <lastmod>2026-07-01</lastmod>
     <priority>0.8</priority>

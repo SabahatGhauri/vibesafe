@@ -1806,6 +1806,93 @@
   </div>
 </section>
 
+<!-- BUILT FOR -->
+<section class="builtfor-section" id="builtfor">
+  <div class="container">
+    <p class="section-eyebrow" style="text-align:center">Who it's for</p>
+    <h2 class="section-title" style="text-align:center">Built for people who build with AI</h2>
+    <p class="section-sub" style="text-align:center;max-width:560px;margin:0 auto 48px">You don't need to be a cybersecurity expert. VibeSafe explains what's risky and how to fix it in plain language.</p>
+    <div class="builtfor-grid">
+      <div class="builtfor-card"><span class="bf-icon">🚀</span><div class="bf-title">Non-technical founders</div><div class="bf-desc">You built the product — VibeSafe makes sure it's safe to launch.</div></div>
+      <div class="builtfor-card"><span class="bf-icon">🛠️</span><div class="bf-title">Indie hackers</div><div class="bf-desc">Ship fast without a security review slowing you down.</div></div>
+      <div class="builtfor-card"><span class="bf-icon">🤖</span><div class="bf-title">AI app builders</div><div class="bf-desc">Catch the mistakes AI tools quietly leave in your code.</div></div>
+      <div class="builtfor-card"><span class="bf-icon">💜</span><div class="bf-title">Lovable, Bolt &amp; Cursor users</div><div class="bf-desc">Tuned for the exact patterns these tools generate.</div></div>
+      <div class="builtfor-card"><span class="bf-icon">🎓</span><div class="bf-title">Students &amp; beginners</div><div class="bf-desc">Learn why something is risky, not just that it is.</div></div>
+      <div class="builtfor-card"><span class="bf-icon">👥</span><div class="bf-title">Small teams shipping MVPs</div><div class="bf-desc">One shared dashboard for every scan before launch.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY VIBESAFE VS NORMAL TOOLS -->
+<section class="whyvs-section" id="whyvs">
+  <div class="container">
+    <p class="section-eyebrow" style="text-align:center">Why VibeSafe</p>
+    <h2 class="section-title" style="text-align:center">Security tools weren't built for you. This one is.</h2>
+    <div class="whyvs-table-wrap">
+      <table class="whyvs-table">
+        <thead>
+          <tr><th>Other security tools</th><th class="whyvs-hl">🛡️ VibeSafe</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Technical jargon — CVE IDs, CVSS scores</td><td class="whyvs-hl">Plain-English results anyone can act on</td></tr>
+          <tr><td>Built for security teams</td><td class="whyvs-hl">Built for AI app builders &amp; founders</td></tr>
+          <tr><td>CLI installs, configs, pipelines</td><td class="whyvs-hl">Paste code and scan — zero setup</td></tr>
+          <tr><td>Long reports you can't parse</td><td class="whyvs-hl">One score, clear fixes, launch checklist</td></tr>
+          <tr><td>$98+/developer/month</td><td class="whyvs-hl">Free to start · $29/month unlimited</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="text-align:center;margin-top:22px;font-size:0.88rem;color:var(--text3)">
+      Full comparisons: <a href="/vs-snyk.html" style="color:var(--cyan);text-decoration:none">VibeSafe vs Snyk</a> ·
+      <a href="/vs-gitguardian.html" style="color:var(--cyan);text-decoration:none">VibeSafe vs GitGuardian</a>
+    </p>
+  </div>
+</section>
+
+<style>
+.builtfor-section { background: var(--bg); }
+.builtfor-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+}
+.builtfor-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 22px;
+  transition: transform 0.3s cubic-bezier(0.22,0.61,0.36,1), border-color 0.3s, box-shadow 0.3s;
+}
+.builtfor-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0,212,255,0.35);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4), 0 0 24px rgba(0,212,255,0.06);
+}
+.bf-icon { font-size: 1.6rem; display: block; margin-bottom: 10px; }
+.bf-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.98rem; margin-bottom: 6px; }
+.bf-desc { font-size: 0.84rem; color: var(--text2); line-height: 1.55; }
+
+.whyvs-section { background: var(--bg2); }
+.whyvs-table-wrap { max-width: 760px; margin: 40px auto 0; overflow-x: auto; }
+.whyvs-table { width: 100%; border-collapse: collapse; }
+.whyvs-table th {
+  font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.05em; color: var(--text3);
+  padding: 12px 18px; text-align: left; border-bottom: 1px solid var(--border2);
+}
+.whyvs-table th.whyvs-hl, .whyvs-table td.whyvs-hl {
+  background: rgba(0,212,255,0.05); color: var(--text);
+}
+.whyvs-table th.whyvs-hl { color: var(--cyan); }
+.whyvs-table td {
+  padding: 13px 18px; font-size: 0.9rem; color: var(--text3);
+  border-bottom: 1px solid var(--border);
+}
+.whyvs-table tr:last-child td { border-bottom: none; }
+@media (max-width: 900px) {
+  .builtfor-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .builtfor-grid { grid-template-columns: 1fr; }
+}
+</style>
+
 <!-- PRICING -->
 <section class="pricing-section" id="pricing">
   <div class="section-tint tint-cyan"></div>

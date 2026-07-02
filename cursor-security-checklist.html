@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cursor AI Code Security Checklist — Check Before You Ship | VibeSafe</title>
+<meta name="description" content="A security checklist for code written with Cursor: AI-suggested secrets, unchecked tab-completions, injection risks, and the mistakes AI autocomplete most often introduces.">
+<meta name="keywords" content="Cursor AI security, Cursor code security checklist, is Cursor safe, secure Cursor code, AI autocomplete security">
+<link rel="canonical" href="https://www.vibesafe.info/cursor-security-checklist.html">
+<meta property="og:title" content="Cursor AI Code Security Checklist | VibeSafe">
+<meta property="og:description" content="What to check before shipping code written with Cursor — AI-suggested secrets, injection risks, and more.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/cursor-security-checklist.html">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is code written with Cursor safe?","acceptedAnswer":{"@type":"Answer","text":"Cursor is a powerful AI editor, but accepted AI suggestions need review. Common issues are hardcoded secrets in AI completions, SQL built by string concatenation, and error handling the AI skipped to keep code short."}},
+{"@type":"Question","name":"What is the biggest security risk when coding with Cursor?","acceptedAnswer":{"@type":"Answer","text":"Accepting large AI-generated changes without reading them. Multi-file agent edits can introduce insecure patterns — string-built queries, missing auth checks, weakened validation — that look fine at a glance."}},
+{"@type":"Question","name":"How do I check Cursor-written code for security issues?","acceptedAnswer":{"@type":"Answer","text":"Scan changed files with a tool like VibeSafe — available directly inside Cursor as an extension — which flags exposed secrets, injection patterns, weak auth, and runtime errors with plain-English fixes."}}
+]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--cyan),var(--violet));display:flex;align-items:center;justify-content:center;font-size:15px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4vw,2.7rem);line-height:1.15;letter-spacing:-0.02em;margin-bottom:18px}
+.lead{font-size:1.1rem;color:var(--text2);margin-bottom:26px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;margin:30px 0 10px}
+p{color:var(--text2);margin-bottom:16px}
+.check{list-style:none;margin:0 0 8px}
+.check li{padding:10px 0 10px 30px;position:relative;border-bottom:1px solid var(--border);color:var(--text2)}
+.check li::before{content:'☐';position:absolute;left:0;color:var(--cyan);font-weight:700;font-size:1.05rem}
+code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.faq-q{font-weight:600;color:var(--text);margin:20px 0 6px}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><span class="logo-icon">🛡️</span> VibeSafe</a>
+  <a href="/login.html" class="nav-cta">Scan your code</a>
+</nav>
+<main>
+  <p class="eyebrow">Cursor Security Checklist</p>
+  <h1>Cursor AI code security checklist — check before you ship</h1>
+  <p class="lead">Cursor's agent mode and tab-completions write a lot of code you didn't type — and accepting a plausible-looking suggestion is exactly how insecure patterns slip in. This checklist covers what to verify before shipping Cursor-written code.</p>
+
+  <div class="cta-box">
+    <a href="/login.html">Scan your Cursor code free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">Also available as a <a href="https://marketplace.visualstudio.com/items?itemName=vibesafe-info.vibesafe-scanner" style="color:var(--cyan)">Cursor extension</a> — scan without leaving the editor</p>
+  </div>
+
+  <h2>1. AI-suggested secrets (the #1 Cursor risk)</h2>
+  <p>Completions trained on public code love to produce hardcoded keys and example credentials that end up committed.</p>
+  <ul class="check">
+    <li>No API keys or placeholder secrets left in accepted completions</li>
+    <li>Secrets loaded from <code>process.env</code> / environment config, never literals</li>
+    <li><code>.env</code> files are in <code>.gitignore</code> before your first commit</li>
+  </ul>
+
+  <h2>2. Injection patterns</h2>
+  <ul class="check">
+    <li>No SQL built by string concatenation — parameterized queries only</li>
+    <li>User input never reaches <code>eval</code>, <code>exec</code>, or shell commands</li>
+    <li>User content escaped before rendering (XSS)</li>
+  </ul>
+
+  <h2>3. Agent-mode edits</h2>
+  <ul class="check">
+    <li>Multi-file agent changes reviewed diff-by-diff, not accepted wholesale</li>
+    <li>Auth middleware and validation weren't "simplified away" during a refactor</li>
+    <li>Error handling still exists after the AI cleaned up your code</li>
+  </ul>
+
+  <h2>4. Dependencies</h2>
+  <ul class="check">
+    <li>Every package the AI imported actually exists (hallucinated names are a real supply-chain risk)</li>
+    <li>No known-vulnerable versions pinned by generated code</li>
+  </ul>
+
+  <h2>5. Before you push</h2>
+  <ul class="check">
+    <li>Scanned the changed files — inside Cursor with the VibeSafe extension (Ctrl+Shift+V) or on the web</li>
+    <li>No critical issues in the scan</li>
+    <li>Secrets rotated if anything was ever committed by mistake</li>
+  </ul>
+
+  <h2>Questions developers ask</h2>
+  <p class="faq-q">Is Cursor safe to use?</p>
+  <p>Cursor itself is safe — the risk is in unreviewed AI output. Treat accepted completions like code from a fast but junior teammate: useful, but checked before it ships.</p>
+  <p class="faq-q">Can I scan without leaving Cursor?</p>
+  <p>Yes — the <a href="https://marketplace.visualstudio.com/items?itemName=vibesafe-info.vibesafe-scanner" style="color:var(--cyan)">VibeSafe extension</a> works in Cursor. Press Ctrl+Shift+V to scan the current file and get inline squiggles on flagged lines.</p>
+
+  <div class="disclaimer"><strong>An honest note.</strong> This checklist catches the most common AI-editor risks. It doesn't replace code review or a professional security audit for high-risk applications.</div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related guides:</p>
+  <div class="related">
+    <a href="/vibe-coding-security.html">Is vibe coding safe?</a>
+    <a href="/exposed-api-key-scanner.html">Exposed API key scanner</a>
+    <a href="/lovable-security-checklist.html">Lovable security checklist</a>
+    <a href="/bolt-security-checklist.html">Bolt security checklist</a>
+    <a href="/pre-launch-security-checklist.html">Pre-launch checklist</a>
+    <a href="/ai-code-security-scanner.html">AI code security scanner</a>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/legal.html">Privacy &amp; Terms</a> · <a href="/faq.html">FAQ</a>
+</footer>
+</body>
+</html>
