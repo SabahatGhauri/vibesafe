@@ -1,0 +1,96 @@
+*** Begin Patch
+*** Update File: D:\claude work\vscode-extension\package.json
+@@
+-  "version": "1.0.6",
++  "version": "1.0.7",
+@@
+-  "activationEvents": ["onLanguage:javascript", "onLanguage:javascriptreact", "onLanguage:typescript", "onLanguage:typescriptreact", "onLanguage:python", "onLanguage:java", "onLanguage:csharp", "onLanguage:html", "onLanguage:css", "onLanguage:json", "onLanguage:jsonc", "onLanguage:markdown", "onLanguage:yaml", "onLanguage:sql"],
++  "activationEvents": ["onUri", "onLanguage:javascript", "onLanguage:javascriptreact", "onLanguage:typescript", "onLanguage:typescriptreact", "onLanguage:python", "onLanguage:java", "onLanguage:csharp", "onLanguage:html", "onLanguage:css", "onLanguage:json", "onLanguage:jsonc", "onLanguage:markdown", "onLanguage:yaml", "onLanguage:sql"],
+*** Update File: D:\claude work\vscode-extension\extension.js
+@@
+     vscode.commands.registerCommand('vibesafe.scanSelection', () => scanDocument(true)),
+     vscode.commands.registerCommand('vibesafe.setApiKey', setApiKey),
+     vscode.commands.registerCommand('vibesafe.clearResults', clearResults),
+   );
++
++  context.subscriptions.push(
++    vscode.window.registerUriHandler({
++      async handleUri(uri) {
++        if (uri.path !== '/setup') return;
++        const params = new URLSearchParams(uri.query);
++        const key = (params.get('key') || '').trim();
++        if (!key.startsWith('vibesafe_sk_')) {
++          vscode.window.showErrorMessage('VibeSafe: This setup link is invalid. Open the VibeSafe dashboard and connect again.');
++          return;
++        }
++        await saveApiKey(key);
++        vscode.window.showInformationMessage('VibeSafe: VS Code is connected. You can scan files now.');
++      }
++    })
++  );
+@@
+   const cfg = vscode.workspace.getConfiguration('vibesafe');
+   const apiKey = cfg.get('apiKey') || '';
+   if (!apiKey) {
+@@
+     return;
+   }
++
++  if (!apiKey.startsWith('vibesafe_sk_')) {
++    const action = await vscode.window.showErrorMessage(
++      'VibeSafe: This looks like an expired website session, not an extension API key. Connect from the dashboard or paste a key that starts with vibesafe_sk_.',
++      'Set API Key', 'Open Dashboard'
++    );
++    if (action === 'Set API Key') vscode.commands.executeCommand('vibesafe.setApiKey');
++    if (action === 'Open Dashboard') vscode.env.openExternal(vscode.Uri.parse('https://www.vibesafe.info/dashboard'));
++    return;
++  }
+@@
+ async function setApiKey() {
+@@
+-  if (key) {
+-    await vscode.workspace.getConfiguration('vibesafe').update('apiKey', key, vscode.ConfigurationTarget.Global);
+-    vscode.window.showInformationMessage('VibeSafe: API key saved. You\'re ready to scan!');
+-  }
++  if (key) await saveApiKey(key);
++}
++
++async function saveApiKey(key) {
++  key = String(key || '').trim();
++  if (!key.startsWith('vibesafe_sk_')) {
++    vscode.window.showErrorMessage('VibeSafe: Paste an extension API key from the dashboard. It should start with vibesafe_sk_.');
++    return;
++  }
++  await vscode.workspace.getConfiguration('vibesafe').update('apiKey', key, vscode.ConfigurationTarget.Global);
++  vscode.window.showInformationMessage('VibeSafe: API key saved. You\'re ready to scan!');
+ }
+*** Update File: D:\claude work\vibesafe\dashboard.html
+@@
+-        Generate an API key, then paste it into the VibeSafe VS Code / Cursor extension
+-        (<code style="color:var(--cyan)">VibeSafe: Set API Key</code>). The key lets the extension scan on your behalf without signing in every time. Treat it like a password â€” anyone with it can run scans on your account.
++        Generate an API key, then connect your editor automatically. The key lets the extension scan on your behalf without signing in every time.
+@@
+-        <div style="display:flex;gap:8px;align-items:center;">
++        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+           <code id="newKeyValue" style="flex:1;background:var(--bg2);padding:9px 12px;border-radius:7px;font-size:0.8rem;color:var(--cyan);word-break:break-all;"></code>
++          <button class="btn btn-primary" onclick="connectVsCode()" style="white-space:nowrap;">Connect VS Code</button>
+           <button class="btn btn-ghost" onclick="copyNewKey()" style="white-space:nowrap;">Copy</button>
+         </div>
+@@
+-    status.textContent = 'âœ“ Key generated. Copy it and paste into the extension.';
++    status.textContent = 'Key generated. Click Connect VS Code to finish setup automatically.';
++    setTimeout(connectVsCode, 300);
+@@
+ function copyNewKey() {
+   var v = document.getElementById('newKeyValue').textContent;
+   navigator.clipboard.writeText(v).then(function() { showToast('API key copied', 'success'); });
+ }
++
++function connectVsCode() {
++  var key = document.getElementById('newKeyValue').textContent;
++  if (!key) { showToast('Generate a key first', 'error'); return; }
++  var url = 'vscode://vibesafe-info.vibesafe-scanner/setup?key=' + encodeURIComponent(key);
++  window.location.href = url;
++  showToast('Opening VS Code to finish setup...', 'success');
++}
+*** End Patch
