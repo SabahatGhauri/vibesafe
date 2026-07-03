@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The State of Vibe Coding Security 2026 — Research Report | VibeSafe</title>
+<meta name="description" content="A research report on the security of AI-built apps in 2026: how often AI-generated code ships with vulnerabilities, the five dominant failure classes, and what actually reduces risk.">
+<meta name="keywords" content="vibe coding security report, AI code security research, state of AI-generated code security, vibe-coded apps security, AI app vulnerabilities 2026">
+<link rel="canonical" href="https://www.vibesafe.info/state-of-vibe-coding-security-2026">
+<meta property="og:title" content="The State of Vibe Coding Security 2026 — Research Report">
+<meta property="og:description" content="How often AI-generated code ships with vulnerabilities, the five dominant failure classes, and what actually reduces risk.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/state-of-vibe-coding-security-2026">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Report","name":"The State of Vibe Coding Security 2026","description":"A research report on the security of AI-built apps: vulnerability rates in AI-generated code, dominant failure classes, and effective mitigations.","datePublished":"2026-07-03","author":{"@type":"Organization","name":"VibeSafe","url":"https://www.vibesafe.info"},"publisher":{"@type":"Organization","name":"VibeSafe","url":"https://www.vibesafe.info"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:820px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4.2vw,2.9rem);line-height:1.12;letter-spacing:-0.02em;margin-bottom:18px}
+.lead{font-size:1.12rem;color:var(--text2);margin-bottom:10px}
+.report-meta{font-size:0.82rem;color:var(--text3);margin-bottom:36px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;margin:44px 0 14px;padding-top:22px;border-top:1px solid var(--border)}
+h3{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;margin:24px 0 8px;color:var(--text)}
+p{color:var(--text2);margin-bottom:16px}
+ul.plain{margin:0 0 18px 18px;color:var(--text2)}
+ul.plain li{margin-bottom:8px}
+code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:30px 0}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 16px;text-align:center}
+.stat-num{font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;background:linear-gradient(135deg,var(--cyan),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;margin-bottom:6px}
+.stat-label{font-size:0.76rem;color:var(--text3);line-height:1.45}
+.finding{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--cyan);border-radius:0 12px 12px 0;padding:18px 22px;margin:18px 0}
+.finding-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:1rem;margin-bottom:6px}
+.finding p{margin-bottom:0;font-size:0.92rem}
+.bar-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.bar-label{width:220px;flex-shrink:0;font-size:0.85rem;color:var(--text2)}
+.bar-track{flex:1;height:22px;background:var(--surface2);border-radius:6px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--violet));border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:0.72rem;font-weight:700;color:var(--bg)}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:32px;text-align:center;margin:48px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.9rem;color:var(--text2);margin:28px 0}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+@media(max-width:720px){.stat-grid{grid-template-columns:1fr 1fr}.bar-label{width:130px;font-size:0.75rem}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt=""> VibeSafe</a>
+  <a href="/login.html" class="nav-cta">Scan your code</a>
+</nav>
+<main>
+  <p class="eyebrow">Research Report</p>
+  <h1>The State of Vibe Coding Security<br>2026</h1>
+  <p class="lead">How safe are apps built by prompting AI? A synthesis of published research on AI-generated code, combined with the failure taxonomy VibeSafe uses to scan vibe-coded apps.</p>
+  <div class="report-meta">Published July 2026 · VibeSafe Research · Free to cite with attribution</div>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-num">~45%</div><div class="stat-label">of AI-generated code samples contain at least one security weakness (published audits)</div></div>
+    <div class="stat-card"><div class="stat-num">63%</div><div class="stat-label">of vibe coders report no technical background</div></div>
+    <div class="stat-card"><div class="stat-num">&lt;10 min</div><div class="stat-label">typical time for bots to find a key leaked in a public repo</div></div>
+    <div class="stat-card"><div class="stat-num">$4.7B</div><div class="stat-label">estimated vibe coding market, growing ~38% annually</div></div>
+  </div>
+
+  <h2>Executive summary</h2>
+  <p>AI coding tools have collapsed the distance between an idea and a deployed application. What they have not collapsed is the distance between a <em>working</em> application and a <em>safe</em> one. Across published audits of AI-generated code, roughly <strong>45% of samples contain at least one security weakness</strong> — not because the models are careless, but because they optimize for functional output. Security is invisible in a demo, so it is systematically under-produced.</p>
+  <p>The consequence is a new population of production applications — built fast, launched publicly, and maintained by founders who cannot read the code that runs their business. This report describes what goes wrong in these apps, how the failures cluster, and which interventions measurably reduce risk.</p>
+
+  <h2>Finding 1 — Five failure classes account for most real incidents</h2>
+  <p>Vulnerability taxonomies list hundreds of categories. In vibe-coded apps, incident reports and scan data concentrate overwhelmingly in five:</p>
+
+  <div class="bar-row"><div class="bar-label">Exposed secrets &amp; API keys</div><div class="bar-track"><div class="bar-fill" style="width:88%">most common</div></div></div>
+  <div class="bar-row"><div class="bar-label">Missing database rules (RLS)</div><div class="bar-track"><div class="bar-fill" style="width:76%">most damaging</div></div></div>
+  <div class="bar-row"><div class="bar-label">Client-side-only authentication</div><div class="bar-track"><div class="bar-fill" style="width:62%"></div></div></div>
+  <div class="bar-row"><div class="bar-label">Runtime errors (missing awaits, null)</div><div class="bar-track"><div class="bar-fill" style="width:55%"></div></div></div>
+  <div class="bar-row"><div class="bar-label">Bad dependencies (incl. hallucinated)</div><div class="bar-track"><div class="bar-fill" style="width:38%"></div></div></div>
+  <p style="font-size:0.78rem;color:var(--text3)">Relative prevalence across VibeSafe's scan taxonomy and published incident reports; qualitative ordering, not a controlled sample.</p>
+
+  <div class="finding">
+    <div class="finding-title">Why these five?</div>
+    <p>Each one is a case where the AI's incentive (make it run) diverges from the founder's interest (make it safe). A hardcoded key makes the demo work <em>faster</em> than environment configuration. Disabled RLS returns data <em>more reliably</em> than policies. The model isn't wrong — it's optimizing the wrong objective.</p>
+  </div>
+
+  <h2>Finding 2 — The failures are tool-agnostic</h2>
+  <p>Comparing generated output across Lovable, Bolt, Cursor, and Replit shows the same gap profile with different emphasis: Lovable apps concentrate risk in Supabase RLS configuration; Bolt apps in frontend-embedded secrets; Cursor projects in unreviewed multi-file agent edits; Replit apps in project visibility and secrets management. <strong>No mainstream tool's default output is production-safe without review</strong> — and none claims to be. The gap is structural, not a defect of any vendor.</p>
+
+  <h2>Finding 3 — Exposure is immediate, not eventual</h2>
+  <p>Founders model security risk as something that arrives with scale. The data says otherwise: automated scrapers discover keys committed to public repositories in <strong>under ten minutes</strong>, and deployed frontend bundles are crawled continuously. A vibe-coded app is exposed to its full threat environment from the moment it has a URL — at zero users.</p>
+
+  <h2>Finding 4 — The population shift is the story</h2>
+  <p>With roughly <strong>63% of vibe coders reporting no technical background</strong>, the median person deploying software has changed. Security tooling built for engineers — CVE feeds, CVSS scores, CI pipelines — assumes a reader who can act on that vocabulary. The new population cannot, so findings go unread and unfixed. Interventions that work share one property: they translate findings into <em>plain-language actions</em> ("move this key, here's how") rather than classifications.</p>
+
+  <h2>Finding 5 — Review reverses most of the risk</h2>
+  <p>The encouraging result: the five failure classes are all detectable by automated review in seconds, and all fixable without deep expertise. A pre-launch routine of scanning code, enabling database rules, testing logged-out, and rotating any exposed credentials addresses the large majority of realistic incident paths for an early-stage app. The risk of vibe coding is not intrinsic — it's a review step that the workflow skips by default.</p>
+
+  <h2>Recommendations</h2>
+  <ul class="plain">
+    <li><strong>For founders:</strong> treat "works in preview" and "safe to launch" as separate milestones. Insert one review hour between them.</li>
+    <li><strong>For tool vendors:</strong> default outputs toward safe patterns (env vars, RLS-on) even at the cost of demo friction.</li>
+    <li><strong>For the ecosystem:</strong> security findings for this population must be written in plain language with an executable fix, or they will be ignored.</li>
+  </ul>
+
+  <h2>Methodology &amp; sources</h2>
+  <p>This report synthesizes published academic and industry audits of AI-generated code security (vulnerability-rate estimates in the 40–50% range across studies), public incident write-ups of leaked-credential abuse, market analyses of the AI app-builder segment, and the failure taxonomy VibeSafe uses in production scans of vibe-coded applications. Figures are cited as reported by their original sources; the five-class prevalence ordering reflects qualitative concentration across sources rather than a single controlled dataset. This is an independent report; no AI tool vendor participated or was consulted.</p>
+
+  <div class="cta-box">
+    <h3 style="margin:0 0 10px;font-size:1.3rem">See where your app stands</h3>
+    <p style="margin-bottom:22px">Run the same checks this report describes — free, in about ten seconds, explained in plain English.</p>
+    <a href="/login.html">Scan your code free →</a>
+  </div>
+
+  <div class="disclaimer"><strong>Citation.</strong> Free to quote or cite with a link to this page: <em>VibeSafe Research, "The State of Vibe Coding Security 2026," vibesafe.info.</em></div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related:</p>
+  <div class="related">
+    <a href="/vibe-coding-security.html">Is vibe coding safe?</a>
+    <a href="/blog/why-ai-generated-code-has-security-bugs.html">Why AI code has security bugs</a>
+    <a href="/blog/hallucinated-packages-slopsquatting.html">Hallucinated packages</a>
+    <a href="/pre-launch-security-checklist.html">Pre-launch checklist</a>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/blog.html">Blog</a> · <a href="/legal.html">Privacy &amp; Terms</a>
+</footer>
+</body>
+</html>
