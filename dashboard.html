@@ -1305,6 +1305,9 @@ document.addEventListener('click', function(e) {
       <button class="sidebar-item" onclick="openAccountMenu(event)">
         <span class="si-icon">⚙️</span> Account
       </button>
+      <button class="sidebar-item" onclick="openApiKeys()">
+        <span class="si-icon">🔑</span> API keys
+      </button>
       <button class="sidebar-item" onclick="window.open('/faq.html','_blank')">
         <span class="si-icon">📚</span> Help &amp; FAQ
       </button>
@@ -1560,6 +1563,40 @@ document.addEventListener('click', function(e) {
         </p>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<!-- API KEYS PANEL OVERLAY -->
+<div id="apiKeysPanel" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;padding:32px 24px;">
+  <div style="max-width:740px;margin:0 auto;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;">
+      <button onclick="closeApiKeys()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">← Back</button>
+      <h2 style="margin:0;font-size:1.3rem;font-weight:700;">🔑 API keys</h2>
+    </div>
+
+    <div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:20px;margin-bottom:20px;">
+      <div style="font-weight:600;margin-bottom:4px;">Connect the VS Code extension</div>
+      <div style="font-size:0.8rem;color:var(--text3);margin-bottom:14px;line-height:1.6;">
+        Generate an API key, then paste it into the VibeSafe VS Code / Cursor extension
+        (<code style="color:var(--cyan)">VibeSafe: Set API Key</code>). The key lets the extension scan on your behalf without signing in every time. Treat it like a password — anyone with it can run scans on your account.
+      </div>
+      <button class="btn btn-primary" id="genKeyBtn" onclick="generateApiKey()">+ Generate new key</button>
+      <div id="genKeyStatus" style="font-size:0.78rem;margin-top:10px;min-height:18px;"></div>
+      <div id="newKeyBox" style="display:none;margin-top:14px;padding:14px;background:var(--surface2);border:1px solid rgba(0,212,255,0.3);border-radius:9px;">
+        <div style="font-size:0.72rem;color:var(--amber);font-weight:600;margin-bottom:8px;">⚠ Copy this now — it won't be shown again</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <code id="newKeyValue" style="flex:1;background:var(--bg2);padding:9px 12px;border-radius:7px;font-size:0.8rem;color:var(--cyan);word-break:break-all;"></code>
+          <button class="btn btn-ghost" onclick="copyNewKey()" style="white-space:nowrap;">Copy</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:20px;">
+      <div style="font-weight:600;margin-bottom:14px;">Your keys</div>
+      <div id="apiKeysList">
+        <div style="font-size:0.8rem;color:var(--text3);text-align:center;padding:16px 0;">Loading...</div>
+      </div>
     </div>
   </div>
 </div>
@@ -2371,6 +2408,87 @@ function closeTeamPanel() {
   // Re-activate scan sidebar item
   document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
   document.querySelector('.sidebar-item[onclick*="scan"]').classList.add('active');
+}
+
+// ── API KEYS ──
+function openApiKeys() {
+  if (!currentUser) { showToast('Please sign in first', 'error'); return; }
+  document.getElementById('apiKeysPanel').style.display = 'block';
+  document.getElementById('newKeyBox').style.display = 'none';
+  loadApiKeys();
+}
+function closeApiKeys() {
+  document.getElementById('apiKeysPanel').style.display = 'none';
+}
+
+async function loadApiKeys() {
+  var list = document.getElementById('apiKeysList');
+  try {
+    var { data, error } = await sbClient.from('vibesafe_api_keys')
+      .select('id, name, created_at, last_used_at').order('created_at', { ascending: false });
+    if (error) throw error;
+    if (!data || data.length === 0) {
+      list.innerHTML = '<div style="font-size:0.8rem;color:var(--text3);text-align:center;padding:16px 0;">No API keys yet. Generate one above to connect the extension.</div>';
+      return;
+    }
+    list.innerHTML = data.map(function(k) {
+      var used = k.last_used_at ? 'Last used ' + new Date(k.last_used_at).toLocaleDateString() : 'Never used';
+      return '<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border1);">'
+        + '<div><div style="font-weight:500;font-size:0.86rem;">🔑 ' + (k.name || 'API key') + '</div>'
+        + '<div style="font-size:0.72rem;color:var(--text3);">Created ' + new Date(k.created_at).toLocaleDateString() + ' · ' + used + '</div></div>'
+        + '<button class="btn btn-ghost" style="color:var(--red);font-size:0.78rem;" onclick="revokeApiKey(\'' + k.id + '\')">Revoke</button>'
+        + '</div>';
+    }).join('');
+  } catch (err) {
+    list.innerHTML = '<div style="font-size:0.8rem;color:var(--red);text-align:center;padding:16px 0;">Could not load keys. Make sure the vibesafe_api_keys table exists.</div>';
+  }
+}
+
+async function generateApiKey() {
+  var btn = document.getElementById('genKeyBtn');
+  var status = document.getElementById('genKeyStatus');
+  btn.disabled = true; btn.textContent = 'Generating...';
+  status.textContent = '';
+  try {
+    // Generate a random, hard-to-guess key entirely client-side.
+    var bytes = new Uint8Array(24);
+    crypto.getRandomValues(bytes);
+    var rand = Array.from(bytes).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+    var key = 'vibesafe_sk_' + rand;
+
+    var { error } = await sbClient.from('vibesafe_api_keys').insert({
+      user_id: currentUser.id, key: key, name: 'VS Code extension'
+    });
+    if (error) throw error;
+
+    document.getElementById('newKeyValue').textContent = key;
+    document.getElementById('newKeyBox').style.display = 'block';
+    status.style.color = 'var(--green)';
+    status.textContent = '✓ Key generated. Copy it and paste into the extension.';
+    loadApiKeys();
+  } catch (err) {
+    status.style.color = 'var(--red)';
+    status.textContent = err.message || 'Could not generate key. Try again.';
+  } finally {
+    btn.disabled = false; btn.textContent = '+ Generate new key';
+  }
+}
+
+function copyNewKey() {
+  var v = document.getElementById('newKeyValue').textContent;
+  navigator.clipboard.writeText(v).then(function() { showToast('API key copied', 'success'); });
+}
+
+async function revokeApiKey(id) {
+  if (!confirm('Revoke this key? Any extension using it will stop working.')) return;
+  try {
+    var { error } = await sbClient.from('vibesafe_api_keys').delete().eq('id', id);
+    if (error) throw error;
+    showToast('Key revoked', 'success');
+    loadApiKeys();
+  } catch (err) {
+    showToast('Could not revoke key', 'error');
+  }
 }
 
 async function sendTeamInvite() {
