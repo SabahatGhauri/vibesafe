@@ -2094,8 +2094,10 @@
           <p style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:1.05rem;color:var(--text);margin-bottom:6px;">Not ready to scan yet?</p>
           <p style="font-size:0.9rem;color:var(--text2);margin-bottom:16px;line-height:1.5;">Get the free <b>Vibe-Coder's Security Checklist</b> and a monthly reminder to re-scan your app — sent to your inbox.</p>
           <form id="leadForm" onsubmit="return submitLead(event)" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+            <input id="leadName" type="text" placeholder="First name" aria-label="Your name"
+              style="flex:1;min-width:150px;padding:12px 14px;border-radius:10px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-size:0.95rem;font-family:'Inter',sans-serif;">
             <input id="leadEmail" type="email" required placeholder="you@email.com" aria-label="Your email"
-              style="flex:1;min-width:220px;padding:12px 14px;border-radius:10px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-size:0.95rem;font-family:'Inter',sans-serif;">
+              style="flex:1;min-width:200px;padding:12px 14px;border-radius:10px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-size:0.95rem;font-family:'Inter',sans-serif;">
             <button type="submit" id="leadBtn" class="btn btn-primary" style="white-space:nowrap;">Send me the checklist</button>
           </form>
           <p id="leadMsg" style="font-size:0.82rem;margin-top:10px;min-height:18px;color:var(--text3);"></p>
@@ -2545,6 +2547,7 @@ function startCheckout(plan) {
 async function submitLead(e) {
   e.preventDefault();
   var email = (document.getElementById('leadEmail').value || '').trim();
+  var name = (document.getElementById('leadName').value || '').trim();
   var btn = document.getElementById('leadBtn');
   var msg = document.getElementById('leadMsg');
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -2556,7 +2559,7 @@ async function submitLead(e) {
     await fetch('https://vibesafe-api.vercel.app/api/lead', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email, source: 'homepage', magnet: 'security-checklist' })
+      body: JSON.stringify({ email: email, name: name, source: 'homepage', magnet: 'security-checklist' })
     });
     // Deliver the value immediately: open the free checklist.
     document.getElementById('leadForm').style.display = 'none';
