@@ -1076,15 +1076,23 @@ const FREE_SCAN_LIMIT = 3;
   const email = currentUser.email || '';
   const name = (currentUser.user_metadata && currentUser.user_metadata.full_name) || email;
   const initials = name.split(' ').map(function(p){return p[0];}).join('').slice(0,2).toUpperCase() || email.slice(0,2).toUpperCase();
-  document.addEventListener('DOMContentLoaded', function() {
+  function initUserUi() {
     var av = document.getElementById('userAvatar');
     var em = document.getElementById('userEmail');
     if (av) av.textContent = initials;
     if (em) em.textContent = email;
+    // Admin nav is independent of profile loading — show it as soon as we know who you are.
+    if (typeof maybeShowAdminNav === 'function') maybeShowAdminNav();
     // Load scan history once logged in
     if (typeof loadScanHistory === 'function') loadScanHistory();
     if (typeof loadProfile === 'function') loadProfile();
-  });
+  }
+  // The session check is async — DOMContentLoaded may have already fired by now.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initUserUi);
+  } else {
+    initUserUi();
+  }
 })();
 
 // ── PLAN / BILLING ──
