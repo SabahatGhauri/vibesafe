@@ -1592,6 +1592,14 @@ document.addEventListener('click', function(e) {
     </div>
 
     <div style="display:flex;align-items:center;gap:12px;margin:40px 0 20px;">
+      <h2 style="margin:0;font-size:1.3rem;font-weight:700;">👥 Users</h2>
+      <span style="font-size:0.78rem;color:var(--text3);">Who is scanning — website and extension</span>
+    </div>
+    <div id="adminUsers">
+      <div style="text-align:center;padding:24px 0;color:var(--text3);font-size:0.85rem;">Loading users…</div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:12px;margin:40px 0 20px;">
       <h2 style="margin:0;font-size:1.3rem;font-weight:700;">🎯 Leads</h2>
       <span style="font-size:0.78rem;color:var(--text3);">People to convert into paying customers</span>
     </div>
@@ -2533,8 +2541,46 @@ async function loadAdminStats() {
   } catch (err) {
     box.innerHTML = '<div style="text-align:center;padding:40px 0;color:var(--red);font-size:0.85rem;">Could not load stats. Make sure the extension_events table and get_extension_stats function exist in Supabase.</div>';
   }
+  loadUsers();
   loadLeads();
   loadBroadcast();
+}
+
+async function loadUsers() {
+  var box = document.getElementById('adminUsers');
+  if (!box) return;
+  box.innerHTML = '<div style="text-align:center;padding:24px 0;color:var(--text3);font-size:0.85rem;">Loading users…</div>';
+  try {
+    var { data, error } = await sbClient.rpc('get_user_activity');
+    if (error) throw error;
+    if (data && data.error) { box.innerHTML = '<div style="text-align:center;padding:24px 0;color:var(--red);">' + data.error + '</div>'; return; }
+    box.innerHTML = renderUsers(data || []);
+  } catch (err) {
+    box.innerHTML = '<div style="text-align:center;padding:24px 0;color:var(--red);font-size:0.85rem;">Could not load users. Make sure the get_user_activity function exists in Supabase.</div>';
+  }
+}
+
+function renderUsers(users) {
+  if (!users.length) return '<div style="text-align:center;padding:24px 0;color:var(--text3);font-size:0.85rem;">No user activity yet.</div>';
+  var head = '<div style="display:flex;gap:10px;padding:8px 14px;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text3);">'
+    + '<div style="flex:2;">User</div><div style="width:58px;text-align:right;">Scans</div>'
+    + '<div style="width:70px;text-align:right;">Website</div><div style="width:78px;text-align:right;">Extension</div>'
+    + '<div style="width:56px;text-align:center;">Plan</div><div style="width:52px;text-align:center;">Ver</div>'
+    + '<div style="width:86px;text-align:right;">Last active</div></div>';
+  var rows = users.map(function(u, i){
+    var last = u.last_active ? new Date(u.last_active).toLocaleDateString() : '—';
+    var planColor = u.plan === 'team' ? 'var(--violet, #7C3AED)' : u.plan === 'pro' ? 'var(--cyan)' : 'var(--text3)';
+    return '<div style="display:flex;gap:10px;align-items:center;padding:10px 14px;' + (i ? 'border-top:1px solid var(--border1);' : '') + '">'
+      + '<div style="flex:2;font-size:0.84rem;color:var(--text);word-break:break-all;">' + esc(u.email) + '</div>'
+      + '<div style="width:58px;text-align:right;font-size:0.84rem;font-weight:600;">' + (u.scans||0) + '</div>'
+      + '<div style="width:70px;text-align:right;font-size:0.8rem;color:var(--text2);">' + (u.web_scans||0) + '</div>'
+      + '<div style="width:78px;text-align:right;font-size:0.8rem;color:var(--text2);">' + (u.ext_scans||0) + '</div>'
+      + '<div style="width:56px;text-align:center;font-size:0.72rem;font-weight:600;color:' + planColor + ';">' + esc(u.plan || 'free') + '</div>'
+      + '<div style="width:52px;text-align:center;font-size:0.72rem;color:var(--text3);">' + esc(u.version || '—') + '</div>'
+      + '<div style="width:86px;text-align:right;font-size:0.75rem;color:var(--text3);">' + esc(last) + '</div>'
+      + '</div>';
+  }).join('');
+  return head + '<div style="border:1px solid var(--border1);border-radius:12px;overflow:hidden;">' + rows + '</div>';
 }
 
 var leadsCache = [];
