@@ -1086,6 +1086,7 @@ const FREE_SCAN_LIMIT = 3;
     // Load scan history once logged in
     if (typeof loadScanHistory === 'function') loadScanHistory();
     if (typeof loadProfile === 'function') loadProfile();
+    if (typeof showSiteBroadcast === 'function') showSiteBroadcast();
   }
   // The session check is async — DOMContentLoaded may have already fired by now.
   if (document.readyState === 'loading') {
@@ -1617,9 +1618,10 @@ document.addEventListener('click', function(e) {
         <input id="bcCtaLabel" type="text" maxlength="30" placeholder="Button text (optional)" style="flex:1;min-width:150px;padding:11px 12px;border-radius:8px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-size:0.9rem;margin-bottom:10px;">
         <input id="bcCtaUrl" type="url" placeholder="Button link (optional)" style="flex:2;min-width:200px;padding:11px 12px;border-radius:8px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-size:0.9rem;margin-bottom:10px;">
         <select id="bcAudience" style="min-width:150px;padding:11px 12px;border-radius:8px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-size:0.9rem;margin-bottom:10px;">
-          <option value="all">Everyone</option>
-          <option value="connected">Connected customers only</option>
-          <option value="unconnected">Not-yet-connected only</option>
+          <option value="all">Everyone (website + extension)</option>
+          <option value="website">Website users only</option>
+          <option value="connected">Connected extension users only</option>
+          <option value="unconnected">Not-yet-connected extensions only</option>
         </select>
       </div>
       <button class="btn btn-primary" id="bcSendBtn" onclick="sendBroadcast()">Send broadcast</button>
@@ -2720,6 +2722,41 @@ async function deactivateBroadcast(id) {
     await sbClient.from('announcements').update({ active: false }).eq('id', id);
     loadBroadcast();
   } catch (err) { showToast('Could not stop broadcast', 'error'); }
+}
+
+// Show the active broadcast to website users as a dismissible banner.
+// Shown once per broadcast (dismissal remembered in localStorage).
+async function showSiteBroadcast() {
+  try {
+    var res = await fetch('https://vibesafe-api.vercel.app/api/announcement');
+    if (!res.ok) return;
+    var data = await res.json();
+    var a = data && data.announcement;
+    if (!a || !a.id || !a.message) return;
+    if (a.audience !== 'all' && a.audience !== 'website') return; // extension-only broadcast
+    if (localStorage.getItem('vibesafe.dismissedBroadcast') === a.id) return;
+
+    var bar = document.createElement('div');
+    bar.id = 'siteBroadcast';
+    bar.style.cssText = 'position:sticky;top:0;z-index:300;display:flex;align-items:center;gap:14px;justify-content:center;padding:11px 44px 11px 18px;background:linear-gradient(90deg,rgba(0,212,255,0.14),rgba(124,58,237,0.14));border-bottom:1px solid rgba(0,212,255,0.3);font-size:0.88rem;color:var(--text);';
+    var inner = document.createElement('span');
+    inner.textContent = a.message;
+    bar.appendChild(inner);
+    if (a.cta_label && a.cta_url) {
+      var btn = document.createElement('a');
+      btn.href = a.cta_url;
+      btn.textContent = a.cta_label;
+      btn.style.cssText = 'flex-shrink:0;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.8rem;padding:6px 14px;border-radius:8px;text-decoration:none;';
+      bar.appendChild(btn);
+    }
+    var close = document.createElement('button');
+    close.textContent = '✕';
+    close.setAttribute('aria-label', 'Dismiss');
+    close.style.cssText = 'position:absolute;right:12px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:0.9rem;padding:4px;';
+    close.onclick = function(){ localStorage.setItem('vibesafe.dismissedBroadcast', a.id); bar.remove(); };
+    bar.appendChild(close);
+    document.body.prepend(bar);
+  } catch (e) { /* banner must never break the dashboard */ }
 }
 
 function statCard(label, value, accent) {
