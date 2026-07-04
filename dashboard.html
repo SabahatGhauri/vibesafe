@@ -2478,17 +2478,39 @@ function renderAdminStats(s) {
   var sr = (s.success_rate === null || s.success_rate === undefined) ? '—' : s.success_rate + '%';
   var srColor = s.success_rate >= 90 ? 'var(--green)' : s.success_rate >= 70 ? 'var(--amber)' : 'var(--red)';
   var html = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;">'
-    + statCard('Active users today', s.active_today || 0, 'var(--cyan)')
-    + statCard('Active users (7d)', s.active_7d || 0, 'var(--cyan)')
-    + statCard('Active users (30d)', s.active_30d || 0, 'var(--cyan)')
-    + statCard('Connected extensions', s.installs || 0, 'var(--violet)')
+    + statCard('Total users', s.total_users || 0, 'var(--cyan)')
+    + statCard('Active today', s.active_today || 0, 'var(--cyan)')
+    + statCard('Active (7d)', s.active_7d || 0, 'var(--cyan)')
+    + statCard('Active (30d)', s.active_30d || 0, 'var(--cyan)')
     + '</div>'
     + '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;">'
-    + statCard('Scans today', s.scans_today || 0)
     + statCard('Total scans', s.scans_total || 0)
-    + statCard('Failed scans', s.scans_failed || 0, s.scans_failed > 0 ? 'var(--red)' : 'var(--text)')
+    + statCard('Successful', s.scans_success || 0, 'var(--green)')
+    + statCard('Failed', s.scans_failed || 0, s.scans_failed > 0 ? 'var(--red)' : 'var(--text)')
     + statCard('Success rate', sr, srColor)
     + '</div>';
+
+  // Channel breakdown: website vs extension
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">';
+  html += '<div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:18px;">'
+    + '<div style="font-weight:600;margin-bottom:6px;">🌐 Website scans</div>'
+    + '<div style="font-size:1.6rem;font-weight:700;font-family:\'Space Grotesk\',sans-serif;">' + (s.website_total || 0) + '</div>'
+    + '<div style="font-size:0.78rem;color:var(--text3);margin-top:4px;">' + (s.website_success || 0) + ' ok · ' + (s.website_failed || 0) + ' failed · ' + (s.users_website || 0) + ' users</div></div>';
+  html += '<div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:18px;">'
+    + '<div style="font-weight:600;margin-bottom:6px;">🧩 Extension scans</div>'
+    + '<div style="font-size:1.6rem;font-weight:700;font-family:\'Space Grotesk\',sans-serif;">' + (s.ext_total || 0) + '</div>'
+    + '<div style="font-size:0.78rem;color:var(--text3);margin-top:4px;">' + (s.ext_success || 0) + ' ok · ' + (s.ext_failed || 0) + ' failed · ' + (s.users_extension || 0) + ' users</div></div>';
+  html += '</div>';
+
+  // Scan-type breakdown
+  var types = s.by_scan_type || [];
+  if (types.length) {
+    html += '<div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:18px;margin-bottom:16px;">'
+      + '<div style="font-weight:600;margin-bottom:12px;">Scan type breakdown</div>';
+    var typeLabel = { code: '📝 Pasted code', github_url: '🐱 GitHub URL', live_url: '🌐 Live URL' };
+    types.forEach(function(t){ html += '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border1);font-size:0.82rem;"><span style="color:var(--text2);">' + (typeLabel[t.scan_type] || esc(t.scan_type)) + '</span><span><span style="color:var(--green);">' + t.ok + ' ok</span> · <span style="color:var(--red);">' + t.fail + ' fail</span> · <strong style="color:var(--text);">' + t.n + ' total</strong></span></div>'; });
+    html += '</div>';
+  }
 
   // Top errors
   html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">';
