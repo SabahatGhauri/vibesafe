@@ -1577,7 +1577,9 @@ document.addEventListener('click', function(e) {
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;">
       <button onclick="closeAdmin()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">← Back</button>
       <h2 style="margin:0;font-size:1.3rem;font-weight:700;">📈 Extension health</h2>
-      <button onclick="loadAdminStats()" style="margin-left:auto;background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">↻ Refresh</button>
+      <span id="sampleBadge" style="display:none;font-size:0.7rem;font-weight:700;letter-spacing:0.05em;background:rgba(245,158,11,0.15);color:var(--amber);border:1px solid rgba(245,158,11,0.4);border-radius:100px;padding:4px 12px;">SAMPLE DATA</span>
+      <button id="sampleBtn" onclick="toggleSampleData()" style="margin-left:auto;background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">👁 Sample data</button>
+      <button onclick="loadAdminStats()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">↻ Refresh</button>
     </div>
     <div id="adminStats">
       <div style="text-align:center;padding:40px 0;color:var(--text3);font-size:0.85rem;">Loading extension analytics…</div>
@@ -2514,7 +2516,79 @@ function closeAdmin() {
   document.getElementById('adminPanel').style.display = 'none';
 }
 
+// ── SAMPLE DATA (admin preview only — never touches the database) ──
+var sampleMode = false;
+
+function sampleAdminData() {
+  return {
+    stats: {
+      total_users: 214, active_today: 38, active_7d: 122, active_30d: 187,
+      users_website: 156, users_extension: 94,
+      scans_total: 1863, scans_today: 97, scans_success: 1742, scans_failed: 121, success_rate: 94,
+      website_total: 1102, website_success: 1041, website_failed: 61,
+      ext_total: 761, ext_success: 701, ext_failed: 60,
+      connected_extensions: 94,
+      by_scan_type: [
+        { scan_type: 'code', n: 1421, ok: 1345, fail: 76 },
+        { scan_type: 'live_url', n: 267, ok: 244, fail: 23 },
+        { scan_type: 'github_url', n: 175, ok: 153, fail: 22 }
+      ],
+      top_errors: [
+        { error_message: 'Free scan limit reached', source: 'website', n: 41 },
+        { error_message: 'Invalid API key', source: 'vscode_extension', n: 28 },
+        { error_message: 'Request timeout', source: 'website', n: 17 }
+      ],
+      top_languages: [
+        { language: 'JavaScript', n: 642 }, { language: 'TypeScript', n: 388 },
+        { language: 'Python', n: 301 }, { language: 'HTML', n: 176 },
+        { language: 'JSON', n: 98 }, { language: 'SQL', n: 54 }
+      ],
+      versions: [
+        { extension_version: '1.1.0', users: 61 },
+        { extension_version: '1.0.10', users: 27 },
+        { extension_version: '1.0.8', users: 6 }
+      ]
+    },
+    leads: {
+      total: 87, today: 6, last_7d: 29, converted: 11,
+      by_source: [
+        { source: 'homepage', n: 44 }, { source: 'extension', n: 26 },
+        { source: 'checklist', n: 12 }, { source: 'verify', n: 5 }
+      ],
+      recent: [
+        { name: 'Maya', email: 'maya@buildfast.io', source: 'extension', magnet: 'unlimited-offer-50', converted: true,  created_at: new Date(Date.now() - 2*3600e3).toISOString() },
+        { name: 'Daniel', email: 'daniel.k@foundermail.com', source: 'homepage', magnet: 'security-checklist', converted: false, created_at: new Date(Date.now() - 7*3600e3).toISOString() },
+        { name: 'Priya', email: 'priya@shipitweekly.co', source: 'homepage', magnet: 'security-checklist', converted: false, created_at: new Date(Date.now() - 26*3600e3).toISOString() },
+        { name: 'Tom', email: 'tom@indiestack.dev', source: 'extension', magnet: 'unlimited-offer-50', converted: true,  created_at: new Date(Date.now() - 2*86400e3).toISOString() },
+        { name: 'Aisha', email: 'aisha@lovable-apps.com', source: 'checklist', magnet: 'security-checklist', converted: false, created_at: new Date(Date.now() - 3*86400e3).toISOString() }
+      ]
+    }
+  };
+}
+
+function toggleSampleData() {
+  sampleMode = !sampleMode;
+  var badge = document.getElementById('sampleBadge');
+  var btn = document.getElementById('sampleBtn');
+  badge.style.display = sampleMode ? 'inline-block' : 'none';
+  btn.textContent = sampleMode ? '👁 Show live data' : '👁 Sample data';
+  if (sampleMode) {
+    var d = sampleAdminData();
+    document.getElementById('adminStats').innerHTML = renderAdminStats(d.stats);
+    document.getElementById('adminLeads').innerHTML = renderLeads(d.leads);
+  } else {
+    loadAdminStats();
+  }
+}
+
 async function loadAdminStats() {
+  if (sampleMode) {
+    var d = sampleAdminData();
+    document.getElementById('adminStats').innerHTML = renderAdminStats(d.stats);
+    document.getElementById('adminLeads').innerHTML = renderLeads(d.leads);
+    loadBroadcast();
+    return;
+  }
   var box = document.getElementById('adminStats');
   box.innerHTML = '<div style="text-align:center;padding:40px 0;color:var(--text3);font-size:0.85rem;">Loading…</div>';
   try {
