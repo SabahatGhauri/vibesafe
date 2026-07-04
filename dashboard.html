@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VibeSafe â€” Dashboard</title>
+<title>VibeSafe — Dashboard</title>
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
 <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
@@ -54,7 +54,7 @@ body {
     #050816;
 }
 
-/* â”€â”€ TOP NAV â”€â”€ */
+/* ── TOP NAV ── */
 .topnav {
   height: 56px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: space-between;
@@ -122,12 +122,12 @@ body {
   cursor: pointer; border: none;
 }
 
-/* â”€â”€ MAIN LAYOUT â”€â”€ */
+/* ── MAIN LAYOUT ── */
 .app-body {
   flex: 1; display: flex; overflow: hidden;
 }
 
-/* â”€â”€ SIDEBAR â”€â”€ */
+/* ── SIDEBAR ── */
 .sidebar {
   width: 220px; flex-shrink: 0;
   background: var(--surface);
@@ -233,13 +233,13 @@ body {
 }
 .upgrade-btn:hover { background: #33DCFF; }
 
-/* â”€â”€ MAIN CONTENT â”€â”€ */
+/* ── MAIN CONTENT ── */
 .main {
   flex: 1; display: flex;
   overflow: hidden; gap: 0;
 }
 
-/* â”€â”€ LEFT PANEL (editor) â”€â”€ */
+/* ── LEFT PANEL (editor) ── */
 .editor-panel {
   flex: 1; display: flex; flex-direction: column;
   border-right: 1px solid var(--border);
@@ -368,7 +368,7 @@ body {
 
 .ef-item { display: flex; align-items: center; gap: 5px; }
 
-/* â”€â”€ RIGHT PANEL (results) â”€â”€ */
+/* ── RIGHT PANEL (results) ── */
 .results-panel {
   width: 420px; flex-shrink: 0;
   display: flex; flex-direction: column;
@@ -468,7 +468,7 @@ body {
 .sstat.warn .sstat-num { color: var(--amber); }
 .sstat.ok   .sstat-num { color: var(--green); }
 
-/* scrollable body of the results panel â€” score header, filters, fix-priority
+/* scrollable body of the results panel — score header, filters, fix-priority
    and the issues list all scroll together as one unit, so a long issues
    list doesn't get squeezed into a tiny clipped sliver below everything else */
 .results-scroll {
@@ -728,13 +728,13 @@ body {
   opacity: 0.4; cursor: not-allowed; box-shadow: none;
 }
 
-/* â”€â”€ SCROLLBAR â”€â”€ */
+/* ── SCROLLBAR ── */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
 ::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.3); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(0,212,255,0.5); }
 
-/* â”€â”€ TOAST â”€â”€ */
+/* ── TOAST ── */
 .toast-wrap {
   position: fixed; bottom: 20px; right: 20px;
   display: flex; flex-direction: column; gap: 8px;
@@ -762,7 +762,7 @@ body {
 .toast.success { border-color: rgba(16,185,129,0.25); }
 .toast.error   { border-color: rgba(239,68,68,0.25); }
 
-/* â”€â”€ HISTORY LIST (sidebar panel) â”€â”€ */
+/* ── HISTORY LIST (sidebar panel) ── */
 .history-section {
   padding: 6px 12px 12px;
   flex: 1; overflow-y: auto;
@@ -798,7 +798,7 @@ body {
 .hi-meta { font-size: 0.7rem; color: var(--text3); }
 
 
-/* â”€â”€ RISK FILTERS â”€â”€ */
+/* ── RISK FILTERS ── */
 .filter-bar {
   display: flex; gap: 6px; padding: 10px 14px;
   border-bottom: 1px solid var(--border);
@@ -819,7 +819,7 @@ body {
   border-color: rgba(0, 212, 255, 0.3);
 }
 
-/* â”€â”€ FIX PRIORITY â”€â”€ */
+/* ── FIX PRIORITY ── */
 .fix-priority {
   padding: 12px 14px;
   border-bottom: 1px solid var(--border);
@@ -991,7 +991,7 @@ body {
   z-index: 10;
 }
 
-/* â”€â”€ RESPONSIVE â”€â”€ */
+/* ── RESPONSIVE ── */
 .menu-btn {
   display: none;
   width: 32px; height: 32px; flex-shrink: 0;
@@ -1056,7 +1056,7 @@ body {
 <body>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// â”€â”€ SUPABASE AUTH â”€â”€
+// ── SUPABASE AUTH ──
 const SUPABASE_URL = 'https://uxsmmpujxbzdgxxburxr.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_hgCpN6tsYqEiCkyvJm06qQ_1Ddlvznn';
 const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -1064,7 +1064,7 @@ let currentUser = null;
 let currentPlan = 'free';
 const FREE_SCAN_LIMIT = 3;
 
-// Require login â€” redirect to login page if not authenticated
+// Require login — redirect to login page if not authenticated
 (async function() {
   const { data: { session } } = await sbClient.auth.getSession();
   if (!session) {
@@ -1087,7 +1087,7 @@ const FREE_SCAN_LIMIT = 3;
   });
 })();
 
-// â”€â”€ PLAN / BILLING â”€â”€
+// ── PLAN / BILLING ──
 // TODO: replace with your LIVE Stripe Payment Link once created (this is a TEST link)
 const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_8x25kFdvx9Zi0rifNN9EI00';
 
@@ -1157,7 +1157,7 @@ function renderPlanCard(plan) {
     if (barFill) barFill.style.width = '100%';
     if (metaEl) metaEl.innerHTML = '<span>Unlimited scans</span>';
     if (upgradeBtn) {
-      upgradeBtn.textContent = plan === 'team' ? "You're on Team âœ“" : "You're on Pro âœ“";
+      upgradeBtn.textContent = plan === 'team' ? "You're on Team ✓" : "You're on Pro ✓";
       upgradeBtn.disabled = true;
       upgradeBtn.style.opacity = '0.6';
       upgradeBtn.style.cursor = 'default';
@@ -1223,7 +1223,7 @@ document.addEventListener('click', function(e) {
 <!-- TOP NAV -->
 <div class="topnav">
   <div class="topnav-left">
-    <button class="menu-btn" id="menuBtn" onclick="toggleSidebar()" aria-label="Toggle menu">â˜°</button>
+    <button class="menu-btn" id="menuBtn" onclick="toggleSidebar()" aria-label="Toggle menu">☰</button>
     <a href="/" class="logo">
       <img class="logo-icon" src="/favicon.svg" alt="" style="object-fit:cover">
       VibeSafe
@@ -1263,21 +1263,21 @@ document.addEventListener('click', function(e) {
     <div class="sidebar-section">
       <div class="sidebar-label">Workspace</div>
       <button class="sidebar-item active" onclick="setPage('scan', event)">
-        <span class="si-icon">ðŸ”</span> New scan
+        <span class="si-icon">🔍</span> New scan
         <span class="si-new">NEW</span>
       </button>
       <button class="sidebar-item" onclick="toggleHistory()">
-        <span class="si-icon">ðŸ“‹</span> Scan history
+        <span class="si-icon">📋</span> Scan history
         <span class="si-chevron" id="histChevron" style="margin-left:auto;font-size:10px;transition:transform 0.2s">â–¶</span>
       </button>
       <div class="history-section" id="historyList" style="display:none;max-height:280px">
         <div style="padding:12px;font-size:0.78rem;color:var(--text3);text-align:center">Loading...</div>
       </div>
       <button class="sidebar-item" onclick="setPage('monitor', event)">
-        <span class="si-icon">ðŸ“¡</span> Monitoring
+        <span class="si-icon">📡</span> Monitoring
       </button>
       <button class="sidebar-item" onclick="setPage('team', event)">
-        <span class="si-icon">ðŸ‘¥</span> Team
+        <span class="si-icon">👥</span> Team
       </button>
     </div>
 
@@ -1286,16 +1286,16 @@ document.addEventListener('click', function(e) {
     <div class="sidebar-section">
       <div class="sidebar-label">Scan from</div>
       <button class="sidebar-item" onclick="switchEditorTab(document.querySelectorAll('.etab')[2],'url')">
-        <span class="si-icon">ðŸ±</span> GitHub URL
+        <span class="si-icon">🐱</span> GitHub URL
       </button>
       <button class="sidebar-item" onclick="switchEditorTab(document.querySelectorAll('.etab')[1],'upload')">
-        <span class="si-icon">ðŸ“</span> Upload file
+        <span class="si-icon">📁</span> Upload file
       </button>
       <button class="sidebar-item" onclick="switchEditorTab(document.querySelectorAll('.etab')[0],'editor')">
-        <span class="si-icon">ðŸ“</span> Paste code
+        <span class="si-icon">📝</span> Paste code
       </button>
       <button class="sidebar-item" onclick="switchEditorTab(document.querySelectorAll('.etab')[3],'liveurl')">
-        <span class="si-icon">ðŸŒ</span> Live URL
+        <span class="si-icon">🌐</span> Live URL
       </button>
     </div>
 
@@ -1304,16 +1304,16 @@ document.addEventListener('click', function(e) {
     <div class="sidebar-section">
       <div class="sidebar-label">Account</div>
       <button class="sidebar-item" onclick="openAccountMenu(event)">
-        <span class="si-icon">âš™ï¸</span> Account
+        <span class="si-icon">⚙️</span> Account
       </button>
       <button class="sidebar-item" onclick="openApiKeys()">
-        <span class="si-icon">ðŸ”‘</span> API keys
+        <span class="si-icon">🔑</span> API keys
       </button>
       <button class="sidebar-item" id="adminNavItem" style="display:none" onclick="openAdmin()">
-        <span class="si-icon">ðŸ“ˆ</span> Extension health
+        <span class="si-icon">📈</span> Extension health
       </button>
       <button class="sidebar-item" onclick="window.open('/faq.html','_blank')">
-        <span class="si-icon">ðŸ“š</span> Help &amp; FAQ
+        <span class="si-icon">📚</span> Help &amp; FAQ
       </button>
     </div>
 
@@ -1329,7 +1329,7 @@ document.addEventListener('click', function(e) {
           <span>resets Jun 30</span>
         </div>
         <button class="upgrade-btn" id="upgradeBtn" onclick="upgradeToPro()">
-          Upgrade to Pro â†’
+          Upgrade to Pro →
         </button>
       </div>
     </div>
@@ -1342,7 +1342,7 @@ document.addEventListener('click', function(e) {
     <div class="editor-panel" id="editorPanel">
       <div class="panel-header">
         <div class="panel-title">
-          <span>ðŸ“</span> Code input
+          <span>📝</span> Code input
         </div>
         <div class="panel-actions">
           <select class="lang-select" id="langSelect">
@@ -1364,7 +1364,7 @@ document.addEventListener('click', function(e) {
         <button class="etab active" onclick="switchEditorTab(this,'editor')">Editor</button>
         <button class="etab" onclick="switchEditorTab(this,'upload')">Upload file</button>
         <button class="etab" onclick="switchEditorTab(this,'url')">From URL</button>
-        <button class="etab" onclick="switchEditorTab(this,'liveurl')">ðŸŒ Live URL</button>
+        <button class="etab" onclick="switchEditorTab(this,'liveurl')">🌐 Live URL</button>
       </div>
 
       <div class="code-area-wrap" id="editorTab">
@@ -1376,31 +1376,31 @@ document.addEventListener('click', function(e) {
           spellcheck="false"
           placeholder="// Paste your AI-generated code here...
 // VibeSafe will scan for:
-//   â€¢ Security vulnerabilities
-//   â€¢ Runtime errors
-//   â€¢ Missing packages
-//   â€¢ Exposed secrets
-//   â€¢ Logic bugs"
+//   • Security vulnerabilities
+//   • Runtime errors
+//   • Missing packages
+//   • Exposed secrets
+//   • Logic bugs"
           oninput="updateLineNumbers()"
           onscroll="syncScroll()"
         ></textarea>
       </div>
 
       <div class="code-area-wrap" id="uploadTab" style="display:none; align-items:center; justify-content:center; flex-direction:column; gap:14px;">
-        <div style="font-size:2.5rem">ðŸ“</div>
+        <div style="font-size:2.5rem">📁</div>
         <div style="font-weight:600">Upload your code file</div>
         <div style="font-size:0.82rem; color:var(--text3)">Supports .js .ts .jsx .tsx .py .java .cs .txt</div>
-        <div style="font-size:0.72rem;color:var(--text3);margin-top:6px;display:flex;align-items:center;gap:5px"><span>ðŸ”’</span> Your code is scanned securely and never stored or used for AI training.</div>
+        <div style="font-size:0.72rem;color:var(--text3);margin-top:6px;display:flex;align-items:center;gap:5px"><span>🔒</span> Your code is scanned securely and never stored or used for AI training.</div>
         <input type="file" id="fileInput" accept=".js,.ts,.jsx,.tsx,.py,.java,.cs,.txt,.html,.css,.json" style="display:none" onchange="handleFileUpload(event)">
         <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">Browse files</button>
         <div id="fileName" style="font-size:0.78rem;color:var(--cyan);margin-top:4px"></div>
       </div>
 
       <div class="code-area-wrap" id="urlTab" style="display:none; align-items:center; justify-content:center; flex-direction:column; gap:14px; padding:32px;">
-        <div style="font-size:2.5rem">ðŸ”—</div>
+        <div style="font-size:2.5rem">🔗</div>
         <div style="font-weight:600">Scan from GitHub URL</div>
         <div style="font-size:0.8rem; color:var(--text3); text-align:center; max-width:420px">
-          Paste a link to a specific file in any GitHub repo. Public repos work for everyone â€” private repos work if you signed in with GitHub.
+          Paste a link to a specific file in any GitHub repo. Public repos work for everyone — private repos work if you signed in with GitHub.
         </div>
         <div style="display:flex; gap:8px; width:100%; max-width:440px;">
           <input type="text" id="githubUrlInput" placeholder="https://github.com/user/repo/blob/main/app.js"
@@ -1413,10 +1413,10 @@ document.addEventListener('click', function(e) {
       </div>
 
       <div class="code-area-wrap" id="liveurlTab" style="display:none; align-items:center; justify-content:center; flex-direction:column; gap:14px; padding:32px;">
-        <div style="font-size:2.5rem">ðŸŒ</div>
+        <div style="font-size:2.5rem">🌐</div>
         <div style="font-weight:600">Scan your live deployed app</div>
         <div style="font-size:0.8rem; color:var(--text3); text-align:center; max-width:460px">
-          Enter your app's URL and VibeSafe will check it for missing security headers, exposed paths, HTTPS issues, and more â€” without touching your code.
+          Enter your app's URL and VibeSafe will check it for missing security headers, exposed paths, HTTPS issues, and more — without touching your code.
         </div>
         <div style="display:flex; gap:8px; width:100%; max-width:480px;">
           <input type="text" id="liveUrlInput" placeholder="https://yourapp.vercel.app"
@@ -1426,11 +1426,11 @@ document.addEventListener('click', function(e) {
           <button class="btn btn-primary" id="liveUrlBtn" onclick="scanLiveUrl()">Scan</button>
         </div>
         <div style="display:flex; gap:16px; font-size:0.72rem; color:var(--text3); flex-wrap:wrap; justify-content:center;">
-          <span>âœ“ Security headers</span>
-          <span>âœ“ HTTPS enforcement</span>
-          <span>âœ“ Exposed paths</span>
-          <span>âœ“ CORS config</span>
-          <span>âœ“ Cookie flags</span>
+          <span>✓ Security headers</span>
+          <span>✓ HTTPS enforcement</span>
+          <span>✓ Exposed paths</span>
+          <span>✓ CORS config</span>
+          <span>✓ Cookie flags</span>
         </div>
       </div>
 
@@ -1444,7 +1444,7 @@ document.addEventListener('click', function(e) {
           <span id="charCount" style="color:var(--text2)">0</span>
         </div>
         <div class="ef-item" id="langLabel">
-          <span style="color:var(--cyan)">â—</span>
+          <span style="color:var(--cyan)">●</span>
           <span id="langDisplay">JavaScript</span>
         </div>
       </div>
@@ -1509,7 +1509,7 @@ document.addEventListener('click', function(e) {
 
         <!-- Empty state -->
         <div class="empty-state" id="emptyState">
-          <div class="empty-icon">ðŸ”¬</div>
+          <div class="empty-icon">🔬</div>
           <div class="empty-title">No scan yet</div>
           <div class="empty-desc">Paste your AI-generated code in the editor and click "Run scan" to detect errors, security vulnerabilities, and bugs.</div>
         </div>
@@ -1542,7 +1542,7 @@ document.addEventListener('click', function(e) {
 
         <!-- Fix priority section -->
         <div class="fix-priority" id="fixPriority" style="display:none">
-          <div class="fix-priority-title">ðŸŽ¯ Fix these first</div>
+          <div class="fix-priority-title">🎯 Fix these first</div>
           <div class="fix-priority-list" id="fixPriorityList"></div>
         </div>
 
@@ -1557,10 +1557,10 @@ document.addEventListener('click', function(e) {
           âš¡ Auto-fix all issues
         </button>
         <button class="fix-all-btn" id="copyFixesBtn" onclick="copyFixesForAI()" style="margin-top:8px;background:var(--surface2);color:var(--cyan);border:1px solid rgba(0,212,255,0.3);box-shadow:none">
-          ðŸ“‹ Copy all fixes for Cursor / Lovable
+          📋 Copy all fixes for Cursor / Lovable
         </button>
         <button class="fix-all-btn" id="rescanBtn" onclick="startScan()" style="margin-top:8px;background:var(--surface2);color:var(--green);border:1px solid rgba(16,185,129,0.3);box-shadow:none">
-          ðŸ”„ Rescan after fixes
+          🔄 Rescan after fixes
         </button>
         <p style="margin-top:10px;font-size:0.7rem;line-height:1.5;color:var(--text3);text-align:center">
           VibeSafe helps detect common code risks and issues, but scan results may not be complete. Always review important apps with a qualified developer or security professional before production launch.
@@ -1575,24 +1575,24 @@ document.addEventListener('click', function(e) {
 <div id="adminPanel" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;padding:32px 24px;">
   <div style="max-width:900px;margin:0 auto;">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;">
-      <button onclick="closeAdmin()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">â† Back</button>
-      <h2 style="margin:0;font-size:1.3rem;font-weight:700;">ðŸ“ˆ Extension health</h2>
-      <button onclick="loadAdminStats()" style="margin-left:auto;background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">â†» Refresh</button>
+      <button onclick="closeAdmin()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">← Back</button>
+      <h2 style="margin:0;font-size:1.3rem;font-weight:700;">📈 Extension health</h2>
+      <button onclick="loadAdminStats()" style="margin-left:auto;background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">↻ Refresh</button>
     </div>
     <div id="adminStats">
-      <div style="text-align:center;padding:40px 0;color:var(--text3);font-size:0.85rem;">Loading extension analyticsâ€¦</div>
+      <div style="text-align:center;padding:40px 0;color:var(--text3);font-size:0.85rem;">Loading extension analytics…</div>
     </div>
 
     <div style="display:flex;align-items:center;gap:12px;margin:40px 0 20px;">
-      <h2 style="margin:0;font-size:1.3rem;font-weight:700;">ðŸŽ¯ Leads</h2>
+      <h2 style="margin:0;font-size:1.3rem;font-weight:700;">🎯 Leads</h2>
       <span style="font-size:0.78rem;color:var(--text3);">People to convert into paying customers</span>
     </div>
     <div id="adminLeads">
-      <div style="text-align:center;padding:24px 0;color:var(--text3);font-size:0.85rem;">Loading leadsâ€¦</div>
+      <div style="text-align:center;padding:24px 0;color:var(--text3);font-size:0.85rem;">Loading leads…</div>
     </div>
 
     <div style="display:flex;align-items:center;gap:12px;margin:40px 0 16px;">
-      <h2 style="margin:0;font-size:1.3rem;font-weight:700;">ðŸ“£ Broadcast</h2>
+      <h2 style="margin:0;font-size:1.3rem;font-weight:700;">📣 Broadcast</h2>
       <span style="font-size:0.78rem;color:var(--text3);">Send a message to customers inside the VS Code extension</span>
     </div>
     <div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:20px;margin-bottom:18px;">
@@ -1617,14 +1617,14 @@ document.addEventListener('click', function(e) {
 <div id="apiKeysPanel" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;padding:32px 24px;">
   <div style="max-width:740px;margin:0 auto;">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;">
-      <button onclick="closeApiKeys()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">â† Back</button>
-      <h2 style="margin:0;font-size:1.3rem;font-weight:700;">ðŸ”‘ API keys</h2>
+      <button onclick="closeApiKeys()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">← Back</button>
+      <h2 style="margin:0;font-size:1.3rem;font-weight:700;">🔑 API keys</h2>
     </div>
 
     <div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:20px;margin-bottom:20px;">
       <div style="font-weight:600;margin-bottom:4px;">Connect the VS Code extension</div>
       <div style="font-size:0.8rem;color:var(--text3);margin-bottom:14px;line-height:1.6;">
-        Generate an API key, then click <strong>Connect VS Code</strong> to set it up automatically â€” or copy it into the extension manually. The key lets the extension scan on your behalf without signing in every time.
+        Generate an API key, then click <strong>Connect VS Code</strong> to set it up automatically — or copy it into the extension manually. The key lets the extension scan on your behalf without signing in every time.
       </div>
       <button class="btn btn-primary" id="genKeyBtn" onclick="generateApiKey()">+ Generate new key</button>
       <div id="genKeyStatus" style="font-size:0.78rem;margin-top:10px;min-height:18px;"></div>
@@ -1651,8 +1651,8 @@ document.addEventListener('click', function(e) {
 <div id="teamPanel" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;padding:32px 24px;">
   <div style="max-width:740px;margin:0 auto;">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;">
-      <button onclick="closeTeamPanel()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">â† Back</button>
-      <h2 style="margin:0;font-size:1.3rem;font-weight:700;">ðŸ‘¥ Team</h2>
+      <button onclick="closeTeamPanel()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">← Back</button>
+      <h2 style="margin:0;font-size:1.3rem;font-weight:700;">👥 Team</h2>
     </div>
 
     <!-- Invite -->
@@ -1691,12 +1691,12 @@ document.addEventListener('click', function(e) {
 <div class="toast-wrap" id="toastWrap"></div>
 
 <script>
-// â”€â”€ STATE â”€â”€
+// ── STATE ──
 let issues = [];
 let scanDone = false;
 let fixedCount = 0;
 
-// â”€â”€ SAMPLE CODE â”€â”€
+// ── SAMPLE CODE ──
 const SAMPLES = {
   js: `const express = require('express')
 const app = express()
@@ -1780,23 +1780,23 @@ async function fetchData(url: string) {
 
 const ISSUES_DATA = {
   js: [
-    { id:1, sev:'critical', type:'Secret exposed', title:'API key hardcoded in source', line:'Line 5', desc:'The value "sk_live_4xKp9mQ2rT8wN3vL" is a live API key committed directly to your code. Anyone with repo access â€” or who views source â€” can extract and abuse it.', before:'const API_KEY = "sk_live_4xKp9mQ2rT8wN3vL"', after:'const API_KEY = process.env.API_KEY', fix:'Move to .env file and add .env to .gitignore.' },
-    { id:2, sev:'critical', type:'SQL injection', title:'Unsanitised input in SQL query', line:'Line 11', desc:'Directly concatenating req.params.id into a SQL query allows an attacker to inject arbitrary SQL â€” they could dump your entire database or delete it.', before:'db.query("SELECT * FROM users WHERE id = " + req.params.id)', after:'db.query("SELECT * FROM users WHERE id = ?", [req.params.id])', fix:'Use parameterised queries â€” never string-concatenate user input into SQL.' },
+    { id:1, sev:'critical', type:'Secret exposed', title:'API key hardcoded in source', line:'Line 5', desc:'The value "sk_live_4xKp9mQ2rT8wN3vL" is a live API key committed directly to your code. Anyone with repo access — or who views source — can extract and abuse it.', before:'const API_KEY = "sk_live_4xKp9mQ2rT8wN3vL"', after:'const API_KEY = process.env.API_KEY', fix:'Move to .env file and add .env to .gitignore.' },
+    { id:2, sev:'critical', type:'SQL injection', title:'Unsanitised input in SQL query', line:'Line 11', desc:'Directly concatenating req.params.id into a SQL query allows an attacker to inject arbitrary SQL — they could dump your entire database or delete it.', before:'db.query("SELECT * FROM users WHERE id = " + req.params.id)', after:'db.query("SELECT * FROM users WHERE id = ?", [req.params.id])', fix:'Use parameterised queries — never string-concatenate user input into SQL.' },
     { id:3, sev:'critical', type:'SQL injection', title:'Template literal SQL on login route', line:'Line 16', desc:'Using a template literal to build a SQL query from user-supplied email is equally dangerous. This is the most common attack vector for authentication bypasses.', before:'db.query SELECT FROM users WHERE email equals email variable', after:'db.query("SELECT * FROM users WHERE email = ?", [email])', fix:'Parameterise all queries.' },
-    { id:4, sev:'warning', type:'Missing await', title:'Async DB call without await', line:'Line 11', desc:'db.query returns a Promise. Without await, user is always a Promise object â€” res.json(user) will send "{}" instead of real data, silently breaking your endpoint.', before:'const user = db.query(...)', after:'const user = await db.query(...)', fix:'Add await before every async call.' },
+    { id:4, sev:'warning', type:'Missing await', title:'Async DB call without await', line:'Line 11', desc:'db.query returns a Promise. Without await, user is always a Promise object — res.json(user) will send "{}" instead of real data, silently breaking your endpoint.', before:'const user = db.query(...)', after:'const user = await db.query(...)', fix:'Add await before every async call.' },
     { id:5, sev:'warning', type:'Weak comparison', title:'Password compared with == not ===', line:'Line 19', desc:'Using == allows type coercion. In JavaScript, "0" == false is true. Always use === for security comparisons.', before:'if (result.password == password)', after:'if (result.password === password)', fix:'Use strict equality for all comparisons.' },
   ],
   py: [
     { id:1, sev:'critical', type:'Secret exposed', title:'Hardcoded secret key in source', line:'Line 6', desc:'SECRET_KEY and DB_PASSWORD are visible to anyone reading your code or git history. These should always come from environment variables.', before:'SECRET_KEY = "my_secret_key_12345"', after:'SECRET_KEY = os.environ.get("SECRET_KEY")', fix:'Use os.environ.get() and a .env file.' },
     { id:2, sev:'critical', type:'SQL injection', title:'String concatenation in SQL query', line:'Line 13', desc:'Concatenating user_id directly into a SQL string is a classic injection vulnerability. An attacker can pass "1 OR 1=1" and receive all user records.', before:'"SELECT * FROM users WHERE id = " + user_id', after:'"SELECT * FROM users WHERE id = ?", (user_id,)', fix:'Use parameterised queries with cursor.execute().' },
     { id:3, sev:'critical', type:'Path traversal', title:'Unsafe file path from user input', line:'Line 27', desc:'Using file.filename directly allows path traversal attacks. An attacker could upload a file named "../../app.py" and overwrite your application.', before:"file.save('/uploads/' + file.filename)", after:'file.save(os.path.join("/uploads", secure_filename(file.filename)))', fix:'Use werkzeug.utils.secure_filename().' },
-    { id:4, sev:'warning', type:'Missing call', title:'response.json not called', line:'Line 21', desc:'response.json is a method â€” without () it returns the method object, not the parsed JSON. This will cause a TypeError at runtime.', before:'data = response.json', after:'data = response.json()', fix:'Add () to call the method.' },
+    { id:4, sev:'warning', type:'Missing call', title:'response.json not called', line:'Line 21', desc:'response.json is a method — without () it returns the method object, not the parsed JSON. This will cause a TypeError at runtime.', before:'data = response.json', after:'data = response.json()', fix:'Add () to call the method.' },
     { id:5, sev:'warning', type:'Debug mode', title:'Flask running with debug=True', line:'Line 31', desc:'debug=True exposes an interactive debugger in the browser. In production, this allows arbitrary code execution on your server.', before:'app.run(debug=True)', after:'app.run(debug=os.environ.get("FLASK_DEBUG","false")=="true")', fix:'Control debug mode via environment variable.' },
   ],
   ts: [
     { id:1, sev:'critical', type:'Secret exposed', title:'JWT secret hardcoded in source', line:'Line 5', desc:'JWT_SECRET is committed to your code. Anyone with repo access can forge valid authentication tokens and log in as any user.', before:'const JWT_SECRET = "hardcoded_jwt_secret_do_not_share"', after:'const JWT_SECRET = process.env.JWT_SECRET!', fix:'Move to environment variable.' },
     { id:2, sev:'critical', type:'SQL injection', title:'Raw SQL with interpolated value', line:'Line 18', desc:'Using Prisma executeRaw with a template literal does not prevent injection. Use parameterised methods only.', before:'await prisma.executeRaw DELETE FROM users WHERE id', after:'await prisma.user.delete({ where: { id } })', fix:'Use Prisma type-safe query methods instead of raw SQL.' },
-    { id:3, sev:'critical', type:'Missing await', title:'Prisma call missing await', line:'Line 9', desc:'prisma.user.findUnique returns a Promise. Without await, user is always a pending Promise â€” your function will return undefined silently.', before:'const user = prisma.user.findUnique(...)', after:'const user = await prisma.user.findUnique(...)', fix:'Add await before all Prisma calls.' },
+    { id:3, sev:'critical', type:'Missing await', title:'Prisma call missing await', line:'Line 9', desc:'prisma.user.findUnique returns a Promise. Without await, user is always a pending Promise — your function will return undefined silently.', before:'const user = prisma.user.findUnique(...)', after:'const user = await prisma.user.findUnique(...)', fix:'Add await before all Prisma calls.' },
     { id:4, sev:'warning', type:'Missing await', title:'fetch() and .json() both missing await', line:'Line 23', desc:'Both fetch() and .json() are async. Without await on both, res is a Promise and data will always be undefined.', before:'const res = fetch(url)\nconst data = res.json()', after:'const res = await fetch(url)\nconst data = await res.json()', fix:'Await every async operation in the chain.' },
     { id:5, sev:'warning', type:'Unsafe type', title:'Parameter typed as any', line:'Line 17', desc:'Using any for the id parameter disables TypeScript type checking. This is how bugs that TypeScript would catch reach production.', before:'async function deleteUser(id: any)', after:'async function deleteUser(id: string)', fix:'Use the correct specific type.' },
   ],
@@ -1804,7 +1804,7 @@ const ISSUES_DATA = {
 
 const LANG_NAMES = { js:'JavaScript', ts:'TypeScript', py:'Python', java:'Java', cs:'.NET / C#' };
 
-// â”€â”€ LINE NUMBERS â”€â”€
+// ── LINE NUMBERS ──
 function updateLineNumbers() {
   const ta = document.getElementById('codeEditor');
   const lines = ta.value.split('\n');
@@ -1819,7 +1819,7 @@ function syncScroll() {
   document.getElementById('lineNumbers').scrollTop = ta.scrollTop;
 }
 
-// â”€â”€ EDITOR TABS â”€â”€
+// ── EDITOR TABS ──
 function switchEditorTab(el, tab) {
   document.querySelectorAll('.etab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
@@ -1831,7 +1831,7 @@ function switchEditorTab(el, tab) {
   });
 }
 
-// â”€â”€ LOAD SAMPLE â”€â”€
+// ── LOAD SAMPLE ──
 function loadSample() {
   const lang = document.getElementById('langSelect').value;
   const sample = SAMPLES[lang] || SAMPLES.js;
@@ -1843,7 +1843,7 @@ function loadSample() {
   showToast('Sample ' + LANG_NAMES[lang] + ' code loaded', 'success');
 }
 
-// â”€â”€ CLEAR EDITOR â”€â”€
+// ── CLEAR EDITOR ──
 function clearEditor() {
   document.getElementById('codeEditor').value = '';
   updateLineNumbers();
@@ -1861,11 +1861,11 @@ function resetResults() {
   document.getElementById('resultsPanelTitle').textContent = 'Scan results';
 }
 
-// â”€â”€ START SCAN â”€â”€
-// â”€â”€ REAL SCAN ENGINE â”€â”€
-// Calls the secure Vercel Edge Function â€” your API key never touches the browser
+// ── START SCAN ──
+// ── REAL SCAN ENGINE ──
+// Calls the secure Vercel Edge Function — your API key never touches the browser
 
-const SCAN_API_URL = 'https://vibesafe-api.vercel.app/api/scan'; // Relative URL â€” same domain as your Vercel deployment
+const SCAN_API_URL = 'https://vibesafe-api.vercel.app/api/scan'; // Relative URL — same domain as your Vercel deployment
 
 async function scanFromGitHub() {
   var urlInput = document.getElementById('githubUrlInput');
@@ -1969,7 +1969,7 @@ async function scanLiveUrl() {
     const result = await response.json();
     if (!response.ok) { showToast(result.error || 'Scan failed', 'error'); return; }
 
-    // Reuse the existing results renderer â€” map DAST result to code-scan shape
+    // Reuse the existing results renderer — map DAST result to code-scan shape
     currentResult = result;
     renderResults(result);
     await updateScanUsage();
@@ -2172,7 +2172,7 @@ function showResults(apiScore) {
   if (issues.length === 0) {
     const el = document.createElement('div');
     el.style.cssText = 'text-align:center;padding:24px 16px';
-    el.innerHTML = '<div style="font-size:2rem;margin-bottom:8px">âœ…</div><div style="font-weight:600;color:var(--green);margin-bottom:4px">No issues found</div><div style="font-size:0.78rem;color:var(--text3)">Your code looks clean and safe to ship.</div>';
+    el.innerHTML = '<div style="font-size:2rem;margin-bottom:8px">✅</div><div style="font-weight:600;color:var(--green);margin-bottom:4px">No issues found</div><div style="font-size:0.78rem;color:var(--text3)">Your code looks clean and safe to ship.</div>';
     list.appendChild(el);
   } else {
     issues.forEach((issue, idx) => {
@@ -2187,7 +2187,7 @@ function showResults(apiScore) {
       const passedEl = document.createElement('div');
       passedEl.style.cssText = 'background:var(--green-dim);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:10px 13px;margin-top:4px';
       passedEl.innerHTML = '<div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;font-weight:600;color:var(--green);margin-bottom:6px">Passed checks</div>' +
-        window.vsPassedChecks.map(p => '<div style="font-size:0.78rem;color:#6EE7B7;margin-bottom:3px">âœ“ ' + p + '</div>').join('');
+        window.vsPassedChecks.map(p => '<div style="font-size:0.78rem;color:#6EE7B7;margin-bottom:3px">✓ ' + p + '</div>').join('');
       list.appendChild(passedEl);
     }, issues.length * 80 + 100);
   }
@@ -2197,7 +2197,7 @@ function showResults(apiScore) {
   document.getElementById('exportBtn').style.display = 'flex';
 
   const title = issues.length === 0
-    ? 'All clear âœ“'
+    ? 'All clear ✓'
     : issues.length + ' issue' + (issues.length > 1 ? 's' : '') + ' found';
   document.getElementById('resultsPanelTitle').textContent = title;
   document.getElementById('scanBtn').disabled = false;
@@ -2209,13 +2209,13 @@ function showResults(apiScore) {
   renderFixPriority();
   renderScoreExplanation(score, criticals, warnings);
 
-  showToast('Scan complete â€” ' + (issues.length === 0 ? 'no issues found!' : issues.length + ' issues found'), issues.length === 0 ? 'success' : 'info');
+  showToast('Scan complete — ' + (issues.length === 0 ? 'no issues found!' : issues.length + ' issues found'), issues.length === 0 ? 'success' : 'info');
 
   // Save this scan to history
   saveScanToHistory(apiScore);
 }
 
-// â”€â”€ SCAN HISTORY (Supabase) â”€â”€
+// ── SCAN HISTORY (Supabase) ──
 async function saveScanToHistory(score) {
   if (!currentUser || !sbClient) return;
   try {
@@ -2268,7 +2268,7 @@ function renderScanHistory(scans) {
     item.innerHTML =
       '<div class="hi-top"><span class="hi-name">' + scan.language + ' scan</span>' +
       '<span class="hi-score ' + cls + '">' + scan.score + '</span></div>' +
-      '<div class="hi-meta">' + date + ' at ' + time + ' Â· ' + scan.issues_count + ' issue' + (scan.issues_count !== 1 ? 's' : '') + '</div>';
+      '<div class="hi-meta">' + date + ' at ' + time + ' · ' + scan.issues_count + ' issue' + (scan.issues_count !== 1 ? 's' : '') + '</div>';
     container.appendChild(item);
   });
 }
@@ -2283,7 +2283,7 @@ function loadPastScan(scan) {
 }
 
 
-// â”€â”€ RISK FILTERS â”€â”€
+// ── RISK FILTERS ──
 function filterIssues(severity, btn) {
   // Update active button
   document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
@@ -2301,7 +2301,7 @@ function filterIssues(severity, btn) {
   });
 }
 
-// â”€â”€ FIX PRIORITY â”€â”€
+// ── FIX PRIORITY ──
 function renderFixPriority() {
   var list = document.getElementById('fixPriorityList');
   var section = document.getElementById('fixPriority');
@@ -2337,7 +2337,7 @@ function renderFixPriority() {
   });
 }
 
-// â”€â”€ SCORE EXPLANATION â”€â”€
+// ── SCORE EXPLANATION ──
 function renderScoreExplanation(score, criticals, warnings) {
   var el = document.getElementById('scoreExplanation');
   if (!el) return;
@@ -2373,7 +2373,7 @@ function buildIssueCard(issue, idx) {
     <div class="issue-body">
       <div class="issue-desc">${issue.desc}</div>
       <div class="code-snippet">
-        <div class="del">âˆ’ ${issue.before}</div>
+        <div class="del">− ${issue.before}</div>
         <div class="add">+ ${issue.after}</div>
       </div>
       <div class="fix-row">
@@ -2405,7 +2405,7 @@ function fixIssue(id) {
   const fixBtn = document.getElementById(`fix-btn-${id}`);
   fixBtn.parentElement.innerHTML = `
     <div class="fixed-label">
-      âœ… Fixed â€” ${issue.fix}
+      ✅ Fixed — ${issue.fix}
     </div>
   `;
 
@@ -2416,11 +2416,11 @@ function fixIssue(id) {
   // Update header count
   const remaining = issues.filter(i => !i.fixed).length;
   document.getElementById('resultsPanelTitle').textContent =
-    remaining > 0 ? `${remaining} issues remaining` : 'All issues fixed âœ“';
+    remaining > 0 ? `${remaining} issues remaining` : 'All issues fixed ✓';
 
   if (remaining === 0) {
     document.getElementById('fixAllBtn').disabled = true;
-    document.getElementById('fixAllBtn').textContent = 'âœ… All issues fixed';
+    document.getElementById('fixAllBtn').textContent = '✅ All issues fixed';
   }
 }
 
@@ -2452,7 +2452,7 @@ function updateScore() {
   document.getElementById('warnCount').textContent = warns;
 }
 
-// â”€â”€ SIDEBAR PAGES â”€â”€
+// ── SIDEBAR PAGES ──
 function setPage(page, evt) {
   document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
   if (evt && evt.currentTarget) evt.currentTarget.classList.add('active');
@@ -2465,15 +2465,15 @@ function setPage(page, evt) {
     document.getElementById('codeEditor').focus();
     showToast('Ready for a new scan', 'info');
   } else if (page === 'history') {
-    showToast('Scan history â€” 4 previous scans', 'info');
+    showToast('Scan history — 4 previous scans', 'info');
   } else if (page === 'monitor') {
-    showToast('Continuous monitoring with email alerts â€” coming in Pro', 'info');
+    showToast('Continuous monitoring with email alerts — coming in Pro', 'info');
   } else if (page === 'team') {
     openTeamPanel();
   }
 }
 
-// â”€â”€ TEAM PANEL â”€â”€
+// ── TEAM PANEL ──
 function openTeamPanel() {
   document.getElementById('teamPanel').style.display = 'block';
   loadTeamMembers();
@@ -2487,7 +2487,7 @@ function closeTeamPanel() {
   document.querySelector('.sidebar-item[onclick*="scan"]').classList.add('active');
 }
 
-// â”€â”€ API KEYS â”€â”€
+// ── API KEYS ──
 function openApiKeys() {
   if (!currentUser) { showToast('Please sign in first', 'error'); return; }
   document.getElementById('apiKeysPanel').style.display = 'block';
@@ -2498,7 +2498,7 @@ function closeApiKeys() {
   document.getElementById('apiKeysPanel').style.display = 'none';
 }
 
-// â”€â”€ ADMIN / EXTENSION HEALTH â”€â”€
+// ── ADMIN / EXTENSION HEALTH ──
 var ADMIN_EMAILS = ['sabahatghauri10@gmail.com', 'contact@vibesafe.info'];
 function maybeShowAdminNav() {
   if (currentUser && ADMIN_EMAILS.indexOf((currentUser.email || '').toLowerCase()) !== -1) {
@@ -2516,7 +2516,7 @@ function closeAdmin() {
 
 async function loadAdminStats() {
   var box = document.getElementById('adminStats');
-  box.innerHTML = '<div style="text-align:center;padding:40px 0;color:var(--text3);font-size:0.85rem;">Loadingâ€¦</div>';
+  box.innerHTML = '<div style="text-align:center;padding:40px 0;color:var(--text3);font-size:0.85rem;">Loading…</div>';
   try {
     var { data, error } = await sbClient.rpc('get_extension_stats');
     if (error) throw error;
@@ -2533,7 +2533,7 @@ var leadsCache = [];
 async function loadLeads() {
   var box = document.getElementById('adminLeads');
   if (!box) return;
-  box.innerHTML = '<div style="text-align:center;padding:24px 0;color:var(--text3);font-size:0.85rem;">Loading leadsâ€¦</div>';
+  box.innerHTML = '<div style="text-align:center;padding:24px 0;color:var(--text3);font-size:0.85rem;">Loading leads…</div>';
   try {
     var { data, error } = await sbClient.rpc('get_leads');
     if (error) throw error;
@@ -2559,7 +2559,7 @@ function renderLeads(l) {
     html += '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;">';
     bySource.forEach(function(x){
       html += '<span style="font-size:0.78rem;background:var(--surface2);border:1px solid var(--border2);border-radius:100px;padding:5px 12px;color:var(--text2);">'
-        + esc(x.source) + ' Â· <b style="color:var(--text)">' + x.n + '</b></span>';
+        + esc(x.source) + ' · <b style="color:var(--text)">' + x.n + '</b></span>';
     });
     html += '</div>';
   }
@@ -2567,7 +2567,7 @@ function renderLeads(l) {
   var recent = l.recent || [];
   html += '<div style="display:flex;align-items:center;gap:10px;margin:6px 0 10px;">'
     + '<div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);">Recent leads</div>';
-  if (recent.length) html += '<button onclick="exportLeadsCsv()" style="margin-left:auto;background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:5px 12px;cursor:pointer;font-size:0.78rem;">â¬‡ Export CSV</button>';
+  if (recent.length) html += '<button onclick="exportLeadsCsv()" style="margin-left:auto;background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:5px 12px;cursor:pointer;font-size:0.78rem;">⬇ Export CSV</button>';
   html += '</div>';
 
   if (!recent.length) {
@@ -2578,7 +2578,7 @@ function renderLeads(l) {
   recent.forEach(function(r, i){
     var d = r.created_at ? new Date(r.created_at).toLocaleDateString() : '';
     html += '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;' + (i ? 'border-top:1px solid var(--border1);' : '') + '">'
-      + '<div style="width:120px;font-size:0.85rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(r.name || 'â€”') + '</div>'
+      + '<div style="width:120px;font-size:0.85rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(r.name || '—') + '</div>'
       + '<div style="flex:1;font-size:0.85rem;color:var(--text);word-break:break-all;">' + esc(r.email) + '</div>'
       + '<div style="font-size:0.75rem;color:var(--text3);">' + esc(r.source || '') + '</div>'
       + '<div style="font-size:0.75rem;color:var(--text3);width:90px;text-align:right;">' + esc(d) + '</div>'
@@ -2604,7 +2604,7 @@ function exportLeadsCsv() {
   URL.revokeObjectURL(a.href);
 }
 
-// â”€â”€ BROADCAST â”€â”€
+// ── BROADCAST ──
 async function sendBroadcast() {
   var msg = (document.getElementById('bcMessage').value || '').trim();
   var label = (document.getElementById('bcCtaLabel').value || '').trim();
@@ -2613,9 +2613,9 @@ async function sendBroadcast() {
   var status = document.getElementById('bcStatus');
   var btn = document.getElementById('bcSendBtn');
   if (!msg) { status.style.color = 'var(--red)'; status.textContent = 'Enter a message first.'; return; }
-  btn.disabled = true; btn.textContent = 'Sendingâ€¦'; status.textContent = '';
+  btn.disabled = true; btn.textContent = 'Sending…'; status.textContent = '';
   try {
-    // Only one active announcement at a time â€” deactivate the rest first.
+    // Only one active announcement at a time — deactivate the rest first.
     await sbClient.from('announcements').update({ active: false }).eq('active', true);
     var { error } = await sbClient.from('announcements').insert({
       message: msg, cta_label: label || null, cta_url: url || null, audience: audience, active: true
@@ -2648,9 +2648,9 @@ async function loadBroadcast() {
       var d = a.created_at ? new Date(a.created_at).toLocaleDateString() : '';
       html += '<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;' + (i ? 'border-top:1px solid var(--border1);' : '') + '">'
         + '<div style="flex:1;font-size:0.85rem;color:var(--text);">' + esc(a.message)
-        + ' <span style="font-size:0.72rem;color:var(--text3);">Â· ' + esc(a.audience || 'all') + ' Â· ' + esc(d) + '</span></div>'
+        + ' <span style="font-size:0.72rem;color:var(--text3);">· ' + esc(a.audience || 'all') + ' · ' + esc(d) + '</span></div>'
         + (a.active
-            ? '<span style="font-size:0.72rem;color:var(--green);font-weight:600;">â— live</span> <button onclick="deactivateBroadcast(\'' + a.id + '\')" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:0.75rem;">Stop</button>'
+            ? '<span style="font-size:0.72rem;color:var(--green);font-weight:600;">● live</span> <button onclick="deactivateBroadcast(\'' + a.id + '\')" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:0.75rem;">Stop</button>'
             : '<span style="font-size:0.72rem;color:var(--text3);">ended</span>')
         + '</div>';
     });
@@ -2675,7 +2675,7 @@ function statCard(label, value, accent) {
 }
 
 function renderAdminStats(s) {
-  var sr = (s.success_rate === null || s.success_rate === undefined) ? 'â€”' : s.success_rate + '%';
+  var sr = (s.success_rate === null || s.success_rate === undefined) ? '—' : s.success_rate + '%';
   var srColor = s.success_rate >= 90 ? 'var(--green)' : s.success_rate >= 70 ? 'var(--amber)' : 'var(--red)';
   var html = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;">'
     + statCard('Total users', s.total_users || 0, 'var(--cyan)')
@@ -2693,13 +2693,13 @@ function renderAdminStats(s) {
   // Channel breakdown: website vs extension
   html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">';
   html += '<div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:18px;">'
-    + '<div style="font-weight:600;margin-bottom:6px;">ðŸŒ Website scans</div>'
+    + '<div style="font-weight:600;margin-bottom:6px;">🌐 Website scans</div>'
     + '<div style="font-size:1.6rem;font-weight:700;font-family:\'Space Grotesk\',sans-serif;">' + (s.website_total || 0) + '</div>'
-    + '<div style="font-size:0.78rem;color:var(--text3);margin-top:4px;">' + (s.website_success || 0) + ' ok Â· ' + (s.website_failed || 0) + ' failed Â· ' + (s.users_website || 0) + ' users</div></div>';
+    + '<div style="font-size:0.78rem;color:var(--text3);margin-top:4px;">' + (s.website_success || 0) + ' ok · ' + (s.website_failed || 0) + ' failed · ' + (s.users_website || 0) + ' users</div></div>';
   html += '<div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:18px;">'
-    + '<div style="font-weight:600;margin-bottom:6px;">ðŸ§© Extension scans</div>'
+    + '<div style="font-weight:600;margin-bottom:6px;">🧩 Extension scans</div>'
     + '<div style="font-size:1.6rem;font-weight:700;font-family:\'Space Grotesk\',sans-serif;">' + (s.ext_total || 0) + '</div>'
-    + '<div style="font-size:0.78rem;color:var(--text3);margin-top:4px;">' + (s.ext_success || 0) + ' ok Â· ' + (s.ext_failed || 0) + ' failed Â· ' + (s.users_extension || 0) + ' users</div></div>';
+    + '<div style="font-size:0.78rem;color:var(--text3);margin-top:4px;">' + (s.ext_success || 0) + ' ok · ' + (s.ext_failed || 0) + ' failed · ' + (s.users_extension || 0) + ' users</div></div>';
   html += '</div>';
 
   // Scan-type breakdown
@@ -2707,8 +2707,8 @@ function renderAdminStats(s) {
   if (types.length) {
     html += '<div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:18px;margin-bottom:16px;">'
       + '<div style="font-weight:600;margin-bottom:12px;">Scan type breakdown</div>';
-    var typeLabel = { code: 'ðŸ“ Pasted code', github_url: 'ðŸ± GitHub URL', live_url: 'ðŸŒ Live URL' };
-    types.forEach(function(t){ html += '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border1);font-size:0.82rem;"><span style="color:var(--text2);">' + (typeLabel[t.scan_type] || esc(t.scan_type)) + '</span><span><span style="color:var(--green);">' + t.ok + ' ok</span> Â· <span style="color:var(--red);">' + t.fail + ' fail</span> Â· <strong style="color:var(--text);">' + t.n + ' total</strong></span></div>'; });
+    var typeLabel = { code: '📝 Pasted code', github_url: '🐱 GitHub URL', live_url: '🌐 Live URL' };
+    types.forEach(function(t){ html += '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border1);font-size:0.82rem;"><span style="color:var(--text2);">' + (typeLabel[t.scan_type] || esc(t.scan_type)) + '</span><span><span style="color:var(--green);">' + t.ok + ' ok</span> · <span style="color:var(--red);">' + t.fail + ' fail</span> · <strong style="color:var(--text);">' + t.n + ' total</strong></span></div>'; });
     html += '</div>';
   }
 
@@ -2717,7 +2717,7 @@ function renderAdminStats(s) {
   html += '<div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:18px;">'
     + '<div style="font-weight:600;margin-bottom:12px;">Top errors</div>';
   var errs = s.top_errors || [];
-  if (errs.length === 0) html += '<div style="font-size:0.8rem;color:var(--text3);">No failures recorded ðŸŽ‰</div>';
+  if (errs.length === 0) html += '<div style="font-size:0.8rem;color:var(--text3);">No failures recorded 🎉</div>';
   else errs.forEach(function(e){ html += '<div style="display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--border1);font-size:0.82rem;"><span style="color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + esc(e.error_message) + '</span><span style="color:var(--red);font-weight:600;">' + e.n + '</span></div>'; });
   html += '</div>';
 
@@ -2755,8 +2755,8 @@ async function loadApiKeys() {
     list.innerHTML = data.map(function(k) {
       var used = k.last_used_at ? 'Last used ' + new Date(k.last_used_at).toLocaleDateString() : 'Never used';
       return '<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border1);">'
-        + '<div><div style="font-weight:500;font-size:0.86rem;">ðŸ”‘ ' + (k.name || 'API key') + '</div>'
-        + '<div style="font-size:0.72rem;color:var(--text3);">Created ' + new Date(k.created_at).toLocaleDateString() + ' Â· ' + used + '</div></div>'
+        + '<div><div style="font-weight:500;font-size:0.86rem;">🔑 ' + (k.name || 'API key') + '</div>'
+        + '<div style="font-size:0.72rem;color:var(--text3);">Created ' + new Date(k.created_at).toLocaleDateString() + ' · ' + used + '</div></div>'
         + '<button class="btn btn-ghost" style="color:var(--red);font-size:0.78rem;" onclick="revokeApiKey(\'' + k.id + '\')">Revoke</button>'
         + '</div>';
     }).join('');
@@ -2851,14 +2851,14 @@ async function sendTeamInvite() {
       invite_token: inviteToken,
     });
     if (error && error.code === '23505') {
-      // Row already exists â€” update the token so the new email link works
+      // Row already exists — update the token so the new email link works
       var { error: upErr } = await sbClient.from('team_members')
         .update({ invite_token: inviteToken, status: 'pending' })
         .eq('team_id', teamId).eq('invited_email', email);
       if (upErr) throw upErr;
     } else if (error) throw error;
 
-    // Fire invite email via API (non-blocking â€” invite is recorded regardless)
+    // Fire invite email via API (non-blocking — invite is recorded regardless)
     var session = sbClient.auth.session ? sbClient.auth.session() : (await sbClient.auth.getSession()).data.session;
     var authToken = session && session.access_token;
     if (authToken) {
@@ -2866,11 +2866,11 @@ async function sendTeamInvite() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
         body: JSON.stringify({ email, teamId, inviteToken }),
-      }).catch(function() {}); // silent â€” invite already recorded in DB
+      }).catch(function() {}); // silent — invite already recorded in DB
     }
 
     status.style.color = 'var(--green, #10B981)';
-    status.textContent = 'âœ“ Invite sent to ' + email + '. They\'ll get an email with a link to join.';
+    status.textContent = '✓ Invite sent to ' + email + '. They\'ll get an email with a link to join.';
     document.getElementById('inviteEmailInput').value = '';
     loadTeamMembers();
   } catch (err) {
@@ -2958,7 +2958,7 @@ async function loadTeamScanHistory() {
     return;
   }
   if (!scans || scans.length === 0) {
-    container.innerHTML = '<div style="font-size:0.8rem;color:var(--text3);text-align:center;padding:16px 0;">No scans yet â€” run your first scan to see it here.</div>';
+    container.innerHTML = '<div style="font-size:0.8rem;color:var(--text3);text-align:center;padding:16px 0;">No scans yet — run your first scan to see it here.</div>';
     return;
   }
 
@@ -2973,12 +2973,12 @@ async function loadTeamScanHistory() {
     scans.map(function(s) {
       var cls = s.score >= 75 ? '#10B981' : s.score >= 50 ? '#F59E0B' : '#EF4444';
       var date = new Date(s.created_at).toLocaleDateString([], { month:'short', day:'numeric' });
-      var email = (s.user_id === currentUser.id) ? 'You' : (s.user_id || '').slice(0, 8) + 'â€¦';
-      var label = s.scan_type === 'url' ? 'ðŸŒ ' + (s.target || 'URL') : (s.language || 'Code') + ' scan';
+      var email = (s.user_id === currentUser.id) ? 'You' : (s.user_id || '').slice(0, 8) + '…';
+      var label = s.scan_type === 'url' ? '🌐 ' + (s.target || 'URL') : (s.language || 'Code') + ' scan';
       return '<tr style="border-bottom:1px solid var(--border1);">' +
         '<td style="padding:7px 8px;color:var(--text2);">' + email + '</td>' +
         '<td style="padding:7px 8px;">' + label + '</td>' +
-        '<td style="padding:7px 8px;text-align:center;font-weight:600;color:' + cls + ';">' + (s.score || 'â€”') + '</td>' +
+        '<td style="padding:7px 8px;text-align:center;font-weight:600;color:' + cls + ';">' + (s.score || '—') + '</td>' +
         '<td style="padding:7px 8px;text-align:center;color:var(--text2);">' + (s.issues_count || 0) + '</td>' +
         '<td style="padding:7px 8px;color:var(--text3);">' + date + '</td>' +
         '</tr>';
@@ -2986,7 +2986,7 @@ async function loadTeamScanHistory() {
     '</tbody></table>';
 }
 
-// â”€â”€ LANG DISPLAY â”€â”€
+// ── LANG DISPLAY ──
 document.getElementById('langSelect').addEventListener('change', function() {
   document.getElementById('langDisplay').textContent = LANG_NAMES[this.value] || this.value;
   resetResults();
@@ -2994,13 +2994,13 @@ document.getElementById('langSelect').addEventListener('change', function() {
   updateLineNumbers();
 });
 
-// â”€â”€ TOAST â”€â”€
+// ── TOAST ──
 function showToast(msg, type='info') {
-  const icons = { success:'âœ…', error:'âŒ', info:'â„¹ï¸' };
+  const icons = { success:'✅', error:'❌', info:'ℹ️' };
   const wrap = document.getElementById('toastWrap');
   const t = document.createElement('div');
   t.className = `toast ${type}`;
-  t.innerHTML = `<span>${icons[type]||'â€¢'}</span><span>${msg}</span>`;
+  t.innerHTML = `<span>${icons[type]||'•'}</span><span>${msg}</span>`;
   wrap.appendChild(t);
   setTimeout(() => {
     t.style.opacity = '0';
@@ -3010,14 +3010,14 @@ function showToast(msg, type='info') {
   }, 3000);
 }
 
-// â”€â”€ INIT â”€â”€
+// ── INIT ──
 updateLineNumbers();
 document.getElementById('codeEditor').focus();
-// Ready â€” paste your code and click Run Scan
+// Ready — paste your code and click Run Scan
 
-// â”€â”€ AI-READY FIX EXPORT â”€â”€
+// ── AI-READY FIX EXPORT ──
 
-// â”€â”€ FILE UPLOAD â”€â”€
+// ── FILE UPLOAD ──
 function handleFileUpload(event) {
   var file = event.target.files[0];
   if (!file) return;
@@ -3039,14 +3039,14 @@ function handleFileUpload(event) {
     if (sel && langMap[ext]) sel.value = langMap[ext];
     var fn = document.getElementById('fileName');
     if (fn) fn.textContent = 'Loaded: ' + file.name;
-    showToast('File loaded â€” click Run Scan', 'success');
+    showToast('File loaded — click Run Scan', 'success');
   };
   reader.onerror = function() { showToast('Could not read file', 'error'); };
   reader.readAsText(file);
 }
 
-// â”€â”€ EXPORT PDF REPORT â”€â”€
-// â”€â”€ PDF SAFETY REPORT (jsPDF, loaded on demand) â”€â”€
+// ── EXPORT PDF REPORT ──
+// ── PDF SAFETY REPORT (jsPDF, loaded on demand) ──
 var jsPdfLoading = null;
 function loadJsPdf() {
   if (window.jspdf) return Promise.resolve();
@@ -3066,11 +3066,11 @@ async function exportReport() {
     showToast('Run a scan first to export a report', 'error');
     return;
   }
-  showToast('Generating PDF reportâ€¦', 'success');
+  showToast('Generating PDF report…', 'success');
   try {
     await loadJsPdf();
   } catch (e) {
-    showToast('Could not load PDF library â€” check your connection', 'error');
+    showToast('Could not load PDF library — check your connection', 'error');
     return;
   }
 
@@ -3095,7 +3095,7 @@ async function exportReport() {
       doc.setPage(p);
       doc.setFontSize(8); doc.setTextColor(150);
       doc.setFont('helvetica', 'normal');
-      doc.text('Generated by VibeSafe Â· vibesafe.info', M, H - 24);
+      doc.text('Generated by VibeSafe · vibesafe.info', M, H - 24);
       doc.text('Page ' + p + ' of ' + pages, W - M, H - 24, { align: 'right' });
     }
   }
@@ -3104,7 +3104,7 @@ async function exportReport() {
     if (y + needed > H - 60) { doc.addPage(); y = M; }
   }
 
-  // â”€â”€ Header band â”€â”€
+  // ── Header band ──
   doc.setFillColor(8, 12, 24);
   doc.rect(0, 0, W, 130, 'F');
   // shield mark (simple two-tone diamond-ish shield)
@@ -3119,7 +3119,7 @@ async function exportReport() {
   doc.setTextColor(255); doc.setFont('helvetica', 'bold'); doc.setFontSize(22);
   doc.text('VibeSafe Security Report', M + 44, 56);
   doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(148, 163, 184);
-  doc.text('AI code security scan Â· ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) + (lang ? ' Â· ' + lang : ''), M + 44, 74);
+  doc.text('AI code security scan · ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) + (lang ? ' · ' + lang : ''), M + 44, 74);
   doc.setTextColor(0, 212, 255);
   doc.text('www.vibesafe.info', M + 44, 90);
 
@@ -3137,15 +3137,15 @@ async function exportReport() {
 
   y = 158;
 
-  // â”€â”€ Verdict + counts â”€â”€
+  // ── Verdict + counts ──
   doc.setFont('helvetica', 'bold'); doc.setFontSize(14);
   doc.setTextColor(scoreColor[0], scoreColor[1], scoreColor[2]);
   doc.text('Verdict: ' + verdict, M, y);
   doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(60);
-  doc.text(crit + ' critical  Â·  ' + warn + ' warnings  Â·  ' + (passed ? passed + ' checks passed  Â·  ' : '') + issues.length + ' total issues', M, y + 18);
+  doc.text(crit + ' critical  ·  ' + warn + ' warnings  ·  ' + (passed ? passed + ' checks passed  ·  ' : '') + issues.length + ' total issues', M, y + 18);
   y += 40;
 
-  // â”€â”€ Summary â”€â”€
+  // ── Summary ──
   var summary = window.vsSummary || '';
   if (summary) {
     doc.setFillColor(245, 247, 250);
@@ -3158,7 +3158,7 @@ async function exportReport() {
     y += boxH + 24;
   }
 
-  // â”€â”€ Issues â”€â”€
+  // ── Issues ──
   doc.setFont('helvetica', 'bold'); doc.setFontSize(13); doc.setTextColor(13, 27, 62);
   doc.text('Issues found', M, y);
   y += 16;
@@ -3168,7 +3168,7 @@ async function exportReport() {
   issues.forEach(function(issue, idx) {
     var col = sevColors[issue.sev] || sevColors.info;
     var contentW = W - 2 * M - 24;
-    var title = (issue.type ? issue.type + ' â€” ' : '') + (issue.title || 'Issue');
+    var title = (issue.type ? issue.type + ' — ' : '') + (issue.title || 'Issue');
     var titleLines = doc.splitTextToSize(title, contentW - 70);
     var descLines = issue.desc ? doc.splitTextToSize(issue.desc, contentW) : [];
     var beforeLines = issue.before ? doc.splitTextToSize(issue.before, contentW - 16) : [];
@@ -3221,7 +3221,7 @@ async function exportReport() {
     y += blockH + 12;
   });
 
-  // â”€â”€ Passed checks â”€â”€
+  // ── Passed checks ──
   var passedList = window.vsPassedChecks || [];
   if (passedList.length) {
     newPageIfNeeded(30 + passedList.length * 15);
@@ -3230,21 +3230,21 @@ async function exportReport() {
     doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5);
     passedList.forEach(function(p) {
       newPageIfNeeded(15);
-      doc.setTextColor(16, 185, 129); doc.text('âœ“', M, y);
+      doc.setTextColor(16, 185, 129); doc.text('✓', M, y);
       doc.setTextColor(70); doc.text(doc.splitTextToSize(String(p), W - 2 * M - 16), M + 14, y);
       y += 15;
     });
     y += 10;
   }
 
-  // â”€â”€ Disclaimer â”€â”€
+  // ── Disclaimer ──
   newPageIfNeeded(40);
   doc.setFontSize(8); doc.setTextColor(150);
   doc.text(doc.splitTextToSize('VibeSafe helps catch common security risks before launch. It does not replace a full professional security audit or penetration test.', W - 2 * M), M, y + 12);
 
   footer();
   doc.save('VibeSafe-Security-Report-' + new Date().toISOString().slice(0, 10) + '.pdf');
-  showToast('âœ“ PDF report downloaded', 'success');
+  showToast('✓ PDF report downloaded', 'success');
 }
 
 function copyFixesForAI() {
@@ -3256,7 +3256,7 @@ function copyFixesForAI() {
   var out = 'I used an AI security scanner (VibeSafe) on my ' + lang + ' code. ';
   out += 'Please apply these ' + issues.length + ' security fixes to my code:\n\n';
   issues.forEach(function(issue, idx) {
-    out += (idx + 1) + '. [' + (issue.sev || 'issue').toUpperCase() + '] ' + (issue.type || '') + ' â€” ' + (issue.title || '') + '\n';
+    out += (idx + 1) + '. [' + (issue.sev || 'issue').toUpperCase() + '] ' + (issue.type || '') + ' — ' + (issue.title || '') + '\n';
     if (issue.line) out += '   Location: ' + issue.line + '\n';
     if (issue.desc) out += '   Problem: ' + issue.desc + '\n';
     if (issue.before) out += '   Current code: ' + issue.before + '\n';
