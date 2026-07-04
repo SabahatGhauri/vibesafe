@@ -1268,7 +1268,7 @@ document.addEventListener('click', function(e) {
       </button>
       <button class="sidebar-item" onclick="toggleHistory()">
         <span class="si-icon">📋</span> Scan history
-        <span class="si-chevron" id="histChevron" style="margin-left:auto;font-size:10px;transition:transform 0.2s">â–¶</span>
+        <span class="si-chevron" id="histChevron" style="margin-left:auto;font-size:10px;transition:transform 0.2s">▶</span>
       </button>
       <div class="history-section" id="historyList" style="display:none;max-height:280px">
         <div style="padding:12px;font-size:0.78rem;color:var(--text3);text-align:center">Loading...</div>
@@ -1355,7 +1355,7 @@ document.addEventListener('click', function(e) {
           <button class="btn btn-ghost" onclick="clearEditor()">Clear</button>
 
           <button class="btn btn-primary" id="scanBtn" onclick="startScan()">
-            â–¶ Run scan
+            ▶ Run scan
           </button>
         </div>
       </div>
@@ -1554,7 +1554,7 @@ document.addEventListener('click', function(e) {
       <!-- Results footer (always pinned at bottom) -->
       <div class="results-footer" id="resultsFooter" style="display:none">
         <button class="fix-all-btn" id="fixAllBtn" onclick="fixAll()">
-          âš¡ Auto-fix all issues
+          ⚡ Auto-fix all issues
         </button>
         <button class="fix-all-btn" id="copyFixesBtn" onclick="copyFixesForAI()" style="margin-top:8px;background:var(--surface2);color:var(--cyan);border:1px solid rgba(0,212,255,0.3);box-shadow:none">
           📋 Copy all fixes for Cursor / Lovable
@@ -2368,7 +2368,7 @@ function buildIssueCard(issue, idx) {
         <div class="issue-line">${issue.line}</div>
       </div>
       <span class="sev-pill sev-pill-${issue.sev}">${issue.sev === 'critical' ? 'High' : issue.sev === 'warning' ? 'Medium' : 'Low'}</span>
-      <div class="issue-chevron">â–¶</div>
+      <div class="issue-chevron">▶</div>
     </div>
     <div class="issue-body">
       <div class="issue-desc">${issue.desc}</div>
@@ -2378,7 +2378,7 @@ function buildIssueCard(issue, idx) {
       </div>
       <div class="fix-row">
         <button class="fix-btn fix-btn-primary" id="fix-btn-${issue.id}" onclick="fixIssue(${issue.id})">
-          âš¡ Auto-fix
+          ⚡ Auto-fix
         </button>
         <button class="fix-btn fix-btn-ghost" onclick="showToast('Explanation copied','success')">
           Copy explanation
