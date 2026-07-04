@@ -1103,6 +1103,7 @@ async function loadProfile() {
     var res = await sbClient.from('vibesafe_plans').select('plan').eq('id', currentUser.id).maybeSingle();
     currentPlan = (res.data && res.data.plan) || 'free';
     renderPlanCard(currentPlan);
+    maybeShowAdminNav();
     await updateScanUsage();
   } catch (err) {
     console.log('Could not load profile:', err);
@@ -1307,6 +1308,9 @@ document.addEventListener('click', function(e) {
       </button>
       <button class="sidebar-item" onclick="openApiKeys()">
         <span class="si-icon">🔑</span> API keys
+      </button>
+      <button class="sidebar-item" id="adminNavItem" style="display:none" onclick="openAdmin()">
+        <span class="si-icon">📈</span> Extension health
       </button>
       <button class="sidebar-item" onclick="window.open('/faq.html','_blank')">
         <span class="si-icon">📚</span> Help &amp; FAQ
@@ -1563,6 +1567,20 @@ document.addEventListener('click', function(e) {
         </p>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN / EXTENSION HEALTH PANEL OVERLAY -->
+<div id="adminPanel" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;padding:32px 24px;">
+  <div style="max-width:900px;margin:0 auto;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;">
+      <button onclick="closeAdmin()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">← Back</button>
+      <h2 style="margin:0;font-size:1.3rem;font-weight:700;">📈 Extension health</h2>
+      <button onclick="loadAdminStats()" style="margin-left:auto;background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">↻ Refresh</button>
+    </div>
+    <div id="adminStats">
+      <div style="text-align:center;padding:40px 0;color:var(--text3);font-size:0.85rem;">Loading extension analytics…</div>
     </div>
   </div>
 </div>
@@ -2420,6 +2438,87 @@ function openApiKeys() {
 function closeApiKeys() {
   document.getElementById('apiKeysPanel').style.display = 'none';
 }
+
+// ── ADMIN / EXTENSION HEALTH ──
+var ADMIN_EMAILS = ['sabahatghauri10@gmail.com', 'contact@vibesafe.info'];
+function maybeShowAdminNav() {
+  if (currentUser && ADMIN_EMAILS.indexOf((currentUser.email || '').toLowerCase()) !== -1) {
+    var el = document.getElementById('adminNavItem');
+    if (el) el.style.display = '';
+  }
+}
+function openAdmin() {
+  document.getElementById('adminPanel').style.display = 'block';
+  loadAdminStats();
+}
+function closeAdmin() {
+  document.getElementById('adminPanel').style.display = 'none';
+}
+
+async function loadAdminStats() {
+  var box = document.getElementById('adminStats');
+  box.innerHTML = '<div style="text-align:center;padding:40px 0;color:var(--text3);font-size:0.85rem;">Loading…</div>';
+  try {
+    var { data, error } = await sbClient.rpc('get_extension_stats');
+    if (error) throw error;
+    if (data && data.error) { box.innerHTML = '<div style="text-align:center;padding:40px 0;color:var(--red);">' + data.error + '</div>'; return; }
+    box.innerHTML = renderAdminStats(data || {});
+  } catch (err) {
+    box.innerHTML = '<div style="text-align:center;padding:40px 0;color:var(--red);font-size:0.85rem;">Could not load stats. Make sure the extension_events table and get_extension_stats function exist in Supabase.</div>';
+  }
+}
+
+function statCard(label, value, accent) {
+  return '<div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:18px;">'
+    + '<div style="font-size:1.9rem;font-weight:700;color:' + (accent || 'var(--text)') + ';font-family:\'Space Grotesk\',sans-serif;line-height:1;">' + value + '</div>'
+    + '<div style="font-size:0.76rem;color:var(--text3);margin-top:6px;">' + label + '</div></div>';
+}
+
+function renderAdminStats(s) {
+  var sr = (s.success_rate === null || s.success_rate === undefined) ? '—' : s.success_rate + '%';
+  var srColor = s.success_rate >= 90 ? 'var(--green)' : s.success_rate >= 70 ? 'var(--amber)' : 'var(--red)';
+  var html = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;">'
+    + statCard('Active users today', s.active_today || 0, 'var(--cyan)')
+    + statCard('Active users (7d)', s.active_7d || 0, 'var(--cyan)')
+    + statCard('Active users (30d)', s.active_30d || 0, 'var(--cyan)')
+    + statCard('Connected extensions', s.installs || 0, 'var(--violet)')
+    + '</div>'
+    + '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;">'
+    + statCard('Scans today', s.scans_today || 0)
+    + statCard('Total scans', s.scans_total || 0)
+    + statCard('Failed scans', s.scans_failed || 0, s.scans_failed > 0 ? 'var(--red)' : 'var(--text)')
+    + statCard('Success rate', sr, srColor)
+    + '</div>';
+
+  // Top errors
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">';
+  html += '<div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:18px;">'
+    + '<div style="font-weight:600;margin-bottom:12px;">Top errors</div>';
+  var errs = s.top_errors || [];
+  if (errs.length === 0) html += '<div style="font-size:0.8rem;color:var(--text3);">No failures recorded 🎉</div>';
+  else errs.forEach(function(e){ html += '<div style="display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--border1);font-size:0.82rem;"><span style="color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + esc(e.error_message) + '</span><span style="color:var(--red);font-weight:600;">' + e.n + '</span></div>'; });
+  html += '</div>';
+
+  // Languages + versions
+  html += '<div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:18px;">'
+    + '<div style="font-weight:600;margin-bottom:12px;">Top languages</div>';
+  var langs = s.top_languages || [];
+  if (langs.length === 0) html += '<div style="font-size:0.8rem;color:var(--text3);">No scans yet</div>';
+  else langs.forEach(function(l){ html += '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border1);font-size:0.82rem;"><span style="color:var(--text2);">' + esc(l.language) + '</span><span style="color:var(--cyan);font-weight:600;">' + l.n + '</span></div>'; });
+  html += '</div></div>';
+
+  // Version adoption
+  var vers = s.versions || [];
+  if (vers.length) {
+    html += '<div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:18px;margin-top:16px;">'
+      + '<div style="font-weight:600;margin-bottom:12px;">Version adoption (30d)</div>';
+    vers.forEach(function(v){ html += '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border1);font-size:0.82rem;"><span style="color:var(--text2);">v' + esc(v.extension_version) + '</span><span style="color:var(--text);font-weight:600;">' + v.users + ' users</span></div>'; });
+    html += '</div>';
+  }
+  return html;
+}
+
+function esc(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 async function loadApiKeys() {
   var list = document.getElementById('apiKeysList');
