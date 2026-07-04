@@ -2526,6 +2526,7 @@ async function loadAdminStats() {
     box.innerHTML = '<div style="text-align:center;padding:40px 0;color:var(--red);font-size:0.85rem;">Could not load stats. Make sure the extension_events table and get_extension_stats function exist in Supabase.</div>';
   }
   loadLeads();
+  loadBroadcast();
 }
 
 var leadsCache = [];
