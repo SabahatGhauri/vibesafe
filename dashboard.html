@@ -1582,6 +1582,14 @@ document.addEventListener('click', function(e) {
     <div id="adminStats">
       <div style="text-align:center;padding:40px 0;color:var(--text3);font-size:0.85rem;">Loading extension analytics…</div>
     </div>
+
+    <div style="display:flex;align-items:center;gap:12px;margin:40px 0 20px;">
+      <h2 style="margin:0;font-size:1.3rem;font-weight:700;">🎯 Leads</h2>
+      <span style="font-size:0.78rem;color:var(--text3);">People to convert into paying customers</span>
+    </div>
+    <div id="adminLeads">
+      <div style="text-align:center;padding:24px 0;color:var(--text3);font-size:0.85rem;">Loading leads…</div>
+    </div>
   </div>
 </div>
 
@@ -2466,6 +2474,81 @@ async function loadAdminStats() {
   } catch (err) {
     box.innerHTML = '<div style="text-align:center;padding:40px 0;color:var(--red);font-size:0.85rem;">Could not load stats. Make sure the extension_events table and get_extension_stats function exist in Supabase.</div>';
   }
+  loadLeads();
+}
+
+var leadsCache = [];
+async function loadLeads() {
+  var box = document.getElementById('adminLeads');
+  if (!box) return;
+  box.innerHTML = '<div style="text-align:center;padding:24px 0;color:var(--text3);font-size:0.85rem;">Loading leads…</div>';
+  try {
+    var { data, error } = await sbClient.rpc('get_leads');
+    if (error) throw error;
+    if (data && data.error) { box.innerHTML = '<div style="text-align:center;padding:24px 0;color:var(--red);">' + data.error + '</div>'; return; }
+    box.innerHTML = renderLeads(data || {});
+  } catch (err) {
+    box.innerHTML = '<div style="text-align:center;padding:24px 0;color:var(--red);font-size:0.85rem;">Could not load leads. Make sure the leads table and get_leads function exist in Supabase.</div>';
+  }
+}
+
+function renderLeads(l) {
+  leadsCache = l.recent || [];
+  var html = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;">'
+    + statCard('Total leads', l.total || 0, 'var(--cyan)')
+    + statCard('New today', l.today || 0, 'var(--cyan)')
+    + statCard('Last 7 days', l.last_7d || 0, 'var(--cyan)')
+    + statCard('Converted', l.converted || 0, 'var(--green)')
+    + '</div>';
+
+  var bySource = l.by_source || [];
+  if (bySource.length) {
+    html += '<div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);margin:6px 0 8px;">Where leads come from</div>';
+    html += '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;">';
+    bySource.forEach(function(x){
+      html += '<span style="font-size:0.78rem;background:var(--surface2);border:1px solid var(--border2);border-radius:100px;padding:5px 12px;color:var(--text2);">'
+        + esc(x.source) + ' · <b style="color:var(--text)">' + x.n + '</b></span>';
+    });
+    html += '</div>';
+  }
+
+  var recent = l.recent || [];
+  html += '<div style="display:flex;align-items:center;gap:10px;margin:6px 0 10px;">'
+    + '<div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);">Recent leads</div>';
+  if (recent.length) html += '<button onclick="exportLeadsCsv()" style="margin-left:auto;background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:5px 12px;cursor:pointer;font-size:0.78rem;">⬇ Export CSV</button>';
+  html += '</div>';
+
+  if (!recent.length) {
+    html += '<div style="text-align:center;padding:24px 0;color:var(--text3);font-size:0.85rem;">No leads yet. They\'ll appear here as visitors sign up.</div>';
+    return html;
+  }
+  html += '<div style="border:1px solid var(--border1);border-radius:12px;overflow:hidden;">';
+  recent.forEach(function(r, i){
+    var d = r.created_at ? new Date(r.created_at).toLocaleDateString() : '';
+    html += '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;' + (i ? 'border-top:1px solid var(--border1);' : '') + '">'
+      + '<div style="flex:1;font-size:0.85rem;color:var(--text);word-break:break-all;">' + esc(r.email) + '</div>'
+      + '<div style="font-size:0.75rem;color:var(--text3);">' + esc(r.source || '') + '</div>'
+      + '<div style="font-size:0.75rem;color:var(--text3);width:90px;text-align:right;">' + esc(d) + '</div>'
+      + '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function exportLeadsCsv() {
+  var rows = [['email','source','magnet','converted','created_at']];
+  (leadsCache || []).forEach(function(r){
+    rows.push([r.email||'', r.source||'', r.magnet||'', r.converted?'yes':'no', r.created_at||'']);
+  });
+  var csv = rows.map(function(row){
+    return row.map(function(c){ return '"' + String(c).replace(/"/g,'""') + '"'; }).join(',');
+  }).join('\n');
+  var blob = new Blob([csv], { type: 'text/csv' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'vibesafe-leads.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
 
 function statCard(label, value, accent) {
