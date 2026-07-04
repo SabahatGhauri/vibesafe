@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claim Your Founding Offer | VibeSafe</title>
+<meta name="description" content="Claim your founding-customer offer: unlimited scans + fixes at 50% off.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden}
+.bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:50px 50px;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black,transparent);pointer-events:none}
+.bg-glow{position:fixed;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.12),transparent 70%);top:-150px;right:-100px;pointer-events:none}
+.card{position:relative;z-index:1;width:100%;max-width:440px;background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:40px 34px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,0.35)}
+.logo{display:inline-flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);text-decoration:none;margin-bottom:22px}
+.logo img{width:32px;height:32px;border-radius:8px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;margin-bottom:8px;letter-spacing:-0.02em}
+.price{font-family:'Space Grotesk',sans-serif;font-size:2.4rem;font-weight:700;color:var(--green,#10B981);margin:10px 0 2px}
+.price s{color:var(--text3);font-size:1.2rem;font-weight:400;margin-right:8px}
+.per{font-size:0.9rem;color:var(--text3)}
+p.sub{color:var(--text2);font-size:0.92rem;margin:10px 0 20px;line-height:1.6}
+ul.feat{list-style:none;text-align:left;margin:0 auto 22px;max-width:300px;font-size:0.88rem;color:var(--text2)}
+ul.feat li{padding:5px 0 5px 26px;position:relative}
+ul.feat li::before{content:'✓';position:absolute;left:0;color:var(--green,#10B981);font-weight:700}
+.spinner{width:34px;height:34px;border:3px solid var(--border2);border-top-color:var(--cyan);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:13px 18px;border-radius:10px;font-weight:700;font-size:0.98rem;cursor:pointer;border:1px solid transparent;text-decoration:none;margin-bottom:10px;font-family:'Inter',sans-serif}
+.btn-primary{background:var(--cyan);color:var(--bg)}
+.btn-primary:hover{opacity:0.92}
+.oauth-btn{background:var(--surface2,#141a2e);color:var(--text);border:1px solid var(--border2);font-weight:600}
+.oauth-btn:hover{border-color:var(--cyan)}
+.oauth-btn img{width:18px;height:18px}
+.divider{display:flex;align-items:center;gap:12px;color:var(--text3);font-size:0.8rem;margin:14px 0}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border2)}
+input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-size:0.95rem;font-family:'Inter',sans-serif;margin-bottom:10px}
+input:focus{outline:none;border-color:var(--cyan)}
+.msg{font-size:0.85rem;padding:10px 12px;border-radius:8px;margin-bottom:12px;display:none}
+.msg.error{display:block;background:rgba(239,68,68,0.1);color:#EF4444;border:1px solid rgba(239,68,68,0.25)}
+.hide{display:none}
+.foot{margin-top:20px;font-size:0.75rem;color:var(--text3)}
+.foot a{color:var(--text3)}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div><div class="bg-glow"></div>
+
+<div class="card">
+  <a href="/" class="logo"><img src="/favicon.svg" alt=""> VibeSafe</a>
+
+  <h1>🎉 Founding-customer offer</h1>
+  <div class="price"><s>$29</s>$14.50<span class="per">/mo</span></div>
+  <p class="sub">Unlimited scans + fixes — 50% off, locked in for as long as you stay subscribed.</p>
+  <ul class="feat">
+    <li>Unlimited security scans</li>
+    <li>One-click AI fixes for every issue</li>
+    <li>All scan types: code, GitHub, live URL</li>
+    <li>Priority support</li>
+  </ul>
+
+  <!-- STATE: checking session -->
+  <div id="state-checking">
+    <div class="spinner"></div>
+    <p class="sub">Preparing your discounted checkout…</p>
+  </div>
+
+  <!-- STATE: sign in -->
+  <div id="state-signin" class="hide">
+    <div id="signinMsg" class="msg"></div>
+    <button class="btn oauth-btn" onclick="oauth('google')">
+      <img src="https://www.google.com/favicon.ico" alt=""> Continue with Google
+    </button>
+    <button class="btn oauth-btn" onclick="oauth('github')">
+      <img src="https://github.githubassets.com/favicons/favicon-dark.png" alt=""> Continue with GitHub
+    </button>
+    <div class="divider">or</div>
+    <input id="email" type="email" placeholder="you@email.com" autocomplete="email">
+    <input id="password" type="password" placeholder="Password" autocomplete="current-password">
+    <button class="btn btn-primary" id="emailBtn" onclick="emailLogin()">Sign in &amp; claim 50% off</button>
+    <p class="foot">New to VibeSafe? <a href="/login.html">Create an account</a>, then come back here.</p>
+  </div>
+
+  <!-- STATE: redirecting -->
+  <div id="state-go" class="hide">
+    <div class="spinner"></div>
+    <p class="sub">Taking you to secure checkout…</p>
+    <button class="btn btn-primary" onclick="goCheckout()">Continue to checkout →</button>
+  </div>
+
+  <div class="foot">Powered by Stripe · Cancel anytime · <a href="/legal.html">Terms</a></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://uxsmmpujxbzdgxxburxr.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_hgCpN6tsYqEiCkyvJm06qQ_1Ddlvznn';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// Founding offer: VibeSafe Pro at $14.50/mo (50% off) — test link for now.
+const OFFER_LINK = 'https://buy.stripe.com/test_6oUdRb2QTfjCgqg9pp9EI05';
+let userId = null;
+
+function show(state){
+  ['checking','signin','go'].forEach(function(s){
+    document.getElementById('state-'+s).classList.toggle('hide', s !== state);
+  });
+}
+function signinMsg(t){ var m=document.getElementById('signinMsg'); m.textContent=t; m.className='msg error'; }
+
+function goCheckout(){
+  if (!userId) return;
+  // client_reference_id ties the payment to this account so the webhook
+  // can auto-activate the plan the moment Stripe confirms it.
+  window.location.href = OFFER_LINK + '?client_reference_id=' + encodeURIComponent(userId);
+}
+
+(async function(){
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session && session.user) { userId = session.user.id; show('go'); setTimeout(goCheckout, 900); }
+    else { show('signin'); }
+  } catch(e){ show('signin'); }
+})();
+
+sb.auth.onAuthStateChange(function(event, session){
+  if (event === 'SIGNED_IN' && session && session.user && !userId) {
+    userId = session.user.id; show('go'); setTimeout(goCheckout, 600);
+  }
+});
+
+async function oauth(provider){
+  try {
+    const { error } = await sb.auth.signInWithOAuth({
+      provider: provider,
+      options: { redirectTo: window.location.origin + '/claim-offer.html' }
+    });
+    if (error) throw error;
+  } catch(err){ signinMsg(err.message || 'Could not start sign-in.'); }
+}
+
+async function emailLogin(){
+  var email = document.getElementById('email').value.trim();
+  var pw = document.getElementById('password').value;
+  if (!email || !pw){ signinMsg('Enter your email and password.'); return; }
+  var btn = document.getElementById('emailBtn');
+  btn.disabled = true; btn.textContent = 'Signing in…';
+  try {
+    const { data, error } = await sb.auth.signInWithPassword({ email: email, password: pw });
+    if (error) throw error;
+    userId = data.user.id; show('go'); setTimeout(goCheckout, 600);
+  } catch(err){
+    signinMsg(err.message || 'Sign-in failed.');
+    btn.disabled = false; btn.textContent = 'Sign in & claim 50% off';
+  }
+}
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
