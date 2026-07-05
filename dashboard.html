@@ -1321,7 +1321,7 @@ document.addEventListener('click', function(e) {
         <span class="si-icon">🔑</span> API keys
       </button>
       <button class="sidebar-item" id="adminNavItem" style="display:none" onclick="openAdmin()">
-        <span class="si-icon">📈</span> Extension health
+        <span class="si-icon">📈</span> Analytics
       </button>
       <button class="sidebar-item" onclick="window.open('/faq.html','_blank')">
         <span class="si-icon">📚</span> Help &amp; FAQ
@@ -1587,7 +1587,8 @@ document.addEventListener('click', function(e) {
   <div style="max-width:900px;margin:0 auto;">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;">
       <button onclick="closeAdmin()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">← Back</button>
-      <h2 style="margin:0;font-size:1.3rem;font-weight:700;">📈 Extension health</h2>
+      <h2 style="margin:0;font-size:1.3rem;font-weight:700;">📈 Analytics</h2>
+      <span style="font-size:0.78rem;color:var(--text3);">All scans — website + extension</span>
       <button onclick="loadAdminStats()" style="margin-left:auto;background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">↻ Refresh</button>
     </div>
     <div id="adminStats">
@@ -2770,11 +2771,15 @@ function statCard(label, value, accent) {
 function renderAdminStats(s) {
   var sr = (s.success_rate === null || s.success_rate === undefined) ? '—' : s.success_rate + '%';
   var srColor = s.success_rate >= 90 ? 'var(--green)' : s.success_rate >= 70 ? 'var(--amber)' : 'var(--red)';
-  var html = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;">'
-    + statCard('Total users', s.total_users || 0, 'var(--cyan)')
-    + statCard('Active today', s.active_today || 0, 'var(--cyan)')
-    + statCard('Active (7d)', s.active_7d || 0, 'var(--cyan)')
-    + statCard('Active (30d)', s.active_30d || 0, 'var(--cyan)')
+  var html = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px;">'
+    + statCard('Registered accounts', s.registered_users || 0, 'var(--cyan)')
+    + statCard('Users who scanned', s.total_users || 0, 'var(--cyan)')
+    + statCard('Connected extensions', s.connected_extensions || 0, 'var(--cyan)')
+    + '</div>'
+    + '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;">'
+    + statCard('Scanned today', s.active_today || 0)
+    + statCard('Scanned (7d)', s.active_7d || 0)
+    + statCard('Scanned (30d)', s.active_30d || 0)
     + '</div>'
     + '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;">'
     + statCard('Total scans', s.scans_total || 0)
