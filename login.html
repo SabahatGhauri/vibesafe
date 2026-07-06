@@ -219,6 +219,7 @@ body{
 
   <div class="auth-divider">or continue with email</div>
 
+  <form id="authForm" onsubmit="event.preventDefault(); handleAuth();">
   <!-- Name field (signup only) -->
   <div class="form-group" id="nameGroup" style="display:none">
     <label class="form-label">Name</label>
@@ -253,9 +254,10 @@ body{
     </div>
   </div>
 
-  <button class="auth-btn" id="authBtn" onclick="handleAuth()">
+  <button type="submit" class="auth-btn" id="authBtn">
     <span id="authBtnText">Sign in</span>
   </button>
+  </form>
 
   <div class="auth-footer" id="authFooter">
     Don't have an account? <a href="#" onclick="switchTab('signup');return false;">Sign up free</a>
