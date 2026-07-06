@@ -1297,7 +1297,7 @@ document.addEventListener('click', function(e) {
     <div class="sidebar-section">
       <div class="sidebar-label">Scan from</div>
       <button class="sidebar-item" onclick="switchEditorTab(document.querySelectorAll('.etab')[2],'url')">
-        <span class="si-icon">🐱</span> GitHub URL
+        <span class="si-icon">🐱</span> Scan GitHub file
       </button>
       <button class="sidebar-item" onclick="switchEditorTab(document.querySelectorAll('.etab')[1],'upload')">
         <span class="si-icon">📁</span> Upload file
@@ -1306,7 +1306,7 @@ document.addEventListener('click', function(e) {
         <span class="si-icon">📝</span> Paste code
       </button>
       <button class="sidebar-item" onclick="switchEditorTab(document.querySelectorAll('.etab')[3],'liveurl')">
-        <span class="si-icon">🌐</span> Live URL
+        <span class="si-icon">🌐</span> Scan live website
       </button>
     </div>
 
@@ -1377,8 +1377,8 @@ document.addEventListener('click', function(e) {
       <div class="editor-tabs">
         <button class="etab active" onclick="switchEditorTab(this,'editor')">Editor</button>
         <button class="etab" onclick="switchEditorTab(this,'upload')">Upload file</button>
-        <button class="etab" onclick="switchEditorTab(this,'url')">From URL</button>
-        <button class="etab" onclick="switchEditorTab(this,'liveurl')">🌐 Live URL</button>
+        <button class="etab" onclick="switchEditorTab(this,'url')">GitHub file</button>
+        <button class="etab" onclick="switchEditorTab(this,'liveurl')">🌐 Live website</button>
       </div>
 
       <div class="code-area-wrap" id="editorTab">
@@ -2030,7 +2030,7 @@ async function scanLiveUrl() {
     currentResult = result;
     renderResults(result);
     await updateScanUsage();
-    showToast('Live URL scan complete', 'success');
+    showToast('Live website scan complete', 'success');
   } catch (err) {
     showToast('Could not reach the scan API. Try again.', 'error');
   } finally {
@@ -2941,7 +2941,7 @@ function renderAdminStats(s) {
   if (types.length) {
     html += '<div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:18px;margin-bottom:16px;">'
       + '<div style="font-weight:600;margin-bottom:12px;">Scan type breakdown</div>';
-    var typeLabel = { code: '📝 Pasted code', github_url: '🐱 GitHub URL', live_url: '🌐 Live URL' };
+    var typeLabel = { code: '📝 Pasted code', github_url: '🐱 GitHub file', live_url: '🌐 Live website' };
     types.forEach(function(t){ html += '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border1);font-size:0.82rem;"><span style="color:var(--text2);">' + (typeLabel[t.scan_type] || esc(t.scan_type)) + '</span><span><span style="color:var(--green);">' + t.ok + ' ok</span> · <span style="color:var(--red);">' + t.fail + ' fail</span> · <strong style="color:var(--text);">' + t.n + ' total</strong></span></div>'; });
     html += '</div>';
   }
