@@ -2302,6 +2302,37 @@ function showResults(apiScore) {
 function openLaunchCheck() {
   document.getElementById('launchPanel').style.display = 'block';
 }
+// ── SELF-UPDATE WATCHER ──
+// A dashboard tab left open runs stale code forever, no matter what cache
+// headers say. Watch the server's content fingerprint (ETag) and refresh
+// when a new version is deployed: silently if the tab is hidden, with a
+// banner if the user is actively looking at it.
+(function () {
+  var knownEtag = null;
+  function checkVersion() {
+    fetch(window.location.pathname, { method: 'HEAD', cache: 'no-store' })
+      .then(function (r) {
+        var e = r.headers.get('etag');
+        if (!e) return;
+        if (!knownEtag) { knownEtag = e; return; }
+        if (e !== knownEtag) {
+          knownEtag = e;
+          if (document.hidden) { window.location.reload(); return; }
+          if (document.getElementById('updateBar')) return;
+          var b = document.createElement('div');
+          b.id = 'updateBar';
+          b.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;align-items:center;gap:12px;background:var(--surface1);border:1px solid var(--cyan);border-radius:12px;padding:12px 18px;font-size:0.85rem;color:var(--text);box-shadow:0 12px 40px rgba(0,0,0,0.5);';
+          b.innerHTML = '✨ VibeSafe was updated <button onclick="window.location.reload()" style="background:var(--cyan);color:var(--bg);border:none;border-radius:8px;padding:7px 16px;font-weight:700;font-size:0.8rem;cursor:pointer;">Refresh now</button>';
+          document.body.appendChild(b);
+        }
+      })
+      .catch(function () { /* offline — try again next tick */ });
+  }
+  checkVersion();
+  setInterval(checkVersion, 3 * 60 * 1000); // every 3 minutes
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) checkVersion(); });
+})();
+
 // Deep link: /dashboard.html?launch=1 opens Launch Check directly (used by broadcasts/emails)
 if (location.search.indexOf('launch=1') !== -1) {
   if (document.readyState === 'loading') {
