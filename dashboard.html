@@ -2302,6 +2302,14 @@ function showResults(apiScore) {
 function openLaunchCheck() {
   document.getElementById('launchPanel').style.display = 'block';
 }
+// Deep link: /dashboard.html?launch=1 opens Launch Check directly (used by broadcasts/emails)
+if (location.search.indexOf('launch=1') !== -1) {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', openLaunchCheck);
+  } else {
+    openLaunchCheck();
+  }
+}
 function closeLaunchCheck() {
   document.getElementById('launchPanel').style.display = 'none';
 }
