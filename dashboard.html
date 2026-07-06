@@ -2462,10 +2462,14 @@ function showLowScoreModal(score) {
   var card = document.getElementById('lowScoreModalCard');
   if (!overlay || !card) return;
 
-  var crit = (issues || []).filter(function(i) { return !i.fixed && i.sev === 'critical'; });
-  if (crit.length === 0) return; // only show when there's a real flaw to explain
-
-  var warns = (issues || []).filter(function(i) { return !i.fixed && i.sev === 'warning'; }).length;
+  var open = (issues || []).filter(function(i) { return !i.fixed; });
+  var crit = open.filter(function(i) { return i.sev === 'critical'; });
+  // Show whenever the score is genuinely low OR criticals exist — the popup's
+  // job is explaining a bad score, not only critical-severity findings.
+  if (crit.length === 0 && (score >= 75 || open.length === 0)) return;
+  var flaws = crit.length ? crit : open.slice(0, 3);
+  var warns = open.filter(function(i) { return i.sev === 'warning'; }).length - (crit.length ? 0 : flaws.length);
+  if (warns < 0) warns = 0;
   var cls = score >= 50 ? 'warn' : 'bad';
 
   var html = '<button class="vs-modal-close" onclick="closeLowScoreModal()" aria-label="Close">✕</button>'
@@ -2475,10 +2479,11 @@ function showLowScoreModal(score) {
 
   if (window.vsSummary) html += '<div class="vs-modal-sub">' + window.vsSummary + '</div>';
 
-  html += '<div class="vs-modal-section-label">' + crit.length + ' critical flaw'
-    + (crit.length > 1 ? 's' : '') + ' to fix before launch</div>';
+  html += '<div class="vs-modal-section-label">' + flaws.length
+    + (crit.length ? ' critical flaw' + (flaws.length > 1 ? 's' : '') : ' issue' + (flaws.length > 1 ? 's' : ''))
+    + ' to fix before launch</div>';
 
-  crit.forEach(function(i) {
+  flaws.forEach(function(i) {
     html += '<div class="vs-flaw"><span class="vs-flaw-ico">🔴</span><div>'
       + '<div class="vs-flaw-title">' + (i.title || 'Critical issue') + '</div>'
       + '<div class="vs-flaw-meta">' + (i.type || '') + (i.line ? ' · ' + i.line : '') + '</div>'
