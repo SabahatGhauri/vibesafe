@@ -464,6 +464,35 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
       </div>
     </div>
 
+    <!-- VS CODE / CURSOR EXTENSION -->
+    <div class="faq-item" data-cat="general">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">Can I use VibeSafe inside my code editor?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-general">General</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        Yes. VibeSafe has a free <strong>VS Code &amp; Cursor extension</strong> — open the Extensions panel, search <em>"VibeSafe"</em>, install it, then connect in one click. Open any file and press <strong>Ctrl/Cmd+Shift+V</strong> to scan without leaving your editor. You get the same score, issues, and one-click fixes right in a side panel.
+      </div>
+    </div>
+
+    <!-- MCP SERVER -->
+    <div class="faq-item" data-cat="general">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">🔌 Can I use VibeSafe inside Claude or Cursor as an AI tool? (MCP)</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-general">General</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        Yes — VibeSafe has an <strong>MCP server</strong>. Add it to Claude Desktop, Cursor, or any MCP client and just ask <em>"scan this file with VibeSafe"</em> — it runs as a native AI tool. It offers three tools: scan code, scan a live website, and run a Launch Check.<br><br>
+        Install with <code>npx vibesafe-mcp</code> and a free API key. Full copy-paste setup is in the <a href="https://github.com/SabahatGhauri/vibesafe-mcp" target="_blank" rel="noopener">MCP server README</a>.
+      </div>
+    </div>
+
     <!-- GENERAL -->
     <div class="faq-item" data-cat="general">
       <div class="faq-q" onclick="toggleFaq(this.parentElement)">
