@@ -2145,6 +2145,7 @@
           <p style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:1.05rem;color:var(--text);margin-bottom:6px;">Not ready to scan yet?</p>
           <p style="font-size:0.9rem;color:var(--text2);margin-bottom:16px;line-height:1.5;">Get the free <b>Vibe-Coder's Security Checklist</b> and a monthly reminder to re-scan your app — sent to your inbox.</p>
           <form id="leadForm" onsubmit="return submitLead(event)" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+            <input type="text" name="website" id="leadHp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;height:0;width:0;" aria-hidden="true">
             <input id="leadName" type="text" placeholder="First name" aria-label="Your name"
               style="flex:1;min-width:150px;padding:12px 14px;border-radius:10px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-size:0.95rem;font-family:'Inter',sans-serif;">
             <input id="leadEmail" type="email" required placeholder="you@email.com" aria-label="Your email"
@@ -2327,7 +2328,7 @@ function showSignInToast() {
 
 // CHATBOT
 var vsOpen = false, vsMessages = [], vsIsTyping = false;
-var VS_PROMPT = 'You are the VibeSafe AI Assistant. VibeSafe scans AI-generated code for security vulnerabilities and suggests fixes in plain English. Pricing: Free plan 5 scans per month, Pro plan $29 per month with 15-day free trial, Team plan $99 per month. For complaints or issues you cannot resolve direct to contact@vibesafe.info with 24hr response. Keep answers short warm and max 3 to 4 sentences.';
+// Assistant prompt lives server-side (/api/chat) so the API key never touches the browser.
 
 function vsToggleChat() {
   vsOpen = !vsOpen;
@@ -2396,7 +2397,7 @@ function vsTypingHide() { var e = document.getElementById('vsTyping'); if (e) e.
 function vsFallback(m) {
   m = m.toLowerCase();
   if (m.includes('price') || m.includes('cost') || m.includes('plan') || m.includes('free'))
-    return 'VibeSafe plans: Free 5 scans per month forever, Pro $29 per month with 15-day free trial, Team $99 per month with 10 seats. Start free at vibesafe.info';
+    return 'VibeSafe plans: Free 3 scans per month forever, Pro $29 per month with 15-day free trial, Team $99 per month with 10 seats. Start free at vibesafe.info';
   if (m.includes('safe') || m.includes('store') || m.includes('privacy'))
     return 'Your code is scanned in memory and never stored. We never retain source code after scanning and never train AI on your code.';
   if (m.includes('start') || m.includes('how') || m.includes('begin'))
@@ -2423,23 +2424,13 @@ async function vsSend() {
     var hist = vsMessages
       .filter(function(m) { return m.role !== 'typing'; })
       .map(function(m) { return { role: m.role === 'bot' ? 'assistant' : 'user', content: m.text }; });
-    var res = await fetch('https://api.anthropic.com/v1/messages', {
+    var res = await fetch('https://vibesafe-api.vercel.app/api/chat', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 300,
-        system: VS_PROMPT,
-        messages: hist
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: hist })
     });
     var data = await res.json();
-    reply = (data.content && data.content[0] && data.content[0].text)
-      ? data.content[0].text
-      : vsFallback(msg);
+    reply = (data && data.reply) ? data.reply : vsFallback(msg);
   } catch (err) {
     reply = vsFallback(msg);
   }
@@ -2612,7 +2603,7 @@ async function submitLead(e) {
     await fetch('https://vibesafe-api.vercel.app/api/lead', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email, name: name, source: 'homepage', magnet: 'security-checklist' })
+      body: JSON.stringify({ email: email, name: name, website: (document.getElementById('leadHp')||{}).value || '', source: 'homepage', magnet: 'security-checklist' })
     });
     // Deliver the value immediately: open the free checklist.
     document.getElementById('leadForm').style.display = 'none';
