@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Guide — How to Use VibeSafe | VibeSafe</title>
+<meta name="description" content="Step-by-step VibeSafe user guide with screenshots: create an account, run your first security scan, understand results, apply fixes, and use the VS Code extension.">
+<link rel="canonical" href="https://www.vibesafe.info/user-guide">
+<meta property="og:title" content="VibeSafe User Guide — from install to first fix">
+<meta property="og:description" content="Everything you need to scan and secure your AI-built app, step by step with screenshots.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/user-guide">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"HowTo","name":"How to scan and secure your AI-built app with VibeSafe","description":"Create an account, run your first scan, understand results, and apply fixes.","step":[
+{"@type":"HowToStep","name":"Create an account"},
+{"@type":"HowToStep","name":"Run your first scan"},
+{"@type":"HowToStep","name":"Understand your results"},
+{"@type":"HowToStep","name":"Copy or apply fixes"},
+{"@type":"HowToStep","name":"Install the VS Code extension"}]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:860px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,2.5rem);line-height:1.18;letter-spacing:-0.02em;margin-bottom:14px}
+.lead{font-size:1.08rem;color:var(--text2);margin-bottom:30px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;margin:46px 0 6px;scroll-margin-top:80px}
+h2 .step-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--cyan),#7C3AED);color:var(--bg);font-size:0.95rem;margin-right:10px;vertical-align:-4px}
+h3{font-family:'Space Grotesk',sans-serif;font-size:1.02rem;margin:22px 0 8px;color:var(--text)}
+p{color:var(--text2);margin-bottom:14px}
+ol.steps,ul.plain{margin:0 0 16px 20px;color:var(--text2)}
+ol.steps li,ul.plain li{margin-bottom:8px}
+.shot{display:block;width:100%;border:1px solid var(--border2);border-radius:12px;margin:16px 0 6px;box-shadow:0 14px 40px rgba(0,0,0,0.35)}
+.caption{font-size:0.78rem;color:var(--text3);text-align:center;margin-bottom:22px}
+.toc{background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:20px 24px;margin-bottom:14px}
+.toc-title{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);margin-bottom:10px}
+.toc a{display:block;color:var(--cyan);text-decoration:none;font-size:0.9rem;padding:4px 0}
+.tip{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--cyan);border-radius:10px;padding:14px 18px;font-size:0.9rem;color:var(--text2);margin:18px 0}
+.trouble{border:1px solid var(--border2);border-radius:12px;overflow:hidden;margin-top:14px}
+.trouble-row{padding:14px 18px;border-top:1px solid var(--border2)}
+.trouble-row:first-child{border-top:none}
+.trouble-q{font-weight:600;color:var(--text);font-size:0.92rem;margin-bottom:4px}
+.trouble-a{font-size:0.88rem;color:var(--text2)}
+code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+kbd{background:var(--surface2);border:1px solid var(--border2);border-bottom-width:2px;border-radius:5px;padding:1px 7px;font-size:0.82em;font-family:inherit;color:var(--text)}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:44px 0 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem;margin-top:60px}
+footer a{color:var(--text3)}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt=""> VibeSafe</a>
+  <a href="/login.html" class="nav-cta">Start free scan</a>
+</nav>
+<main>
+  <p class="eyebrow">User guide</p>
+  <h1>How to use VibeSafe — from sign-up to your first fix</h1>
+  <p class="lead">VibeSafe scans AI-built apps for exposed keys, security flaws, bugs, and risky code — and explains every fix in plain English. This guide walks you through the whole journey with screenshots. Total time: about 5 minutes.</p>
+
+  <div class="toc">
+    <div class="toc-title">In this guide</div>
+    <a href="#what">1. What VibeSafe does</a>
+    <a href="#account">2. Create an account</a>
+    <a href="#scan">3. Run your first scan</a>
+    <a href="#results">4. Understand your results</a>
+    <a href="#fixes">5. Copy or apply fixes</a>
+    <a href="#vscode">6. Use the VS Code extension</a>
+    <a href="#history">7. Scan history &amp; reports</a>
+    <a href="#plans">8. Plans and limits</a>
+    <a href="#trouble">9. Troubleshooting</a>
+  </div>
+
+  <h2 id="what"><span class="step-num">1</span>What VibeSafe does</h2>
+  <p>Tools like Lovable, Bolt, Cursor, and Replit build apps fast — but the code they generate often ships with <strong>exposed API keys, open databases, and unsafe logic</strong>. VibeSafe checks your code for these risks in about ten seconds and tells you exactly what to fix and how, without security jargon. Your code is never stored.</p>
+  <img class="shot" src="/assets/manual/01-homepage.png" alt="VibeSafe homepage" loading="lazy">
+  <p class="caption">vibesafe.info — start with the "Start free scan" button</p>
+
+  <h2 id="account"><span class="step-num">2</span>Create an account</h2>
+  <ol class="steps">
+    <li>Go to <a href="https://www.vibesafe.info" style="color:var(--cyan)">vibesafe.info</a> and click <strong>Start free scan</strong></li>
+    <li>Sign up with Google, GitHub, or email — no credit card needed</li>
+    <li>You land in your dashboard with <strong>3 free scans every month</strong></li>
+  </ol>
+  <img class="shot" src="/assets/manual/02-login.png" alt="VibeSafe sign up and login page" loading="lazy">
+  <p class="caption">Sign in with Google, GitHub, or email</p>
+
+  <h2 id="scan"><span class="step-num">3</span>Run your first scan</h2>
+  <p>The dashboard gives you four ways to scan, in the left sidebar:</p>
+  <ul class="plain">
+    <li><strong>Paste code</strong> — copy code from your AI tool and paste it into the editor</li>
+    <li><strong>Upload file</strong> — drop in a file straight from your project</li>
+    <li><strong>GitHub URL</strong> — paste a link to a file in your repo (private repos supported)</li>
+    <li><strong>Live URL</strong> — point VibeSafe at your deployed app to check headers, HTTPS, and exposed paths</li>
+  </ul>
+  <img class="shot" src="/assets/manual/03-dashboard-new-scan.png" alt="VibeSafe dashboard with scan options" loading="lazy">
+  <p class="caption">The dashboard — pick a scan type from the sidebar</p>
+  <p>Paste your code, pick the language (or let it auto-detect), and hit <strong>▶ Run scan</strong>. Results arrive in about ten seconds.</p>
+  <img class="shot" src="/assets/manual/04-paste-code.png" alt="Pasting code into the VibeSafe editor" loading="lazy">
+  <p class="caption">Paste code and click Run scan</p>
+
+  <h2 id="results"><span class="step-num">4</span>Understand your results</h2>
+  <p>Every scan produces a <strong>security score out of 100</strong> and a list of issues sorted by severity:</p>
+  <ul class="plain">
+    <li>🔴 <strong>Critical</strong> — exposed keys, injection flaws, open databases. Fix before deploying.</li>
+    <li>🟡 <strong>Warning</strong> — missing error handling, weak logic. Fix before launch week.</li>
+    <li>🔵 <strong>Info</strong> — code quality suggestions. Fix when convenient.</li>
+  </ul>
+  <img class="shot" src="/assets/manual/05-scan-results.png" alt="VibeSafe scan results with security score" loading="lazy">
+  <p class="caption">The score gauge, verdict, and issue counts</p>
+  <p>If critical issues are found, a summary pops up explaining <strong>why your score is low</strong> — each flaw, where it is, and what an attacker could do with it:</p>
+  <img class="shot" src="/assets/manual/07-low-score-popup.png" alt="Why your score is low popup listing critical flaws" loading="lazy">
+  <p class="caption">The post-scan summary of critical flaws</p>
+  <p>Click any issue to expand it. You get a plain-English explanation, the exact line, and a before/after fix:</p>
+  <img class="shot" src="/assets/manual/06-issue-detail-fix.png" alt="Expanded issue with before and after fix" loading="lazy">
+  <p class="caption">Every issue shows the problem line and the fixed version</p>
+
+  <h2 id="fixes"><span class="step-num">5</span>Copy or apply fixes</h2>
+  <ul class="plain">
+    <li><strong>⚡ Auto-fix all issues</strong> — applies the suggested fixes to your pasted code in one click</li>
+    <li><strong>📋 Copy all fixes for Cursor / Lovable</strong> — copies every fix as one clear prompt; paste it into your AI tool and it applies them for you</li>
+    <li><strong>🔄 Rescan after fixes</strong> — run the scan again and watch your score climb</li>
+  </ul>
+  <div class="tip">💡 <strong>Tip:</strong> the copy-fixes prompt works with any AI coding tool — Cursor, Lovable, Bolt, Replit, or ChatGPT. It lists each problem, the exact replacement, and why.</div>
+
+  <h2 id="vscode"><span class="step-num">6</span>Use the VS Code extension</h2>
+  <p>Scan without leaving your editor — works in <strong>VS Code and Cursor</strong>.</p>
+  <ol class="steps">
+    <li>Open the Extensions panel (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>), search <strong>VibeSafe</strong>, and install <em>"VibeSafe - Security Scanner"</em> by vibesafe-info</li>
+    <li>Connect in one click: open your <a href="/connect.html" style="color:var(--cyan)">connect page</a>, sign in, and it links your editor automatically — no keys to copy</li>
+    <li>Open any file and press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd> (or click the 🛡 VibeSafe button in the status bar) to scan</li>
+    <li>After each scan you get your score, the issues panel, and one-click <strong>Copy fixes</strong></li>
+  </ol>
+  <img class="shot" src="/assets/manual/08-connect-editor.png" alt="One-click editor connect page" loading="lazy">
+  <p class="caption">The one-click connect page — sign in and your editor is linked</p>
+  <img class="shot" src="/assets/manual/09-vscode-results.png" alt="VibeSafe results inside VS Code" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='none'">
+  <p class="caption">Scan results inside VS Code</p>
+
+  <h2 id="history"><span class="step-num">7</span>Scan history &amp; reports</h2>
+  <p>Every scan is saved to <strong>Scan history</strong> in the sidebar — score, issue count, and date — so you can track progress as you fix things. Use <strong>Export PDF</strong> on any result to download a clean, branded security report you can share with clients, co-founders, or investors.</p>
+
+  <h2 id="plans"><span class="step-num">8</span>Plans and limits</h2>
+  <ul class="plain">
+    <li><strong>Starter (free)</strong> — 3 scans every month, all scan types, forever</li>
+    <li><strong>Pro ($29/mo)</strong> — unlimited scans, auto-fixes, priority support</li>
+    <li><strong>Team ($99/mo)</strong> — everything in Pro for up to 10 people, shared history, monitoring</li>
+  </ul>
+  <img class="shot" src="/assets/manual/12-pricing.png" alt="VibeSafe pricing plans" loading="lazy">
+  <p class="caption">Plans — start free, upgrade when you're shipping</p>
+
+  <h2 id="trouble"><span class="step-num">9</span>Troubleshooting</h2>
+  <div class="trouble">
+    <div class="trouble-row">
+      <div class="trouble-q">"Not connected yet" in the extension</div>
+      <div class="trouble-a">Click <strong>Connect VibeSafe</strong> in the prompt, or run <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → <em>VibeSafe: Connect</em>. Sign in on the page that opens and your editor links automatically.</div>
+    </div>
+    <div class="trouble-row">
+      <div class="trouble-q">"Invalid API key"</div>
+      <div class="trouble-a">Your key was revoked or mistyped. Dashboard → <strong>API keys</strong> → Generate new key → <strong>Connect VS Code</strong>. Keys always start with <code>vibesafe_sk_</code>.</div>
+    </div>
+    <div class="trouble-row">
+      <div class="trouble-q">"Scan failed" or no result</div>
+      <div class="trouble-a">Usually a very large file or a momentary outage. Try a smaller portion of code, wait a minute, and scan again. If it keeps failing, contact us from the dashboard.</div>
+    </div>
+    <div class="trouble-row">
+      <div class="trouble-q">Results not showing after scan</div>
+      <div class="trouble-a">Hard-refresh the page (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>) — your browser may be holding an old version of the dashboard.</div>
+    </div>
+    <div class="trouble-row">
+      <div class="trouble-q">"You have used all 3 free scans this month"</div>
+      <div class="trouble-a">Free scans reset on the 1st of each month — or upgrade to Pro for unlimited scans (there's usually a founding-member discount inside the app).</div>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <a href="/login.html">Run your first scan free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem;color:var(--text3)">3 free scans every month · No credit card · Your code is never stored</p>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/faq.html">FAQ</a> · <a href="/blog.html">Blog</a> · <a href="/legal.html">Privacy &amp; Terms</a>
+</footer>
+  <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
