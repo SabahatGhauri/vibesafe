@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security Issues Explained — How to Fix What VibeSafe Finds | VibeSafe</title>
+<meta name="description" content="Every security issue VibeSafe flags, explained in plain English with a before/after fix: exposed keys, SQL injection, missing RLS, CSP, security headers, and more.">
+<meta name="keywords" content="VibeSafe, how to fix security issues, exposed API key fix, SQL injection fix, Supabase RLS, Content-Security-Policy, security headers, vibe coding security">
+<link rel="canonical" href="https://www.vibesafe.info/learn">
+<meta property="og:title" content="Security Issues Explained — How to Fix What VibeSafe Finds">
+<meta property="og:description" content="Every issue VibeSafe flags, in plain English, with the exact fix. Learn what your score means and how to reach launch-ready.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/learn">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:880px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,2.6rem);line-height:1.15;letter-spacing:-0.02em;margin-bottom:14px}
+.lead{font-size:1.08rem;color:var(--text2);margin-bottom:30px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.35rem;margin:44px 0 10px;scroll-margin-top:80px}
+p{color:var(--text2);margin-bottom:14px}
+/* score legend */
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0 8px}
+.legend-item{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:16px}
+.legend-badge{display:inline-block;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;padding:3px 9px;border-radius:100px;margin-bottom:8px}
+.b-crit{background:rgba(239,68,68,0.15);color:#EF4444}
+.b-warn{background:rgba(245,158,11,0.15);color:#F59E0B}
+.b-info{background:rgba(59,130,246,0.15);color:#3B82F6}
+.b-pass{background:rgba(16,185,129,0.15);color:#10B981}
+.legend-item p{font-size:0.85rem;margin:0}
+/* issue cards */
+.issue{background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:22px 24px;margin-bottom:16px;border-left:3px solid var(--border2)}
+.issue.crit{border-left-color:#EF4444}
+.issue.warn{border-left-color:#F59E0B}
+.issue.info{border-left-color:#3B82F6}
+.issue-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.issue-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.08rem;color:var(--text)}
+.issue-sev{font-size:0.64rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;padding:3px 8px;border-radius:100px}
+.issue-q{font-size:0.82rem;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin:12px 0 3px}
+.issue p{font-size:0.92rem;margin-bottom:6px}
+.diff{margin:8px 0;border-radius:8px;overflow:hidden;font-family:'JetBrains Mono',monospace;font-size:0.8rem;border:1px solid var(--border2)}
+.diff .row{padding:6px 12px;display:flex;gap:8px}
+.diff .bad{background:rgba(239,68,68,0.08);color:#FCA5A5}
+.diff .good{background:rgba(16,185,129,0.08);color:#86EFAC}
+.diff .lbl{width:52px;flex-shrink:0;opacity:0.7;font-weight:600}
+.toc{background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:20px 24px;margin-bottom:20px;columns:2;column-gap:24px}
+.toc a{display:block;color:var(--cyan);text-decoration:none;font-size:0.88rem;padding:4px 0}
+@media(max-width:600px){.toc{columns:1}}
+.cta-box{background:linear-gradient(135deg,rgba(0,212,255,0.08),rgba(124,58,237,0.08));border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:44px 0 0}
+.cta-box h3{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;margin-bottom:14px;color:var(--text)}
+.cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.cta-row a{display:inline-flex;gap:8px;align-items:center;padding:12px 24px;border-radius:10px;font-weight:700;text-decoration:none;font-size:0.95rem}
+.cta-primary{background:var(--cyan);color:var(--bg)}
+.cta-ghost{background:transparent;color:var(--text);border:1px solid var(--border2)}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem;margin-top:60px}
+footer a{color:var(--text3)}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt=""> VibeSafe</a>
+  <a href="/login.html" class="nav-cta">Scan your code</a>
+</nav>
+<main>
+  <p class="eyebrow">Learn</p>
+  <h1>Every issue VibeSafe finds — and how to fix it</h1>
+  <p class="lead">When VibeSafe flags something in your code or app, this page explains what it means in plain English and shows you the exact fix. No security degree required. Bookmark it — it's your cheat sheet from scan to launch-ready.</p>
+
+  <h2>What your safety score means</h2>
+  <p>Every scan gives a score out of 100. It starts at 100 and drops for each issue found — the more severe, the bigger the drop.</p>
+  <div class="legend">
+    <div class="legend-item"><span class="legend-badge b-crit">Critical</span><p>Fix before you deploy. These are the exposed keys and open databases that end companies.</p></div>
+    <div class="legend-item"><span class="legend-badge b-warn">Warning</span><p>Fix before launch week. Bugs and weak spots that will bite you under real traffic.</p></div>
+    <div class="legend-item"><span class="legend-badge b-info">Info</span><p>Fix when convenient. Best-practice and code-quality suggestions.</p></div>
+    <div class="legend-item"><span class="legend-badge b-pass">Passed</span><p>Things your code already does right — good habits worth keeping.</p></div>
+  </div>
+  <p style="font-size:0.9rem;color:var(--text3)">A score of 75+ is generally launch-ready with no criticals. Below 50 means something serious needs attention first.</p>
+
+  <h2>The issues, explained</h2>
+  <div class="toc">
+    <a href="#secrets">🔴 Exposed API keys &amp; secrets</a>
+    <a href="#sql">🔴 SQL injection</a>
+    <a href="#rls">🔴 Missing database security (RLS)</a>
+    <a href="#auth">🔴 Broken authentication</a>
+    <a href="#xss">🔴 Cross-site scripting (XSS)</a>
+    <a href="#csp">🟡 Missing Content-Security-Policy</a>
+    <a href="#headers">🟡 Missing security headers</a>
+    <a href="#await">🟡 Missing await</a>
+    <a href="#packages">🟡 Hallucinated packages</a>
+    <a href="#logic">🟡 Logic bugs</a>
+  </div>
+
+  <div class="issue crit" id="secrets">
+    <div class="issue-head"><span class="issue-title">Exposed API keys &amp; secrets</span><span class="issue-sev b-crit">Critical</span></div>
+    <div class="issue-q">What it is</div>
+    <p>A live key, token, or password written directly in your code (e.g. <code>sk_live_…</code>, an AWS key, a database password).</p>
+    <div class="issue-q">Why it matters</div>
+    <p>Bots scan public code and deployed bundles for keys within minutes. A leaked Stripe or OpenAI key can rack up thousands in charges or expose customer data.</p>
+    <div class="issue-q">The fix</div>
+    <div class="diff"><div class="row bad"><span class="lbl">Before</span><span>const key = "sk_live_abc123..."</span></div><div class="row good"><span class="lbl">After</span><span>const key = process.env.STRIPE_SECRET_KEY</span></div></div>
+    <p>Move it to an environment variable, add <code>.env</code> to <code>.gitignore</code>, and <strong>rotate the exposed key</strong> at the provider — assume it's already compromised.</p>
+  </div>
+
+  <div class="issue crit" id="sql">
+    <div class="issue-head"><span class="issue-title">SQL injection</span><span class="issue-sev b-crit">Critical</span></div>
+    <div class="issue-q">What it is</div>
+    <p>User input glued directly into a database query, so an attacker can inject their own SQL.</p>
+    <div class="issue-q">Why it matters</div>
+    <p>It's the classic way attackers dump or delete an entire database — or bypass your login screen entirely.</p>
+    <div class="issue-q">The fix</div>
+    <div class="diff"><div class="row bad"><span class="lbl">Before</span><span>db.query("SELECT * FROM users WHERE id=" + req.query.id)</span></div><div class="row good"><span class="lbl">After</span><span>db.query("SELECT * FROM users WHERE id = $1", [req.query.id])</span></div></div>
+    <p>Always use parameterised queries — never build a query by concatenating user input.</p>
+  </div>
+
+  <div class="issue crit" id="rls">
+    <div class="issue-head"><span class="issue-title">Missing database security (RLS)</span><span class="issue-sev b-crit">Critical</span></div>
+    <div class="issue-q">What it is</div>
+    <p>A Supabase/Firebase table with no Row-Level Security, or with access enforced only in your frontend code.</p>
+    <div class="issue-q">Why it matters</div>
+    <p>The #1 cause of vibe-coded breaches. The public "anon" key ships in your app — without RLS, anyone can read every user's rows, not just their own. Frontend filters are a suggestion, not a rule.</p>
+    <div class="issue-q">The fix</div>
+    <div class="diff"><div class="row good"><span class="lbl">SQL</span><span>ALTER TABLE todos ENABLE ROW LEVEL SECURITY;</span></div><div class="row good"><span class="lbl">SQL</span><span>CREATE POLICY "own rows" ON todos FOR ALL USING (auth.uid() = user_id);</span></div></div>
+    <p>Enable RLS on <em>every</em> table and add a policy scoping rows to the logged-in user. <a href="/blog/supabase-rls-explained-for-founders.html" style="color:var(--cyan)">Full RLS guide →</a></p>
+  </div>
+
+  <div class="issue crit" id="auth">
+    <div class="issue-head"><span class="issue-title">Broken authentication &amp; access control</span><span class="issue-sev b-crit">Critical</span></div>
+    <div class="issue-q">What it is</div>
+    <p>Missing auth checks, authorization enforced only in the browser, or inverted access logic (e.g. <code>if (!isAdmin)</code> where it should be <code>if (isAdmin)</code>).</p>
+    <div class="issue-q">Why it matters</div>
+    <p>Anyone can call your API directly, bypassing your UI. Client-side "protection" protects nothing.</p>
+    <div class="issue-q">The fix</div>
+    <p>Check the user's identity and permissions on the <strong>server</strong> for every sensitive action — never trust that the frontend hid a button.</p>
+  </div>
+
+  <div class="issue crit" id="xss">
+    <div class="issue-head"><span class="issue-title">Cross-site scripting (XSS)</span><span class="issue-sev b-crit">Critical</span></div>
+    <div class="issue-q">What it is</div>
+    <p>Rendering user-supplied content as raw HTML (e.g. <code>innerHTML = userText</code>), letting attackers inject scripts.</p>
+    <div class="issue-q">Why it matters</div>
+    <p>A malicious script running in your users' browsers can steal sessions, keystrokes, and data.</p>
+    <div class="issue-q">The fix</div>
+    <div class="diff"><div class="row bad"><span class="lbl">Before</span><span>el.innerHTML = userComment</span></div><div class="row good"><span class="lbl">After</span><span>el.textContent = userComment</span></div></div>
+    <p>Use <code>textContent</code> (or your framework's safe rendering) and sanitise any HTML you must render.</p>
+  </div>
+
+  <div class="issue warn" id="csp">
+    <div class="issue-head"><span class="issue-title">Missing Content-Security-Policy</span><span class="issue-sev b-warn">Warning</span></div>
+    <div class="issue-q">What it is</div>
+    <p>No CSP header or meta tag on your deployed site. (This is the one in the screenshot most founders see first.)</p>
+    <div class="issue-q">Why it matters</div>
+    <p>CSP is a browser-level safety net: it blocks scripts and resources from origins you didn't allow, making XSS far harder to exploit if something ever slips through.</p>
+    <div class="issue-q">The fix</div>
+    <p>Add a CSP header in <code>vercel.json</code> or <code>next.config.js</code>. Start strict and loosen as needed. <a href="/blog/vercel-deployment-security-checklist.html" style="color:var(--cyan)">Vercel headers guide →</a></p>
+  </div>
+
+  <div class="issue warn" id="headers">
+    <div class="issue-head"><span class="issue-title">Missing security headers</span><span class="issue-sev b-warn">Warning</span></div>
+    <div class="issue-q">What it is</div>
+    <p>Absent headers like <code>Strict-Transport-Security</code> (HSTS), <code>X-Frame-Options</code>, or <code>X-Content-Type-Options</code> on your live site.</p>
+    <div class="issue-q">Why it matters</div>
+    <p>Each header blocks a class of attack — clickjacking, protocol downgrade, MIME sniffing — for a few lines of config.</p>
+    <div class="issue-q">The fix</div>
+    <p>Add them once in your host config. VibeSafe's <a href="/login.html" style="color:var(--cyan)">live-website scan</a> tells you exactly which are missing.</p>
+  </div>
+
+  <div class="issue warn" id="await">
+    <div class="issue-head"><span class="issue-title">Missing await</span><span class="issue-sev b-warn">Warning</span></div>
+    <div class="issue-q">What it is</div>
+    <p>Calling an async function without <code>await</code>, so you get a Promise object instead of the actual result.</p>
+    <div class="issue-q">Why it matters</div>
+    <p>Your code runs but silently does the wrong thing — sending <code>{}</code> instead of real data, or saving nothing. These bugs are invisible until a user hits them.</p>
+    <div class="issue-q">The fix</div>
+    <div class="diff"><div class="row bad"><span class="lbl">Before</span><span>const user = db.query(...)</span></div><div class="row good"><span class="lbl">After</span><span>const user = await db.query(...)</span></div></div>
+  </div>
+
+  <div class="issue warn" id="packages">
+    <div class="issue-head"><span class="issue-title">Hallucinated packages</span><span class="issue-sev b-warn">Warning</span></div>
+    <div class="issue-q">What it is</div>
+    <p>An import for a package that doesn't actually exist — AI tools sometimes invent plausible-sounding library names.</p>
+    <div class="issue-q">Why it matters</div>
+    <p>Beyond breaking your build, attackers register these fake names with malicious code ("slopsquatting") hoping you'll install them.</p>
+    <div class="issue-q">The fix</div>
+    <p>Verify every import exists on the real registry before installing. If you didn't ask for it and can't find its docs, remove it.</p>
+  </div>
+
+  <div class="issue warn" id="logic">
+    <div class="issue-head"><span class="issue-title">Logic bugs</span><span class="issue-sev b-warn">Warning</span></div>
+    <div class="issue-q">What it is</div>
+    <p>Code that runs but does the wrong thing: inverted conditions, off-by-one errors, <code>==</code> instead of <code>===</code>, wrong comparison operators.</p>
+    <div class="issue-q">Why it matters</div>
+    <p>Non-technical founders can't spot these because they didn't write the code — but users feel them as "the app is acting weird."</p>
+    <div class="issue-q">The fix</div>
+    <p>VibeSafe points to the exact line and the corrected version. Re-scan after fixing to confirm.</p>
+  </div>
+
+  <div class="cta-box">
+    <h3>Ready to find and fix these in your own app?</h3>
+    <div class="cta-row">
+      <a href="/login.html" class="cta-primary">Scan your code free →</a>
+      <a href="/user-guide.html" class="cta-ghost">🚀 Try Launch Check</a>
+    </div>
+    <p style="margin:14px 0 0;font-size:0.82rem;color:var(--text3)">3 free scans every month · Your code is never stored</p>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/user-guide.html">User guide</a> · <a href="/faq.html">FAQ</a> · <a href="/blog.html">Blog</a> · <a href="/legal.html">Privacy &amp; Terms</a>
+</footer>
+  <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
