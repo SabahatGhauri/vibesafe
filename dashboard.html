@@ -3108,16 +3108,17 @@ function renderAdminStats(s) {
     + statCard('Success rate', sr, srColor)
     + '</div>';
 
-  // Channel breakdown: website vs extension
-  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">';
-  html += '<div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:18px;">'
-    + '<div style="font-weight:600;margin-bottom:6px;">🌐 Website scans</div>'
-    + '<div style="font-size:1.6rem;font-weight:700;font-family:\'Space Grotesk\',sans-serif;">' + (s.website_total || 0) + '</div>'
-    + '<div style="font-size:0.78rem;color:var(--text3);margin-top:4px;">' + (s.website_success || 0) + ' ok · ' + (s.website_failed || 0) + ' failed · ' + (s.users_website || 0) + ' users</div></div>';
-  html += '<div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:18px;">'
-    + '<div style="font-weight:600;margin-bottom:6px;">🧩 Extension scans</div>'
-    + '<div style="font-size:1.6rem;font-weight:700;font-family:\'Space Grotesk\',sans-serif;">' + (s.ext_total || 0) + '</div>'
-    + '<div style="font-size:0.78rem;color:var(--text3);margin-top:4px;">' + (s.ext_success || 0) + ' ok · ' + (s.ext_failed || 0) + ' failed · ' + (s.users_extension || 0) + ' users</div></div>';
+  // Channel breakdown: website vs extension vs MCP
+  function channelCard(icon, label, total, ok, fail, users) {
+    return '<div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:18px;">'
+      + '<div style="font-weight:600;margin-bottom:6px;">' + icon + ' ' + label + '</div>'
+      + '<div style="font-size:1.6rem;font-weight:700;font-family:\'Space Grotesk\',sans-serif;">' + (total || 0) + '</div>'
+      + '<div style="font-size:0.78rem;color:var(--text3);margin-top:4px;">' + (ok || 0) + ' ok · ' + (fail || 0) + ' failed · ' + (users || 0) + ' users</div></div>';
+  }
+  html += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;">';
+  html += channelCard('🌐', 'Website scans', s.website_total, s.website_success, s.website_failed, s.users_website);
+  html += channelCard('🧩', 'Extension scans', s.ext_total, s.ext_success, s.ext_failed, s.users_extension);
+  html += channelCard('🔌', 'MCP scans', s.mcp_total, s.mcp_success, s.mcp_failed, s.users_mcp);
   html += '</div>';
 
   // Scan-type breakdown

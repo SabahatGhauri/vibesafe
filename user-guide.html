@@ -154,6 +154,22 @@ footer a{color:var(--text3)}
   <img class="shot" src="/assets/manual/09-vscode-results.png" alt="VibeSafe results inside VS Code" loading="lazy">
   <p class="caption">Scan results inside VS Code</p> -->
 
+  <h3>Also: use VibeSafe inside Claude &amp; Cursor (MCP)</h3>
+  <p>VibeSafe has an <strong>MCP server</strong>, so you can scan right inside an AI chat — just ask <em>"scan this file with VibeSafe"</em> and it runs. It works in Claude Desktop, Cursor, and any MCP client, exposing three tools: scan code, scan a live website, and run a Launch Check.</p>
+  <ol class="steps">
+    <li>Get a free API key: dashboard → <strong>API keys</strong> → Generate</li>
+    <li>Add VibeSafe to your client's MCP config (full copy-paste setup in the <a href="https://github.com/SabahatGhauri/vibesafe-mcp" target="_blank" rel="noopener" style="color:var(--cyan)">MCP server README</a>):</li>
+  </ol>
+  <div class="tip" style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;white-space:pre-wrap;line-height:1.5;">{
+  "mcpServers": {
+    "vibesafe": {
+      "command": "npx",
+      "args": ["-y", "vibesafe-mcp"],
+      "env": { "VIBESAFE_API_KEY": "vibesafe_sk_your_key" }
+    }
+  }
+}</div>
+
   <h2 id="history"><span class="step-num">7</span>Scan history &amp; reports</h2>
   <p>Every scan is saved to <strong>Scan history</strong> in the sidebar — score, issue count, and date — so you can track progress as you fix things. Use <strong>Export PDF</strong> on any result to download a clean, branded security report you can share with clients, co-founders, or investors.</p>
 
