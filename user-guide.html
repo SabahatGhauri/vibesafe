@@ -171,6 +171,22 @@ footer a{color:var(--text3)}
   }
 }</div>
 
+  <h3>Also: scan from the command line (CLI)</h3>
+  <p>Prefer the terminal? The <strong>VibeSafe CLI</strong> scans a whole file or folder in seconds and prints each issue with a one-line fix. It exits with an error when critical issues are found, so it slots straight into a pre-commit hook or CI step.</p>
+  <ol class="steps">
+    <li>Get a free API key: dashboard → <strong>API keys</strong> → Generate</li>
+    <li>Set it as <code>VIBESAFE_API_KEY</code>, then run:</li>
+  </ol>
+  <div class="tip" style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;white-space:pre-wrap;line-height:1.5;">npx vibesafe-scan ./src</div>
+  <p style="margin-top:8px">Full options are in the <a href="https://github.com/SabahatGhauri/vibesafe-scan" target="_blank" rel="noopener" style="color:var(--cyan)">CLI README</a>.</p>
+
+  <h3>Also: run VibeSafe in your CI/CD (GitHub Action)</h3>
+  <p>To catch issues automatically, add the <strong>VibeSafe Vulnerability Scanner</strong> GitHub Action. It scans on every push or pull request and <strong>fails the build if critical issues are found</strong>, so risky code never reaches production.</p>
+  <ol class="steps">
+    <li>Store a free API key as a repository secret named <code>VIBESAFE_API_KEY</code></li>
+    <li>Add the action from the <a href="https://github.com/marketplace/actions/vibesafe-vulnerability-scanner" target="_blank" rel="noopener" style="color:var(--cyan)">GitHub Marketplace</a> to your workflow file</li>
+  </ol>
+
   <h2 id="history"><span class="step-num">7</span>Scan history &amp; reports</h2>
   <p>Every scan is saved to <strong>Scan history</strong> in the sidebar — score, issue count, and date — so you can track progress as you fix things. Use <strong>Export PDF</strong> on any result to download a clean, branded security report you can share with clients, co-founders, or investors.</p>
 

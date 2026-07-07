@@ -493,6 +493,35 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
       </div>
     </div>
 
+    <!-- CLI -->
+    <div class="faq-item" data-cat="general">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">⌨️ Can I scan from the command line? (CLI)</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-general">General</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        Yes — VibeSafe has a <strong>command-line scanner</strong>. Point it at a file or folder and it scans everything in seconds, printing each issue with a one-line fix. It exits with an error code when critical issues are found, so it's perfect for a pre-commit hook or CI step.<br><br>
+        No install needed — just run <code>npx vibesafe-scan ./src</code> with a free API key set as <code>VIBESAFE_API_KEY</code>. Setup and options are in the <a href="https://github.com/SabahatGhauri/vibesafe-scan" target="_blank" rel="noopener">CLI README</a>.
+      </div>
+    </div>
+
+    <!-- GITHUB ACTION -->
+    <div class="faq-item" data-cat="general">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">⚙️ Can VibeSafe run automatically in my CI/CD? (GitHub Action)</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-general">General</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        Yes — the <strong>VibeSafe Vulnerability Scanner</strong> GitHub Action scans your code on every push or pull request and <strong>fails the build if critical issues are found</strong>, so risky code never reaches production. Add it from the <a href="https://github.com/marketplace/actions/vibesafe-vulnerability-scanner" target="_blank" rel="noopener">GitHub Marketplace</a> and drop a few lines into your workflow file with a free API key stored as a repository secret.
+      </div>
+    </div>
+
     <!-- GENERAL -->
     <div class="faq-item" data-cat="general">
       <div class="faq-q" onclick="toggleFaq(this.parentElement)">
