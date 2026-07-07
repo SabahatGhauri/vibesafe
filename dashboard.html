@@ -1114,6 +1114,7 @@ async function loadProfile() {
     var res = await sbClient.from('vibesafe_plans').select('plan').eq('id', currentUser.id).maybeSingle();
     currentPlan = (res.data && res.data.plan) || 'free';
     renderPlanCard(currentPlan);
+    if (typeof markProFeatures === 'function') markProFeatures();
     maybeShowAdminNav();
     await updateScanUsage();
   } catch (err) {
@@ -1903,14 +1904,53 @@ function syncScroll() {
 }
 
 // ── EDITOR TABS ──
+var PRO_PLANS = ['pro', 'team'];
+function isPro() { return PRO_PLANS.indexOf(currentPlan) !== -1; }
+
 function switchEditorTab(el, tab) {
+  // Live website scanning is a Pro feature — gate it for free accounts.
+  if (tab === 'liveurl' && !isPro()) {
+    showProUpgrade('Live website scanning');
+    return;
+  }
   document.querySelectorAll('.etab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
+  if (el) el.classList.add('active');
   const tabs = { editor:'editorTab', upload:'uploadTab', url:'urlTab', liveurl:'liveurlTab' };
   Object.entries(tabs).forEach(([k,id]) => {
     const el = document.getElementById(id);
     if (!el) return;
     el.style.display = k === tab ? (k==='editor'?'block':'flex') : 'none';
+  });
+}
+
+// Upgrade prompt shown when a free user tries a Pro-only feature.
+function showProUpgrade(feature) {
+  var old = document.getElementById('proUpgradeModal');
+  if (old) old.remove();
+  var o = document.createElement('div');
+  o.id = 'proUpgradeModal';
+  o.style.cssText = 'position:fixed;inset:0;z-index:1000;background:rgba(4,8,18,0.72);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;';
+  o.onclick = function(e){ if (e.target === o) o.remove(); };
+  o.innerHTML =
+    '<div style="width:100%;max-width:420px;background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;box-shadow:0 24px 70px rgba(0,0,0,0.6);">'
+    + '<div style="font-size:2.2rem;margin-bottom:8px;">🌐</div>'
+    + '<div style="font-family:\'Space Grotesk\',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:8px;">' + esc(feature) + ' is a Pro feature</div>'
+    + '<div style="font-size:0.9rem;color:var(--text2);line-height:1.6;margin-bottom:20px;">Upgrade to Pro to scan your deployed apps for missing security headers, exposed paths, HTTPS issues, and more — plus unlimited code scans.</div>'
+    + '<a href="/claim-offer.html" class="btn btn-primary" style="display:block;text-decoration:none;margin-bottom:10px;">⚡ Upgrade to Pro — 50% off</a>'
+    + '<button onclick="document.getElementById(\'proUpgradeModal\').remove()" style="width:100%;padding:11px;border-radius:9px;background:var(--surface2);color:var(--text);border:1px solid var(--border2);font-weight:600;font-size:0.86rem;cursor:pointer;">Maybe later</button>'
+    + '</div>';
+  document.body.appendChild(o);
+  if (typeof trackEvent === 'function') try { trackEvent('pro_gate_shown', { feature: feature }); } catch(e){}
+}
+
+// Add a 🔒 hint to Pro-only controls when the user is on the free plan.
+function markProFeatures() {
+  var lock = isPro() ? '' : ' 🔒';
+  document.querySelectorAll('.etab').forEach(function(b){
+    if (b.getAttribute('onclick') && b.getAttribute('onclick').indexOf('liveurl') !== -1) {
+      b.textContent = '🌐 Live website' + lock;
+      b.style.opacity = isPro() ? '1' : '0.75';
+    }
   });
 }
 
