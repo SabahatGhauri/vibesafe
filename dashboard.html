@@ -3118,10 +3118,11 @@ function renderAdminStats(s) {
       + '<div style="font-size:1.6rem;font-weight:700;font-family:\'Space Grotesk\',sans-serif;">' + (total || 0) + '</div>'
       + '<div style="font-size:0.78rem;color:var(--text3);margin-top:4px;">' + (ok || 0) + ' ok · ' + (fail || 0) + ' failed · ' + (users || 0) + ' users</div></div>';
   }
-  html += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;">';
-  html += channelCard('🌐', 'Website scans', s.website_total, s.website_success, s.website_failed, s.users_website);
-  html += channelCard('🧩', 'Extension scans', s.ext_total, s.ext_success, s.ext_failed, s.users_extension);
-  html += channelCard('🔌', 'MCP scans', s.mcp_total, s.mcp_success, s.mcp_failed, s.users_mcp);
+  html += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px;">';
+  html += channelCard('🌐', 'Website', s.website_total, s.website_success, s.website_failed, s.users_website);
+  html += channelCard('🧩', 'Extension', s.ext_total, s.ext_success, s.ext_failed, s.users_extension);
+  html += channelCard('🔌', 'MCP', s.mcp_total, s.mcp_success, s.mcp_failed, s.users_mcp);
+  html += channelCard('🔧', 'CI / Action', s.ci_total, s.ci_success, s.ci_failed, s.users_ci);
   html += '</div>';
 
   // Scan-type breakdown
