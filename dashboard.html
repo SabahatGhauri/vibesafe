@@ -1740,6 +1740,40 @@ document.addEventListener('click', function(e) {
   </div>
 </div>
 
+<!-- MONITORING PANEL OVERLAY -->
+<div id="monitorPanel" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;padding:32px 24px;">
+  <div style="max-width:740px;margin:0 auto;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+      <button onclick="closeMonitorPanel()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">← Back</button>
+      <h2 style="margin:0;font-size:1.3rem;font-weight:700;">📡 Continuous monitoring</h2>
+    </div>
+    <p style="font-size:0.88rem;color:var(--text2);margin:0 0 22px;line-height:1.6;">Add your live sites and VibeSafe re-scans them every week. We only email you when something gets <strong>worse</strong> — the score drops or a new critical appears. No news is good news.</p>
+
+    <!-- Add site -->
+    <div id="monitorAddCard" style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:20px;margin-bottom:20px;">
+      <div style="font-weight:600;margin-bottom:4px;">Watch a live site</div>
+      <div style="font-size:0.8rem;color:var(--text3);margin-bottom:14px;">Enter the URL of your deployed app. We'll check it weekly and alert you if its security drops.</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <input type="url" id="monitorUrlInput" placeholder="https://yourapp.vercel.app"
+          style="flex:1;min-width:220px;padding:9px 12px;background:var(--surface2);border:1px solid var(--border2);border-radius:7px;color:var(--text);font-size:0.82rem;outline:none;font-family:'Inter',sans-serif;"
+          onkeydown="if(event.key==='Enter')addMonitoredUrl()">
+        <input type="text" id="monitorLabelInput" maxlength="80" placeholder="Label (optional)"
+          style="width:150px;padding:9px 12px;background:var(--surface2);border:1px solid var(--border2);border-radius:7px;color:var(--text);font-size:0.82rem;outline:none;font-family:'Inter',sans-serif;">
+        <button class="btn btn-primary" id="monitorAddBtn" onclick="addMonitoredUrl()">+ Watch</button>
+      </div>
+      <div id="monitorStatus" style="font-size:0.78rem;margin-top:8px;min-height:18px;"></div>
+    </div>
+
+    <!-- Watched sites -->
+    <div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:20px;">
+      <div style="font-weight:600;margin-bottom:14px;">Watched sites</div>
+      <div id="monitorList">
+        <div style="font-size:0.8rem;color:var(--text3);text-align:center;padding:16px 0;">Loading...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="toast-wrap" id="toastWrap"></div>
 
 <!-- LOW-SCORE "WHY" POPUP -->
@@ -2068,6 +2102,27 @@ async function scanFromGitHub() {
   }
 }
 
+// Returns a valid, fresh access token — refreshing it if the stored one has
+// expired. Returns null when the user genuinely needs to sign in again, so
+// callers can prompt a clean re-login instead of firing a doomed request that
+// the API rejects (and that would otherwise log as a scan "failure").
+async function freshAuthToken() {
+  try {
+    var res = await sbClient.auth.getSession();
+    var session = res && res.data ? res.data.session : null;
+    var now = Math.floor(Date.now() / 1000);
+    if (!session || (session.expires_at && session.expires_at - now < 60)) {
+      var r = await sbClient.auth.refreshSession();
+      session = r && r.data ? r.data.session : null;
+    }
+    return session ? session.access_token : null;
+  } catch (e) { return null; }
+}
+function promptReauth() {
+  showToast('Your session expired — please sign in again.', 'error');
+  setTimeout(function () { window.location.href = '/login.html'; }, 1600);
+}
+
 async function scanLiveUrl() {
   var allowed = await checkScanLimit();
   if (!allowed) return;
@@ -2080,8 +2135,8 @@ async function scanLiveUrl() {
   if (btn) { btn.disabled = true; btn.textContent = 'Scanning...'; }
 
   try {
-    const { data: { session: liveSession } } = await sbClient.auth.getSession();
-    const authToken = liveSession ? liveSession.access_token : '';
+    const authToken = await freshAuthToken();
+    if (!authToken) { promptReauth(); return; }
 
     const response = await fetch('https://vibesafe-api.vercel.app/api/scan-url', {
       method: 'POST',
@@ -2808,7 +2863,7 @@ function setPage(page, evt) {
   } else if (page === 'history') {
     showToast('Scan history — 4 previous scans', 'info');
   } else if (page === 'monitor') {
-    showToast('Continuous monitoring with email alerts — coming in Pro', 'info');
+    openMonitorPanel();
   } else if (page === 'team') {
     openTeamPanel();
   }
@@ -2826,6 +2881,115 @@ function closeTeamPanel() {
   // Re-activate scan sidebar item
   document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
   document.querySelector('.sidebar-item[onclick*="scan"]').classList.add('active');
+}
+
+// ── CONTINUOUS MONITORING ──
+var MONITOR_API = 'https://vibesafe-api.vercel.app/api/monitor';
+function escHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function relTime(iso) {
+  if (!iso) return 'not scanned yet';
+  var d = (Date.now() - new Date(iso).getTime()) / 1000;
+  if (d < 3600) return Math.max(1, Math.floor(d / 60)) + 'm ago';
+  if (d < 86400) return Math.floor(d / 3600) + 'h ago';
+  return Math.floor(d / 86400) + 'd ago';
+}
+async function monitorAuth() {
+  var { data: { session } } = await sbClient.auth.getSession();
+  return session ? session.access_token : '';
+}
+function openMonitorPanel() {
+  if (!currentUser) { showToast('Please sign in first', 'error'); return; }
+  document.getElementById('monitorPanel').style.display = 'block';
+  loadMonitoredUrls();
+}
+function closeMonitorPanel() {
+  document.getElementById('monitorPanel').style.display = 'none';
+  document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+  document.querySelector('.sidebar-item[onclick*="scan"]').classList.add('active');
+}
+async function loadMonitoredUrls() {
+  var list = document.getElementById('monitorList');
+  var addCard = document.getElementById('monitorAddCard');
+  list.innerHTML = '<div style="font-size:0.8rem;color:var(--text3);text-align:center;padding:16px 0;">Loading...</div>';
+  try {
+    var token = await monitorAuth();
+    var res = await fetch(MONITOR_API, { headers: { 'Authorization': 'Bearer ' + token } });
+    var data = await res.json();
+    if (!res.ok) { list.innerHTML = '<div style="font-size:0.8rem;color:var(--red);padding:16px 0;">' + escHtml(data.error || 'Could not load.') + '</div>'; return; }
+
+    // Free users can't add sites — show an upgrade note in place of the form.
+    if (!isPro()) {
+      addCard.innerHTML = '<div style="font-weight:600;margin-bottom:6px;">🔒 Continuous monitoring is a Pro feature</div>'
+        + '<div style="font-size:0.82rem;color:var(--text3);margin-bottom:14px;">Upgrade to Pro and VibeSafe will watch your live sites every week, emailing you the moment security drops.</div>'
+        + '<button class="btn btn-primary" onclick="showProUpgrade && showProUpgrade()">Upgrade to Pro</button>';
+    }
+
+    var urls = data.urls || [];
+    if (!urls.length) {
+      list.innerHTML = '<div style="font-size:0.82rem;color:var(--text3);text-align:center;padding:16px 0;">No sites watched yet.' + (isPro() ? ' Add one above to start weekly monitoring.' : '') + '</div>';
+      return;
+    }
+    list.innerHTML = urls.map(function(u) {
+      var hasScore = u.last_score !== null && u.last_score !== undefined;
+      var col = !hasScore ? 'var(--text3)' : u.last_score >= 75 ? 'var(--green)' : u.last_score >= 50 ? 'var(--amber)' : 'var(--red)';
+      var scoreBadge = hasScore
+        ? '<span style="font-weight:700;color:' + col + ';">' + u.last_score + '/100</span>' + (u.last_criticals ? ' <span style="color:var(--red);font-size:0.75rem;">' + u.last_criticals + ' critical</span>' : '')
+        : '<span style="color:var(--text3);font-size:0.78rem;">pending first scan</span>';
+      return '<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border1);">'
+        + '<div style="flex:1;min-width:0;">'
+        + '<div style="font-weight:600;font-size:0.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escHtml(u.label || u.url) + '</div>'
+        + '<div style="font-size:0.75rem;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escHtml(u.url) + ' · checked ' + relTime(u.last_scanned_at) + '</div>'
+        + '</div>'
+        + '<div style="text-align:right;white-space:nowrap;">' + scoreBadge + '</div>'
+        + '<button onclick="removeMonitoredUrl(' + u.id + ')" title="Stop watching" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text3);border-radius:6px;padding:5px 9px;cursor:pointer;font-size:0.75rem;">Remove</button>'
+        + '</div>';
+    }).join('');
+  } catch (e) {
+    list.innerHTML = '<div style="font-size:0.8rem;color:var(--red);padding:16px 0;">Could not load watched sites.</div>';
+  }
+}
+async function addMonitoredUrl() {
+  var input = document.getElementById('monitorUrlInput');
+  var labelInput = document.getElementById('monitorLabelInput');
+  var status = document.getElementById('monitorStatus');
+  var btn = document.getElementById('monitorAddBtn');
+  var url = (input.value || '').trim();
+  if (!url) { status.style.color = 'var(--red)'; status.textContent = 'Enter a URL first.'; return; }
+  btn.disabled = true; status.style.color = 'var(--text3)'; status.textContent = 'Adding…';
+  try {
+    var token = await monitorAuth();
+    var res = await fetch(MONITOR_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ url: url, label: (labelInput.value || '').trim() }),
+    });
+    var data = await res.json();
+    if (!res.ok) {
+      status.style.color = 'var(--red)'; status.textContent = data.error || 'Could not add.';
+      if (data.upgrade && window.showProUpgrade) showProUpgrade();
+      return;
+    }
+    status.style.color = 'var(--green)';
+    status.textContent = data.duplicate ? 'Already watching that site.' : 'Added — first scan runs within a week.';
+    input.value = ''; labelInput.value = '';
+    loadMonitoredUrls();
+  } catch (e) {
+    status.style.color = 'var(--red)'; status.textContent = 'Could not add. Try again.';
+  } finally {
+    btn.disabled = false;
+  }
+}
+async function removeMonitoredUrl(id) {
+  try {
+    var token = await monitorAuth();
+    var res = await fetch(MONITOR_API, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ id: id }),
+    });
+    if (res.ok) { showToast('Stopped watching', 'info'); loadMonitoredUrls(); }
+    else showToast('Could not remove', 'error');
+  } catch (e) { showToast('Could not remove', 'error'); }
 }
 
 // ── API KEYS ──
@@ -3461,7 +3625,10 @@ document.getElementById('langSelect').addEventListener('change', function() {
 function showToast(msg, type='info') {
   const icons = { success:'✅', error:'❌', info:'ℹ️' };
   const wrap = document.getElementById('toastWrap');
+  // Don't stack an identical toast that's already on screen (double-clicks, re-fires).
+  if ([...wrap.querySelectorAll('.toast')].some(el => el.dataset.msg === msg)) return;
   const t = document.createElement('div');
+  t.dataset.msg = msg;
   t.className = `toast ${type}`;
   t.innerHTML = `<span>${icons[type]||'•'}</span><span>${msg}</span>`;
   wrap.appendChild(t);
