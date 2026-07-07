@@ -2847,8 +2847,8 @@ function renderFunnel(s, mkt) {
   var stages = [
     { label: 'Store downloads', sub: 'reach — includes bots', value: downloads, color: 'var(--text3)' },
     { label: 'Registered accounts', sub: 'signup conversion', value: s.registered_users || 0, color: 'var(--cyan)' },
-    { label: 'Connected extensions', sub: 'activation', value: s.connected_extensions || 0, color: 'var(--violet, #7C3AED)' },
-    { label: 'Users who scanned', sub: 'real usage', value: s.total_users || 0, color: 'var(--green, #10B981)' }
+    { label: 'Users who scanned', sub: 'activation — ran a real scan', value: s.total_users || 0, color: 'var(--green, #10B981)' },
+    { label: 'Connected extensions', sub: 'power users — installed the extension', value: s.connected_extensions || 0, color: 'var(--violet, #7C3AED)' }
   ];
   var max = Math.max.apply(null, stages.map(function(x){ return x.value || 0; }).concat([1]));
   var html = '<div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:20px;margin-bottom:24px;">'
