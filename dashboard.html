@@ -2191,9 +2191,18 @@ function renderResults(result) {
     }, 80);
   }
 }
+// Cheap check so we don't burn a scan on junk like "sfgjghry" — mirrors the server guard.
+function looksLikeCode(t) {
+  t = (t || '').trim();
+  if (!t) return false;
+  if (/[=(){}\[\].,;:<>/\\"'`|&$#@]/.test(t)) return true;
+  if (/\b(function|const|let|var|def|class|import|export|from|return|if|else|for|while|public|private|async|await|print|console|select|insert|update|create)\b/i.test(t)) return true;
+  return /\s/.test(t) && t.split(/\s+/).filter(Boolean).length >= 3;
+}
 async function startScan() {
   const code = document.getElementById('codeEditor').value.trim();
   if (!code) { showToast('Please paste some code first', 'error'); return; }
+  if (!looksLikeCode(code)) { showToast("That doesn't look like code — paste a snippet or file to scan.", 'error'); return; }
 
   const allowed = await checkScanLimit();
   if (!allowed) return;
