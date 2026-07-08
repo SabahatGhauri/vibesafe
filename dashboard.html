@@ -2790,9 +2790,37 @@ function toggleIssue(card) {
   card.classList.toggle('open');
 }
 
+// Actually apply a fix to the pasted code — only when the "before" snippet is found
+// EXACTLY ONCE, so we can never rewrite the wrong line. Returns {ok, reason}.
+function applyFixToEditor(issue) {
+  const ta = document.getElementById('codeEditor');
+  if (!ta || !issue.before || !issue.after) return { ok:false, reason:'No exact code fix for this one — copied it so you can paste into your AI editor.' };
+  const text = ta.value;
+  const first = text.indexOf(issue.before);
+  if (first === -1) return { ok:false, reason:'Couldn’t find that exact code — copied the fix so you can paste it into your AI editor.' };
+  if (text.indexOf(issue.before, first + issue.before.length) !== -1) return { ok:false, reason:'That code appears more than once — copied the fix instead so nothing wrong gets changed.' };
+  ta.value = text.slice(0, first) + issue.after + text.slice(first + issue.before.length);
+  if (typeof updateLineNumbers === 'function') updateLineNumbers();
+  return { ok:true };
+}
+function copyOneFix(issue) {
+  const out = `Fix: ${issue.title}\nReplace: ${issue.before || ''}\nWith: ${issue.after || ''}${issue.fix ? '\nWhy: ' + issue.fix : ''}`;
+  if (navigator.clipboard) navigator.clipboard.writeText(out).catch(() => {});
+}
+
 function fixIssue(id) {
   const issue = issues.find(i => i.id === id);
   if (!issue || issue.fixed) return;
+
+  // Rewrite the pasted code for real. If we can't do it safely, copy the fix and stop —
+  // don't falsely mark it fixed.
+  const applied = applyFixToEditor(issue);
+  if (!applied.ok) {
+    copyOneFix(issue);
+    showToast(applied.reason, 'info');
+    return;
+  }
+
   issue.fixed = true;
   fixedCount++;
 
@@ -2808,7 +2836,7 @@ function fixIssue(id) {
 
   // Update score
   updateScore();
-  showToast(`Fixed: ${issue.title}`, 'success');
+  showToast(`Applied to your code: ${issue.title}. Review, then Rescan.`, 'success');
 
   // Update header count
   const remaining = issues.filter(i => !i.fixed).length;
