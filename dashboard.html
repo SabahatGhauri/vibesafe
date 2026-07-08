@@ -1574,8 +1574,8 @@ document.addEventListener('click', function(e) {
         <button class="fix-all-btn" id="fixAllBtn" onclick="fixAll()">
           ⚡ Auto-fix all issues
         </button>
-        <button class="fix-all-btn" id="copyFixesBtn" onclick="copyFixesForAI()" style="margin-top:8px;background:var(--surface2);color:var(--cyan);border:1px solid rgba(0,212,255,0.3);box-shadow:none">
-          📋 Copy all fixes for Cursor / Lovable
+        <button class="fix-all-btn" id="copyFixesBtn" onclick="copyFixesForAI()" title="Paste into Lovable, Bolt, Cursor, Replit, Windsurf, v0, Firebase Studio, ChatGPT/Claude — or apply by hand" style="margin-top:8px;background:var(--surface2);color:var(--cyan);border:1px solid rgba(0,212,255,0.3);box-shadow:none">
+          📋 Copy all fixes for your AI editor
         </button>
         <button class="fix-all-btn" id="rescanBtn" onclick="startScan()" style="margin-top:8px;background:var(--surface2);color:var(--green);border:1px solid rgba(16,185,129,0.3);box-shadow:none">
           🔄 Rescan after fixes
@@ -3896,7 +3896,7 @@ function copyFixesForAI() {
   out += 'Please apply all of these fixes carefully and explain any that need my input.';
 
   navigator.clipboard.writeText(out).then(function() {
-    showToast('Fixes copied! Paste into Cursor, Lovable, or Bolt', 'success');
+    showToast('Fixes copied! Paste into your AI editor to apply', 'success');
   }).catch(function() {
     // Fallback for older browsers
     var ta = document.createElement('textarea');
