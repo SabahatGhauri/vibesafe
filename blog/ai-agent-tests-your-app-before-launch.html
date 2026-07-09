@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>An AI That Tests Your App Before You Launch | VibeSafe</title>
+<meta name="description" content="&quot;It works in preview&quot; proves nothing. VibeSafe Launch Check opens your deployed app in a real browser, clicks through it like a user, and scores its launch-readiness.">
+<meta name="keywords" content="VibeSafe, test web app before launch, launch readiness, AI app testing, deployed app testing, pre-launch check">
+<link rel="canonical" href="https://www.vibesafe.info/blog/ai-agent-tests-your-app-before-launch">
+<meta property="og:title" content="We Built an AI That Tests Your App Before You Launch">
+<meta property="og:description" content="Launch Check opens your deployed app like a real user, captures errors and screenshots, and gives you a launch-readiness score.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/blog/ai-agent-tests-your-app-before-launch">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"We Built an AI That Tests Your App Before You Launch","description":"How VibeSafe Launch Check walks your deployed app like a real user and scores its launch-readiness.","datePublished":"2026-07-09","author":{"@type":"Organization","name":"VibeSafe"},"publisher":{"@type":"Organization","name":"VibeSafe","url":"https://www.vibesafe.info"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,2.5rem);line-height:1.18;letter-spacing:-0.02em;margin-bottom:18px}
+.lead{font-size:1.08rem;color:var(--text2);margin-bottom:26px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;margin:32px 0 12px}
+p{color:var(--text2);margin-bottom:16px}
+ul.plain{margin:0 0 18px 18px;color:var(--text2)}
+ul.plain li{margin-bottom:8px}
+.check{list-style:none;margin:0 0 18px}
+.check li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid var(--border);color:var(--text2)}
+.check li::before{content:'☐';position:absolute;left:0;color:var(--cyan);font-weight:700}
+code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+.meta-row{font-size:0.82rem;color:var(--text3);margin-bottom:28px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt=""> VibeSafe</a>
+  <a href="/login.html" class="nav-cta">Scan your code</a>
+</nav>
+<main>
+  <p class="eyebrow">Launch Check · New</p>
+  <h1>We built an AI that tests your app before you launch</h1>
+  <div class="meta-row">5 min read · VibeSafe Blog</div>
+  <p class="lead">"It works on my machine" has a younger sibling that trips up every AI builder: <em>"it works in preview."</em> The preview is a controlled demo — the happy path, your data, your browser. Real users arrive with none of those advantages, and that's where AI-built apps quietly fall apart.</p>
+
+  <h2>The gap between "preview works" and "it's ready"</h2>
+  <p>When you build with Lovable, Bolt, Cursor, or Replit, the preview pane makes everything look finished. But the preview hides the things that actually break for real users:</p>
+  <ul class="plain">
+    <li><strong>A button that goes nowhere</strong> because a route was renamed and a link wasn't updated.</li>
+    <li><strong>A page that throws a console error</strong> on load — invisible unless you open dev tools, which founders don't.</li>
+    <li><strong>An API call that 404s</strong> in production because an environment variable is missing on the live deploy.</li>
+    <li><strong>A screen that never finishes loading</strong> on a slower connection than your fast dev machine.</li>
+    <li><strong>A layout that collapses on mobile</strong>, where most of your first visitors actually are.</li>
+  </ul>
+  <p>You'd catch these if you clicked through your live app like a stranger. But you don't — you click the two paths you always test, on the machine you always use, and everything looks fine.</p>
+
+  <h2>So we made an AI do the clicking</h2>
+  <p>VibeSafe <strong>Launch Check</strong> is an AI agent that opens your <em>deployed</em> app in a real browser and behaves like a first-time visitor. It:</p>
+  <ul class="plain">
+    <li>Visits your pages and follows the internal links a real user would click</li>
+    <li>Captures screenshots of what actually renders</li>
+    <li>Records console errors, failed network requests, and slow-loading screens</li>
+    <li>Then writes a plain-English <strong>launch-readiness report with a score out of 100</strong> — what worked, what's broken, why it matters, and what to fix first</li>
+  </ul>
+  <p>You paste your URL, wait about thirty seconds, and get the report a QA tester would give you — without hiring one.</p>
+
+  <h2>Safe by design: it looks, it never touches</h2>
+  <p>Launch Check is deliberately <strong>read-only</strong>. It's a passive journey: it navigates and observes, but it <em>never</em> submits forms, makes purchases, or clicks destructive buttons on your live app. It's the equivalent of a careful reviewer browsing your site — not a bot poking every button. So you can point it at production without worrying it'll create junk data or fire off a real order.</p>
+
+  <h2>When to run it</h2>
+  <ul class="check">
+    <li>Right before you share the link with users, clients, or investors</li>
+    <li>After every deploy that changes routing, auth, or a major page</li>
+    <li>When something "feels off" but you can't reproduce it on your machine</li>
+    <li>Before a launch post — so the first 100 visitors don't find the bug you didn't</li>
+  </ul>
+  <p>Pair it with a code scan and you've covered both halves of shipping safely: the <strong>code</strong> (exposed keys, injection, weak rules) and the <strong>running app</strong> (what a real user actually experiences).</p>
+
+  <div class="cta-box">
+    <a href="/login.html">Run a Launch Check →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">Free plan includes 1 check per month · Pro &amp; Team get unlimited</p>
+  </div>
+
+  <div class="disclaimer"><strong>An honest note.</strong> Launch Check finds the common, visible problems a real user would hit. It's a fast readiness check, not a substitute for thorough QA or a security audit on high-risk apps.</div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related:</p>
+  <div class="related">
+    <a href="/how-it-works.html">How VibeSafe works</a>
+    <a href="/blog/how-to-check-ai-generated-code-security.html">How to check if your app is secure</a>
+    <a href="/pre-launch-security-checklist.html">Pre-launch checklist</a>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/blog.html">Blog</a> · <a href="/legal.html">Privacy &amp; Terms</a>
+</footer>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+</body>
+</html>
