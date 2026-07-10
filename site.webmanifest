@@ -1,16 +1,25 @@
 {
-  "name": "VibeSafe",
+  "name": "VibeSafe — AI Code Security Scanner",
   "short_name": "VibeSafe",
-  "start_url": "/",
+  "description": "Scan your AI-built app for exposed keys, security flaws, and bugs before you launch.",
+  "start_url": "/dashboard",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#0A1440",
-  "theme_color": "#0A3AAF",
+  "orientation": "portrait",
+  "background_color": "#080C18",
+  "theme_color": "#080C18",
   "icons": [
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "/icon-256.png",
       "sizes": "256x256",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "/apple-touch-icon.png",
@@ -20,11 +29,6 @@
     {
       "src": "/favicon-96.png",
       "sizes": "96x96",
-      "type": "image/png"
-    },
-    {
-      "src": "/favicon-48x48.png",
-      "sizes": "48x48",
       "type": "image/png"
     }
   ]
