@@ -10,7 +10,7 @@
   (function(){
     try {
       var standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
-      if (standalone) { window.location.replace('/dashboard'); }
+      if (standalone) { window.location.replace('/app'); }
     } catch (e) {}
   })();
 </script>

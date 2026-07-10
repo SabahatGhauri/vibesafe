@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>VibeSafe</title>
+<meta name="robots" content="noindex">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#080C18">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="VibeSafe">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#080C18;overflow:hidden}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:100dvh;color:#F1F5F9;text-align:center;
+    padding:24px calc(24px + env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) calc(24px + env(safe-area-inset-left));
+    background:
+      radial-gradient(120% 90% at 50% 0%, rgba(0,212,255,0.10), transparent 55%),
+      radial-gradient(120% 90% at 50% 100%, rgba(124,58,237,0.12), transparent 55%),
+      #080C18;
+  }
+  .logo-wrap{position:relative;margin-bottom:26px}
+  .logo{
+    width:104px;height:104px;border-radius:26px;display:block;
+    box-shadow:0 20px 60px rgba(0,212,255,0.25);
+    animation:rise .7s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .glow{
+    position:absolute;inset:-18%;border-radius:40px;z-index:-1;
+    background:radial-gradient(circle, rgba(0,212,255,0.35), transparent 62%);
+    filter:blur(18px);animation:pulse 2.4s ease-in-out infinite;
+  }
+  .name{
+    font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:2rem;letter-spacing:-0.02em;
+    background:linear-gradient(120deg,#00D4FF,#7C3AED);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    animation:rise .7s .06s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .tag{color:#94A3B8;font-size:0.95rem;margin-top:8px;animation:rise .7s .12s cubic-bezier(.2,.8,.2,1) both}
+  .bar{
+    width:150px;height:3px;border-radius:100px;background:rgba(255,255,255,0.08);
+    overflow:hidden;margin-top:34px;animation:rise .7s .18s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .bar span{display:block;height:100%;width:40%;border-radius:100px;
+    background:linear-gradient(90deg,#00D4FF,#7C3AED);animation:slide 1.1s ease-in-out infinite}
+  .foot{position:fixed;bottom:calc(22px + env(safe-area-inset-bottom));font-size:0.72rem;color:#475569;letter-spacing:0.04em}
+  @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  @keyframes pulse{0%,100%{opacity:.5;transform:scale(.96)}50%{opacity:1;transform:scale(1.04)}}
+  @keyframes slide{0%{transform:translateX(-120%)}100%{transform:translateX(320%)}}
+  @media (prefers-reduced-motion:reduce){.logo,.name,.tag,.bar{animation:none}.glow{animation:none}.bar span{animation:none;width:100%}}
+</style>
+</head>
+<body>
+  <div class="logo-wrap">
+    <div class="glow"></div>
+    <img class="logo" src="/icon-256.png" alt="VibeSafe">
+  </div>
+  <div class="name">VibeSafe</div>
+  <div class="tag">Security for AI-built apps</div>
+  <div class="bar"><span></span></div>
+  <div class="foot">Loading your workspace…</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+  (async function () {
+    var SUPABASE_URL = 'https://uxsmmpujxbzdgxxburxr.supabase.co';
+    var SUPABASE_ANON_KEY = 'sb_publishable_hgCpN6tsYqEiCkyvJm06qQ_1Ddlvznn';
+    var dest = '/login';
+    try {
+      var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      var res = await sb.auth.getSession();
+      if (res && res.data && res.data.session) dest = '/dashboard';
+    } catch (e) { /* fall through to login */ }
+    // Let the branded launch screen breathe, then route.
+    setTimeout(function () { window.location.replace(dest); }, 850);
+  })();
+  </script>
+</body>
+</html>

@@ -2,7 +2,7 @@
   "name": "VibeSafe — AI Code Security Scanner",
   "short_name": "VibeSafe",
   "description": "Scan your AI-built app for exposed keys, security flaws, and bugs before you launch.",
-  "start_url": "/dashboard",
+  "start_url": "/app",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
