@@ -3,6 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  /* Installed-app (PWA) users should never land on the marketing homepage —
+     send them straight to the app. Works even for old installs whose cached
+     manifest still has start_url "/". Runs before render to avoid a flash. */
+  (function(){
+    try {
+      var standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
+      if (standalone) { window.location.replace('/dashboard'); }
+    } catch (e) {}
+  })();
+</script>
 <title>VibeSafe | AI Code Security Scanner for AI-Built Apps</title>
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="shortcut icon" href="/favicon.ico">
