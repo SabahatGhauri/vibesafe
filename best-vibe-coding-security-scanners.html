@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Vibe Coding Security Scanners (2026): Honest Comparison</title>
+<meta name="description" content="An honest comparison of the best security scanners for AI-built apps in 2026 — VibeSafe, Vibe App Scanner, Snyk, Semgrep, CheckVibe and more. What each one catches, who it's for, and how to choose.">
+<link rel="canonical" href="https://www.vibesafe.info/best-vibe-coding-security-scanners">
+<meta property="og:title" content="Best Vibe Coding Security Scanners (2026): Honest Comparison">
+<meta property="og:description" content="Which security scanner should you use for your Lovable, Bolt, Cursor or Replit app? A fair, side-by-side comparison of the main options in 2026.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/best-vibe-coding-security-scanners">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.vibesafe.info/og-image.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Best Vibe Coding Security Scanners (2026): Honest Comparison","description":"A fair, side-by-side comparison of the leading security scanners for AI-built apps in 2026.","datePublished":"2026-07-12","dateModified":"2026-07-12","image":"https://www.vibesafe.info/og-image.png","mainEntityOfPage":"https://www.vibesafe.info/best-vibe-coding-security-scanners","author":{"@type":"Organization","name":"VibeSafe","url":"https://www.vibesafe.info"},"publisher":{"@type":"Organization","name":"VibeSafe","url":"https://www.vibesafe.info"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is a vibe coding security scanner?","acceptedAnswer":{"@type":"Answer","text":"A vibe coding security scanner is a tool that checks apps built with AI coding platforms (Lovable, Bolt, Cursor, Replit, v0) for the security mistakes those tools commonly ship: exposed API keys in the browser bundle, missing Supabase Row Level Security, broken auth, open storage buckets, and missing security headers."}},{"@type":"Question","name":"What is the best security scanner for a Lovable or Supabase app?","acceptedAnswer":{"@type":"Answer","text":"It depends on whether you want to scan your source code or your deployed URL, and whether you need plain-English fixes. VibeSafe scans both code and the live URL and explains every issue for non-technical founders; URL-only scanners like Vibe App Scanner and CheckVibe test the deployed app; Snyk and Semgrep are deeper but built for engineering teams."}},{"@type":"Question","name":"Do I need a security scanner if I built my app with AI?","acceptedAnswer":{"@type":"Answer","text":"Yes. Studies of AI-generated apps repeatedly find exposed secrets and missing database access controls, because AI tools optimise for a working demo, not a secure launch. A quick scan before you go live catches the highest-risk issues."}}]}
+</script>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--cyan);text-decoration:none}
+.container{max-width:860px;margin:0 auto;padding:0 24px}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:18px 32px;border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:8px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,var(--cyan),var(--violet));display:flex;align-items:center;justify-content:center;font-size:15px}
+.nav-cta{background:var(--cyan);color:var(--bg);font-weight:600;font-size:0.85rem;padding:9px 20px;border-radius:8px;font-family:'Inter',sans-serif}
+
+.hero{padding:72px 0 40px;text-align:center}
+.eyebrow{font-size:0.78rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,2.8rem);font-weight:700;color:var(--text);line-height:1.2;margin-bottom:20px}
+.hero-sub{font-size:1.05rem;color:var(--text2);max-width:640px;margin:0 auto 20px}
+.updated{font-size:0.8rem;color:var(--text3)}
+
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;color:var(--text);margin:48px 0 20px;scroll-margin-top:20px}
+h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;color:var(--text);margin:0 0 10px}
+p{color:var(--text2);margin-bottom:16px;font-size:0.95rem}
+
+.tldr{background:var(--surface);border:1px solid rgba(0,212,255,0.18);border-radius:14px;padding:24px 28px;margin:8px 0 40px}
+.tldr h2{margin:0 0 12px;font-size:1.1rem}
+.tldr ul{list-style:none;padding:0;margin:0}
+.tldr li{font-size:0.9rem;color:var(--text2);padding:6px 0;display:flex;gap:10px}
+.tldr li strong{color:var(--text)}
+.pick{color:var(--cyan);font-weight:600}
+
+.comparison-table{width:100%;border-collapse:collapse;margin:24px 0 48px;font-size:0.85rem;display:block;overflow-x:auto;white-space:nowrap}
+.comparison-table th{padding:12px 14px;text-align:left;font-family:'Space Grotesk',sans-serif;font-size:0.78rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text3);border-bottom:1px solid var(--border2)}
+.comparison-table td{padding:12px 14px;border-bottom:1px solid var(--border1);color:var(--text2);vertical-align:top}
+.comparison-table tr:last-child td{border-bottom:none}
+.comparison-table td:first-child,.comparison-table th:first-child{color:var(--text);font-weight:500;white-space:normal;min-width:150px}
+.col-vs{background:rgba(0,212,255,0.05)}
+.win{color:#10B981;font-weight:600}
+.lose{color:var(--text3)}
+.tie{color:#F59E0B;font-weight:500}
+
+.section-divider{border:none;border-top:1px solid var(--border1);margin:48px 0}
+
+.tool-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px 28px;margin:20px 0}
+.tool-card.featured{border-color:rgba(0,212,255,0.3)}
+.tool-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.tool-name{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;font-weight:700;color:var(--text)}
+.tool-tag{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:4px 10px;border-radius:20px;background:rgba(0,212,255,0.1);color:var(--cyan)}
+.tool-tag.neutral{background:var(--border1);color:var(--text3)}
+.tool-meta{font-size:0.82rem;color:var(--text3);margin:0 0 12px}
+.tool-meta strong{color:var(--text2)}
+.pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.pros-cons ul{list-style:none;padding:0;margin:0}
+.pros-cons li{font-size:0.85rem;color:var(--text2);padding:3px 0;display:flex;gap:8px}
+.check{color:#10B981;flex-shrink:0}
+.cross{color:#EF4444;flex-shrink:0}
+
+.cta-box{background:var(--surface);border:1px solid rgba(0,212,255,0.2);border-radius:16px;padding:40px;text-align:center;margin:48px 0 72px}
+.cta-box h2{margin-top:0;font-size:1.6rem}
+.cta-box p{max-width:480px;margin:0 auto 28px;font-size:0.95rem}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.9rem;padding:13px 28px;border-radius:9px;font-family:'Inter',sans-serif}
+.btn-outline{display:inline-flex;align-items:center;gap:8px;background:none;color:var(--text);font-weight:600;font-size:0.9rem;padding:13px 28px;border-radius:9px;border:1px solid var(--border2);font-family:'Inter',sans-serif;margin-left:12px}
+
+footer{border-top:1px solid var(--border);padding:24px 32px;text-align:center;font-size:0.8rem;color:var(--text3)}
+
+@media(max-width:640px){
+  .pros-cons{grid-template-columns:1fr}
+  .btn-outline{margin-left:0;margin-top:10px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt="" style="object-fit:cover"> VibeSafe</a>
+  <a href="/login.html" class="nav-cta">Start free scan</a>
+</nav>
+
+<div class="container">
+
+  <div class="hero">
+    <p class="eyebrow">Buyer's Guide</p>
+    <h1>Best Vibe Coding Security Scanners (2026)</h1>
+    <p class="hero-sub">If you built your app with Lovable, Bolt, Cursor, Replit or v0, a security scanner catches the exposed keys and missing database rules those tools tend to ship. Here's an honest, side-by-side look at the main options — including where they beat us.</p>
+    <p class="updated">Last updated: July 2026 · Maintained by the VibeSafe team</p>
+  </div>
+
+  <div class="tldr">
+    <h2>The short version</h2>
+    <ul>
+      <li><span class="pick">→</span> <span><strong>Best for non-technical founders:</strong> <a href="#vibesafe">VibeSafe</a> — scans your code <em>and</em> live URL, explains every issue in plain English.</span></li>
+      <li><span class="pick">→</span> <span><strong>Best for a quick deployed-URL check:</strong> <a href="#vas">Vibe App Scanner</a> or <a href="#checkvibe">CheckVibe</a> — paste a URL, no code needed.</span></li>
+      <li><span class="pick">→</span> <span><strong>Best for engineering teams:</strong> <a href="#snyk">Snyk</a> or <a href="#semgrep">Semgrep</a> — deep dependency and SAST coverage, built for developers.</span></li>
+      <li><span class="pick">→</span> <span><strong>Best for Supabase/Firebase specifically:</strong> <a href="#audit">AuditYourApp</a> — focused on RLS and exposed database rules.</span></li>
+    </ul>
+  </div>
+
+  <h2>Quick comparison</h2>
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th>Scanner</th>
+        <th class="col-vs">VibeSafe</th>
+        <th>Vibe App Scanner</th>
+        <th>CheckVibe</th>
+        <th>Snyk</th>
+        <th>Semgrep</th>
+        <th>AuditYourApp</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Scans source code</td>
+        <td class="col-vs win">Yes</td>
+        <td class="lose">No</td>
+        <td class="lose">No</td>
+        <td class="win">Yes</td>
+        <td class="win">Yes</td>
+        <td class="tie">Config</td>
+      </tr>
+      <tr>
+        <td>Scans deployed URL</td>
+        <td class="col-vs win">Yes</td>
+        <td class="win">Yes</td>
+        <td class="win">Yes</td>
+        <td class="lose">No</td>
+        <td class="lose">No</td>
+        <td class="win">Yes</td>
+      </tr>
+      <tr>
+        <td>Exposed secrets / API keys</td>
+        <td class="col-vs win">Yes</td>
+        <td class="win">Yes</td>
+        <td class="win">Yes</td>
+        <td class="tie">Add-on</td>
+        <td class="win">Yes</td>
+        <td class="win">Yes</td>
+      </tr>
+      <tr>
+        <td>Supabase RLS checks</td>
+        <td class="col-vs win">Yes</td>
+        <td class="win">Yes</td>
+        <td class="tie">Partial</td>
+        <td class="lose">No</td>
+        <td class="lose">No</td>
+        <td class="win">Yes</td>
+      </tr>
+      <tr>
+        <td>Plain-English fixes</td>
+        <td class="col-vs win">Yes</td>
+        <td class="tie">Partial</td>
+        <td class="tie">Partial</td>
+        <td class="lose">Dev-focused</td>
+        <td class="lose">Dev-focused</td>
+        <td class="tie">Partial</td>
+      </tr>
+      <tr>
+        <td>IDE extension</td>
+        <td class="col-vs win">Yes</td>
+        <td class="lose">No</td>
+        <td class="lose">No</td>
+        <td class="win">Yes</td>
+        <td class="win">Yes</td>
+        <td class="lose">No</td>
+      </tr>
+      <tr>
+        <td>CI/CD (GitHub Action)</td>
+        <td class="col-vs win">Yes</td>
+        <td class="lose">No</td>
+        <td class="lose">No</td>
+        <td class="win">Yes</td>
+        <td class="win">Yes</td>
+        <td class="lose">No</td>
+      </tr>
+      <tr>
+        <td>Free tier</td>
+        <td class="col-vs win">Yes</td>
+        <td class="tie">Paid scan</td>
+        <td class="win">Yes</td>
+        <td class="tie">OSS only</td>
+        <td class="win">Yes</td>
+        <td class="tie">Limited</td>
+      </tr>
+      <tr>
+        <td>Built for</td>
+        <td class="col-vs">Founders</td>
+        <td>Founders</td>
+        <td>Founders</td>
+        <td>Dev teams</td>
+        <td>Dev teams</td>
+        <td>Builders</td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="font-size:0.8rem;color:var(--text3)">Features and pricing change often — check each tool's site for the latest. This table reflects our best understanding as of July 2026.</p>
+
+  <hr class="section-divider">
+
+  <div class="tool-card featured" id="vibesafe">
+    <div class="tool-head">
+      <span class="tool-name">🛡️ VibeSafe</span>
+      <span class="tool-tag">Our pick for founders</span>
+    </div>
+    <p class="tool-meta"><strong>Scans:</strong> Code + live URL · <strong>Best for:</strong> Non-technical founders shipping AI-built apps · <strong>Price:</strong> Free tier, then $29/mo unlimited</p>
+    <p>VibeSafe is built for the person who used an AI tool to build their product and doesn't have a security engineer. It scans both your source code and your deployed URL, then explains every finding in plain language with a specific fix — no CVE IDs or CVSS scores to decode. It also ships a VS Code / Cursor extension and a GitHub Action.</p>
+    <div class="pros-cons">
+      <ul>
+        <li><span class="check">✓</span> Code <em>and</em> deployed-URL scanning in one tool</li>
+        <li><span class="check">✓</span> Plain-English fixes for non-developers</li>
+        <li><span class="check">✓</span> Catches Supabase RLS, prompt injection, hallucinated packages</li>
+        <li><span class="check">✓</span> IDE extension + GitHub Action + continuous monitoring</li>
+      </ul>
+      <ul>
+        <li><span class="cross">✗</span> Not a full enterprise SCA suite like Snyk</li>
+        <li><span class="cross">✗</span> Newer than the incumbents</li>
+      </ul>
+    </div>
+    <p style="margin-top:14px;margin-bottom:0"><a href="/login.html">Run a free scan →</a></p>
+  </div>
+
+  <div class="tool-card" id="vas">
+    <div class="tool-head">
+      <span class="tool-name">Vibe App Scanner</span>
+      <span class="tool-tag neutral">Deployed-URL scan</span>
+    </div>
+    <p class="tool-meta"><strong>Scans:</strong> Deployed URL · <strong>Best for:</strong> A fast pre-launch check without touching code · <strong>Price:</strong> Per-scan</p>
+    <p>Vibe App Scanner runs against your live URL, auto-detects your stack, and probes for exposed secrets, missing security headers, auth issues and database misconfigurations that Lovable, Bolt, Cursor and Replit tend to introduce. A solid choice if you only want to test the deployed app and don't need code-level scanning or an IDE workflow.</p>
+    <div class="pros-cons">
+      <ul>
+        <li><span class="check">✓</span> No source code required</li>
+        <li><span class="check">✓</span> Auto-detects your tech stack</li>
+        <li><span class="check">✓</span> Fast results</li>
+      </ul>
+      <ul>
+        <li><span class="cross">✗</span> No source-code or IDE scanning</li>
+        <li><span class="cross">✗</span> Deep scans are paid per-run</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tool-card" id="checkvibe">
+    <div class="tool-head">
+      <span class="tool-name">CheckVibe</span>
+      <span class="tool-tag neutral">Free URL scan</span>
+    </div>
+    <p class="tool-meta"><strong>Scans:</strong> Deployed URL · <strong>Best for:</strong> A free first look at a live site · <strong>Price:</strong> Free tier</p>
+    <p>CheckVibe scans a deployed URL against a large set of checks in parallel — exposed keys, injection, XSS and more — with no install or config. Good as a free starting point, though like other URL-only tools it can't see your source code or run inside your editor.</p>
+    <div class="pros-cons">
+      <ul>
+        <li><span class="check">✓</span> Free to start</li>
+        <li><span class="check">✓</span> Many checks, no setup</li>
+      </ul>
+      <ul>
+        <li><span class="cross">✗</span> URL-only — no code scanning</li>
+        <li><span class="cross">✗</span> Output leans technical</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tool-card" id="snyk">
+    <div class="tool-head">
+      <span class="tool-name">Snyk</span>
+      <span class="tool-tag neutral">Enterprise / dev teams</span>
+    </div>
+    <p class="tool-meta"><strong>Scans:</strong> Code, dependencies, containers · <strong>Best for:</strong> Engineering teams with CI/CD · <strong>Price:</strong> Free for OSS, paid per seat</p>
+    <p>Snyk is the industry standard for software composition analysis and has an unmatched vulnerability database. If you have a developer and a real pipeline, it's excellent. For a solo non-technical founder, the output — CVE IDs, CVSS scores, dependency trees — is hard to act on, and it won't know what Supabase RLS is.</p>
+    <div class="pros-cons">
+      <ul>
+        <li><span class="check">✓</span> Best-in-class dependency/CVE coverage</li>
+        <li><span class="check">✓</span> Deep CI/CD and container scanning</li>
+      </ul>
+      <ul>
+        <li><span class="cross">✗</span> Requires a developer to set up and read</li>
+        <li><span class="cross">✗</span> No vibe-coding-specific checks</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tool-card" id="semgrep">
+    <div class="tool-head">
+      <span class="tool-name">Semgrep</span>
+      <span class="tool-tag neutral">Developer SAST</span>
+    </div>
+    <p class="tool-meta"><strong>Scans:</strong> Code (SAST), dependencies, secrets · <strong>Best for:</strong> Developers who want customisable rules · <strong>Price:</strong> Free tier, paid teams</p>
+    <p>Semgrep is a powerful, developer-focused static-analysis tool with AI-assisted rules to cut false positives. Great if you write code and want fine-grained control. Like Snyk, it assumes a developer audience rather than a founder who needs to know "is my app safe to launch?"</p>
+    <div class="pros-cons">
+      <ul>
+        <li><span class="check">✓</span> Strong, customisable SAST</li>
+        <li><span class="check">✓</span> Generous free tier</li>
+      </ul>
+      <ul>
+        <li><span class="cross">✗</span> Built for developers, not founders</li>
+        <li><span class="cross">✗</span> No deployed-URL scanning</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tool-card" id="audit">
+    <div class="tool-head">
+      <span class="tool-name">AuditYourApp</span>
+      <span class="tool-tag neutral">Supabase / Firebase</span>
+    </div>
+    <p class="tool-meta"><strong>Scans:</strong> Supabase & Firebase config, URL · <strong>Best for:</strong> Database-specific checks · <strong>Price:</strong> Limited free, paid</p>
+    <p>AuditYourApp focuses on the backend layer where vibe-coded apps most often leak: exposed RLS rules, unprotected RPCs and leaked API keys in Supabase and Firebase. A good complement if your main worry is database access control specifically.</p>
+    <div class="pros-cons">
+      <ul>
+        <li><span class="check">✓</span> Deep Supabase/Firebase focus</li>
+        <li><span class="check">✓</span> Catches exposed RLS and RPCs</li>
+      </ul>
+      <ul>
+        <li><span class="cross">✗</span> Narrower scope than a full scanner</li>
+        <li><span class="cross">✗</span> No IDE or CI/CD workflow</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <h2>How to choose</h2>
+  <p><strong>Start with what you can give the scanner.</strong> If you only have a deployed URL and no code, a URL scanner (VibeSafe, Vibe App Scanner, CheckVibe) is your path. If you have the source, code-aware tools (VibeSafe, Snyk, Semgrep) go deeper.</p>
+  <p><strong>Then match it to who's reading the report.</strong> If a developer will act on the findings, Snyk or Semgrep give the most depth. If <em>you</em> — a founder — need to understand and fix things yourself, pick a tool that explains issues in plain English and covers both code and the live app.</p>
+  <p><strong>Don't over-buy.</strong> Most solo founders launching an AI-built app need three things covered well: no exposed secrets, Supabase RLS actually enabled, and no obvious auth holes. Any tool above handles the basics — the difference is how much interpretation it asks of you.</p>
+
+  <h2>Our honest take</h2>
+  <p>We build VibeSafe, so treat this with appropriate salt — but we wrote this guide to be genuinely useful even if you pick someone else. Snyk and Semgrep are outstanding if you're an engineering team. URL-only scanners are great for a fast pre-launch check. We built VibeSafe for the middle: the founder who has the code <em>and</em> the deployed app, isn't a security engineer, and wants one tool that checks both and tells them plainly what to fix.</p>
+
+  <div class="cta-box">
+    <h2>See where your app stands</h2>
+    <p>Run a free VibeSafe scan on your code or deployed URL. No setup, no credit card, plain-English results in under a minute.</p>
+    <a href="/login.html" class="btn-primary">Start free scan →</a>
+    <a href="/vs-snyk" class="btn-outline">VibeSafe vs Snyk</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 VibeSafe · <a href="/legal.html">Privacy & Terms</a> · <a href="/">vibesafe.info</a></p>
+</footer>
+
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+</body>
+</html>
