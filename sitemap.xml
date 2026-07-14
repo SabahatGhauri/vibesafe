@@ -32,6 +32,11 @@
   <priority>0.90</priority>
 </url>
 <url>
+  <loc>https://www.vibesafe.info/blog/security-mistakes-ai-built-apps</loc>
+  <lastmod>2026-07-14T00:00:00+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
   <loc>https://www.vibesafe.info/vs-snyk</loc>
   <lastmod>2026-07-07T22:12:22+00:00</lastmod>
   <priority>0.80</priority>

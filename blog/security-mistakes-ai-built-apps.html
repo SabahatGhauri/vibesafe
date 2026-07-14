@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 5 Security Mistakes Every AI-Built App Ships | VibeSafe</title>
+<meta name="description" content="Apps built with Lovable, Bolt, Cursor and Replit ship the same 5 security holes over and over — exposed keys, missing Supabase RLS, broken auth, open buckets, no headers. Here's what they are and how to check your own app.">
+<meta name="keywords" content="AI app security, vibe coding security, Lovable security, Supabase RLS, exposed API keys, AI-generated code vulnerabilities">
+<link rel="canonical" href="https://www.vibesafe.info/blog/security-mistakes-ai-built-apps">
+<meta property="og:title" content="The 5 Security Mistakes Every AI-Built App Ships">
+<meta property="og:description" content="The same 5 security holes show up in almost every AI-built app. Here's what they are, why the AI keeps shipping them, and how to check yours in minutes.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/blog/security-mistakes-ai-built-apps">
+<meta property="og:image" content="https://www.vibesafe.info/assets/blog/5-security-mistakes-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.vibesafe.info/assets/blog/5-security-mistakes-cover.png">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"The 5 Security Mistakes Every AI-Built App Ships","description":"The same five security holes show up in almost every AI-built app. What they are, why AI tools keep shipping them, and how to check your own app.","datePublished":"2026-07-14","dateModified":"2026-07-14","image":"https://www.vibesafe.info/assets/blog/5-security-mistakes-cover.png","author":{"@type":"Organization","name":"VibeSafe"},"publisher":{"@type":"Organization","name":"VibeSafe","url":"https://www.vibesafe.info"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,2.5rem);line-height:1.18;letter-spacing:-0.02em;margin-bottom:18px}
+.hero-img{width:100%;border-radius:16px;border:1px solid var(--border2);margin:8px 0 28px;display:block}
+.lead{font-size:1.08rem;color:var(--text2);margin-bottom:26px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;margin:38px 0 12px}
+h2 .num{color:var(--cyan)}
+p{color:var(--text2);margin-bottom:16px}
+strong{color:var(--text)}
+ul.plain{margin:0 0 18px 18px;color:var(--text2)}
+ul.plain li{margin-bottom:8px}
+.check{list-style:none;margin:0 0 18px}
+.check li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid var(--border);color:var(--text2)}
+.check li::before{content:'☐';position:absolute;left:0;color:var(--cyan);font-weight:700}
+code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:0.85em;color:var(--cyan)}
+pre{background:#0B1120;border:1px solid var(--border2);border-radius:10px;padding:16px 18px;overflow-x:auto;margin:0 0 18px;font-size:0.85rem;line-height:1.55}
+pre code{background:none;border:none;padding:0;color:#CBD5E1;font-family:'JetBrains Mono',ui-monospace,monospace}
+.tag-check{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--cyan);border-radius:10px;padding:12px 16px;font-size:0.92rem;color:var(--text2);margin:0 0 22px}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+.meta-row{font-size:0.82rem;color:var(--text3);margin-bottom:22px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt=""> VibeSafe</a>
+  <a href="/login.html" class="nav-cta">Scan your code</a>
+</nav>
+<main>
+  <p class="eyebrow">Security · AI-Built Apps</p>
+  <h1>The 5 security mistakes every AI-built app ships</h1>
+  <div class="meta-row">6 min read · VibeSafe Blog</div>
+  <img class="hero-img" src="/assets/blog/5-security-mistakes-cover.png" alt="The 5 security mistakes every AI-built app ships: exposed keys, Supabase RLS, broken auth, open buckets, missing headers">
+
+  <p class="lead">I've spent the last few weeks looking at security on apps built with AI tools — Lovable, Bolt, Cursor, Replit, v0. Different people, different products, different stacks. And yet the same five holes show up almost every single time.</p>
+  <p>None of this is because the tools are bad. It's because an AI coding assistant optimizes for <strong>"make the demo work,"</strong> not <strong>"make it safe to put on the internet."</strong> Those are different goals, and the gap between them is where you get owned. Here are the five that keep coming up — what they look like, and how to check your own app.</p>
+
+  <h2><span class="num">1.</span> Secret keys sitting in the frontend bundle</h2>
+  <p>The most common one, by a mile. The AI needs to call an API, so it drops the key straight into client-side code:</p>
+  <pre><code>// This ships to every visitor's browser
+const supabase = createClient(url, SERVICE_ROLE_KEY);
+const stripe = new Stripe("sk_live_51H...");</code></pre>
+  <p>Anything in your frontend bundle is public. Open DevTools → Sources, or just <code>view-source</code>, and it's right there. A <code>service_role</code> key or an <code>sk_live_</code> secret in the browser means anyone can read/write your whole database or hit your payment provider as you.</p>
+  <p><strong>The nuance that trips people up:</strong> not every key is a secret. A Supabase <strong>anon</strong> key (<code>sb_publishable_...</code>), a Firebase <code>apiKey</code>, or a Stripe <strong>publishable</strong> key (<code>pk_live_</code>) are <em>designed</em> to be public — they're safe in the frontend as long as your access rules are correct (see #2). The dangerous ones are <code>service_role</code>, <code>sk_live_</code>/<code>sk_test_</code>, and anything labeled "secret."</p>
+  <div class="tag-check"><strong>Check:</strong> search your bundle for <code>service_role</code>, <code>sk_live</code>, <code>SECRET</code>, <code>PRIVATE_KEY</code>. If a truly secret key is there, rotate it immediately and move it server-side.</div>
+
+  <h2><span class="num">2.</span> Supabase Row Level Security never got turned on</h2>
+  <p>This is the big one for anything using Supabase. You create a <code>profiles</code> or <code>orders</code> table, the app works great in testing… because RLS is <strong>off</strong>, so every row is readable by anyone with the (public) anon key.</p>
+  <pre><code>-- Table created, RLS never enabled = the whole table is public
+create table orders (id uuid, user_id uuid, total numeric, card_last4 text);</code></pre>
+  <p>Since the anon key is in the frontend (correctly!), a stranger can open a console and run:</p>
+  <pre><code>const { data } = await supabase.from('orders').select('*'); // everyone's orders</code></pre>
+  <div class="tag-check"><strong>Check:</strong> in the Supabase dashboard, every table under <code>public</code> should say <strong>RLS enabled</strong>, with policies that actually scope rows to the user (<code>auth.uid() = user_id</code>). "RLS is on" is not enough — a policy of <code>true</code> is the same as off.</div>
+
+  <h2><span class="num">3.</span> Auth checks that only exist in the UI</h2>
+  <p>The app hides the admin button unless you're an admin. Feels secure. But the <em>route</em> underneath has no check:</p>
+  <pre><code>// Frontend hides the link... but the endpoint is wide open
+app.post('/api/admin/delete-user', async (req, res) =&gt; {
+  await db.deleteUser(req.body.id); // no auth check at all
+});</code></pre>
+  <p>Hiding a button is not access control. Anyone can call the endpoint directly with <code>curl</code>.</p>
+  <div class="tag-check"><strong>Check:</strong> for every sensitive action (delete, refund, change role, read other users' data), confirm the <strong>server</strong> verifies who's calling and whether they're allowed — not just the UI.</div>
+
+  <h2><span class="num">4.</span> Storage buckets left public</h2>
+  <p>AI tools love to set a storage bucket to public so image uploads "just work." Then user IDs, receipts, or private uploads are all listable by URL.</p>
+  <div class="tag-check"><strong>Check:</strong> in Supabase/Firebase storage, buckets holding anything user-specific should be <strong>private</strong>, served through signed URLs — not public with guessable paths.</div>
+
+  <h2><span class="num">5.</span> No security headers on the deployed site</h2>
+  <p>Missing <code>Content-Security-Policy</code>, <code>X-Frame-Options</code>, <code>Strict-Transport-Security</code>. On its own this is lower severity, but it's the difference between a clickjacking or XSS attempt bouncing off and landing.</p>
+  <div class="tag-check"><strong>Check:</strong> run your deployed URL through any headers checker, or your browser's DevTools → Network → click the document → Response Headers.</div>
+
+  <h2>How to actually check all of this</h2>
+  <p>You can go through the list above by hand — and honestly you should understand each one. But when you want a faster pass, there's now a whole category of scanners built specifically for AI-generated apps. They fall into two buckets: <strong>URL scanners</strong> that probe your deployed app, and <strong>code-aware scanners</strong> that read your source.</p>
+  <p>We wrote an honest, side-by-side comparison of the main options — VibeSafe, Vibe App Scanner, CheckVibe, Snyk, Semgrep and AuditYourApp — including which fits which situation: <a href="/best-vibe-coding-security-scanners">Best Vibe Coding Security Scanners (2026)</a>. VibeSafe scans both your code and your live URL and explains every issue in plain English, which is why we built it — but use whatever gets you to check <em>before</em> you launch instead of after.</p>
+
+  <div class="cta-box">
+    <a href="/login.html">Scan your app free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">Code or live URL · Plain-English results in under a minute · No card required</p>
+  </div>
+
+  <h2>The one takeaway</h2>
+  <p>If you built something with AI and you only do one thing from this post: <strong>check that your Supabase tables have real RLS policies and that no <code>service_role</code>/<code>sk_live_</code> key is in your frontend.</strong> Those two cover the majority of the serious breaches in vibe-coded apps. Ship fast — just check the locks before you hand out the address.</p>
+
+  <div class="disclaimer"><strong>An honest note.</strong> An automated scan catches the common, high-frequency issues above. It complements — but doesn't replace — a full security audit for high-risk applications handling sensitive data.</div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related:</p>
+  <div class="related">
+    <a href="/best-vibe-coding-security-scanners">Compare all scanners</a>
+    <a href="/blog/supabase-rls-explained-for-founders.html">Supabase RLS explained</a>
+    <a href="/blog/how-to-find-exposed-api-keys-in-code.html">Find exposed API keys</a>
+    <a href="/pre-launch-security-checklist.html">Pre-launch checklist</a>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/blog.html">Blog</a> · <a href="/legal.html">Privacy &amp; Terms</a>
+</footer>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+</body>
+</html>
