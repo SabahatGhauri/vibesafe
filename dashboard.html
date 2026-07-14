@@ -3087,12 +3087,14 @@ async function loadAdminStats() {
 function renderFunnel(s, mkt) {
   var box = document.getElementById('adminFunnel');
   if (!box) return;
-  var downloads = null;
-  if (mkt && (mkt.vscode_installs != null || mkt.openvsx_downloads != null)) {
-    downloads = (mkt.vscode_installs || 0) + (mkt.openvsx_downloads || 0);
-  }
+  // Open VSX "downloads" counts raw file fetches and is dominated by mirrors and
+  // crawlers, so adding it to real installs produced a reach number ~200x the truth
+  // and made every conversion below look broken. Funnel uses installs only; Open VSX
+  // is shown underneath as context.
+  var installs = (mkt && mkt.vscode_installs != null) ? mkt.vscode_installs : null;
+  var openvsx = (mkt && mkt.openvsx_downloads != null) ? mkt.openvsx_downloads : null;
   var stages = [
-    { label: 'Store downloads', sub: 'reach — includes bots', value: downloads, color: 'var(--text3)' },
+    { label: 'Store installs', sub: 'reach — VS Code Marketplace', value: installs, color: 'var(--text3)' },
     { label: 'Registered accounts', sub: 'signup conversion', value: s.registered_users || 0, color: 'var(--cyan)' },
     { label: 'Users who scanned', sub: 'activation — ran a real scan', value: s.total_users || 0, color: 'var(--green, #10B981)' },
     { label: 'Connected extensions', sub: 'power users — installed the extension', value: s.connected_extensions || 0, color: 'var(--violet, #7C3AED)' }
@@ -3103,8 +3105,9 @@ function renderFunnel(s, mkt) {
   stages.forEach(function(st, i){
     var v = st.value;
     var shown = (v == null) ? '—' : v.toLocaleString();
-    // log scale so 1.1k reach doesn't flatten the small stages into invisibility
-    var w = (v == null || v <= 0) ? 2 : Math.max(4, Math.round(100 * Math.log(v + 1) / Math.log(max + 1)));
+    // Linear: now that reach is real installs rather than bot-inflated downloads,
+    // the stages are the same order of magnitude and bar widths should be truthful.
+    var w = (v == null || v <= 0) ? 2 : Math.max(4, Math.round(100 * v / max));
     var conv = '';
     if (i > 0 && v != null && stages[i-1].value) {
       conv = ' <span style="color:var(--text3);font-weight:400;">· ' + Math.round(100 * v / stages[i-1].value) + '% of previous</span>';
@@ -3117,6 +3120,12 @@ function renderFunnel(s, mkt) {
       + '<div style="width:170px;font-size:0.85rem;font-weight:700;">' + shown + conv + '</div>'
       + '</div>';
   });
+  if (openvsx != null) {
+    html += '<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border1);font-size:0.7rem;color:var(--text3);line-height:1.5;">'
+      + 'Open VSX: <strong style="color:var(--text2);">' + openvsx.toLocaleString() + '</strong> raw downloads — kept out of the funnel. '
+      + 'Open VSX counts every file fetch including mirrors and crawlers, so it is not comparable to installs.'
+      + '</div>';
+  }
   html += '</div>';
   box.innerHTML = html;
 }
