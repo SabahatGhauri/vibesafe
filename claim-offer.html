@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="theme.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden}
+body{font-family:'Inter','Inter Fallback',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden}
 .bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:50px 50px;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black,transparent);pointer-events:none}
 .bg-glow{position:fixed;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.12),transparent 70%);top:-150px;right:-100px;pointer-events:none}
 .card{position:relative;z-index:1;width:100%;max-width:440px;background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:40px 34px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,0.35)}
@@ -31,7 +31,7 @@ ul.feat li{padding:5px 0 5px 26px;position:relative}
 ul.feat li::before{content:'✓';position:absolute;left:0;color:var(--green,#10B981);font-weight:700}
 .spinner{width:34px;height:34px;border:3px solid var(--border2);border-top-color:var(--cyan);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 20px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:13px 18px;border-radius:10px;font-weight:700;font-size:0.98rem;cursor:pointer;border:1px solid transparent;text-decoration:none;margin-bottom:10px;font-family:'Inter',sans-serif}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:13px 18px;border-radius:10px;font-weight:700;font-size:0.98rem;cursor:pointer;border:1px solid transparent;text-decoration:none;margin-bottom:10px;font-family:'Inter','Inter Fallback',sans-serif}
 .btn-primary{background:var(--cyan);color:var(--bg)}
 .btn-primary:hover{opacity:0.92}
 .oauth-btn{background:var(--surface2,#141a2e);color:var(--text);border:1px solid var(--border2);font-weight:600}
@@ -39,7 +39,7 @@ ul.feat li::before{content:'✓';position:absolute;left:0;color:var(--green,#10B
 .oauth-btn img{width:18px;height:18px}
 .divider{display:flex;align-items:center;gap:12px;color:var(--text3);font-size:0.8rem;margin:14px 0}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border2)}
-input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-size:0.95rem;font-family:'Inter',sans-serif;margin-bottom:10px}
+input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-size:0.95rem;font-family:'Inter','Inter Fallback',sans-serif;margin-bottom:10px}
 input:focus{outline:none;border-color:var(--cyan)}
 .msg{font-size:0.85rem;padding:10px 12px;border-radius:8px;margin-bottom:12px;display:none}
 .msg.error{display:block;background:rgba(239,68,68,0.1);color:#EF4444;border:1px solid rgba(239,68,68,0.25)}

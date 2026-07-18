@@ -24,7 +24,7 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{
-  font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
+  font-family:'Inter','Inter Fallback',sans-serif;background:var(--bg);color:var(--text);
   min-height:100vh;display:flex;align-items:center;justify-content:center;
   padding:20px;position:relative;overflow:hidden;
 }
@@ -90,7 +90,7 @@ body{
 }
 .auth-tab{
   flex:1;padding:9px;border-radius:7px;border:none;background:none;
-  font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:600;
+  font-family:'Inter','Inter Fallback',sans-serif;font-size:0.85rem;font-weight:600;
   color:var(--text3);cursor:pointer;transition:all 0.2s;
 }
 .auth-tab.active{background:var(--surface2);color:var(--cyan)}
@@ -100,7 +100,7 @@ body{
 .form-input{
   width:100%;padding:11px 14px;
   background:var(--bg2);border:1px solid var(--border2);border-radius:9px;
-  color:var(--text);font-size:0.88rem;font-family:'Inter',sans-serif;
+  color:var(--text);font-size:0.88rem;font-family:'Inter','Inter Fallback',sans-serif;
   outline:none;transition:border-color 0.2s;
 }
 .form-input:focus{border-color:rgba(0,212,255,0.4)}
@@ -120,7 +120,7 @@ body{
   width:100%;padding:12px;margin-top:6px;
   background:var(--cyan);color:var(--bg);
   border:none;border-radius:9px;
-  font-family:'Inter',sans-serif;font-size:0.9rem;font-weight:700;
+  font-family:'Inter','Inter Fallback',sans-serif;font-size:0.9rem;font-weight:700;
   cursor:pointer;transition:all 0.2s;
   display:flex;align-items:center;justify-content:center;gap:8px;
 }
@@ -147,7 +147,7 @@ body{
   flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
   padding:10px;border-radius:9px;border:1px solid var(--border2);
   background:var(--bg2);color:var(--text);
-  font-family:'Inter',sans-serif;font-size:0.84rem;font-weight:600;
+  font-family:'Inter','Inter Fallback',sans-serif;font-size:0.84rem;font-weight:600;
   cursor:pointer;transition:all 0.2s;
 }
 .social-btn:hover{border-color:var(--cyan);background:var(--surface2)}

@@ -28,7 +28,7 @@
 </script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+body{font-family:'Inter','Inter Fallback',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
 nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
 .logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
 .logo-icon{width:30px;height:30px;border-radius:8px}
@@ -36,7 +36,7 @@ nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-con
 main{max-width:760px;margin:0 auto;padding:52px 5% 70px}
 .eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
 h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,2.5rem);line-height:1.18;letter-spacing:-0.02em;margin-bottom:18px}
-.hero-img{width:100%;border-radius:16px;border:1px solid var(--border2);margin:8px 0 28px;display:block}
+.hero-img{width:100%;height:auto;border-radius:16px;border:1px solid var(--border2);margin:8px 0 28px;display:block}
 .lead{font-size:1.08rem;color:var(--text2);margin-bottom:26px}
 h2{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;margin:38px 0 12px}
 h2 .num{color:var(--cyan)}
@@ -70,7 +70,7 @@ footer a{color:var(--text3);text-decoration:none}
   <p class="eyebrow">Security · AI-Built Apps</p>
   <h1>The 5 security mistakes every AI-built app ships</h1>
   <div class="meta-row">6 min read · VibeSafe Blog</div>
-  <img class="hero-img" src="/assets/blog/5-security-mistakes-cover.png" alt="The 5 security mistakes every AI-built app ships: exposed keys, Supabase RLS, broken auth, open buckets, missing headers">
+  <img class="hero-img" src="/assets/blog/5-security-mistakes-cover.png" width="1200" height="630" alt="The 5 security mistakes every AI-built app ships: exposed keys, Supabase RLS, broken auth, open buckets, missing headers">
 
   <p class="lead">I've spent the last few weeks looking at security on apps built with AI tools — Lovable, Bolt, Cursor, Replit, v0. Different people, different products, different stacks. And yet the same five holes show up almost every single time.</p>
   <p>None of this is because the tools are bad. It's because an AI coding assistant optimizes for <strong>"make the demo work,"</strong> not <strong>"make it safe to put on the internet."</strong> Those are different goals, and the gap between them is where you get owned. Here are the five that keep coming up — what they look like, and how to check your own app.</p>

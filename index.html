@@ -95,7 +95,7 @@
   html { scroll-behavior: smooth; }
 
   body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', 'Inter Fallback', sans-serif;
     background: var(--bg);
     color: var(--text);
     line-height: 1.6;
@@ -147,7 +147,7 @@
   .btn {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 10px 22px; border-radius: 8px;
-    font-family: 'Inter', sans-serif; font-size: 0.875rem; font-weight: 600;
+    font-family: 'Inter', 'Inter Fallback', sans-serif; font-size: 0.875rem; font-weight: 600;
     cursor: pointer; transition: all 0.2s; border: none; text-decoration: none;
     white-space: nowrap;
   }
@@ -917,7 +917,7 @@
   .plan-btn {
     width: 100%; margin-top: 24px;
     padding: 12px; border-radius: 8px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', 'Inter Fallback', sans-serif;
     font-size: 0.9rem; font-weight: 600;
     cursor: pointer; transition: all 0.2s; border: none;
     text-align: center;
@@ -1017,7 +1017,7 @@
     background: var(--bg2); color: var(--text);
     border: 1px solid var(--border2);
     border-radius: 8px; font-size: 0.9rem;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', 'Inter Fallback', sans-serif;
     outline: none; transition: border-color 0.2s;
   }
   .waitlist-input:focus { border-color: var(--cyan); }
@@ -2228,9 +2228,9 @@
           <form id="leadForm" onsubmit="return submitLead(event)" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
             <input type="text" name="website" id="leadHp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;height:0;width:0;" aria-hidden="true">
             <input id="leadName" type="text" placeholder="First name" aria-label="Your name"
-              style="flex:1;min-width:150px;padding:12px 14px;border-radius:10px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-size:0.95rem;font-family:'Inter',sans-serif;">
+              style="flex:1;min-width:150px;padding:12px 14px;border-radius:10px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-size:0.95rem;font-family:'Inter','Inter Fallback',sans-serif;">
             <input id="leadEmail" type="email" required placeholder="you@email.com" aria-label="Your email"
-              style="flex:1;min-width:200px;padding:12px 14px;border-radius:10px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-size:0.95rem;font-family:'Inter',sans-serif;">
+              style="flex:1;min-width:200px;padding:12px 14px;border-radius:10px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-size:0.95rem;font-family:'Inter','Inter Fallback',sans-serif;">
             <button type="submit" id="leadBtn" class="btn btn-primary" style="white-space:nowrap;">Send me the checklist</button>
           </form>
           <p id="leadMsg" style="font-size:0.82rem;margin-top:10px;min-height:18px;color:var(--text3);"></p>
@@ -2727,7 +2727,7 @@ async function submitLead(e) {
     background: #EF4444; border: 2px solid #080C18;
     display: flex; align-items: center; justify-content: center;
     font-size: 10px; font-weight: 700; color: white;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', 'Inter Fallback', sans-serif;
   }
 
   #vs-chat-window {
@@ -2813,7 +2813,7 @@ async function submitLead(e) {
   .vs-msg-bubble {
     padding: 10px 13px; border-radius: 12px;
     font-size: 0.82rem; line-height: 1.6;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', 'Inter Fallback', sans-serif;
   }
 
   .vs-msg.bot .vs-msg-bubble {
@@ -2847,7 +2847,7 @@ async function submitLead(e) {
     border: 1px solid rgba(0,212,255,0.25);
     font-size: 0.72rem; font-weight: 500;
     cursor: pointer; transition: all 0.2s;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', 'Inter Fallback', sans-serif;
     white-space: nowrap;
   }
 
@@ -2894,7 +2894,7 @@ async function submitLead(e) {
     flex: 1; background: #1A2438; color: #F1F5F9;
     border: 1px solid #1E2D42; border-radius: 10px;
     padding: 9px 12px; font-size: 0.82rem;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', 'Inter Fallback', sans-serif;
     resize: none; outline: none; max-height: 80px;
     line-height: 1.5; transition: border-color 0.2s;
   }
@@ -2916,7 +2916,7 @@ async function submitLead(e) {
   .vs-chat-footer {
     text-align: center; font-size: 0.65rem;
     color: #334155; margin-top: 6px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', 'Inter Fallback', sans-serif;
   }
 
   .vs-chat-footer a { color: #00D4FF; text-decoration: none; }

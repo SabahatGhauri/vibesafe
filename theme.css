@@ -1,3 +1,15 @@
+/* Metric-matched fallback for Inter: while the web font loads asynchronously,
+   text renders in Arial adjusted to Inter's metrics, so the swap causes almost
+   no layout shift (CLS). Use as: font-family:'Inter','Inter Fallback',sans-serif */
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  size-adjust: 107%;
+  ascent-override: 90.44%;
+  descent-override: 22.52%;
+  line-gap-override: 0%;
+}
+
 :root {
   --bg:        #080C18;
   --bg2:       #0D1220;
