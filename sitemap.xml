@@ -1,200 +1,203 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-<urlset
-      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:fo="http://www.w3.org/1999/XSL/Format"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml"
-      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+  <!-- Core pages -->
+  <url>
+    <loc>https://www.vibesafe.info/</loc>
+    <lastmod>2026-07-22</lastmod>
+    <priority>1.00</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/how-it-works</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/faq</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/security</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/legal</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.50</priority>
+  </url>
 
+  <!-- Landing / SEO pages -->
+  <url>
+    <loc>https://www.vibesafe.info/ai-code-security-scanner</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/vibe-coding-security</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/exposed-api-key-scanner</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/best-vibe-coding-security-scanners</loc>
+    <lastmod>2026-07-12</lastmod>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/state-of-vibe-coding-security-2026</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.75</priority>
+  </url>
 
-<url>
-  <loc>https://www.vibesafe.info/</loc>
-  <lastmod>2026-07-07T22:12:21+00:00</lastmod>
-  <priority>1.00</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/learn</loc>
-  <lastmod>2026-07-07T22:12:22+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/user-guide</loc>
-  <lastmod>2026-07-07T22:12:22+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/best-vibe-coding-security-scanners</loc>
-  <lastmod>2026-07-12T00:00:00+00:00</lastmod>
-  <priority>0.90</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/blog/security-mistakes-ai-built-apps</loc>
-  <lastmod>2026-07-14T00:00:00+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/vs-snyk</loc>
-  <lastmod>2026-07-07T22:12:22+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/vs-gitguardian</loc>
-  <lastmod>2026-07-07T22:12:23+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/ai-code-security-scanner</loc>
-  <lastmod>2026-07-07T22:12:23+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/vibe-coding-security</loc>
-  <lastmod>2026-07-07T22:12:23+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/pre-launch-security-checklist</loc>
-  <lastmod>2026-07-07T22:12:23+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/exposed-api-key-scanner</loc>
-  <lastmod>2026-07-07T22:12:23+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/supabase-security-checklist</loc>
-  <lastmod>2026-07-07T22:12:24+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/free-security-checklist</loc>
-  <lastmod>2026-07-07T22:12:24+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/faq</loc>
-  <lastmod>2026-07-07T22:12:24+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/how-it-works</loc>
-  <lastmod>2026-07-07T22:12:24+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/security</loc>
-  <lastmod>2026-07-07T22:12:25+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/blog</loc>
-  <lastmod>2026-07-07T22:12:25+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/legal</loc>
-  <lastmod>2026-07-07T22:12:25+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/blog/supabase-rls-explained-for-founders</loc>
-  <lastmod>2026-07-07T22:12:25+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/blog/vercel-deployment-security-checklist</loc>
-  <lastmod>2026-07-07T22:12:25+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/state-of-vibe-coding-security-2026</loc>
-  <lastmod>2026-07-07T22:12:26+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/blog/continuous-security-monitoring-after-launch</loc>
-  <lastmod>2026-07-09T00:00:00+00:00</lastmod>
-  <priority>0.7</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/blog/ai-agent-tests-your-app-before-launch</loc>
-  <lastmod>2026-07-09T00:00:00+00:00</lastmod>
-  <priority>0.7</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/blog/is-vibe-coding-safe-honest-answer</loc>
-  <lastmod>2026-07-07T22:12:26+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/blog/how-to-secure-lovable-app-before-launch</loc>
-  <lastmod>2026-07-07T22:12:26+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/blog/how-to-check-ai-generated-code-security</loc>
-  <lastmod>2026-07-07T22:12:26+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/blog/how-to-find-exposed-api-keys-in-code</loc>
-  <lastmod>2026-07-07T22:12:27+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/blog/what-happens-when-api-key-leaks</loc>
-  <lastmod>2026-07-07T22:12:27+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/blog/replit-app-security-guide</loc>
-  <lastmod>2026-07-07T22:12:27+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/blog/hallucinated-packages-slopsquatting</loc>
-  <lastmod>2026-07-07T22:12:27+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/blog/security-checklist-non-technical-founders</loc>
-  <lastmod>2026-07-07T22:12:27+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/blog/why-ai-generated-code-has-security-bugs</loc>
-  <lastmod>2026-07-07T22:12:28+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/blog/exposed-api-key-real-world-disasters</loc>
-  <lastmod>2026-07-07T22:12:28+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/blog/lovable-bolt-cursor-replit-security-compared</loc>
-  <lastmod>2026-07-07T22:12:28+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/lovable-security-checklist</loc>
-  <lastmod>2026-07-07T22:12:28+00:00</lastmod>
-  <priority>0.51</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/cursor-security-checklist</loc>
-  <lastmod>2026-07-07T22:12:29+00:00</lastmod>
-  <priority>0.51</priority>
-</url>
-<url>
-  <loc>https://www.vibesafe.info/bolt-security-checklist</loc>
-  <lastmod>2026-07-07T22:12:29+00:00</lastmod>
-  <priority>0.41</priority>
-</url>
+  <!-- Checklists -->
+  <url>
+    <loc>https://www.vibesafe.info/free-security-checklist</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/pre-launch-security-checklist</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/supabase-security-checklist</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/lovable-security-checklist</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/cursor-security-checklist</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/bolt-security-checklist</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.70</priority>
+  </url>
+
+  <!-- Competitor comparisons -->
+  <url>
+    <loc>https://www.vibesafe.info/vs-snyk</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/vs-gitguardian</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- Learn / docs -->
+  <url>
+    <loc>https://www.vibesafe.info/learn</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/user-guide</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.75</priority>
+  </url>
+
+  <!-- Blog index -->
+  <url>
+    <loc>https://www.vibesafe.info/blog</loc>
+    <lastmod>2026-07-14</lastmod>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Blog posts -->
+  <url>
+    <loc>https://www.vibesafe.info/blog/security-mistakes-ai-built-apps</loc>
+    <lastmod>2026-07-14</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/blog/why-ai-generated-code-has-security-bugs</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/blog/exposed-api-key-real-world-disasters</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/blog/lovable-bolt-cursor-replit-security-compared</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/blog/supabase-rls-explained-for-founders</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/blog/vercel-deployment-security-checklist</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/blog/continuous-security-monitoring-after-launch</loc>
+    <lastmod>2026-07-09</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/blog/ai-agent-tests-your-app-before-launch</loc>
+    <lastmod>2026-07-09</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/blog/is-vibe-coding-safe-honest-answer</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/blog/how-to-secure-lovable-app-before-launch</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/blog/how-to-check-ai-generated-code-security</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/blog/how-to-find-exposed-api-keys-in-code</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/blog/what-happens-when-api-key-leaks</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/blog/replit-app-security-guide</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/blog/hallucinated-packages-slopsquatting</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://www.vibesafe.info/blog/security-checklist-non-technical-founders</loc>
+    <lastmod>2026-07-07</lastmod>
+    <priority>0.70</priority>
+  </url>
 
 </urlset>
