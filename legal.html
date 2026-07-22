@@ -178,7 +178,7 @@ footer a{color:var(--cyan);text-decoration:none}
 
     <h2 id="pp1">1. Who we are</h2>
     <p>VibeSafe is an AI-powered code security scanning service operated by <strong>SG Digital Ventures LLC</strong>, a limited liability company registered in the State of Wyoming, USA (Entity ID: 2026-002034713, Wyoming Secretary of State). Our website is <a href="https://www.vibesafe.info">vibesafe.info</a> and our contact email is <a href="mailto:contact@vibesafe.info">contact@vibesafe.info</a>.</p>
-    <p>References to "VibeSafe", "we", "us", or "our" in this Privacy Policy refer to SG Digital Ventures LLC doing business as VibeSafe.</p>
+    <p>References to "VibeSafe", "we", "us", or "our" in this Privacy Policy refer to SG Digital Ventures LLC doing business as VibeSafe. For legal correspondence and service of process, please contact us via our registered agent in Wyoming, or email <a href="mailto:contact@vibesafe.info">contact@vibesafe.info</a>.</p>
     <p>This Privacy Policy explains how we collect, use, and protect your personal information when you use VibeSafe. By using our service, you agree to the collection and use of information in accordance with this policy.</p>
 
     <h2 id="pp2">2. What data we collect</h2>
@@ -187,7 +187,7 @@ footer a{color:var(--cyan);text-decoration:none}
       <li><strong>Email address</strong> — when you join our waitlist, sign up for an account, or contact us</li>
       <li><strong>Name</strong> — optional, if provided when creating an account</li>
       <li><strong>Payment information</strong> — processed securely by Stripe; we never store your full card details</li>
-      <li><strong>Messages</strong> — when you contact us via email or our chat widget</li>
+      <li><strong>Messages</strong> — when you contact us via email</li>
     </ul>
     <h3>Information collected automatically</h3>
     <ul>
@@ -214,7 +214,7 @@ footer a{color:var(--cyan);text-decoration:none}
 
     <h2 id="pp4">4. How we store and protect your data</h2>
     <p>Your data is stored on secure servers. We use industry-standard encryption (HTTPS/TLS) for all data in transit. Access to personal data is restricted to essential personnel only.</p>
-    <p>Our service infrastructure is hosted on <strong>Vercel</strong> (CDN and hosting) and <strong>Supabase</strong> (database, when applicable). Both providers maintain high security standards. Payment processing is handled by <strong>Stripe</strong>, which is PCI DSS Level 1 certified.</p>
+    <p>Our service infrastructure is hosted on <strong>Vercel</strong> (CDN, hosting, and analytics) and <strong>Supabase</strong> (database). Both providers maintain high security standards. Payment processing is handled by <strong>Stripe</strong>, which is PCI DSS Level 1 certified. We use <strong>Google Analytics 4</strong> for website analytics; data collected by Google Analytics is processed by Google LLC and subject to <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>. EU/UK users: Google Analytics data may be transferred to the United States under Google's Standard Contractual Clauses.</p>
     <p>While we take every reasonable precaution, no method of transmission over the internet is 100% secure. We cannot guarantee absolute security but commit to notifying you promptly of any breach affecting your personal data.</p>
 
     <h2 id="pp5">5. Your code and scan data</h2>
@@ -233,7 +233,7 @@ footer a{color:var(--cyan);text-decoration:none}
     <h2 id="pp6">6. Sharing your data</h2>
     <p>We do not sell, trade, or rent your personal data. We share data only in the following limited circumstances:</p>
     <ul>
-      <li><strong>Service providers</strong> — Vercel (hosting), Stripe (payments), Formspree (email capture), Supabase (database). These providers are contractually bound to protect your data and use it only to provide services to us.</li>
+      <li><strong>Service providers</strong> — Vercel (hosting and analytics), Stripe (payments), Supabase (database), Google LLC (analytics via Google Analytics 4). These providers are contractually bound to protect your data and use it only to provide services to us.</li>
       <li><strong>Legal requirements</strong> — If required by law, court order, or government authority in the UAE, the United States, or other applicable jurisdictions.</li>
       <li><strong>Business transfers</strong> — In the event of a merger or acquisition, your data may be transferred. We will notify you via email before this occurs.</li>
       <li><strong>With your consent</strong> — For any other purpose with your explicit permission.</li>
@@ -566,7 +566,7 @@ footer a{color:var(--cyan);text-decoration:none}
         <tr>
           <td>vs_analytics</td>
           <td>Analytics</td>
-          <td>Understands how pages are used (page views, scans run)</td>
+          <td>Vercel Analytics — understands how pages are used (page views, scans run)</td>
           <td>90 days</td>
         </tr>
         <tr>
@@ -574,6 +574,18 @@ footer a{color:var(--cyan);text-decoration:none}
           <td>Essential</td>
           <td>Required by Vercel hosting infrastructure</td>
           <td>Session</td>
+        </tr>
+        <tr>
+          <td>_ga</td>
+          <td>Analytics</td>
+          <td>Google Analytics 4 — distinguishes unique users</td>
+          <td>2 years</td>
+        </tr>
+        <tr>
+          <td>_ga_*</td>
+          <td>Analytics</td>
+          <td>Google Analytics 4 — stores session state</td>
+          <td>2 years</td>
         </tr>
       </tbody>
     </table>
@@ -627,9 +639,10 @@ footer a{color:var(--cyan);text-decoration:none}
     <h2>Third-party cookies</h2>
     <p>We use the following third-party services that may set their own cookies:</p>
     <ul>
-      <li><strong>Stripe</strong> — payment processing (essential for paid plans)</li>
-      <li><strong>Formspree</strong> — waitlist email capture</li>
-      <li><strong>Vercel</strong> — website hosting and performance</li>
+      <li><strong>Stripe</strong> — payment processing (essential for paid plans). <a href="https://stripe.com/privacy" target="_blank" rel="noopener">Stripe Privacy Policy</a></li>
+      <li><strong>Vercel</strong> — website hosting, CDN, and performance analytics. <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener">Vercel Privacy Policy</a></li>
+      <li><strong>Google Analytics 4</strong> — website usage analytics (page views, sessions). Data is processed by Google LLC and may be transferred to the US. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a> · <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics Opt-Out</a></li>
+      <li><strong>Supabase</strong> — authentication and database. <a href="https://supabase.com/privacy" target="_blank" rel="noopener">Supabase Privacy Policy</a></li>
     </ul>
     <p>These services have their own privacy policies. We do not use any advertising networks or social media tracking cookies.</p>
 
