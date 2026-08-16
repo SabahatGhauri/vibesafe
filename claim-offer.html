@@ -56,7 +56,7 @@ input:focus{outline:none;border-color:var(--cyan)}
 
   <h1>🎉 Founding-customer offer</h1>
   <div class="price"><s>$29</s>$14.50<span class="per">/mo</span></div>
-  <p class="sub">Unlimited scans + fixes — 50% off, locked in for as long as you stay subscribed.</p>
+  <p class="sub">Unlimited scans + fixes — 50% off for your first 3 months, then $29/mo. Cancel anytime.</p>
   <ul class="feat">
     <li>Unlimited security scans</li>
     <li>One-click AI fixes for every issue</li>
@@ -101,8 +101,8 @@ input:focus{outline:none;border-color:var(--cyan)}
 const SUPABASE_URL = 'https://uxsmmpujxbzdgxxburxr.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_hgCpN6tsYqEiCkyvJm06qQ_1Ddlvznn';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-// Founding offer: VibeSafe Pro at $14.50/mo (50% off) — test link for now.
-const OFFER_LINK = 'https://buy.stripe.com/test_6oUdRb2QTfjCgqg9pp9EI05';
+// Founding offer: VibeSafe Pro at $14.50/mo (50% off) — live payment link.
+const OFFER_LINK = 'https://buy.stripe.com/28EcN63POeiZ85J5ITg3607';
 let userId = null;
 
 function show(state){

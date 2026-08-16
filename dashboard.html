@@ -1104,8 +1104,7 @@ const FREE_SCAN_LIMIT = 3;
 })();
 
 // ── PLAN / BILLING ──
-// TODO: replace with your LIVE Stripe Payment Link once created (this is a TEST link)
-const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_8x25kFdvx9Zi0rifNN9EI00';
+const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/00w8wQgCAb6N85Jdblg3604';
 
 function upgradeToPro() {
   if (!currentUser) return;
@@ -2202,7 +2201,12 @@ function looksLikeCode(t) {
   if (!t) return false;
   if (/[-=(){}\[\].,;:<>/\\"'`+*%!?~^|&$#@]/.test(t)) return true;
   if (/\b(function|const|let|var|def|class|import|export|from|return|if|else|for|while|public|private|async|await|print|console|select|insert|update|create)\b/i.test(t)) return true;
-  return /\s/.test(t) && t.split(/\s+/).filter(Boolean).length >= 3;
+  // No punctuation and no recognized keyword — almost certainly not real code
+  // (virtually every language uses at least one of the punctuation marks above).
+  // Previously this fell back to "3+ space-separated words = code," which any
+  // gibberish with spaces in it satisfied — that's why keyboard-mashed text
+  // was passing the check and burning a real scan on nonsense.
+  return false;
 }
 async function startScan() {
   const code = document.getElementById('codeEditor').value.trim();
