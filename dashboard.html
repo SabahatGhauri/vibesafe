@@ -2150,7 +2150,13 @@ async function scanLiveUrl() {
     });
 
     const result = await response.json();
-    if (!response.ok) { showToast(result.error || 'Scan failed', 'error'); return; }
+    if (!response.ok) {
+      // A free account hitting the Pro gate needs an actual way to upgrade —
+      // a plain toast was a dead end (server sends upgrade:true for this case).
+      if (result.upgrade) showProUpgrade('Live website scanning');
+      else showToast(result.error || 'Scan failed', 'error');
+      return;
+    }
 
     // Reuse the existing results renderer — map DAST result to code-scan shape
     currentResult = result;
