@@ -27,7 +27,10 @@
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
 {"@type":"Question","name":"Is vibe coding safe?","acceptedAnswer":{"@type":"Answer","text":"Vibe coding (building apps with AI) is safe to ship only after you check the generated code. AI tools frequently leave exposed API keys, weak database rules, missing packages, and runtime errors. Scanning the code before launch catches these common problems."}},
 {"@type":"Question","name":"What are the biggest security risks in AI-built apps?","acceptedAnswer":{"@type":"Answer","text":"The most common are exposed API keys and secrets, missing database access rules (like Supabase Row-Level Security), missing or hallucinated packages, unhandled runtime errors, and broken authentication or access control."}},
-{"@type":"Question","name":"How do I check if my vibe-coded app is secure?","acceptedAnswer":{"@type":"Answer","text":"Run an AI code security scanner like VibeSafe that reviews your code for exposed secrets, OWASP Top 10 risks, vulnerable dependencies, and runtime errors, then explains the fixes in plain English."}}
+{"@type":"Question","name":"How do I check if my vibe-coded app is secure?","acceptedAnswer":{"@type":"Answer","text":"Run an AI code security scanner like VibeSafe that reviews your code for exposed secrets, OWASP Top 10 risks, vulnerable dependencies, and runtime errors, then explains the fixes in plain English."}},
+{"@type":"Question","name":"Is vibe coding less safe than writing the code myself?","acceptedAnswer":{"@type":"Answer","text":"Not inherently — hand-written code ships the same vulnerability classes. The difference is review. A developer writing their own auth logic usually knows to check it, whereas AI-generated code arrives looking finished, which discourages the review it still needs."}},
+{"@type":"Question","name":"Which AI builder is the safest?","acceptedAnswer":{"@type":"Answer","text":"The differences between Lovable, Bolt, Cursor, Replit and the rest are far smaller than the difference between checking your output and not checking it. They all optimise for working code, and any of them will hardcode a secret if you ask for a feature that needs one."}},
+{"@type":"Question","name":"How often should I re-scan my app?","acceptedAnswer":{"@type":"Answer","text":"Any time you ship a meaningful change, and at minimum before each deploy. Security drifts — a later edit can reintroduce a key or drop a database rule that an earlier scan passed cleanly."}}
 ]}
 </script>
 <style>
@@ -71,17 +74,26 @@ footer a{color:var(--text3);text-decoration:none}
     <p style="margin:14px 0 0;font-size:0.85rem">3 free scans every month · No credit card required</p>
   </div>
 
+  <h2>What the data actually says</h2>
+  <p>Independent audits keep landing in the same range: roughly <strong>45% of AI-generated code contains at least one security weakness</strong>. That figure holds across languages and across model versions, which tells you something important — it isn't a bug in one tool that a future release will quietly fix.</p>
+  <p>The reason is structural. A coding model is optimised to produce code that <em>runs</em>. Nothing in that objective rewards code that survives contact with an attacker. A hardcoded API key runs perfectly. A database with no access rules runs perfectly. An admin route with no server-side check runs perfectly — right up until someone tries the URL. The preview looks identical either way, which is precisely why these problems reach production.</p>
+
   <h2>Why AI-built apps are risky at launch</h2>
   <p>AI generates code that <em>looks</em> finished and runs fine in preview. The problems are the ones you can't see without reading the code: secrets baked into the source, a database anyone can read, or an error that only triggers when a real user does something unexpected. For a non-technical builder, these are invisible until something breaks — or leaks.</p>
 
   <h2>The most common vibe-coding security risks</h2>
+  <p>These five account for the overwhelming majority of what turns up in real AI-built apps. They're worth understanding individually, because the fix for each is different.</p>
   <ul>
-    <li><strong>Exposed API keys &amp; secrets</strong> — live keys hardcoded in the source, visible to anyone who views the code.</li>
-    <li><strong>Missing database rules</strong> — Supabase/Firebase tables with no Row-Level Security, so one user can read everyone's data.</li>
-    <li><strong>Missing or hallucinated packages</strong> — imports for packages that don't exist or are outdated and vulnerable.</li>
-    <li><strong>Runtime errors</strong> — missing awaits and unhandled errors that crash the app for real users.</li>
-    <li><strong>Broken authentication</strong> — client-side-only checks or inverted access logic that lets anyone in.</li>
+    <li><strong>Exposed API keys and secrets</strong> — a live Stripe, OpenAI, or database key written straight into the source. This one has the shortest fuse: bots continuously scan public repositories and deployed JavaScript bundles for key patterns, and a leaked key is often used within minutes. Moving it to an environment variable isn't sufficient on its own — anything already published should be treated as compromised and rotated.</li>
+    <li><strong>Missing database rules</strong> — Supabase and Firebase tables ship open, and Row-Level Security is something you switch on deliberately. Without it, the anon key sitting in your frontend can read every row in the table, not just the current user's. This is the failure that exposes every customer record at once, and nothing in the app's behaviour hints at it.</li>
+    <li><strong>Hallucinated or vulnerable packages</strong> — AI tools sometimes import packages that don't exist. Attackers monitor commonly hallucinated names and register them, so the install that "fixes" your build can pull in hostile code. Others are real but years out of date with known CVEs.</li>
+    <li><strong>Runtime errors</strong> — missing <code>await</code>s and unhandled promise rejections. These pass a demo because the happy path completes fast enough, then fail for a real user on a slower connection or an edge case the preview never exercised.</li>
+    <li><strong>Broken authentication</strong> — the login screen hides the button, but the API behind it accepts requests from anyone. Client-side-only checks are the most common auth mistake in AI-generated code, precisely because the app looks correctly gated.</li>
   </ul>
+
+  <h2>Why "it works in preview" proves nothing</h2>
+  <p>This is the trap that catches non-technical founders, and it's worth stating plainly: <strong>security failures are not functionality failures</strong>. Every problem above is invisible in a working demo. The app does what you asked — buttons respond, data saves, pages load.</p>
+  <p>There's no error message for "your database is publicly readable." Nothing turns red when a key is committed. The app behaves identically whether the auth check runs on the server or only in the browser. So the signal a builder naturally relies on — does it work? — tells you nothing at all about whether it's safe. The code has to be inspected specifically, or something has to inspect it for you.</p>
 
   <h2>How to check if your app is safe</h2>
   <p>You don't need to be a developer. Run your code through an AI code security scanner that reads it for these exact issues and explains them simply:</p>
@@ -91,11 +103,28 @@ footer a{color:var(--text3);text-decoration:none}
     <li>Apply the suggested fixes, re-scan, and launch with more confidence.</li>
   </ul>
 
+  <h2>The 30-minute pre-launch routine</h2>
+  <p>If you do nothing else before shipping, do these five things. They take about half an hour and remove most of the realistic risk.</p>
+  <ul>
+    <li><strong>Scan for exposed secrets, then rotate anything you find.</strong> Moving a key to an environment variable isn't enough by itself — if it was ever committed or deployed, generate a new one and revoke the old.</li>
+    <li><strong>Turn on Row-Level Security for every table.</strong> Not just the ones holding obviously sensitive data. A table you think is harmless is still a list of your users.</li>
+    <li><strong>Test your app logged out.</strong> Open it in a private window and try to reach a page or API route that should require a session. If data comes back, your auth is cosmetic.</li>
+    <li><strong>Verify every imported package exists and is current.</strong> Anything you don't recognise is worth thirty seconds on the registry before you trust it.</li>
+    <li><strong>Re-scan after fixing, and keep the report.</strong> Fixes introduce their own bugs, and a clean second scan is what actually tells you you're done.</li>
+  </ul>
+  <p>So the honest answer to "is vibe coding safe" is conditional — and the condition is entirely within your control. It's safe once you've checked it, and genuinely risky if you haven't.</p>
+
   <h2>Questions builders ask</h2>
   <p class="faq-q">Is vibe coding safe for production?</p>
   <p>It can be — once you've scanned the code and fixed exposed secrets, database rules, and runtime errors. The danger is shipping unchecked.</p>
   <p class="faq-q">Do I need to know how to code?</p>
   <p>No. VibeSafe explains every issue in plain English and offers one-click fixes.</p>
+  <p class="faq-q">Is vibe coding less safe than writing the code myself?</p>
+  <p>Not inherently — hand-written code ships the same vulnerability classes. The difference is review. A developer writing their own auth logic usually knows to check it, whereas AI-generated code arrives looking finished, which quietly discourages the review it still needs.</p>
+  <p class="faq-q">Which AI builder is the safest?</p>
+  <p>The differences between Lovable, Bolt, Cursor, Replit and the rest are far smaller than the difference between checking your output and not checking it. They all optimise for working code, and any of them will hardcode a secret if you ask for a feature that needs one.</p>
+  <p class="faq-q">How often should I re-scan?</p>
+  <p>Any time you ship a meaningful change, and at minimum before each deploy. Security drifts — a later edit can reintroduce a key or drop a database rule that an earlier scan passed cleanly.</p>
 
   <div class="disclaimer"><strong>An honest note.</strong> VibeSafe is a fast pre-launch safety check, not a replacement for a full professional security audit or penetration test.</div>
 
