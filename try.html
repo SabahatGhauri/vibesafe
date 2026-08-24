@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Try VibeSafe Free — Scan AI-Generated Code, No Signup | VibeSafe</title>
+<meta name="description" content="Paste your AI-generated code and get a real security scan in about ten seconds. No account, no credit card — see exposed keys, broken auth, and runtime errors before you ship.">
+<link rel="canonical" href="https://www.vibesafe.info/try">
+<meta property="og:title" content="Try VibeSafe Free — Scan AI-Generated Code, No Signup">
+<meta property="og:description" content="Paste your code, get a real security scan in ten seconds. No account needed.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.vibesafe.info/try">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"></noscript>
+<link rel="stylesheet" href="/theme.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Inter Fallback',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;border:1px solid var(--border2);color:var(--text);font-weight:600;font-size:0.85rem;text-decoration:none}
+main{max-width:900px;margin:0 auto;padding:46px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px;text-align:center}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4.5vw,2.6rem);line-height:1.15;letter-spacing:-0.02em;margin-bottom:14px;text-align:center}
+.lead{font-size:1.05rem;color:var(--text2);margin:0 auto 10px;max-width:620px;text-align:center}
+.trust{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;font-size:0.82rem;color:var(--text3);margin-bottom:26px}
+.panel{background:var(--surface);border:1px solid var(--border2);border-radius:16px;overflow:hidden}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.panel-title{font-weight:600;font-size:0.9rem}
+select,button{font-family:'Inter','Inter Fallback',sans-serif}
+select{background:var(--bg);color:var(--text);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;font-size:0.85rem}
+textarea{width:100%;min-height:300px;background:var(--bg);color:var(--text);border:0;padding:16px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;line-height:1.55;resize:vertical;outline:none}
+.panel-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-top:1px solid var(--border);flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;border-radius:10px;font-weight:700;font-size:0.95rem;cursor:pointer;border:1px solid transparent;text-decoration:none}
+.btn-primary{background:var(--cyan);color:var(--bg)}
+.btn-primary:hover{opacity:0.92}
+.btn-primary:disabled{opacity:0.55;cursor:not-allowed}
+.btn-ghost{background:transparent;color:var(--text);border-color:var(--border2)}
+.hint{font-size:0.8rem;color:var(--text3)}
+.sample{background:none;border:0;color:var(--cyan);font-size:0.82rem;cursor:pointer;text-decoration:underline;padding:0}
+.msg{display:none;margin-top:16px;padding:12px 14px;border-radius:10px;font-size:0.88rem}
+.msg.err{display:block;background:rgba(239,68,68,0.1);color:#FCA5A5;border:1px solid rgba(239,68,68,0.25)}
+#results{display:none;margin-top:26px}
+.score-row{display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:14px;background:var(--surface);border:1px solid var(--border2);margin-bottom:16px;flex-wrap:wrap}
+.score-num{font-family:'Space Grotesk',sans-serif;font-size:2.4rem;font-weight:700;line-height:1}
+.score-meta{flex:1;min-width:220px}
+.score-label{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);font-weight:700;margin-bottom:3px}
+.issue{border:1px solid var(--border2);border-left-width:3px;border-radius:11px;padding:14px 16px;margin-bottom:10px;background:var(--surface)}
+.issue.critical{border-left-color:#EF4444}
+.issue.warning{border-left-color:#F59E0B}
+.issue.info{border-left-color:var(--cyan)}
+.issue-top{display:flex;align-items:center;gap:9px;margin-bottom:6px;flex-wrap:wrap}
+.pill{font-size:0.67rem;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;padding:3px 8px;border-radius:100px}
+.pill.critical{background:rgba(239,68,68,0.15);color:#FCA5A5}
+.pill.warning{background:rgba(245,158,11,0.15);color:#FCD34D}
+.pill.info{background:rgba(0,212,255,0.12);color:#7DD3F5}
+.issue-title{font-weight:600;font-size:0.94rem}
+.issue-line{font-size:0.76rem;color:var(--text3)}
+.issue p{color:var(--text2);font-size:0.87rem;margin-top:5px}
+.issue .fix{color:#6EE7B7;font-size:0.85rem;margin-top:7px}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:26px;text-align:center;margin-top:26px}
+.cta-box h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;margin-bottom:8px}
+.cta-box p{color:var(--text2);font-size:0.9rem;margin-bottom:16px}
+.spinner{width:18px;height:18px;border:2px solid rgba(8,12,24,0.3);border-top-color:var(--bg);border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+footer{border-top:1px solid var(--border);padding:28px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3)}
+@media(max-width:640px){.panel-foot{flex-direction:column;align-items:stretch}.btn{width:100%}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt=""> VibeSafe</a>
+  <a href="/login.html" class="nav-cta">Sign in</a>
+</nav>
+
+<main>
+  <p class="eyebrow">Free · No signup</p>
+  <h1>Scan your AI-generated code</h1>
+  <p class="lead">Paste code from Lovable, Bolt, Cursor, Replit — or anywhere else — and see what it would ship with. Real scan, real findings, about ten seconds.</p>
+  <div class="trust">
+    <span>✓ No account needed</span>
+    <span>✓ No credit card</span>
+    <span>✓ Your code is never stored</span>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <span class="panel-title">Your code</span>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="sample" id="sampleBtn" type="button">Try a sample</button>
+        <select id="lang" aria-label="Language">
+          <option value="">Auto-detect</option>
+          <option value="javascript">JavaScript</option>
+          <option value="typescript">TypeScript</option>
+          <option value="python">Python</option>
+          <option value="html">HTML</option>
+          <option value="sql">SQL</option>
+        </select>
+      </div>
+    </div>
+    <textarea id="code" spellcheck="false" placeholder="Paste your code here…"></textarea>
+    <div class="panel-foot">
+      <span class="hint">Up to ~300 lines in the demo</span>
+      <button class="btn btn-primary" id="scanBtn" type="button">Scan my code</button>
+    </div>
+  </div>
+
+  <div class="msg" id="msg"></div>
+
+  <section id="results" aria-live="polite">
+    <div class="score-row">
+      <div class="score-num" id="score">—</div>
+      <div class="score-meta">
+        <div class="score-label">Safety score</div>
+        <div id="summary" style="color:var(--text2);font-size:0.9rem"></div>
+      </div>
+    </div>
+    <div id="issues"></div>
+    <div class="cta-box">
+      <h3>Want the fixes applied for you?</h3>
+      <p>A free account adds one-click AI fixes, scan history, GitHub and live-site scanning, and 3 scans every month.</p>
+      <a href="/login.html" class="btn btn-primary" style="text-decoration:none">Create a free account →</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/how-it-works">How it works</a> · <a href="/legal">Privacy &amp; Terms</a>
+</footer>
+
+<script>
+var API = 'https://vibesafe-api.vercel.app/api/demo-scan';
+var codeEl = document.getElementById('code');
+var msgEl  = document.getElementById('msg');
+var btn    = document.getElementById('scanBtn');
+
+var SAMPLE = [
+  "// Example: a typical AI-generated Express route",
+  "const express = require('express');",
+  "const app = express();",
+  "",
+  "const STRIPE_KEY = 'sk_live_51H8xQ2eZvKYlo2CkQmT9vB';",
+  "",
+  "app.get('/user/:id', (req, res) => {",
+  "  const user = db.query('SELECT * FROM users WHERE id = ' + req.params.id);",
+  "  res.json(user);",
+  "});",
+  "",
+  "app.post('/login', async (req, res) => {",
+  "  const { email, password } = req.body;",
+  "  const result = db.query(`SELECT * FROM users WHERE email = '${email}'`);",
+  "  if (result.password == password) {",
+  "    res.json({ token: 'admin-token' });",
+  "  }",
+  "});",
+  "",
+  "app.listen(3000);"
+].join('\n');
+
+document.getElementById('sampleBtn').addEventListener('click', function () {
+  codeEl.value = SAMPLE;
+  codeEl.focus();
+});
+
+function showError(text) {
+  msgEl.textContent = text;
+  msgEl.className = 'msg err';
+}
+function clearError() { msgEl.className = 'msg'; msgEl.textContent = ''; }
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+function render(data) {
+  var score = typeof data.score === 'number' ? data.score : 0;
+  var scoreEl = document.getElementById('score');
+  scoreEl.textContent = score;
+  scoreEl.style.color = score >= 80 ? '#10B981' : score >= 50 ? '#F59E0B' : '#EF4444';
+  document.getElementById('summary').textContent = data.summary || '';
+
+  var issues = data.issues || [];
+  var host = document.getElementById('issues');
+  if (!issues.length) {
+    host.innerHTML = '<div class="issue info"><div class="issue-title">No issues found</div>' +
+      '<p>Nothing flagged in this snippet. Scanning your full project usually surfaces more — a single file rarely tells the whole story.</p></div>';
+  } else {
+    host.innerHTML = issues.map(function (i) {
+      var sev = (i.sev === 'critical' || i.sev === 'warning') ? i.sev : 'info';
+      return '<div class="issue ' + sev + '">' +
+        '<div class="issue-top"><span class="pill ' + sev + '">' + esc(sev) + '</span>' +
+        '<span class="issue-title">' + esc(i.title || i.type || 'Issue') + '</span>' +
+        (i.line ? '<span class="issue-line">' + esc(i.line) + '</span>' : '') + '</div>' +
+        (i.desc ? '<p>' + esc(i.desc) + '</p>' : '') +
+        (i.impact ? '<p><strong>Impact:</strong> ' + esc(i.impact) + '</p>' : '') +
+        (i.fix ? '<div class="fix">Fix: ' + esc(i.fix) + '</div>' : '') +
+        '</div>';
+    }).join('');
+  }
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+btn.addEventListener('click', async function () {
+  var code = codeEl.value.trim();
+  clearError();
+  if (!code) { showError('Paste some code to scan.'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Scanning…';
+  document.getElementById('results').style.display = 'none';
+
+  try {
+    var res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: code, language: document.getElementById('lang').value })
+    });
+    var data = await res.json();
+    if (!res.ok) {
+      showError(data.error || 'Scan failed. Please try again.');
+      return;
+    }
+    render(data);
+  } catch (err) {
+    showError('Could not reach the scanner. Check your connection and try again.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Scan my code';
+  }
+});
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
