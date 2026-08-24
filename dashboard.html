@@ -3570,7 +3570,24 @@ async function sendTeamInvite() {
   }
 }
 
-async function getOrCreateTeam() {
+// openTeamPanel() calls loadTeamMembers() and loadTeamScanHistory() without
+// awaiting either, so both used to reach the SELECT below before either INSERT
+// landed and each created a team — two identical teams, milliseconds apart.
+// Callers now share one in-flight promise, and `teams.owner_id` is UNIQUE in
+// the database so a race this can't cover (second tab, double-click) fails the
+// insert rather than duplicating.
+var _teamPromise = null;
+function getOrCreateTeam() {
+  if (!_teamPromise) {
+    _teamPromise = _getOrCreateTeam().catch(function (err) {
+      _teamPromise = null; // let a later attempt retry rather than caching the failure
+      throw err;
+    });
+  }
+  return _teamPromise;
+}
+
+async function _getOrCreateTeam() {
   // Check if user already owns a team
   var { data: owned } = await sbClient.from('teams').select('id').eq('owner_id', currentUser.id).limit(1);
   if (owned && owned.length > 0) return owned[0].id;
@@ -3584,7 +3601,15 @@ async function getOrCreateTeam() {
     owner_id: currentUser.id,
     name: (currentUser.email || 'My Team').split('@')[0] + "'s team",
   }).select('id').single();
-  if (error) throw error;
+  if (error) {
+    // 23505 = unique violation: someone else won the race and the team now
+    // exists. Read it back instead of surfacing an error to the user.
+    if (error.code === '23505') {
+      var { data: raced } = await sbClient.from('teams').select('id').eq('owner_id', currentUser.id).limit(1);
+      if (raced && raced.length > 0) return raced[0].id;
+    }
+    throw error;
+  }
 
   // Add owner as first member
   await sbClient.from('team_members').insert({
