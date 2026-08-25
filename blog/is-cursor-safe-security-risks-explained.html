@@ -29,9 +29,7 @@
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
   {"@type":"Question","name":"Is Cursor safe to use?","acceptedAnswer":{"@type":"Answer","text":"Cursor is safe for most day-to-day coding, but agent mode, auto-run commands, and AI-suggested dependencies each carry real risk if left unchecked. Reviewing agent actions and scanning generated code before you ship closes most of the gap."}},
   {"@type":"Question","name":"What are the main Cursor security risks?","acceptedAnswer":{"@type":"Answer","text":"The main risks are: agent mode running unintended commands (prompt injection), secrets in .env files being readable by the model even when listed in .cursorignore, AI-suggested packages that don't exist or are typosquatted, and context carrying over between unrelated projects."}},
-  {"@type":"Question","name":"How do I secure Cursor before shipping?","acceptedAnswer":{"@type":"Answer","text":"Disable auto-run for agent mode, review every AI-suggested command and dependency before accepting it, keep real secrets out of files the editor can read, and scan the generated code for hardcoded keys and unsafe patterns before you deploy."}},
-  {"@type":"Question","name":"Is Cursor safe for company or client code?","acceptedAnswer":{"@type":"Answer","text":"It can be, but it is a deliberate configuration rather than a default. Check the privacy setting before your first prompt, understand that codebase indexing sends code off the machine for processing, and treat .cursorignore as a scoping tool rather than a security boundary."}},
-  {"@type":"Question","name":"Is Cursor less safe than other AI editors?","acceptedAnswer":{"@type":"Answer","text":"No. These risks apply to any agentic AI editor. Cursor is more visible because it is widely used and its agent is capable. An editor without an ignore mechanism or diff review is not safer, it simply gives you fewer controls."}}
+  {"@type":"Question","name":"How do I secure Cursor before shipping?","acceptedAnswer":{"@type":"Answer","text":"Disable auto-run for agent mode, review every AI-suggested command and dependency before accepting it, keep real secrets out of files the editor can read, and scan the generated code for hardcoded keys and unsafe patterns before you deploy."}}
 ]}
 </script>
 <style>
@@ -79,24 +77,11 @@ footer a{color:var(--text3);text-decoration:none}
 
   <h2>The four risks that actually show up</h2>
   <ul class="plain">
-    <li><strong>Agent-mode auto-run.</strong> With auto-run enabled, Cursor executes suggested terminal commands without a human approving each one. The danger isn't that the model is malicious — it's that the model reads untrusted text. A comment in a dependency, a line in a log file, a scraped web page, or the output of a tool can all contain instructions, and the agent has no reliable way to tell data from direction. That's prompt injection, and auto-run turns it from an annoyance into command execution on your machine.</li>
-    <li><strong>Secrets the editor can still read.</strong> An open <code>.env</code> tab is visible to the model even when the file is in <code>.cursorignore</code> — ignore rules govern indexing, not what's in your open editor. The practical consequence is that a key can end up quoted in a chat response, pasted into a suggested config, or written into a file that later gets committed.</li>
-    <li><strong>Hallucinated or typosquatted packages.</strong> Agent mode sometimes suggests installing a dependency that doesn't exist. Attackers watch for commonly hallucinated names and register them, so the install that resolves your error can be the attack. This has a name — slopsquatting — and it's an active technique, not a hypothetical one.</li>
-    <li><strong>Context carrying between projects.</strong> Long sessions with several repos open can let details from one codebase surface in suggestions for another. Usually harmless; occasionally it means a client's schema or an internal endpoint appears in work for someone else.</li>
+    <li><strong>Agent-mode auto-run</strong> — with auto-run enabled, Cursor can execute suggested terminal commands without a human confirming each one first. A prompt-injected comment, log line, or scraped web page can steer the agent into running something you never approved.</li>
+    <li><strong>Secrets the editor can still read</strong> — an open <code>.env</code> tab can be read by the model even if the file is listed in <code>.cursorignore</code>, since ignore rules govern indexing, not what's visible in an open editor tab.</li>
+    <li><strong>Hallucinated or typosquatted packages</strong> — agent mode sometimes suggests installing a dependency that doesn't exist, or a real-looking name that isn't the real package. Installing without checking is a live supply-chain risk, not a theoretical one.</li>
+    <li><strong>Context carrying between projects</strong> — long sessions and shared context can let details from one project leak into suggestions for an unrelated one, especially with multiple repos open.</li>
   </ul>
-
-  <h2>Is Cursor safe for proprietary or client code?</h2>
-  <p>This is the question that actually decides whether Cursor gets approved at work, and it's a different question from whether the code it writes is secure. Three things determine the answer, and all three are settings you control:</p>
-  <ul class="plain">
-    <li><strong>Privacy mode.</strong> Cursor offers a privacy setting that governs whether your code can be retained or used for training. If you're working on client or proprietary code, this is the first thing to check — before the first prompt, not after. Confirm the current behaviour in Cursor's own settings and privacy documentation rather than assuming a default.</li>
-    <li><strong>Codebase indexing.</strong> Cursor's codebase-wide features work by indexing your repository so it can retrieve relevant context. That means parts of your code leave the machine to be processed. For most projects this is an acceptable trade; for a codebase under NDA, it's a decision someone should make deliberately.</li>
-    <li><strong>What <code>.cursorignore</code> actually covers.</strong> It governs what gets indexed. It does not make a file invisible to the model if you have that file open in a tab and ask a question about the surrounding code. Treat it as a scoping tool, not a security boundary.</li>
-  </ul>
-  <p>None of this makes Cursor unsafe for professional work — plenty of teams use it under NDA. It means the safe configuration is something you set deliberately, and the defaults are tuned for convenience rather than confidentiality.</p>
-
-  <h2>What Cursor actually gets right</h2>
-  <p>It's worth being fair here, because "is Cursor safe" often gets answered with unqualified alarm. Cursor asks for confirmation before applying edits by default. It shows you diffs rather than silently rewriting files. It has an ignore mechanism at all, which not every AI editor does. And agent mode's riskiest behaviour — auto-run — is something you have to turn on.</p>
-  <p>Nearly every serious Cursor incident traces back to a setting someone changed for speed, or to code that shipped without review. That's genuinely good news: it means the risk is configurable, not inherent.</p>
 
   <h2>Why "it worked in the editor" proves nothing</h2>
   <p>Same failure as any AI code tool: the agent optimizes for a command that completes and code that runs, not for a command you'd have approved if you'd read it carefully. Nothing about a clean terminal output tells you a suggested package was vetted, or that a secret didn't sit in an open tab during the session.</p>
@@ -109,20 +94,7 @@ footer a{color:var(--text3);text-decoration:none}
     <li>Start a fresh session per project for anything sensitive, instead of one long multi-repo thread</li>
     <li>Scan the generated code for hardcoded keys and unsafe patterns before you deploy</li>
   </ul>
-  <p>Two of those deserve a note. <strong>Turning off auto-run</strong> is the single highest-value change on the list — it converts every prompt-injection risk from "something that already ran" into "something you declined." And <strong>checking package names</strong> takes about thirty seconds on the registry: look for a plausible download count, a real repository, and a publish history that didn't start last week.</p>
   <p>A scanner like <a href="/login.html" style="color:var(--cyan)">VibeSafe</a> runs that last check in about ten seconds and explains each finding in plain English — so "is Cursor safe?" becomes "yes, because I checked what it shipped."</p>
-
-  <h2>Questions developers ask</h2>
-  <p class="faq-q">Is Cursor safe to use?</p>
-  <p>Yes, for most work. Cursor asks before applying edits and requires you to enable its riskiest behaviour deliberately. The real exposure comes from agent mode with auto-run on, secrets sitting in open tabs, and shipping generated code without review — all of which are configuration and habit rather than flaws in the editor.</p>
-  <p class="faq-q">What are Cursor's biggest security risks?</p>
-  <p>Agent-mode auto-run combined with prompt injection, secrets remaining readable despite <code>.cursorignore</code>, hallucinated or typosquatted package suggestions, and context bleeding between projects in long multi-repo sessions.</p>
-  <p class="faq-q">How do I secure Cursor?</p>
-  <p>Disable auto-run so you approve each command, keep real secrets out of open files, verify every suggested package against the registry, use a fresh session per project for sensitive work, and scan the generated code before deploying.</p>
-  <p class="faq-q">Is Cursor safe for company or client code?</p>
-  <p>It can be, but it's a deliberate configuration rather than a default. Check the privacy setting before your first prompt, understand that codebase indexing sends code off the machine for processing, and treat <code>.cursorignore</code> as a scoping tool rather than a security boundary.</p>
-  <p class="faq-q">Is Cursor less safe than other AI editors?</p>
-  <p>No — the risks described here apply to any agentic AI editor. Cursor is more visible because it's widely used and its agent is capable. An editor without an ignore mechanism or diff review isn't safer; it just gives you fewer controls.</p>
 
   <div class="cta-box">
     <a href="/login.html">Scan your code free →</a>
