@@ -125,11 +125,6 @@
 
   <!-- Blog posts -->
   <url>
-    <loc>https://www.vibesafe.info/blog/vibe-coding-safety-2026-current-issues</loc>
-    <lastmod>2026-08-21</lastmod>
-    <priority>0.85</priority>
-  </url>
-  <url>
     <loc>https://www.vibesafe.info/blog/is-cursor-safe-security-risks-explained</loc>
     <lastmod>2026-08-15</lastmod>
     <priority>0.80</priority>
