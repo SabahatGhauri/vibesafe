@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What VibeSafe Actually Finds — Real Examples | VibeSafe</title>
+<meta name="description" content="See real VibeSafe output before you sign up: a genuine scan result, what Launch Check inspects in your live app, the headers a website scan checks, and exactly what each plan includes.">
+<link rel="canonical" href="https://www.vibesafe.info/demo">
+<meta property="og:title" content="What VibeSafe Actually Finds — Real Examples">
+<meta property="og:description" content="Real scan output, not a mockup. See what you get before you sign up.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.vibesafe.info/demo">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"></noscript>
+<link rel="stylesheet" href="/theme.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Inter Fallback',sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:880px;margin:0 auto;padding:48px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px;text-align:center}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4.5vw,2.6rem);line-height:1.15;letter-spacing:-0.02em;margin-bottom:14px;text-align:center}
+.lead{font-size:1.05rem;color:var(--text2);margin:0 auto 34px;max-width:660px;text-align:center}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;margin:44px 0 6px;display:flex;align-items:center;gap:10px}
+.sub{color:var(--text3);font-size:0.86rem;margin-bottom:16px}
+p{color:var(--text2);margin-bottom:14px}
+.card{background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:20px 22px;margin-bottom:14px}
+.code{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:0.8rem;line-height:1.6;color:var(--text2);overflow-x:auto;white-space:pre;margin-bottom:14px}
+.scorebar{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:12px;background:var(--bg);border:1px solid var(--border2);margin-bottom:14px}
+.scorenum{font-family:'Space Grotesk',sans-serif;font-size:2.1rem;font-weight:700;color:#EF4444;line-height:1}
+.finding{border:1px solid var(--border2);border-left-width:3px;border-radius:10px;padding:11px 14px;margin-bottom:8px;background:var(--bg)}
+.finding.crit{border-left-color:#EF4444}
+.finding.warn{border-left-color:#F59E0B}
+.pill{font-size:0.64rem;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;padding:2px 7px;border-radius:100px;margin-right:8px}
+.pill.crit{background:rgba(239,68,68,0.15);color:#FCA5A5}
+.pill.warn{background:rgba(245,158,11,0.15);color:#FCD34D}
+ul{margin:0 0 14px 20px;color:var(--text2)}
+li{margin-bottom:6px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem;margin-bottom:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)}
+th{color:var(--text3);font-size:0.74rem;text-transform:uppercase;letter-spacing:0.05em;font-weight:700}
+td.y{color:#6EE7B7}
+td.n{color:var(--text3)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 26px;border-radius:10px;font-weight:700;font-size:0.95rem;text-decoration:none;background:var(--cyan);color:var(--bg)}
+.cta{text-align:center;background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;margin-top:36px}
+.note{font-size:0.82rem;color:var(--text3);margin-top:8px}
+footer{border-top:1px solid var(--border);padding:28px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3)}
+@media(max-width:640px){.code{font-size:0.72rem}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt=""> VibeSafe</a>
+  <a href="/try" class="nav-cta">Try it free</a>
+</nav>
+
+<main>
+  <p class="eyebrow">Real output · No mockups</p>
+  <h1>What VibeSafe actually finds</h1>
+  <p class="lead">Every example below is genuine output from the live product, not an illustration. If you'd rather just watch it work on your own code, that takes about ten seconds and needs no account.</p>
+
+  <h2>🔐 Code scan</h2>
+  <p class="sub">Free · 3 scans a month · no account needed to try</p>
+  <p>Paste code from Lovable, Bolt, Cursor, Replit — or anywhere. Here is a real scan of twelve lines of the kind of Express route an AI tool writes when you ask it for a login endpoint:</p>
+
+  <div class="code">const STRIPE_KEY = "sk_live_51H8xQ2eZvKYlo2CkQmT9vB";
+
+app.get("/user/:id", (req, res) =&gt; {
+  const u = db.query("SELECT * FROM users WHERE id = " + req.params.id);
+  res.json(u);
+});
+
+app.post("/login", async (req, res) =&gt; {
+  const r = db.query(`SELECT * FROM users WHERE email = ${req.body.email}`);
+  if (r.password == req.body.password) res.json({ token: "admin" });
+});</div>
+
+  <div class="scorebar">
+    <div class="scorenum">2</div>
+    <div>
+      <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);font-weight:700">Safety score</div>
+      <div style="font-size:0.9rem">8 issues found — 6 critical</div>
+    </div>
+  </div>
+
+  <div class="finding crit"><span class="pill crit">critical</span>Live Stripe secret key hardcoded in source code</div>
+  <div class="finding crit"><span class="pill crit">critical</span>Unsanitised user input concatenated into SQL query (GET /user/:id)</div>
+  <div class="finding crit"><span class="pill crit">critical</span>Unsanitised user input interpolated into SQL query (POST /login)</div>
+  <div class="finding crit"><span class="pill crit">critical</span>Passwords compared in plaintext</div>
+  <div class="finding crit"><span class="pill crit">critical</span>Hardcoded static auth token returned for all users</div>
+  <div class="finding crit"><span class="pill crit">critical</span>Full database row, including password, returned in API response</div>
+
+  <p>Every finding comes with a plain-English explanation of what an attacker could do with it, and the corrected code. That code ran perfectly, by the way — the demo would have looked fine.</p>
+  <p><a href="/try" style="color:var(--cyan)">Run this on your own code →</a></p>
+
+  <h2>🚀 Launch Check</h2>
+  <p class="sub">Free plan includes 1 per month · unlimited on Pro</p>
+  <p>Scanning code tells you nothing about whether the deployed app works. Launch Check opens your live site in a real browser and behaves like a first-time visitor. It captures:</p>
+  <ul>
+    <li>Every page it can reach by following your internal links</li>
+    <li>JavaScript errors thrown in the console</li>
+    <li>Network requests that failed</li>
+    <li>Screenshots of what a visitor actually sees</li>
+    <li>How many forms, buttons and links exist on each page</li>
+  </ul>
+  <p>Then it writes a launch-readiness report in plain English — written for a founder, not an engineer.</p>
+  <div class="card"><strong>What it does not do:</strong> it never submits forms or clicks anything destructive. It browses; it doesn't create accounts or write to your database.</div>
+
+  <h2>🌐 Live website scan</h2>
+  <p class="sub">Pro</p>
+  <p>Point it at a deployed URL and it inspects what your server actually sends to a browser, including the security headers that decide whether common attacks are possible at all:</p>
+  <ul>
+    <li><code>Content-Security-Policy</code> — limits what can execute on your page</li>
+    <li><code>Strict-Transport-Security</code> — forces HTTPS</li>
+    <li><code>X-Frame-Options</code> — blocks clickjacking</li>
+    <li><code>X-Content-Type-Options</code> — stops MIME-type confusion</li>
+    <li><code>Referrer-Policy</code> and <code>Permissions-Policy</code></li>
+  </ul>
+  <p>Plus exposed paths that shouldn't be reachable, and an AI review of what it found.</p>
+
+  <h2>🐱 GitHub file scan</h2>
+  <p class="sub">Free</p>
+  <p>Paste a link to a file in a public GitHub repo and it scans that file directly — no copying and pasting, and no install.</p>
+
+  <h2>📡 Continuous monitoring</h2>
+  <p class="sub">Pro</p>
+  <p>Security drifts. A deploy next month can reintroduce a key or drop a header that passed today. Monitoring re-scans your watched site weekly and emails you <em>only</em> when it gets worse — when the score drops or a new critical issue appears. The email shows the before and after score and what changed, so a quiet inbox means nothing broke.</p>
+
+  <h2>What each plan includes</h2>
+  <table>
+    <tr><th>&nbsp;</th><th>Free</th><th>Pro</th><th>Team</th></tr>
+    <tr><td>Code scans</td><td class="n">3 / month</td><td class="y">Unlimited</td><td class="y">Unlimited</td></tr>
+    <tr><td>Plain-English fixes</td><td class="y">Yes</td><td class="y">Yes</td><td class="y">Yes</td></tr>
+    <tr><td>GitHub file scan</td><td class="y">Yes</td><td class="y">Yes</td><td class="y">Yes</td></tr>
+    <tr><td>Launch Check</td><td class="n">1 / month</td><td class="y">Unlimited</td><td class="y">Unlimited</td></tr>
+    <tr><td>Live website scan</td><td class="n">—</td><td class="y">Yes</td><td class="y">Yes</td></tr>
+    <tr><td>Continuous monitoring</td><td class="n">—</td><td class="y">Yes</td><td class="y">Yes</td></tr>
+    <tr><td>Team members</td><td class="n">—</td><td class="n">—</td><td class="y">Yes</td></tr>
+  </table>
+  <p class="note">Your code is never stored. Scans run and the code is discarded.</p>
+
+  <div class="cta">
+    <h2 style="justify-content:center;margin-top:0">See it on your own code</h2>
+    <p>No account, no card. About ten seconds.</p>
+    <a href="/try" class="btn">Scan my code free →</a>
+  </div>
+</main>
+
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/how-it-works">How it works</a> · <a href="/try">Try it free</a> · <a href="/legal">Privacy &amp; Terms</a>
+</footer>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

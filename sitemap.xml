@@ -30,6 +30,11 @@
 
   <!-- Landing / SEO pages -->
   <url>
+    <loc>https://www.vibesafe.info/demo</loc>
+    <lastmod>2026-08-26</lastmod>
+    <priority>0.95</priority>
+  </url>
+  <url>
     <loc>https://www.vibesafe.info/try</loc>
     <lastmod>2026-08-23</lastmod>
     <priority>0.95</priority>
