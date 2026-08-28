@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stripe Key Exposed on GitHub? Do This Right Now | VibeSafe</title>
+<meta name="description" content="A live Stripe secret key on GitHub is live the moment it's pushed. Exact steps to rotate it, check for damage, and remove it from git history — in order of urgency.">
+<meta name="keywords" content="VibeSafe, vibesafe, stripe key exposed, leaked stripe secret key, rotate stripe api key github, stripe key on github">
+<link rel="canonical" href="https://www.vibesafe.info/blog/stripe-key-exposed-on-github-what-to-do">
+<meta property="og:title" content="Stripe Key Exposed on GitHub? Do This Right Now">
+<meta property="og:description" content="Exact steps to rotate a leaked Stripe key, check for damage, and remove it from git history — in order of urgency.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/blog/stripe-key-exposed-on-github-what-to-do">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
+<link rel="stylesheet" href="/theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Stripe Key Exposed on GitHub? Do This Right Now","description":"Exact steps to rotate a leaked Stripe key, check for damage, and remove it from git history.","datePublished":"2026-08-28","author":{"@type":"Organization","name":"VibeSafe"},"publisher":{"@type":"Organization","name":"VibeSafe","url":"https://www.vibesafe.info"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Does GitHub automatically revoke a leaked Stripe key?","acceptedAnswer":{"@type":"Answer","text":"Stripe is a partner in GitHub's secret scanning partner program, which runs automatically and free on public repositories. When GitHub detects a live Stripe key pattern in a public repo, it notifies Stripe directly, and Stripe can revoke it — sometimes before you notice the push. This does not cover private repositories, and there is still a window between the push and detection where the key is live."}},
+{"@type":"Question","name":"Is deleting the file with the key enough?","acceptedAnswer":{"@type":"Answer","text":"No. Deleting the file and committing that change leaves the key readable in git history via git log or git show. The key must be rotated in the Stripe dashboard regardless of what you do to the repository — rotation is the only action that actually disables it."}},
+{"@type":"Question","name":"Are restricted keys safer than the full secret key?","acceptedAnswer":{"@type":"Answer","text":"Yes. A restricted key scoped to only the operations your app needs (e.g. read-only on charges) limits what an attacker can do if it leaks. It does not prevent the leak, but it shrinks the blast radius."}},
+{"@type":"Question","name":"What if the repo is private?","acceptedAnswer":{"@type":"Answer","text":"GitHub's automatic partner notification to Stripe applies to public repositories. A key in a private repo is not automatically reported, so it can sit exposed indefinitely to anyone with repo access — a departing contractor, a compromised collaborator account, or a misconfigured fork. Rotate it regardless of repo visibility."}}
+]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Inter Fallback',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,2.5rem);line-height:1.18;letter-spacing:-0.02em;margin-bottom:18px}
+.lead{font-size:1.08rem;color:var(--text2);margin-bottom:26px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;margin:32px 0 12px}
+p{color:var(--text2);margin-bottom:16px}
+ul.plain{margin:0 0 18px 18px;color:var(--text2)}
+ul.plain li{margin-bottom:8px}
+.check{list-style:none;margin:0 0 18px}
+.check li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid var(--border);color:var(--text2)}
+.check li::before{content:'☐';position:absolute;left:0;color:var(--cyan);font-weight:700}
+.step{display:flex;gap:14px;margin-bottom:20px}
+.step-num{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--surface2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;color:var(--cyan)}
+.step-body h3{font-size:1.02rem;margin-bottom:5px;color:var(--text)}
+code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.faq-item{margin-bottom:18px}
+.faq-item h3{font-size:1rem;margin-bottom:6px;color:var(--text)}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+.meta-row{font-size:0.82rem;color:var(--text3);margin-bottom:28px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt=""> VibeSafe</a>
+  <a href="/try" class="nav-cta">Scan your code — free</a>
+</nav>
+<main>
+  <p class="eyebrow">Secrets</p>
+  <h1>Your Stripe key is on GitHub. Do this now, in this order.</h1>
+  <div class="meta-row">6 min read · VibeSafe Blog</div>
+  <p class="lead">Deleting the file doesn't help. The key is still live until you rotate it, and it's still readable in git history until you remove it from there too. Here's the order that actually matters.</p>
+
+  <h2>Step 1 (right now): rotate the key in Stripe</h2>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h3>Go to dashboard.stripe.com/apikeys in live mode</h3>
+      <p>Find the exposed secret key, open its overflow menu, and choose <strong>Rotate key</strong>. In the expiration dropdown, pick <strong>Now</strong> — not a grace period. A grace period exists to avoid downtime during planned rotations; it does the opposite of what you want during a leak, since it keeps the compromised key valid.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h3>Copy the new key straight into environment variables</h3>
+      <p>Server environment, CI secrets, and any deployment platform's secret store — never back into a file. Redeploy before you do anything else on this list.</p>
+    </div>
+  </div>
+
+  <p><strong>This is the only step that actually disables the key.</strong> Everything below matters, but none of it neutralizes the leak by itself.</p>
+
+  <h2>Step 2: check what happened while it was live</h2>
+  <ul class="plain">
+    <li>In the Stripe dashboard, check the <strong>API request logs</strong> for the exposed key — filter by key ID and look for requests you don't recognize, especially from unfamiliar IPs or at odd hours</li>
+    <li>Check for unexpected refunds, payouts, or customer list queries — a live secret key can read customer records, not just process payments</li>
+    <li>If anything looks wrong, Stripe support can help assess the blast radius; don't assume silence in the logs means nothing happened, but don't assume the worst either — check first</li>
+  </ul>
+
+  <h2>Step 3: remove it from git history</h2>
+  <p>A key doesn't disappear from a repo when you delete the file and commit — it's still sitting in every commit before that one, retrievable with <code>git log -p</code> or a clone of the repo from before the deletion. If the repo is public or shared, treat the key as burned regardless of what you do next (that's what Step 1 was for), then clean the history so it stops being a liability going forward:</p>
+  <ul class="plain">
+    <li>Use <code>git filter-repo</code> (the tool git.com itself now recommends) or BFG Repo-Cleaner to strip the key from every commit, not just the latest one</li>
+    <li>Force-push the cleaned history, and have every collaborator re-clone rather than pull — a stale local clone will just push the old history back</li>
+    <li>If the repo is public and has been up for more than a few minutes, assume it's already been scraped by an automated bot regardless of history cleanup — see the note on GitHub's secret scanning below</li>
+  </ul>
+
+  <h2>What GitHub does automatically — and what it doesn't</h2>
+  <p>Stripe is one of over 100 partners in <a href="https://docs.github.com/en/code-security/secret-scanning/secret-scanning-partnership-program/secret-scanning-partner-program" style="color:var(--cyan)">GitHub's secret scanning partner program</a>. It runs automatically and free on public repositories: when GitHub detects a live Stripe key pattern in a public push, it notifies Stripe directly, and Stripe can revoke it — sometimes within minutes, before you've even seen the push notification.</p>
+  <p>Two things this doesn't cover, both worth knowing:</p>
+  <ul class="plain">
+    <li><strong>Private repositories aren't scanned by default.</strong> A key in a private repo can sit exposed indefinitely to anyone with access — a contractor after their contract ends, a compromised collaborator account, a fork nobody remembers exists.</li>
+    <li><strong>There's still a window.</strong> Detection isn't instant, and a scraper watching public commits in real time can beat GitHub's own notification to Stripe. Rotating yourself in Step 1 is what closes that window — don't wait to see if GitHub catches it first.</li>
+  </ul>
+
+  <h2>Prevent the next one</h2>
+  <ul class="check">
+    <li>Use <strong>restricted keys</strong> scoped to only what each service needs — a webhook handler that only needs to read charges shouldn't hold the full secret key</li>
+    <li>Add <code>.env</code> to <code>.gitignore</code> before the first commit, not after the first leak</li>
+    <li>Scan before you push, not after GitHub or a customer tells you</li>
+  </ul>
+
+  <div class="cta-box">
+    <a href="/try">Scan your code for exposed keys free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">No signup · About ten seconds · Your code is never stored</p>
+  </div>
+
+  <h2>FAQ</h2>
+  <div class="faq-item">
+    <h3 class="faq-q">Does GitHub automatically revoke a leaked Stripe key?</h3>
+    <p>Stripe is a partner in GitHub's secret scanning partner program, which runs automatically and free on public repositories. When GitHub detects a live Stripe key pattern in a public repo, it notifies Stripe directly, and Stripe can revoke it — sometimes before you notice the push. This does not cover private repositories, and there is still a window between the push and detection where the key is live.</p>
+  </div>
+  <div class="faq-item">
+    <h3 class="faq-q">Is deleting the file with the key enough?</h3>
+    <p>No. Deleting the file and committing that change leaves the key readable in git history via <code>git log</code> or <code>git show</code>. The key must be rotated in the Stripe dashboard regardless of what you do to the repository — rotation is the only action that actually disables it.</p>
+  </div>
+  <div class="faq-item">
+    <h3 class="faq-q">Are restricted keys safer than the full secret key?</h3>
+    <p>Yes. A restricted key scoped to only the operations your app needs (e.g. read-only on charges) limits what an attacker can do if it leaks. It does not prevent the leak, but it shrinks the blast radius.</p>
+  </div>
+  <div class="faq-item">
+    <h3 class="faq-q">What if the repo is private?</h3>
+    <p>GitHub's automatic partner notification to Stripe applies to public repositories. A key in a private repo is not automatically reported, so it can sit exposed indefinitely to anyone with repo access. Rotate it regardless of repo visibility.</p>
+  </div>
+
+  <div class="disclaimer"><strong>An honest note.</strong> VibeSafe flags hardcoded keys like this one before you ship — it doesn't monitor Stripe's logs or clean git history for you. Steps 2 and 3 above are still yours to do.</div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related:</p>
+  <div class="related">
+    <a href="/blog/what-happens-when-api-key-leaks.html">What happens when any key leaks</a>
+    <a href="/exposed-api-key-scanner.html">Exposed key scanner</a>
+    <a href="/blog/how-to-find-exposed-api-keys-in-code.html">How to find exposed keys</a>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/blog.html">Blog</a> · <a href="/legal.html">Privacy &amp; Terms</a>
+</footer>
+  <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

@@ -200,6 +200,11 @@
     <priority>0.70</priority>
   </url>
   <url>
+    <loc>https://www.vibesafe.info/blog/stripe-key-exposed-on-github-what-to-do</loc>
+    <lastmod>2026-08-28</lastmod>
+    <priority>0.75</priority>
+  </url>
+  <url>
     <loc>https://www.vibesafe.info/blog/replit-app-security-guide</loc>
     <lastmod>2026-07-07</lastmod>
     <priority>0.70</priority>
