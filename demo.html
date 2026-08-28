@@ -161,6 +161,23 @@ app.post("/login", async (req, res) =&gt; {
 <footer>
   © VibeSafe · <a href="/">Home</a> · <a href="/how-it-works">How it works</a> · <a href="/try">Try it free</a> · <a href="/legal">Privacy &amp; Terms</a>
 </footer>
+<script>
+// First-touch attribution, same key /try and login.html read — captured here
+// too since this is often the first page someone from Reddit/HN/PH actually lands on.
+(function () {
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var fromUrl = params.get('utm_source') || params.get('ref');
+    if (fromUrl && !localStorage.getItem('vs_source')) {
+      localStorage.setItem('vs_source', fromUrl.slice(0, 60));
+    }
+    if (!localStorage.getItem('vs_source')) {
+      var ref = document.referrer ? (new URL(document.referrer)).hostname : '';
+      localStorage.setItem('vs_source', ref && ref.indexOf('vibesafe.info') === -1 ? ref.slice(0, 60) : 'direct');
+    }
+  } catch (e) {}
+})();
+</script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

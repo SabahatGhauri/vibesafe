@@ -140,6 +140,26 @@ footer a{color:var(--text3)}
 
 <script>
 var API = 'https://vibesafe-api.vercel.app/api/demo-scan';
+
+// First-touch attribution: capture ?utm_source (falls back to referrer host,
+// then 'direct') once, keep it in localStorage so it survives the trip through
+// signup. Never overwrites an existing value — first touch, not last touch.
+function getSource() {
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var fromUrl = params.get('utm_source') || params.get('ref');
+    if (fromUrl && !localStorage.getItem('vs_source')) {
+      localStorage.setItem('vs_source', fromUrl.slice(0, 60));
+    }
+    if (!localStorage.getItem('vs_source')) {
+      var ref = document.referrer ? (new URL(document.referrer)).hostname : '';
+      localStorage.setItem('vs_source', ref && ref.indexOf('vibesafe.info') === -1 ? ref.slice(0, 60) : 'direct');
+    }
+    return localStorage.getItem('vs_source') || 'direct';
+  } catch (e) { return 'direct'; }
+}
+var SOURCE = getSource();
+
 var codeEl = document.getElementById('code');
 var msgEl  = document.getElementById('msg');
 var btn    = document.getElementById('scanBtn');
@@ -226,7 +246,7 @@ btn.addEventListener('click', async function () {
     var res = await fetch(API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code: code, language: document.getElementById('lang').value })
+      body: JSON.stringify({ code: code, language: document.getElementById('lang').value, source: SOURCE })
     });
     var data = await res.json();
     if (!res.ok) {

@@ -469,10 +469,14 @@ async function handleAuth() {
 
   try {
     if (mode === 'signup') {
+      // Closes the source → scan → signup loop: /try and /demo write this to
+      // localStorage on first touch (utm_source, or referrer host, or 'direct').
+      var signupSource = 'direct';
+      try { signupSource = localStorage.getItem('vs_source') || 'direct'; } catch (e) {}
       const { data, error } = await supabaseClient.auth.signUp({
         email: email,
         password: password,
-        options: { data: { full_name: name } }
+        options: { data: { full_name: name, signup_source: signupSource } }
       });
       if (error) throw error;
 
