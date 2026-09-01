@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Launch Check Can Now See Your App — Not Just Count Its Buttons | VibeSafe</title>
+<meta name="description" content="Two things we shipped this week: missing-state detection in the code scanner, and a Launch Check that actually looks at screenshots instead of guessing from button counts. We tested both on our own site.">
+<meta name="keywords" content="VibeSafe, vibesafe, Launch Check, missing state handling, webhook security, UX testing, launch readiness">
+<link rel="canonical" href="https://www.vibesafe.info/blog/launch-check-can-now-see-your-app">
+<meta property="og:title" content="Launch Check Can Now See Your App — Not Just Count Its Buttons">
+<meta property="og:description" content="We fed Launch Check its own screenshots and added missing-state detection to the scanner. Then we ran both on our own site and fixed what they found.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/blog/launch-check-can-now-see-your-app">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"></noscript>
+<link rel="stylesheet" href="/theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Launch Check Can Now See Your App — Not Just Count Its Buttons","description":"Two things we shipped this week: missing-state detection in the code scanner, and a Launch Check that actually looks at screenshots. Tested on our own site.","datePublished":"2026-08-29","author":{"@type":"Organization","name":"VibeSafe"},"publisher":{"@type":"Organization","name":"VibeSafe","url":"https://www.vibesafe.info"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Inter Fallback',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,2.5rem);line-height:1.18;letter-spacing:-0.02em;margin-bottom:18px}
+.lead{font-size:1.08rem;color:var(--text2);margin-bottom:26px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;margin:38px 0 12px}
+h3{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;margin:24px 0 8px;color:var(--text)}
+p{color:var(--text2);margin-bottom:16px}
+strong{color:var(--text)}
+ul.plain{margin:0 0 18px 18px;color:var(--text2)}
+ul.plain li{margin-bottom:8px}
+code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+pre{background:#0B1120;border:1px solid var(--border2);border-radius:10px;padding:16px 18px;overflow-x:auto;margin:0 0 18px;font-size:0.82rem;line-height:1.6}
+pre code{background:none;border:none;padding:0;color:#CBD5E1}
+.quote{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--cyan);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:0 0 18px;font-style:italic}
+.finding{border:1px solid var(--border2);border-left-width:3px;border-radius:10px;padding:12px 16px;margin-bottom:10px}
+.finding.critical{border-left-color:#EF4444}
+.finding.warning{border-left-color:#F59E0B}
+.finding-title{font-weight:600;font-size:0.9rem;color:var(--text)}
+.pill{display:inline-block;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;padding:2px 8px;border-radius:100px;margin-right:8px;vertical-align:middle}
+.pill.critical{background:rgba(239,68,68,0.15);color:#FCA5A5}
+.pill.warning{background:rgba(245,158,11,0.15);color:#FCD34D}
+.score-row{display:flex;align-items:baseline;gap:10px;margin:20px 0}
+.score-num{font-family:'Space Grotesk',sans-serif;font-size:2.2rem;font-weight:700}
+.score-arrow{color:var(--text3);font-size:1.2rem}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.faq-item{margin-bottom:18px}
+.faq-item h3{margin:0 0 6px}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+.meta-row{font-size:0.82rem;color:var(--text3);margin-bottom:28px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt=""> VibeSafe</a>
+  <a href="/#pricing" style="color:var(--text2);text-decoration:none;font-size:0.88rem;font-weight:500;margin-right:18px">Pricing</a>
+  <a href="/try?utm_source=blog_launch_check_screenshots" class="nav-cta">Start free scan</a>
+</nav>
+<main>
+  <p class="eyebrow">Product</p>
+  <h1>Launch Check can now see your app. We tested that claim on our own site before writing this.</h1>
+  <div class="meta-row">7 min read · VibeSafe Blog</div>
+  <p class="lead">Two things shipped this week: the code scanner now catches a class of bug that has nothing to do with security in the usual sense, and Launch Check stopped judging your app blind. Here's what changed, and what happened when we pointed both at ourselves.</p>
+
+  <h2>1. The scanner now catches "the AI only wrote the happy path"</h2>
+  <p>AI coding tools are very good at making the demo work. They're much less reliable at handling what happens when Stripe calls your webhook twice, or a payment comes back <code>pending</code> instead of <code>paid</code>. Those paths don't show up in a five-minute test, so they don't get written — until a real customer hits one in production.</p>
+  <p>We added a new category to the scanner for exactly this: <strong>missing state handling</strong>. It looks for stateful flows — payments, orders, subscriptions, webhooks — that only implement the success path, with no branch for the realistic failure states.</p>
+  <p>Here's the scanner running on a Stripe webhook handler that already had signature verification done correctly (the part everyone remembers to check):</p>
+  <pre><code>critical | Missing State Handling | No guard against duplicate or replayed webhook events
+warning  | Missing State Handling | No handling for payment_intent.payment_failed or checkout.session.expired
+warning  | Missing State Handling | No handling for async payment methods that stay in 'pending'</code></pre>
+  <p>Notice the first one is <strong>critical</strong>, not a style nitpick. Stripe guarantees at-least-once delivery — the same webhook event can arrive twice. A handler with no idempotency check will happily process a duplicate and double-fulfil an order. That's a real bug hiding inside what looks like a completeness gap, and the scanner correctly told the two apart on its own — it doesn't flag every payment flow just for existing, only ones that visibly reach a real failure state with no branch for it.</p>
+
+  <h2>2. Launch Check was writing reports blind. It isn't anymore.</h2>
+  <p>Launch Check opens your app in a real browser, clicks through a few pages, and captures screenshots. Those screenshots were always shown to <em>you</em> in the report. What we hadn't noticed until we looked closely: they were never actually sent to the model writing the report. It was judging your app's UX from numbers — "this page has 2 buttons and 1 form" — never from what the page actually looked like.</p>
+  <p>We fixed that. The screenshots now go to the model along with the technical evidence, and the report splits into two sections instead of one flat list: <strong>What needs fixing</strong> (crashes, console errors, broken requests — objectively broken) and <strong>UX &amp; flow issues</strong> (friction a first-time visitor would hit — nothing crashed, but it might cost you the visitor).</p>
+
+  <h2>We didn't just ship this. We ran it on ourselves.</h2>
+  <p>Before writing this post, we pointed Launch Check at our own <code>/learn</code> page and asked it to confirm a visitor could reach pricing and the free scan.</p>
+
+  <div class="score-row"><span class="score-num" style="color:#F59E0B">82</span><span style="color:var(--text3)">/100 — Almost ready</span></div>
+  <div class="quote">"VibeSafe loads fast, looks polished, and makes its value crystal clear from the first headline. The main gap is that the 'Learn' page has no nav links back to Pricing or the free scan... so a visitor can't easily understand what Pro includes without backtracking."</div>
+
+  <div class="finding warning">
+    <span class="pill warning">Warning</span><span class="finding-title">'Learn' page is a dead end — no nav menu or next-step CTAs</span>
+    <p style="margin:6px 0 0;font-size:0.87rem">A visitor who lands on Learn has only one button and no way to reach Pricing, Features, or the homepage nav — they have to use the browser back button.</p>
+  </div>
+
+  <p>That was a real, specific finding about our own live site, not a hypothetical. So we fixed it — added the missing nav links, and while we were at it, ran the same audit across every other page sharing that nav template. Then we ran Launch Check again.</p>
+
+  <div class="score-row"><span class="score-num" style="color:#10B981">87</span><span style="color:var(--text3)">/100 — Ready to launch</span></div>
+  <p>Better — and it confirmed the fix in its own words: <em>"Visitors can clearly reach both Pricing and the free scan from the /learn page via the top navigation bar."</em> But it kept going, because the bot's journey that run happened to click through to <code>/how-it-works</code> and <code>/login</code>, and found two more real, smaller gaps: the How It Works page's nav was missing a Sign In link, and the login page had no navigation at all beyond a single "back to home" text link. Fixed both. Ran it a third time.</p>
+
+  <div class="score-row"><span class="score-num" style="color:#10B981">95</span><span style="color:var(--text3)">/100 — Ready to launch</span></div>
+  <p>The only thing left was a wording mismatch — one page's button said "Scan your code" while every other page said "Start free scan." Same link, inconsistent label. Fixed that too.</p>
+
+  <h2>Why we're telling you this instead of just changing a changelog</h2>
+  <p>Three consecutive real findings, each one different from the last, each one true about our own production site, each one we verified live rather than assumed fixed. That's the actual proof this is worth anything — not "the model can now see images," but "the model looked at our own app and found three real problems in a row, and stopped finding new ones once they were actually fixed."</p>
+
+  <div class="disclaimer"><strong>An honest note.</strong> Launch Check is deliberately passive — it never submits forms or clicks anything destructive on your live app. That means it won't catch everything a full manual QA pass would, especially issues that only show up mid-flow through a multi-step form. It's built to catch what a first-time visitor sees in the first few clicks, not to replace testing your own checkout.</div>
+
+  <h2>FAQ</h2>
+  <div class="faq-item">
+    <h3>Does missing-state detection replace testing my webhook handlers?</h3>
+    <p>No. It flags stateful flows that show a visible gap in the code — it can't know your actual Stripe event volume or run your webhook against real retries. Treat it as a fast first pass that catches the mistake everyone makes, not a substitute for testing against Stripe's own event simulator.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Does Launch Check now click through my whole app to find UX issues?</h3>
+    <p>No — it still only visits the homepage plus up to two internal links, passively. What changed is that it now actually looks at the screenshots from those same pages instead of judging them by button and form counts alone.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Is the UX feedback subjective?</h3>
+    <p>Some of it necessarily is — "does this feel like a dead end" isn't as clear-cut as "did this page return a 500." That's exactly why it's shown in its own section, separate from objective technical failures, so you can weigh it accordingly rather than treating a UX opinion with the same certainty as a crash.</p>
+  </div>
+
+  <div class="cta-box">
+    <a href="/try?utm_source=blog_launch_check_screenshots">Try the scanner free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">No signup · About ten seconds · Launch Check available on paid plans</p>
+  </div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related:</p>
+  <div class="related">
+    <a href="/how-it-works.html">How VibeSafe works</a>
+    <a href="/blog/security-mistakes-ai-built-apps.html">5 security mistakes every AI-built app ships</a>
+    <a href="/blog/stripe-key-exposed-on-github-what-to-do.html">Stripe key exposed? Do this</a>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/blog.html">Blog</a> · <a href="/legal.html">Privacy &amp; Terms</a>
+</footer>
+  <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
