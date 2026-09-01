@@ -28,6 +28,11 @@ nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-con
 .logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
 .logo-icon{width:30px;height:30px;border-radius:8px}
 .nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+.nav-links{display:flex;align-items:center;gap:22px;list-style:none}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:0.88rem;font-weight:500}
+.nav-links a:hover{color:var(--text)}
+.nav-right{display:flex;align-items:center;gap:18px}
+@media(max-width:720px){.nav-links{display:none}}
 main{max-width:880px;margin:0 auto;padding:52px 5% 70px}
 .eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
 h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,2.6rem);line-height:1.15;letter-spacing:-0.02em;margin-bottom:14px}
@@ -74,7 +79,14 @@ footer a{color:var(--text3)}
 <body>
 <nav>
   <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt=""> VibeSafe</a>
-  <a href="/login.html" class="nav-cta">Scan your code</a>
+  <ul class="nav-links">
+    <li><a href="/how-it-works.html">How it works</a></li>
+    <li><a href="/#pricing">Pricing</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="/login.html" style="color:var(--text2);text-decoration:none;font-size:0.88rem;font-weight:500">Sign in</a>
+    <a href="/try?utm_source=learn_page" class="nav-cta">Start free scan</a>
+  </div>
 </nav>
 <main>
   <p class="eyebrow">Learn</p>
