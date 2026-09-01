@@ -164,6 +164,15 @@ body{
 }
 .back-home:hover{color:var(--cyan)}
 
+.top-links{
+  position:absolute;top:24px;right:24px;z-index:20;
+  display:flex;align-items:center;gap:20px;
+}
+.top-links a{font-size:0.82rem;color:var(--text3);text-decoration:none;transition:color 0.2s}
+.top-links a:hover{color:var(--cyan)}
+.top-links a.cta{color:var(--cyan);font-weight:600}
+@media(max-width:640px){.top-links{display:none}}
+
 .spinner{
   width:16px;height:16px;border:2px solid rgba(8,12,24,0.3);
   border-top-color:var(--bg);border-radius:50%;
@@ -183,6 +192,11 @@ body{
 <div class="bg-glow2"></div>
 
 <a href="/" class="back-home">← Back to home</a>
+<div class="top-links">
+  <a href="/how-it-works.html">How it works</a>
+  <a href="/#pricing">Pricing</a>
+  <a href="/try?utm_source=login_page" class="cta">Start free scan</a>
+</div>
 
 <div class="auth-card">
   <a href="/" class="auth-logo">
