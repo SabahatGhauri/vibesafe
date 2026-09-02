@@ -260,3 +260,72 @@ This is a project, not a content task. Worth scheduling deliberately.
 Everything above should reinforce that one sentence. Category terms — "AI code security,"
 "vibe coding security," "AI-built app security" — are the territory worth owning.
 "Website security scanner" is a supporting acquisition channel, not the identity.
+
+---
+
+# Backlink plan (added 2026-09-02)
+
+Synthesised from a pasted backlink audit, corrected against what was verified
+directly this session.
+
+## Where the audit is right
+
+- **Profile is underdeveloped, not bad.** Few links, but the ones that exist are
+  topically relevant. That is a much better starting point than spammy volume.
+- **Do not buy links.** Correct, and non-negotiable for a security product.
+- **Spread links across pages**, not all at the homepage.
+- **The research report is the single biggest asset.** This is now the third
+  independent document to say so, and it matches the autoseo skill's own rule:
+  position 40+ is an authority gap that content alone cannot close. Links are the
+  ceiling everything else is stuck under.
+
+## What the audit missed — both verified directly
+
+### 1. The GitHub repo is invisible, and a competitor's ranks above the product
+
+`github.com/SabahatGhauri/vibesafe`:
+- description: **empty**
+- topics: **none**
+- homepage: **a Vercel preview URL**, not vibesafe.info
+
+The competitor ranking #1 for "vibesafe free scanner" (`vibesafeio/vibesafe-action`)
+has a keyword-rich description, 15 topics and 7 stars.
+
+This is a 60-second fix that improves both a ranking competitor's advantage AND the
+`sameAs` entity signal on /about, which currently points at a blank repo.
+
+### 2. The brand is contested — this is why links matter more here than usual
+
+Searching "vibesafe free scanner" returns **four other VibeSafe security scanners
+ahead of vibesafe.info**: `vibesafeio/vibesafe-action`, `CodAngels/vibesafe`,
+`vibesafe.net`, `vibe-safe.net`. vibesafe.info ranks **8th for its own name**.
+
+The search engine also blended all of them into one description — mixing competitors'
+features with VibeSafe's. AI assistants will do the same.
+
+So links here are not only about authority. They are about **entity disambiguation**:
+making the web state unambiguously which VibeSafe is which. That changes what a good
+link looks like — a link that names the product AND the domain AND the company is
+worth more than a higher-authority link that just says "VibeSafe".
+
+### 3. Medium is missing from the confirmed list
+
+Published there this session, canonical pointing back to vibesafe.info.
+
+## Revised priority — sequenced by effort against value
+
+| # | Action | Effort | Why this order |
+|---|---|---|---|
+| 1 | **Fix the GitHub repo** (description, 10 topics, correct homepage) | 1 min | A competitor's repo outranks the product; this is the cheapest possible correction, and it repairs an entity link that already exists |
+| 2 | **Keep cross-posting to DEV/Medium with canonical** | ongoing | Already working; 8 DEV posts live. Scale to 10–15 as the audit suggests |
+| 3 | **The research report with real data** | project | The only lever that lifts position-65 pages. Needs a real corpus — public GitHub repos built with these tools — with published methodology and no invented numbers |
+| 4 | **Developer directories / AI tool listings** | low | Also entity-disambiguation work: each listing states which VibeSafe this is |
+| 5 | **SourceBottle / journalist quotes** | slow, low hit rate | The audit ranks this #1; demoted here because it is the slowest item with the least predictable return, and it works far better once #3 exists to cite |
+
+## The strategic point the audit almost reaches
+
+Its Priority 1 is SourceBottle. That is the wrong first move for a product whose own
+brand name returns four competitors ahead of it. Pitching journalists before the
+entity is unambiguous risks coverage that credits the wrong VibeSafe.
+
+Fix identity first (#1, #4), then earn citations (#3), then pitch (#5).
