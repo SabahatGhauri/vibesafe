@@ -3,6 +3,113 @@
 Synthesised from the two pasted strategy documents, checked against the actual
 site inventory, real Search Console signal, and what's already scheduled.
 
+> **Updated 2026-09-02 with real Google Search Console data (last 3 months).
+> That data changes the priority order — read section 0 first.**
+
+---
+
+## 0. What Search Console actually says (2026-09-02 export, Jul 8 – Aug 30)
+
+### The headline
+
+**29 clicks / 815 impressions in three months. 100% of clicks came from brand
+queries** ("vibesafe", "vibe safe"). **Zero non-brand clicks in three months.**
+
+### Correction to an earlier claim in this document
+
+An earlier version said *"supabase-security-checklist ranks position 7 — the only
+page-one ranking on the site."* **That was wrong.** It came from third-party keyword
+data that does not match Google's own numbers. Real GSC: best Supabase position is
+**42**. Treat GSC as the only source of truth; the third-party positions were
+unreliable across the board.
+
+The "don't move URLs" rule still stands, but because there's no ranking worth the
+risk and the `.html`→extensionless redirects are still consolidating — not because
+of a page-one ranking that doesn't exist.
+
+### Where demand actually is
+
+| Cluster | Impressions | Clicks | Avg position |
+|---|---|---|---|
+| **Cursor** (how to secure cursor, cursor security, is cursor safe…) | **251** | 0 | ~64 |
+| **Vibe coding** ("is vibe coding safe" alone = 176) | **211** | 0 | ~68 |
+| Supabase | 20 | 0 | 42 |
+| "ai code security scanner" | 5 | 0 | 41 |
+| "website security scanner" | **0 impressions — never appears** | — | — |
+
+Top pages by impressions: `/` (500), `/cursor-security-checklist` (**252, pos 64,
+zero clicks**), `/vibe-coding-security` (212, pos 59).
+
+### The uncomfortable implication
+
+**Nothing non-brand sits in the winnable position 8–20 band.** Everything is
+position 30–90. Per the autoseo skill's own rule: *"Position 40+ means an authority
+gap that content alone won't close."*
+
+Therefore:
+- The four pages previously queued for Phase 1 (`/launch-check`, `/ai-code-security`,
+  `/about`, `/website-security-scanner`) target queries with **near-zero measured
+  demand**. "Website security scanner" has never produced a single impression.
+- **On-page work cannot lift a position-65 page.** The research report is not a
+  "phase 3 nice-to-have" — it is the only item on the whole list that earns links,
+  and links are the ceiling everything else is stuck under.
+
+### The one clearly winnable thing
+
+**You rank position 4.95 for your own brand name.** 167 impressions, 14.37% CTR.
+A brand query at #1 typically converts 30–60%. Roughly half the clicks on your
+easiest query are going elsewhere — to the other "VibeSafe" products.
+
+Brand-collision noise visible in the data: Google is matching vibesafe.info to
+*wiresafe, bitsafe, baysafe, defibsafe, visafe, codesafe, "bobby safe", "vibi
+homesafe"*. The collision is real and now quantified.
+
+---
+
+## 0b. Separate finding: the blog never explains what the product does
+
+Measured across all 20 blog posts:
+
+| Feature | Posts mentioning it |
+|---|---|
+| Code scan | 20/20 |
+| Launch Check | 13/20 (mostly name-only) |
+| Safety score | 4/20 |
+| Live URL / DAST | 3/20 |
+| GitHub repo scan | 1/20 |
+| Continuous monitoring | 1/20 |
+| **One-click AI fixes** | **0/20** |
+| **VS Code / Cursor extension** | **0/20** |
+
+And **16 of 20 CTAs are near-identical**: *"Scan your code free → 3 free scans every
+month."*
+
+That sells a **quota, not a capability**. A reader finishes a post about Cursor
+risks and is offered three scans — with no stated reason an account is worth having.
+
+This connects to a known funnel fact: **three users exhausted the free scan limit and
+none converted.** If "3 scans/month" is the only thing they were ever told, hitting
+the limit reads as *"the free thing ran out,"* not *"there's a better version."*
+
+**Fix pattern already proven today:** `/try`'s post-scan CTA now names the actual
+critical issue found ("Critical: Hardcoded Stripe Live Secret Key → don't just find
+it, fix it"). That specificity is what every blog CTA is missing.
+
+---
+
+## 0c. Revised priority order (supersedes the phases below)
+
+1. **Blog CTA + feature communication rewrite** — cheapest, affects all 20 posts,
+   fixes a proven conversion gap, needs no new pages and no new demand
+2. **Brand-term ranking** — the only winnable query; entity signals, `/about`,
+   Organization schema. Directly converts.
+3. **The research report with real data** — the only lever that lifts position-65
+   pages, because it's the only one that earns links
+4. **Cursor cluster investigation** — 251 impressions and a page at position 64
+   with zero clicks; understand it before writing more
+5. **Hold** `/launch-check`, `/ai-code-security`, `/website-security-scanner` until
+   something demonstrates demand
+
 ---
 
 ## 1. The correction that changes the whole plan
