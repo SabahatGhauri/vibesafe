@@ -350,6 +350,11 @@ body {
   overflow: auto;
 }
 
+.ln-flag { display:inline-block; min-width:20px; border-radius:4px; font-weight:700; padding:0 3px; margin-right:-3px; }
+.ln-critical { color:#FCA5A5; background:rgba(239,68,68,0.22); }
+.ln-warning  { color:#FCD34D; background:rgba(245,158,11,0.20); }
+.ln-info     { color:#7DD3F5; background:rgba(0,212,255,0.16); }
+
 .line-numbers {
   position: absolute; left: 0; top: 0; bottom: 0;
   width: 44px;
@@ -1929,13 +1934,58 @@ const ISSUES_DATA = {
 const LANG_NAMES = { js:'JavaScript', ts:'TypeScript', py:'Python', java:'Java', cs:'.NET / C#' };
 
 // ── LINE NUMBERS ──
+// Pulls line numbers out of the model's free-text line reference.
+// Handles "Line 5", "Lines 5-8", "line 3, 7", and a bare "12".
+function parseIssueLines(ref) {
+  const out = [];
+  const s = String(ref || '');
+  const rangeRe = /(\d+)\s*[-–]\s*(\d+)/g;
+  let m;
+  while ((m = rangeRe.exec(s)) !== null) {
+    const a = parseInt(m[1], 10), b = parseInt(m[2], 10);
+    if (a > 0 && b >= a && b - a < 500) for (let i = a; i <= b; i++) out.push(i);
+  }
+  const withoutRanges = s.replace(rangeRe, ' ');
+  const singleRe = /\d+/g;
+  while ((m = singleRe.exec(withoutRanges)) !== null) {
+    const n = parseInt(m[0], 10);
+    if (n > 0) out.push(n);
+  }
+  return out;
+}
+
+// line number -> worst UNFIXED severity on that line, so a fixed issue clears its mark
+function issueLineSeverities() {
+  const rank = { info: 1, warning: 2, critical: 3 };
+  const map = {};
+  (typeof issues !== 'undefined' ? issues : []).forEach(function (i) {
+    if (i.fixed) return;
+    const sev = rank[i.sev] ? i.sev : 'info';
+    parseIssueLines(i.line).forEach(function (n) {
+      if (!map[n] || rank[sev] > rank[map[n]]) map[n] = sev;
+    });
+  });
+  return map;
+}
+
 function updateLineNumbers() {
   const ta = document.getElementById('codeEditor');
   const lines = ta.value.split('\n');
   document.getElementById('lineCount').textContent = lines.length;
   document.getElementById('charCount').textContent = ta.value.length;
   const ln = document.getElementById('lineNumbers');
-  ln.textContent = lines.map((_,i) => i+1).join('\n');
+  const sevByLine = issueLineSeverities();
+  if (!Object.keys(sevByLine).length) {
+    ln.textContent = lines.map((_,i) => i+1).join('\n');
+    return;
+  }
+  ln.innerHTML = lines.map(function (_, i) {
+    const n = i + 1;
+    const sev = sevByLine[n];
+    return sev
+      ? '<span class="ln-flag ln-' + sev + '" title="' + sev + ' issue on line ' + n + '">' + n + '</span>'
+      : String(n);
+  }).join('\n');
 }
 
 function syncScroll() {
@@ -2363,6 +2413,8 @@ function showResults(apiScore) {
 
   // This score came from a real scan of the real code -- drop any estimate labelling.
   markScoreEstimated(false);
+  // Paint the gutter now that we know which lines have findings.
+  if (typeof updateLineNumbers === 'function') updateLineNumbers();
   var rb = document.getElementById('rescanBtn');
   if (rb) {
     rb.textContent = '🔄 Rescan after fixes';
@@ -2960,6 +3012,8 @@ function updateScore() {
   var sv = document.getElementById('scoreValue');
   if (sv) sv.textContent = score;
   markScoreEstimated(fixedCount > 0);
+  // Re-paint the gutter so a fixed issue's line loses its highlight.
+  if (typeof updateLineNumbers === 'function') updateLineNumbers();
   var gf = document.getElementById('gaugeFill');
   if (gf) {
     gf.className.baseVal = 'gauge-fill ' + cls;
