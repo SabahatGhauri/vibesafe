@@ -45,6 +45,7 @@ h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,2.5rem);lin
 h2{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;margin:32px 0 12px}
 p{color:var(--text2);margin-bottom:16px}
 code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+.cta-box h3{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;margin:0 0 10px;color:var(--text)}
 .cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
 .cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
 .disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
@@ -80,11 +81,13 @@ footer a{color:var(--text3);text-decoration:none}
   <p>Every function that writes data should verify the caller's identity first, and validate inputs before using them in queries. AI-generated functions frequently skip both to "keep it simple."</p>
 
   <h2>Step 5 — Run a scan and keep the report (5 min)</h2>
-  <p>Paste the generated code into <a href="/login.html" style="color:var(--cyan)">VibeSafe</a> (or connect the GitHub sync). You'll get a 0–100 safety score, each issue explained in plain English, and a PDF report you can keep as your pre-launch record. Fix the criticals, re-scan, ship.</p>
+  <p>Paste the generated code into <a href="/try?utm_source=how_to_secure_lovable_app_before_launch" style="color:var(--cyan)">VibeSafe</a> (or connect the GitHub sync). You'll get a 0–100 safety score, each issue explained in plain English, and a PDF report you can keep as your pre-launch record. Fix the criticals, re-scan, ship.</p>
 
   <div class="cta-box">
-    <a href="/login.html">Scan your Lovable app free →</a>
-    <p style="margin:14px 0 0;font-size:0.85rem">3 free scans every month · Your code is never stored</p>
+    <h3>Check your Lovable app end to end</h3>
+    <p style="margin:0 0 16px;color:var(--text2);font-size:0.92rem">VibeSafe reads your code for missing Supabase RLS and exposed keys, and scans your deployed URL for missing security headers — with one-click AI fixes on a free account.</p>
+    <a href="/try?utm_source=blog_how_to_secure_lovable_app_before_launch">Scan your Lovable app free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">No signup to try · Your code is never stored</p>
   </div>
 
   <div class="disclaimer"><strong>An honest note.</strong> VibeSafe helps catch the most common risks in AI-built apps quickly. It doesn't replace a professional security audit for high-risk applications — and always confirm RLS directly in your Supabase dashboard too.</div>

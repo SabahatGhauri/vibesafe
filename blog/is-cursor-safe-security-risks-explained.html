@@ -51,6 +51,7 @@ ul.plain li{margin-bottom:8px}
 .check li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid var(--border);color:var(--text2)}
 .check li::before{content:'☐';position:absolute;left:0;color:var(--cyan);font-weight:700}
 code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+.cta-box h3{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;margin:0 0 10px;color:var(--text)}
 .cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
 .cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
 .disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
@@ -95,11 +96,13 @@ footer a{color:var(--text3);text-decoration:none}
     <li>Start a fresh session per project for anything sensitive, instead of one long multi-repo thread</li>
     <li>Scan the generated code for hardcoded keys and unsafe patterns before you deploy</li>
   </ul>
-  <p>A scanner like <a href="/login.html" style="color:var(--cyan)">VibeSafe</a> runs that last check in about ten seconds and explains each finding in plain English — so "is Cursor safe?" becomes "yes, because I checked what it shipped."</p>
+  <p>A scanner like <a href="/try?utm_source=is_cursor_safe_security_risks_explained" style="color:var(--cyan)">VibeSafe</a> runs that last check in about ten seconds and explains each finding in plain English — so "is Cursor safe?" becomes "yes, because I checked what it shipped."</p>
 
   <div class="cta-box">
-    <a href="/login.html">Scan your code free →</a>
-    <p style="margin:14px 0 0;font-size:0.85rem">3 free scans every month · Your code is never stored</p>
+    <h3>Scan without leaving Cursor</h3>
+    <p style="margin:0 0 16px;color:var(--text2);font-size:0.92rem">The VibeSafe extension runs inside Cursor and VS Code, so you can scan what the agent just wrote before you commit it — plus one-click AI fixes on a free account.</p>
+    <a href="/try?utm_source=blog_is_cursor_safe_security_risks_explained">Scan your code free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">No signup to try · Extension on VS Marketplace &amp; Open VSX</p>
   </div>
 
   <div class="disclaimer"><strong>An honest note.</strong> VibeSafe checks the code Cursor produces for the most common risks. It doesn't monitor agent-mode behavior inside the editor itself or replace a professional security audit for high-risk applications.</div>

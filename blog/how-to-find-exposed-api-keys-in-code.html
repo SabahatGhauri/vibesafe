@@ -44,6 +44,7 @@ ul.plain li{margin-bottom:8px}
 .check li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid var(--border);color:var(--text2)}
 .check li::before{content:'☐';position:absolute;left:0;color:var(--cyan);font-weight:700}
 code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+.cta-box h3{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;margin:0 0 10px;color:var(--text)}
 .cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
 .cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
 .disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
@@ -86,11 +87,13 @@ footer a{color:var(--text3);text-decoration:none}
   <p>Skipping rotation is the classic mistake: removing the key from your code doesn't remove it from the scrapers that already copied it.</p>
 
   <h2>Automate the hunt</h2>
-  <p><a href="/login.html" style="color:var(--cyan)">VibeSafe</a> detects exposed keys across languages and providers, shows the exact line, and explains the fix — and it flags high-entropy strings that don't match known prefixes but look like secrets. Free to run, results in seconds.</p>
+  <p><a href="/try?utm_source=how_to_find_exposed_api_keys_in_code" style="color:var(--cyan)">VibeSafe</a> detects exposed keys across languages and providers, shows the exact line, and explains the fix — and it flags high-entropy strings that don't match known prefixes but look like secrets. Free to run, results in seconds.</p>
 
   <div class="cta-box">
-    <a href="/login.html">Scan for exposed keys free →</a>
-    <p style="margin:14px 0 0;font-size:0.85rem">3 free scans every month · Your code is never stored</p>
+    <h3>Search your whole repo, not just the files you remember</h3>
+    <p style="margin:0 0 16px;color:var(--text2);font-size:0.92rem">Connect a GitHub repo and VibeSafe checks every file for hardcoded secrets, then offers a one-click AI fix for each one.</p>
+    <a href="/try?utm_source=blog_how_to_find_exposed_api_keys_in_code">Scan for exposed keys free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">No signup to try · Public and private repos</p>
   </div>
 
   <div class="disclaimer"><strong>An honest note.</strong> VibeSafe helps catch the most common risks in AI-built apps quickly. It doesn't replace a professional security audit for high-risk applications.</div>

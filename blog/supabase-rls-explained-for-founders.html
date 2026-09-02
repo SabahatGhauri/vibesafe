@@ -41,6 +41,7 @@ p{color:var(--text2);margin-bottom:16px}
 ul.plain{margin:0 0 18px 18px;color:var(--text2)}
 ul.plain li{margin-bottom:8px}
 code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+.cta-box h3{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;margin:0 0 10px;color:var(--text)}
 .cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
 .cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
 .disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
@@ -81,11 +82,13 @@ footer a{color:var(--text3);text-decoration:none}
     <li><strong>Using the service_role key in frontend code</strong> — that key bypasses RLS entirely; it must live server-side only.</li>
     <li><strong>Trusting frontend filters</strong> — if the rule isn't in the database, it isn't a rule.</li>
   </ul>
-  <p>A scan with <a href="/login.html" style="color:var(--cyan)">VibeSafe</a> flags the code-side patterns (service_role in frontend, client-side-only filtering) — and always confirm the RLS toggles directly in your Supabase dashboard.</p>
+  <p>A scan with <a href="/try?utm_source=supabase_rls_explained_for_founders" style="color:var(--cyan)">VibeSafe</a> flags the code-side patterns (service_role in frontend, client-side-only filtering) — and always confirm the RLS toggles directly in your Supabase dashboard.</p>
 
   <div class="cta-box">
-    <a href="/login.html">Scan your Supabase app free →</a>
-    <p style="margin:14px 0 0;font-size:0.85rem">3 free scans every month · Your code is never stored</p>
+    <h3>Check RLS before someone else does</h3>
+    <p style="margin:0 0 16px;color:var(--text2);font-size:0.92rem">VibeSafe flags tables and queries that rely on client-side filtering instead of real database policies, and explains the fix in plain English.</p>
+    <a href="/try?utm_source=blog_supabase_rls_explained_for_founders">Scan your Supabase app free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">No signup to try · Your code is never stored</p>
   </div>
 
   <div class="disclaimer"><strong>An honest note.</strong> VibeSafe helps catch the most common risks in AI-built apps quickly. It doesn't replace a professional security audit for high-risk applications.</div>

@@ -39,6 +39,7 @@ h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,2.5rem);lin
 h2{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;margin:32px 0 12px}
 p{color:var(--text2);margin-bottom:16px}
 code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+.cta-box h3{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;margin:0 0 10px;color:var(--text)}
 .cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
 .cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
 .disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
@@ -74,14 +75,16 @@ footer a{color:var(--text3);text-decoration:none}
   <p>If your app uses Supabase or Firebase, open the dashboard and confirm access rules exist on every table or collection. "RLS disabled" on a table of user data is the most common — and most damaging — finding in vibe-coded apps.</p>
 
   <h2>Check 4 — The automated scan</h2>
-  <p>An AI scanner reads the code the way a security reviewer would and flags what the manual checks can't see: injection patterns, missing awaits, hallucinated packages, weak comparisons. <a href="/login.html" style="color:var(--cyan)">VibeSafe</a> does this in about ten seconds and explains every finding in plain English, with the fix.</p>
+  <p>An AI scanner reads the code the way a security reviewer would and flags what the manual checks can't see: injection patterns, missing awaits, hallucinated packages, weak comparisons. <a href="/try?utm_source=how_to_check_ai_generated_code_security" style="color:var(--cyan)">VibeSafe</a> does this in about ten seconds and explains every finding in plain English, with the fix.</p>
 
   <h2>How often to re-check</h2>
   <p>Every time the AI regenerates a meaningful chunk of your app. Generated code changes wholesale — a feature you fixed last week can reappear broken after a new prompt. Scanning after each big change (or on every push, with a CI integration) keeps the safety score honest.</p>
 
   <div class="cta-box">
-    <a href="/login.html">Scan your code free →</a>
-    <p style="margin:14px 0 0;font-size:0.85rem">3 free scans every month · Your code is never stored</p>
+    <h3>Run the whole checklist in ten seconds</h3>
+    <p style="margin:0 0 16px;color:var(--text2);font-size:0.92rem">VibeSafe checks all of the above at once and explains each finding in plain English. A free account adds one-click AI fixes, scan history and GitHub scanning — or scan from inside VS Code and Cursor with the extension.</p>
+    <a href="/try?utm_source=blog_how_to_check_ai_generated_code_security">Scan your code free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">No signup to try · Your code is never stored</p>
   </div>
 
   <div class="disclaimer"><strong>An honest note.</strong> VibeSafe helps catch the most common risks in AI-built apps quickly. It doesn't replace a professional security audit for high-risk applications.</div>

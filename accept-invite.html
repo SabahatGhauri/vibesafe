@@ -211,10 +211,19 @@ async function init() {
     return;
   }
 
-  // Look up the invite
+  // Look up the invite (via RPC — the token is passed as a parameter and matched
+  // server-side, instead of relying on a row policy that can't see it)
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/team_members?invite_token=eq.${encodeURIComponent(token)}&select=*`,
-    { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+    `${SUPABASE_URL}/rest/v1/rpc/get_invite_by_token`,
+    {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ _token: token })
+    }
   );
   const rows = await res.json();
 
@@ -255,31 +264,33 @@ window.acceptInvite = async function() {
   btn.textContent = 'Accepting…';
   btn.disabled = true;
 
-  const invite = window._inviteRow;
-  const session = window._session;
   const accessToken = localStorage.getItem('sb-access-token') || '';
 
-  // Update team_members row: set user_id, status=active, clear token
+  // Accept via RPC — the function checks the token belongs to a pending invite
+  // AND that its invited_email matches the signed-in user's own email before
+  // it touches the row, so one account can't accept an invite meant for another.
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/team_members?invite_token=eq.${encodeURIComponent(token)}`,
+    `${SUPABASE_URL}/rest/v1/rpc/accept_team_invite`,
     {
-      method: 'PATCH',
+      method: 'POST',
       headers: {
         'apikey': SUPABASE_ANON_KEY,
         'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ user_id: session.id, status: 'active', invite_token: null })
+      body: JSON.stringify({ _token: token })
     }
   );
+  const result = res.ok ? await res.json().catch(() => null) : null;
 
-  if (res.ok || res.status === 204) {
+  if (res.ok && result && result.ok) {
     localStorage.removeItem('vibesafe_pending_invite');
     show('view-done');
   } else {
-    const err = await res.text();
-    setStatus('status-msg', 'Failed to accept invite. Please try again.', 'error');
+    const reason = result && result.error === 'email_mismatch'
+      ? 'This invite was sent to a different email address. Sign in with that email to accept it.'
+      : 'Failed to accept invite. Please try again.';
+    setStatus('status-msg', reason, 'error');
     btn.textContent = 'Accept invite';
     btn.disabled = false;
   }

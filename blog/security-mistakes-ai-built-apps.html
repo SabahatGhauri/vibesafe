@@ -51,6 +51,7 @@ code{background:var(--surface2);border:1px solid var(--border2);border-radius:5p
 pre{background:#0B1120;border:1px solid var(--border2);border-radius:10px;padding:16px 18px;overflow-x:auto;margin:0 0 18px;font-size:0.85rem;line-height:1.55}
 pre code{background:none;border:none;padding:0;color:#CBD5E1;font-family:'JetBrains Mono',ui-monospace,monospace}
 .tag-check{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--cyan);border-radius:10px;padding:12px 16px;font-size:0.92rem;color:var(--text2);margin:0 0 22px}
+.cta-box h3{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;margin:0 0 10px;color:var(--text)}
 .cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
 .cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
 .disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
@@ -115,8 +116,10 @@ app.post('/api/admin/delete-user', async (req, res) =&gt; {
   <p>We wrote an honest, side-by-side comparison of the main options — VibeSafe, Vibe App Scanner, CheckVibe, Snyk, Semgrep and AuditYourApp — including which fits which situation: <a href="/best-vibe-coding-security-scanners">Best Vibe Coding Security Scanners (2026)</a>. VibeSafe scans both your code and your live URL and explains every issue in plain English, which is why we built it — but use whatever gets you to check <em>before</em> you launch instead of after.</p>
 
   <div class="cta-box">
-    <a href="/login.html">Scan your app free →</a>
-    <p style="margin:14px 0 0;font-size:0.85rem">Code or live URL · Plain-English results in under a minute · No card required</p>
+    <h3>Check your app for all five</h3>
+    <p style="margin:0 0 16px;color:var(--text2);font-size:0.92rem">VibeSafe reads your code for exposed keys, missing RLS and broken auth, and scans your live URL for missing security headers — with one-click AI fixes on a free account.</p>
+    <a href="/try?utm_source=blog_security_mistakes_ai_built_apps">Scan your app free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">No signup to try · Code or live URL</p>
   </div>
 
   <h2>The one takeaway</h2>
