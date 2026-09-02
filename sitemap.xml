@@ -18,6 +18,11 @@
     <priority>0.80</priority>
   </url>
   <url>
+    <loc>https://www.vibesafe.info/about</loc>
+    <lastmod>2026-09-02</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
     <loc>https://www.vibesafe.info/security</loc>
     <lastmod>2026-07-07</lastmod>
     <priority>0.70</priority>
