@@ -373,6 +373,7 @@ body {
 .area-val { flex: 0 0 30px; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
 .trend-spark { display: flex; align-items: flex-end; gap: 4px; height: 46px; margin-bottom: 8px; }
 .trend-bar { flex: 1; border-radius: 3px 3px 0 0; min-height: 3px; }
+.area-foot { font-size: 0.7rem; color: var(--text3); line-height: 1.5; margin-top: 10px; padding-top: 9px; border-top: 1px solid var(--border); }
 .trend-note { font-size: 0.75rem; color: var(--text3); line-height: 1.5; }
 .trend-note strong { color: var(--green); }
 .trend-note strong.down { color: var(--amber); }
@@ -1585,6 +1586,7 @@ document.addEventListener('click', function(e) {
           <div class="area-panel" id="areaPanel" style="display:none">
             <div class="area-head">Security areas <span class="pro-chip">PRO</span></div>
             <div id="areaRows"></div>
+            <div class="area-foot">Scored from this scan only. An area at 100 had no findings in what you submitted — for a single file that can mean there was nothing of that kind to check.</div>
           </div>
 
           <!-- Pro: score trend across past scans -->
