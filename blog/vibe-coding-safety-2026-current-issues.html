@@ -121,7 +121,7 @@ footer a{color:var(--text3);text-decoration:none}
   </div>
 
   <h2>Slopsquatting is no longer theoretical</h2>
-  <p>We've written before about <a href="/blog/hallucinated-packages-slopsquatting.html" style="color:var(--cyan)">hallucinated packages</a> — AI tools inventing plausible-sounding library names that don't exist. This year it stopped being a hypothetical risk: research across 2.23 million AI-generated code samples found that <strong>roughly 1 in 5 contained at least one hallucinated package name</strong>, and attackers are now pre-registering those exact names with malicious code waiting behind them. One fabricated package was copied into a major company's public documentation and picked up over 30,000 downloads in three months; another propagated through 237 repositories via AI agents installing their own generated output, with no human in the loop at all.</p>
+  <p>We've written before about <a href="/blog/hallucinated-packages-slopsquatting" style="color:var(--cyan)">hallucinated packages</a> — AI tools inventing plausible-sounding library names that don't exist. This year it stopped being a hypothetical risk: research across 2.23 million AI-generated code samples found that <strong>roughly 1 in 5 contained at least one hallucinated package name</strong>, and attackers are now pre-registering those exact names with malicious code waiting behind them. One fabricated package was copied into a major company's public documentation and picked up over 30,000 downloads in three months; another propagated through 237 repositories via AI agents installing their own generated output, with no human in the loop at all.</p>
 
   <h2>So — is vibe coding safe? An honest answer, updated</h2>
   <p>The answer hasn't changed in shape, but it's better evidenced now: vibe coding is safe to ship <em>after</em> you check the code, and genuinely risky if you don't. What's different this year is that we now have a running list of real 2026 incidents showing exactly which check would have caught each one — a missing RLS policy, an authorization check nobody tested, a permission an agent shouldn't have had by default, an import nobody verified. Every single failure above was detectable with the right review step. None of them required a sophisticated attacker; independent researchers and automated scans found most of them, which means the same kind of scanning can find yours first too.</p>
@@ -148,15 +148,15 @@ footer a{color:var(--text3);text-decoration:none}
 
   <p style="color:var(--text3);font-size:0.85rem">Related reading:</p>
   <div class="related">
-    <a href="/blog/is-vibe-coding-safe-honest-answer.html">Is vibe coding safe? The original answer</a>
-    <a href="/state-of-vibe-coding-security-2026.html">State of Vibe Coding Security — report</a>
-    <a href="/blog/hallucinated-packages-slopsquatting.html">Hallucinated packages</a>
-    <a href="/blog/supabase-rls-explained-for-founders.html">Supabase RLS explained</a>
-    <a href="/pre-launch-security-checklist.html">Pre-launch checklist</a>
+    <a href="/blog/is-vibe-coding-safe-honest-answer">Is vibe coding safe? The original answer</a>
+    <a href="/state-of-vibe-coding-security-2026">State of Vibe Coding Security — report</a>
+    <a href="/blog/hallucinated-packages-slopsquatting">Hallucinated packages</a>
+    <a href="/blog/supabase-rls-explained-for-founders">Supabase RLS explained</a>
+    <a href="/pre-launch-security-checklist">Pre-launch checklist</a>
   </div>
 </article>
 <footer>
-  © VibeSafe · <a href="/">Home</a> · <a href="/blog.html">Blog</a> · <a href="/legal.html">Privacy &amp; Terms</a>
+  © VibeSafe · <a href="/">Home</a> · <a href="/blog">Blog</a> · <a href="/legal">Privacy &amp; Terms</a>
 </footer>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>

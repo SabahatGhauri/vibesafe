@@ -79,7 +79,7 @@ input:focus{outline:none;border-color:var(--cyan)}
     <input id="email" type="email" placeholder="you@email.com" autocomplete="email">
     <input id="password" type="password" placeholder="Password" autocomplete="current-password">
     <button class="btn btn-primary" id="emailBtn" onclick="emailLogin()">Sign in &amp; connect</button>
-    <p class="fallback">New to VibeSafe? <a href="/login.html">Create an account</a>, then come back here.</p>
+    <p class="fallback">New to VibeSafe? <a href="/login">Create an account</a>, then come back here.</p>
   </div>
 
   <!-- STATE: connecting -->
@@ -109,10 +109,10 @@ input:focus{outline:none;border-color:var(--cyan)}
     <h1>Couldn't connect</h1>
     <p class="sub" id="errText">Something went wrong. Please try again.</p>
     <button class="btn btn-primary" onclick="location.reload()">Try again</button>
-    <a class="btn btn-ghost" href="/dashboard.html">Go to dashboard</a>
+    <a class="btn btn-ghost" href="/dashboard">Go to dashboard</a>
   </div>
 
-  <div class="foot">Your code is never stored · <a href="/legal.html">Privacy</a></div>
+  <div class="foot">Your code is never stored · <a href="/legal">Privacy</a></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

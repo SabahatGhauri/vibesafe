@@ -80,11 +80,11 @@ footer a{color:var(--text3)}
 <nav>
   <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt=""> VibeSafe</a>
   <ul class="nav-links">
-    <li><a href="/how-it-works.html">How it works</a></li>
+    <li><a href="/how-it-works">How it works</a></li>
     <li><a href="/#pricing">Pricing</a></li>
   </ul>
   <div class="nav-right">
-    <a href="/login.html" style="color:var(--text2);text-decoration:none;font-size:0.88rem;font-weight:500">Sign in</a>
+    <a href="/login" style="color:var(--text2);text-decoration:none;font-size:0.88rem;font-weight:500">Sign in</a>
     <a href="/try?utm_source=learn_page" class="nav-cta">Start free scan</a>
   </div>
 </nav>
@@ -147,7 +147,7 @@ footer a{color:var(--text3)}
     <p>The #1 cause of vibe-coded breaches. The public "anon" key ships in your app — without RLS, anyone can read every user's rows, not just their own. Frontend filters are a suggestion, not a rule.</p>
     <div class="issue-q">The fix</div>
     <div class="diff"><div class="row good"><span class="lbl">SQL</span><span>ALTER TABLE todos ENABLE ROW LEVEL SECURITY;</span></div><div class="row good"><span class="lbl">SQL</span><span>CREATE POLICY "own rows" ON todos FOR ALL USING (auth.uid() = user_id);</span></div></div>
-    <p>Enable RLS on <em>every</em> table and add a policy scoping rows to the logged-in user. <a href="/blog/supabase-rls-explained-for-founders.html" style="color:var(--cyan)">Full RLS guide →</a></p>
+    <p>Enable RLS on <em>every</em> table and add a policy scoping rows to the logged-in user. <a href="/blog/supabase-rls-explained-for-founders" style="color:var(--cyan)">Full RLS guide →</a></p>
   </div>
 
   <div class="issue crit" id="auth">
@@ -178,7 +178,7 @@ footer a{color:var(--text3)}
     <div class="issue-q">Why it matters</div>
     <p>CSP is a browser-level safety net: it blocks scripts and resources from origins you didn't allow, making XSS far harder to exploit if something ever slips through.</p>
     <div class="issue-q">The fix</div>
-    <p>Add a CSP header in <code>vercel.json</code> or <code>next.config.js</code>. Start strict and loosen as needed. <a href="/blog/vercel-deployment-security-checklist.html" style="color:var(--cyan)">Vercel headers guide →</a></p>
+    <p>Add a CSP header in <code>vercel.json</code> or <code>next.config.js</code>. Start strict and loosen as needed. <a href="/blog/vercel-deployment-security-checklist" style="color:var(--cyan)">Vercel headers guide →</a></p>
   </div>
 
   <div class="issue warn" id="headers">
@@ -188,7 +188,7 @@ footer a{color:var(--text3)}
     <div class="issue-q">Why it matters</div>
     <p>Each header blocks a class of attack — clickjacking, protocol downgrade, MIME sniffing — for a few lines of config.</p>
     <div class="issue-q">The fix</div>
-    <p>Add them once in your host config. VibeSafe's <a href="/login.html" style="color:var(--cyan)">live-website scan</a> tells you exactly which are missing.</p>
+    <p>Add them once in your host config. VibeSafe's <a href="/login" style="color:var(--cyan)">live-website scan</a> tells you exactly which are missing.</p>
   </div>
 
   <div class="issue warn" id="await">
@@ -225,13 +225,13 @@ footer a{color:var(--text3)}
     <h3>Ready to find and fix these in your own app?</h3>
     <div class="cta-row">
       <a href="/try?utm_source=learn" class="cta-primary">Scan your code free →</a>
-      <a href="/user-guide.html" class="cta-ghost">🚀 Try Launch Check</a>
+      <a href="/user-guide" class="cta-ghost">🚀 Try Launch Check</a>
     </div>
     <p style="margin:14px 0 0;font-size:0.82rem;color:var(--text3)">3 free scans every month · Your code is never stored</p>
   </div>
 </main>
 <footer>
-  © VibeSafe · <a href="/">Home</a> · <a href="/user-guide.html">User guide</a> · <a href="/faq.html">FAQ</a> · <a href="/blog.html">Blog</a> · <a href="/legal.html">Privacy &amp; Terms</a>
+  © VibeSafe · <a href="/">Home</a> · <a href="/user-guide">User guide</a> · <a href="/faq">FAQ</a> · <a href="/blog">Blog</a> · <a href="/legal">Privacy &amp; Terms</a>
 </footer>
   <script defer src="/_vercel/insights/script.js"></script>
   <script defer src="/_vercel/speed-insights/script.js"></script>
