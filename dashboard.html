@@ -2088,7 +2088,8 @@ async function scanFromGitHub() {
         id: idx + 1, sev: issue.severity || 'warning', type: issue.type || 'Issue',
         title: issue.title || 'Unknown issue', line: issue.line || '', desc: issue.description || '',
         impact: issue.impact || '', before: issue.before || '', after: issue.after || '',
-        fix: issue.fix_explanation || 'Apply the suggested fix.', fixed: false
+        fix: issue.fix_explanation || 'Apply the suggested fix.', fixed: false,
+        category: issue.category || null, owasp: issue.owasp || null
       };
     });
     window.vsPassedChecks = result.passed || [];
@@ -2186,7 +2187,9 @@ function renderResults(result) {
       before: issue.before || '',
       after: issue.after || issue.fix || '',
       fix: issue.fix_explanation || issue.fix || 'Apply the suggested fix.',
-      fixed: false
+      fixed: false,
+      category: issue.category || null,
+      owasp: issue.owasp || null
     };
   });
 
@@ -2297,6 +2300,8 @@ async function startScan() {
       after: issue.after || '',
       fix: issue.fix_explanation || 'Apply the suggested fix.',
       fixed: false,
+      category: issue.category || null,
+      owasp: issue.owasp || null,
     }));
 
     // Store passed checks
