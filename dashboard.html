@@ -635,6 +635,7 @@ body {
   margin-bottom: 3px;
 }
 
+.owasp-tag { display:inline-block; margin-left:6px; padding:1px 7px; border-radius:100px; background:rgba(124,58,237,0.14); color:#C4B5FD; font-size:0.68rem; font-weight:600; letter-spacing:0.02em; vertical-align:middle; white-space:nowrap; text-transform:none; }
 .severity-critical .issue-type { color: var(--red); }
 .severity-warning  .issue-type { color: var(--amber); }
 .severity-info     .issue-type { color: var(--cyan); }
@@ -2355,6 +2356,16 @@ function showResults(apiScore) {
   document.getElementById('passCount').textContent = passed;
   document.getElementById('scoreHeader').style.display = 'block';
 
+  // This score came from a real scan of the real code -- drop any estimate labelling.
+  markScoreEstimated(false);
+  var rb = document.getElementById('rescanBtn');
+  if (rb) {
+    rb.textContent = '🔄 Rescan after fixes';
+    rb.style.background = 'var(--surface2)';
+    rb.style.color = 'var(--green)';
+    rb.style.border = '1px solid rgba(16,185,129,0.3)';
+  }
+
   // Fade in results panel
   const rp = document.getElementById('resultsPanel');
   rp.style.opacity = '0';
@@ -2798,7 +2809,7 @@ function buildIssueCard(issue, idx) {
     <div class="issue-card-header" onclick="toggleIssue(this.parentElement)">
       <div class="issue-sev-dot"></div>
       <div class="issue-meta">
-        <div class="issue-type">${issue.type}</div>
+        <div class="issue-type">${issue.type}${issue.owasp ? ` <span class="owasp-tag" title="OWASP Top 10:2025">${issue.owasp.id} ${issue.owasp.name}</span>` : ''}</div>
         <div class="issue-title">${issue.title}</div>
         <div class="issue-line">${issue.line}</div>
       </div>
@@ -2887,14 +2898,53 @@ function fixIssue(id) {
   }
 }
 
+// Shows/hides the "estimated, not verified" state on the score gauge.
+function markScoreEstimated(isEstimate) {
+  var verdictEl = document.getElementById('scoreVerdict');
+  var expl = document.getElementById('scoreExplanation');
+  if (!expl) return;
+  if (isEstimate) {
+    if (verdictEl) verdictEl.textContent = 'Estimated';
+    expl.style.display = 'block';
+    expl.innerHTML = 'Estimated from the fixes you applied — not yet verified. ' +
+      '<strong style="color:var(--cyan)">Rescan</strong> to score your updated code for real.';
+  } else {
+    expl.style.display = 'none';
+    expl.innerHTML = '';
+  }
+}
+
 function fixAll() {
   const unfixed = issues.filter(i => !i.fixed);
+  if (!unfixed.length) return;
   unfixed.forEach((issue, idx) => {
     setTimeout(() => fixIssue(issue.id), idx * 300);
   });
   showToast(`Auto-fixing ${unfixed.length} issues...`, 'success');
+
+  // Once every fix has been attempted, push the user to a real rescan. The
+  // arithmetic score is a guess until the modified code is actually scanned.
+  setTimeout(function () {
+    var stillOpen = issues.filter(i => !i.fixed).length;
+    var applied = unfixed.length - stillOpen;
+    if (applied > 0) {
+      markScoreEstimated(true);
+      var btn = document.getElementById('rescanBtn');
+      if (btn) {
+        btn.textContent = '🔄 Rescan to verify your new score';
+        btn.style.background = 'var(--cyan)';
+        btn.style.color = 'var(--bg)';
+        btn.style.border = 'none';
+      }
+      showToast('Fixes applied to your code. Rescan to confirm the real score.', 'info');
+    }
+  }, unfixed.length * 300 + 400);
 }
 
+// The score shown after applying fixes is ARITHMETIC, not a real scan: it assumes
+// each applied fix fully resolves its issue and introduces nothing new. That is an
+// estimate, so it is labelled as one until a real rescan verifies it. Showing a
+// verified-looking score we have not measured is what a security tool must not do.
 function updateScore() {
   const remaining = issues.filter(i => !i.fixed);
   const crits = remaining.filter(i => i.sev==='critical').length;
@@ -2904,6 +2954,7 @@ function updateScore() {
 
   var sv = document.getElementById('scoreValue');
   if (sv) sv.textContent = score;
+  markScoreEstimated(fixedCount > 0);
   var gf = document.getElementById('gaugeFill');
   if (gf) {
     gf.className.baseVal = 'gauge-fill ' + cls;
