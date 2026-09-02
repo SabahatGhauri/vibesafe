@@ -350,6 +350,33 @@ body {
   overflow: auto;
 }
 
+/* Pro panels: per-area breakdown + score trend. Both are pure aggregation over
+   data already stored, so they cost nothing per scan. */
+.area-panel, .trend-panel {
+  margin-top: 14px; padding: 14px 16px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.area-head {
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text3); font-weight: 700; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.pro-chip {
+  background: rgba(124,58,237,0.18); color: #C4B5FD;
+  border-radius: 100px; padding: 1px 7px; font-size: 0.62rem; letter-spacing: 0.04em;
+}
+.area-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; font-size: 0.78rem; }
+.area-name { flex: 0 0 150px; color: var(--text2); }
+.area-bar { flex: 1; height: 6px; border-radius: 100px; background: var(--border); overflow: hidden; }
+.area-fill { height: 100%; border-radius: 100px; }
+.area-val { flex: 0 0 30px; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+.trend-spark { display: flex; align-items: flex-end; gap: 4px; height: 46px; margin-bottom: 8px; }
+.trend-bar { flex: 1; border-radius: 3px 3px 0 0; min-height: 3px; }
+.trend-note { font-size: 0.75rem; color: var(--text3); line-height: 1.5; }
+.trend-note strong { color: var(--green); }
+.trend-note strong.down { color: var(--amber); }
+
 /* Row highlight bands sit behind the textarea. The textarea is transparent, so the
    band shows through under the code itself. Metrics must match .code-editor exactly
    (font-size 0.8rem, line-height 1.75, padding-top 16px) or the rows drift out of
@@ -1553,6 +1580,19 @@ document.addEventListener('click', function(e) {
               <div class="sstat-label">Passed</div>
             </div>
           </div>
+
+          <!-- Pro: per-area breakdown, derived from the OWASP category on each finding -->
+          <div class="area-panel" id="areaPanel" style="display:none">
+            <div class="area-head">Security areas <span class="pro-chip">PRO</span></div>
+            <div id="areaRows"></div>
+          </div>
+
+          <!-- Pro: score trend across past scans -->
+          <div class="trend-panel" id="trendPanel" style="display:none">
+            <div class="area-head">Score history <span class="pro-chip">PRO</span></div>
+            <div class="trend-spark" id="trendSpark"></div>
+            <div class="trend-note" id="trendNote"></div>
+          </div>
         </div>
 
         <!-- Empty state -->
@@ -2009,6 +2049,87 @@ function updateLineNumbers() {
   renderLineHighlights();
 }
 
+// ── PRO: per-area security breakdown ──
+// Scores each area from the findings already produced, using the OWASP category
+// attached server-side. No extra model call -- this is aggregation, not analysis.
+// Areas with no findings AND no signal are shown as 100 only when the scan
+// actually covered them; an area we cannot assess is omitted rather than
+// reported as a perfect score.
+var AREA_DEFS = [
+  { name: 'Access control',  owasp: ['A01'] },
+  { name: 'Configuration',   owasp: ['A02'] },
+  { name: 'Dependencies',    owasp: ['A03'] },
+  { name: 'Injection',       owasp: ['A05'] },
+  { name: 'Secrets & auth',  owasp: ['A07'] },
+  { name: 'Error handling',  owasp: ['A10'] },
+];
+
+function renderAreaBreakdown() {
+  var panel = document.getElementById('areaPanel');
+  var rows = document.getElementById('areaRows');
+  if (!panel || !rows) return;
+  if (!isPro() || !issues || !issues.length) { panel.style.display = 'none'; return; }
+
+  var weight = { critical: 30, warning: 12, info: 4 };
+  var html = '';
+  var shown = 0;
+  AREA_DEFS.forEach(function (area) {
+    var hits = issues.filter(function (i) {
+      return i.owasp && area.owasp.indexOf(i.owasp.id) !== -1;
+    });
+    // Only score an area we have some basis for: either it has findings, or the
+    // scan produced OWASP-tagged findings at all (so the check ran and it passed).
+    var anyTagged = issues.some(function (i) { return i.owasp; });
+    if (!hits.length && !anyTagged) return;
+    var penalty = hits.reduce(function (sum, i) { return sum + (weight[i.sev] || 4); }, 0);
+    var score = Math.max(0, Math.min(100, 100 - penalty));
+    var colour = score >= 80 ? 'var(--green)' : score >= 50 ? 'var(--amber)' : 'var(--red)';
+    html += '<div class="area-row">' +
+      '<span class="area-name">' + area.name + '</span>' +
+      '<span class="area-bar"><span class="area-fill" style="width:' + score + '%;background:' + colour + '"></span></span>' +
+      '<span class="area-val" style="color:' + colour + '">' + score + '</span>' +
+      '</div>';
+    shown++;
+  });
+  rows.innerHTML = html;
+  panel.style.display = shown ? 'block' : 'none';
+}
+
+// ── PRO: score trend across previous scans ──
+var vsScanHistory = [];
+
+function renderScoreTrend() {
+  var panel = document.getElementById('trendPanel');
+  var spark = document.getElementById('trendSpark');
+  var note = document.getElementById('trendNote');
+  if (!panel || !spark || !note) return;
+  // Needs at least two scans to be a trend rather than a single data point.
+  if (!isPro() || vsScanHistory.length < 2) { panel.style.display = 'none'; return; }
+
+  var series = vsScanHistory.slice(0, 12).reverse(); // oldest -> newest
+  spark.innerHTML = series.map(function (s) {
+    var sc = Math.max(0, Math.min(100, s.score || 0));
+    var colour = sc >= 75 ? 'var(--green)' : sc >= 50 ? 'var(--amber)' : 'var(--red)';
+    var d = new Date(s.created_at).toLocaleDateString([], { month: 'short', day: 'numeric' });
+    return '<span class="trend-bar" style="height:' + Math.max(6, sc) + '%;background:' + colour +
+           '" title="' + d + ': ' + sc + '/100"></span>';
+  }).join('');
+
+  var first = series[0].score, last = series[series.length - 1].score;
+  var delta = last - first;
+  if (delta > 0) {
+    note.innerHTML = 'Up <strong>+' + delta + '</strong> since your first scan on ' +
+      new Date(series[0].created_at).toLocaleDateString([], { month: 'short', day: 'numeric' }) + '.';
+  } else if (delta < 0) {
+    note.innerHTML = 'Down <strong class="down">' + delta + '</strong> since ' +
+      new Date(series[0].created_at).toLocaleDateString([], { month: 'short', day: 'numeric' }) +
+      ' — worth checking what changed.';
+  } else {
+    note.textContent = 'No change across your last ' + series.length + ' scans.';
+  }
+  panel.style.display = 'block';
+}
+
 // Paints the band behind each flagged line in the editor itself.
 function renderLineHighlights() {
   const layer = document.getElementById('lineHighlights');
@@ -2455,6 +2576,9 @@ function showResults(apiScore) {
   markScoreEstimated(false);
   // Paint the gutter now that we know which lines have findings.
   if (typeof updateLineNumbers === 'function') updateLineNumbers();
+  // Pro panels: both are aggregation over data we already have.
+  if (typeof renderAreaBreakdown === 'function') renderAreaBreakdown();
+  if (typeof renderScoreTrend === 'function') renderScoreTrend();
   var rb = document.getElementById('rescanBtn');
   if (rb) {
     rb.textContent = '🔄 Rescan after fixes';
@@ -2787,7 +2911,9 @@ async function loadScanHistory() {
       .order('created_at', { ascending: false })
       .limit(20);
     if (res.error) throw res.error;
-    renderScanHistory(res.data || []);
+    vsScanHistory = res.data || [];   // newest first; the trend panel reverses it
+    renderScanHistory(vsScanHistory);
+    renderScoreTrend();
   } catch (err) {
     console.log('Could not load history:', err);
   }
