@@ -350,6 +350,24 @@ body {
   overflow: auto;
 }
 
+/* Row highlight bands sit behind the textarea. The textarea is transparent, so the
+   band shows through under the code itself. Metrics must match .code-editor exactly
+   (font-size 0.8rem, line-height 1.75, padding-top 16px) or the rows drift out of
+   alignment as you scroll. */
+.line-highlights {
+  position: absolute; inset: 0; z-index: 0;
+  padding-top: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem; line-height: 1.75;
+  pointer-events: none; overflow: hidden;
+}
+.lh-row { height: 1.75em; }
+.lh-row.lh-critical { background: rgba(239, 68, 68, 0.13); box-shadow: inset 3px 0 0 #EF4444; }
+.lh-row.lh-warning  { background: rgba(245, 158, 11, 0.12); box-shadow: inset 3px 0 0 #F59E0B; }
+.lh-row.lh-info     { background: rgba(0, 212, 255, 0.10); box-shadow: inset 3px 0 0 #00D4FF; }
+.code-editor { position: relative; z-index: 1; }
+.line-numbers { z-index: 2; }
+
 .ln-flag { display:inline-block; min-width:20px; border-radius:4px; font-weight:700; padding:0 3px; margin-right:-3px; }
 .ln-critical { color:#FCA5A5; background:rgba(239,68,68,0.22); }
 .ln-warning  { color:#FCD34D; background:rgba(245,158,11,0.20); }
@@ -1396,6 +1414,7 @@ document.addEventListener('click', function(e) {
       </div>
 
       <div class="code-area-wrap" id="editorTab">
+        <div class="line-highlights" id="lineHighlights" aria-hidden="true"></div>
         <div class="line-numbers" id="lineNumbers">1</div>
         <textarea
           class="code-editor"
@@ -1977,6 +1996,7 @@ function updateLineNumbers() {
   const sevByLine = issueLineSeverities();
   if (!Object.keys(sevByLine).length) {
     ln.textContent = lines.map((_,i) => i+1).join('\n');
+    renderLineHighlights();
     return;
   }
   ln.innerHTML = lines.map(function (_, i) {
@@ -1986,11 +2006,31 @@ function updateLineNumbers() {
       ? '<span class="ln-flag ln-' + sev + '" title="' + sev + ' issue on line ' + n + '">' + n + '</span>'
       : String(n);
   }).join('\n');
+  renderLineHighlights();
+}
+
+// Paints the band behind each flagged line in the editor itself.
+function renderLineHighlights() {
+  const layer = document.getElementById('lineHighlights');
+  const ta = document.getElementById('codeEditor');
+  if (!layer || !ta) return;
+  const sevByLine = issueLineSeverities();
+  if (!Object.keys(sevByLine).length) { layer.innerHTML = ''; return; }
+  const count = ta.value.split('\n').length;
+  let out = '';
+  for (let n = 1; n <= count; n++) {
+    const sev = sevByLine[n];
+    out += sev ? '<div class="lh-row lh-' + sev + '"></div>' : '<div class="lh-row"></div>';
+  }
+  layer.innerHTML = out;
+  layer.scrollTop = ta.scrollTop;
 }
 
 function syncScroll() {
   const ta = document.getElementById('codeEditor');
   document.getElementById('lineNumbers').scrollTop = ta.scrollTop;
+  const lh = document.getElementById('lineHighlights');
+  if (lh) lh.scrollTop = ta.scrollTop;
 }
 
 // ── EDITOR TABS ──
