@@ -3069,6 +3069,19 @@ function toggleIssue(card) {
 
 // Actually apply a fix to the pasted code — only when the "before" snippet is found
 // EXACTLY ONCE, so we can never rewrite the wrong line. Returns {ok, reason}.
+// Parses `code` without running it. new Function compiles the body and throws on a
+// syntax error, so this catches things like `await` inserted into a non-async
+// function. Only meaningful for plain JavaScript:
+//   - TypeScript type annotations are not valid JS and would false-positive
+//   - ESM import/export is illegal inside a function body, same problem
+// Anything we cannot genuinely check returns checked:false rather than pretending.
+function syntaxCheck(code, lang) {
+  if (lang !== 'js') return { checked: false };
+  if (/^\s*(import|export)\s/m.test(code)) return { checked: false };
+  try { new Function(code); return { checked: true, ok: true }; }
+  catch (e) { return { checked: true, ok: false, error: String((e && e.message) || e) }; }
+}
+
 function applyFixToEditor(issue) {
   const ta = document.getElementById('codeEditor');
   if (!ta || !issue.before || !issue.after) return { ok:false, reason:'No exact code fix for this one — copied it so you can paste into your AI editor.' };
@@ -3076,9 +3089,27 @@ function applyFixToEditor(issue) {
   const first = text.indexOf(issue.before);
   if (first === -1) return { ok:false, reason:'Couldn’t find that exact code — copied the fix so you can paste it into your AI editor.' };
   if (text.indexOf(issue.before, first + issue.before.length) !== -1) return { ok:false, reason:'That code appears more than once — copied the fix instead so nothing wrong gets changed.' };
-  ta.value = text.slice(0, first) + issue.after + text.slice(first + issue.before.length);
+
+  const candidate = text.slice(0, first) + issue.after + text.slice(first + issue.before.length);
+
+  // Never hand back code that stops parsing. Only block when the code parsed BEFORE
+  // and the fix breaks it -- if what was pasted was already invalid (a fragment, or
+  // another language), that is not this fix's fault and we should not refuse it.
+  const lang = (document.getElementById('langSelect') || {}).value;
+  const pre = syntaxCheck(text, lang);
+  const post = syntaxCheck(candidate, lang);
+  if (pre.checked && pre.ok && post.checked && !post.ok) {
+    return {
+      ok: false,
+      broke: true,
+      reason: 'That fix would break your code — ' + post.error.replace(/\s+/g, ' ').slice(0, 90) +
+              '. Copied it instead so you can apply it properly.'
+    };
+  }
+
+  ta.value = candidate;
   if (typeof updateLineNumbers === 'function') updateLineNumbers();
-  return { ok:true };
+  return { ok:true, verified: post.checked && post.ok };
 }
 function copyOneFix(issue) {
   const out = `Fix: ${issue.title}\nReplace: ${issue.before || ''}\nWith: ${issue.after || ''}${issue.fix ? '\nWhy: ' + issue.fix : ''}`;
@@ -3094,7 +3125,9 @@ function fixIssue(id) {
   const applied = applyFixToEditor(issue);
   if (!applied.ok) {
     copyOneFix(issue);
-    showToast(applied.reason, 'info');
+    // A fix that would break the file is a different class of problem from one we
+    // simply couldn't place, so it gets an error toast rather than an info one.
+    showToast(applied.reason, applied.broke ? 'error' : 'info');
     return;
   }
 
