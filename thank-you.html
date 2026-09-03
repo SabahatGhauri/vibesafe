@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thank you — your VibeSafe plan is active | VibeSafe</title>
+<!-- Deliberately noindex: a thank-you page must never appear in search results.
+     If it were indexable, someone could land here from Google and fire a false
+     purchase conversion in Google Ads. It is also kept out of sitemap.xml. -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
+<link rel="stylesheet" href="/theme.css">
+
+<!-- ─────────────────────────────────────────────────────────────────────────
+     GOOGLE ADS CONVERSION TAG GOES HERE.
+
+     In Google Ads: Goals → Conversions → your purchase action → Tag setup.
+     Paste BOTH snippets it gives you (the global gtag.js loader AND the
+     conversion event) in place of this comment.
+
+     Do not invent the AW- id or the conversion label -- copy them from Google
+     Ads, or the conversion will never record.
+     ───────────────────────────────────────────────────────────────────────── -->
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Inter Fallback',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh;display:flex;flex-direction:column}
+nav{display:flex;align-items:center;justify-content:center;padding:20px 5%;border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px}
+main{flex:1;max-width:620px;margin:0 auto;padding:64px 5% 70px;text-align:center}
+.tick{width:72px;height:72px;border-radius:50%;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.35);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 24px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,4vw,2.4rem);line-height:1.2;letter-spacing:-0.02em;margin-bottom:14px}
+.lead{font-size:1.05rem;color:var(--text2);margin-bottom:32px}
+.next{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:24px 26px;text-align:left;margin-bottom:28px}
+.next h2{font-family:'Space Grotesk',sans-serif;font-size:1rem;margin-bottom:14px}
+.next ol{margin:0 0 0 18px;color:var(--text2);font-size:0.92rem}
+.next li{margin-bottom:9px}
+.next a{color:var(--cyan);text-decoration:none}
+.btn{display:inline-flex;gap:8px;align-items:center;padding:14px 30px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.note{font-size:0.85rem;color:var(--text3);margin-top:22px;line-height:1.6}
+.note a{color:var(--cyan);text-decoration:none}
+footer{border-top:1px solid var(--border);padding:26px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt=""> VibeSafe</a>
+</nav>
+
+<main>
+  <div class="tick">✅</div>
+  <h1>Thank you — your plan is active</h1>
+  <p class="lead">Your payment went through and your VibeSafe account has been upgraded. A receipt is on its way to your email from Stripe.</p>
+
+  <div class="next">
+    <h2>What to do next</h2>
+    <ol>
+      <li><strong>Run a scan.</strong> Paste code, upload a file, or connect a GitHub repository from your <a href="/dashboard">dashboard</a>.</li>
+      <li><strong>Scan your deployed site.</strong> Add your live URL to check security headers and exposed paths.</li>
+      <li><strong>Run a Launch Check.</strong> VibeSafe opens your app in a real browser and reports what a first-time visitor hits.</li>
+      <li><strong>Install the editor extension</strong> so you can scan before you commit — <a href="https://marketplace.visualstudio.com/items?itemName=vibesafe-info.vibesafe-scanner" rel="noopener">VS Code &amp; Cursor</a>.</li>
+    </ol>
+  </div>
+
+  <a href="/dashboard" class="btn">Go to your dashboard →</a>
+
+  <p class="note">Plan not showing as upgraded yet? It can take a few seconds to apply. Refresh the dashboard, and if it still looks wrong email <a href="mailto:contact@vibesafe.info">contact@vibesafe.info</a> and we'll sort it out.</p>
+</main>
+
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/security">Security</a> · <a href="/legal">Privacy &amp; Terms</a>
+</footer>
+  <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
