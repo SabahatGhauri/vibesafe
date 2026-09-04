@@ -89,11 +89,13 @@ footer a{color:var(--text3)}
 <main>
   <p class="eyebrow">Free · No signup</p>
   <h1>Scan your AI-generated code free — no signup</h1>
+  <p style="display:inline-flex;align-items:center;gap:7px;margin:0 0 14px;padding:5px 12px;border-radius:100px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.35);font-size:0.8rem;font-weight:600;color:#10B981">● Real scanner — this analyses the code you paste</p>
   <p class="lead">Paste code from Lovable, Bolt, Cursor, Replit — or anywhere else — and see what it would ship with. Real scan, real findings, about ten seconds.</p>
   <div class="trust">
     <span>✓ No account needed</span>
     <span>✓ No credit card</span>
     <span>✓ Your code is never stored</span>
+    <span>✓ Same engine as the paid product</span>
   </div>
 
   <div class="panel">
@@ -131,7 +133,7 @@ footer a{color:var(--text3)}
     <div id="issues"></div>
     <div class="cta-box">
       <h2 id="ctaTitle">Want the fixes applied for you?</h2>
-      <p id="ctaBody">A free account adds one-click AI fixes, scan history, GitHub and live-site scanning, and 3 scans every month.</p>
+      <p id="ctaBody">A free account adds one-click AI fixes, scan history, GitHub and live-site scanning, and 10 scans every month.</p>
       <a href="/login" id="ctaBtn" class="btn btn-primary" style="text-decoration:none">Create a free account →</a>
     </div>
   </section>
@@ -234,7 +236,7 @@ function render(data) {
   }
   // Tie the account pitch to the specific thing they just found, not a
   // generic feature list -- someone who just saw "your key is exposed" is
-  // far more motivated than someone reading "3 scans every month."
+  // far more motivated than someone reading "10 scans every month."
   var worst = issues.reduce(function (acc, i) {
     var rank = { critical: 2, warning: 1, info: 0 };
     var sev = (i.sev === 'critical' || i.sev === 'warning') ? i.sev : 'info';
@@ -246,19 +248,19 @@ function render(data) {
   var ctaBtn = document.getElementById('ctaBtn');
   if (worst && worst.sev === 'critical') {
     ctaTitle.innerHTML = '<span class="pill critical" style="margin-right:8px">Critical</span>' + esc(worst.title || worst.type || 'Issue found');
-    ctaBody.textContent = "Don't just find it — fix it. Create a free account for the AI-powered fix, plus scan history, GitHub scanning, and 3 scans every month.";
+    ctaBody.textContent = "Don't just find it — fix it. Create a free account for the AI-powered fix, plus scan history, GitHub scanning, and 10 scans every month.";
     ctaBtn.textContent = 'Get the fix, free →';
   } else if (worst && worst.sev === 'warning') {
     ctaTitle.innerHTML = '<span class="pill warning" style="margin-right:8px">Warning</span>' + esc(worst.title || worst.type || 'Issue found');
-    ctaBody.textContent = 'A free account adds one-click AI fixes, scan history, GitHub and live-site scanning, and 3 scans every month.';
+    ctaBody.textContent = 'A free account adds one-click AI fixes, scan history, GitHub and live-site scanning, and 10 scans every month.';
     ctaBtn.textContent = 'Create a free account →';
   } else if (!issues.length) {
     ctaTitle.textContent = 'Clean scan — keep it that way';
-    ctaBody.textContent = 'A free account adds continuous monitoring, GitHub scanning, and 3 scans every month, so the next change gets checked too.';
+    ctaBody.textContent = 'A free account adds continuous monitoring, GitHub scanning, and 10 scans every month, so the next change gets checked too.';
     ctaBtn.textContent = 'Create a free account →';
   } else {
     ctaTitle.textContent = 'Want the fixes applied for you?';
-    ctaBody.textContent = 'A free account adds one-click AI fixes, scan history, GitHub and live-site scanning, and 3 scans every month.';
+    ctaBody.textContent = 'A free account adds one-click AI fixes, scan history, GitHub and live-site scanning, and 10 scans every month.';
     ctaBtn.textContent = 'Create a free account →';
   }
 
