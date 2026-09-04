@@ -1874,16 +1874,94 @@ document.addEventListener('click', function(e) {
       <button onclick="closeLaunchCheck()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">← Back</button>
       <h2 style="margin:0;font-size:1.3rem;font-weight:700;">🚀 Launch Check</h2>
     </div>
-    <p style="font-size:0.88rem;color:var(--text2);margin:0 0 22px;line-height:1.6;">Let VibeSafe act like your first real user: it opens your app in a real browser, clicks through pages, captures screenshots and errors, and tells you if you're ready to launch. <span style="color:var(--text3);">It looks but never touches — no forms are submitted on your live app.</span></p>
+    <p style="font-size:1.02rem;color:var(--text);margin:0 0 8px;font-weight:600;">Test your app before your users do.</p>
+    <p style="font-size:0.88rem;color:var(--text2);margin:0 0 18px;line-height:1.6;">Let VibeSafe act like your first real user. It opens your app in a real browser, clicks through your pages, captures screenshots, and reports what actually breaks — crashes, console errors, failed requests, and dead ends a visitor would hit.</p>
 
-    <div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:20px;margin-bottom:20px;">
-      <input id="lcUrl" type="url" placeholder="https://yourapp.vercel.app" style="width:100%;padding:12px 14px;border-radius:9px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-size:0.92rem;margin-bottom:10px;">
-      <input id="lcGoal" type="text" maxlength="200" placeholder="What should work? e.g. &quot;Landing page and pricing&quot; (optional)" style="width:100%;padding:12px 14px;border-radius:9px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-size:0.92rem;margin-bottom:12px;">
-      <button class="btn btn-primary" id="lcRunBtn" onclick="runLaunchCheck()">🚀 Test my app</button>
+    <div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:20px;margin-bottom:14px;">
+      <label for="lcUrl" style="display:block;font-size:0.78rem;font-weight:600;color:var(--text2);margin-bottom:6px;">Your app URL</label>
+      <input id="lcUrl" type="url" placeholder="https://yourapp.vercel.app" style="width:100%;padding:12px 14px;border-radius:9px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-size:0.92rem;margin-bottom:14px;">
+      <label for="lcGoal" style="display:block;font-size:0.78rem;font-weight:600;color:var(--text2);margin-bottom:6px;">What should work? <span style="font-weight:400;color:var(--text3)">(optional)</span></label>
+      <input id="lcGoal" type="text" maxlength="200" placeholder="e.g. &quot;Landing page, pricing and signup&quot;" style="width:100%;padding:12px 14px;border-radius:9px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-size:0.92rem;margin-bottom:14px;">
+      <button class="btn btn-primary" id="lcRunBtn" onclick="runLaunchCheck()">🚀 Run Launch Check</button>
       <div id="lcStatus" style="font-size:0.8rem;margin-top:10px;min-height:18px;color:var(--text3);"></div>
     </div>
 
+    <p style="display:flex;gap:9px;align-items:flex-start;font-size:0.84rem;color:var(--text2);background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.28);border-radius:10px;padding:11px 14px;margin:0 0 34px;line-height:1.55;">
+      <span style="flex:none">🛡️</span><span><strong style="color:var(--text)">Safe testing.</strong> VibeSafe looks but never touches — it does not submit forms, click destructive buttons, or modify anything in your live app.</span>
+    </p>
+
     <div id="lcReport"></div>
+
+    <!-- Everything below is explanatory and hides itself once a real report is
+         rendered, so the panel is never an empty URL box on first open. -->
+    <div id="lcIntro">
+      <h3 style="font-size:1rem;font-weight:700;margin:0 0 14px;">What does Launch Check look for?</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin-bottom:34px;">
+        <div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:15px;">
+          <div style="font-size:1.3rem;margin-bottom:7px;">👤</div>
+          <div style="font-weight:600;font-size:0.9rem;margin-bottom:4px;">Real-user flows</div>
+          <div style="font-size:0.8rem;color:var(--text3);line-height:1.5;">Navigates your app the way a first-time visitor would</div>
+        </div>
+        <div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:15px;">
+          <div style="font-size:1.3rem;margin-bottom:7px;">🐛</div>
+          <div style="font-weight:600;font-size:0.9rem;margin-bottom:4px;">Runtime errors</div>
+          <div style="font-size:0.8rem;color:var(--text3);line-height:1.5;">Console errors, crashes and failed network requests</div>
+        </div>
+        <div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:15px;">
+          <div style="font-size:1.3rem;margin-bottom:7px;">🚧</div>
+          <div style="font-weight:600;font-size:0.9rem;margin-bottom:4px;">Dead ends</div>
+          <div style="font-size:0.8rem;color:var(--text3);line-height:1.5;">Pages with no way forward, or forms with no submit button</div>
+        </div>
+        <div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:15px;">
+          <div style="font-size:1.3rem;margin-bottom:7px;">📸</div>
+          <div style="font-weight:600;font-size:0.9rem;margin-bottom:4px;">Visual evidence</div>
+          <div style="font-size:0.8rem;color:var(--text3);line-height:1.5;">Screenshots of what it actually saw on each page</div>
+        </div>
+      </div>
+
+      <h3 style="font-size:1rem;font-weight:700;margin:0 0 14px;">Example report</h3>
+      <div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:18px 20px;margin-bottom:34px;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--border);padding-bottom:11px;margin-bottom:12px;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:0.86rem;color:var(--text2);">myapp.vercel.app</span>
+          <span style="font-size:0.86rem;"><span style="color:var(--text3)">Launch readiness</span> <strong style="font-size:1.05rem;color:var(--amber)">72/100</strong></span>
+        </div>
+        <div style="display:grid;gap:8px;font-size:0.88rem;">
+          <div style="display:flex;justify-content:space-between;gap:12px;"><span>🟢 Landing page</span><span style="color:var(--text3)">Loaded cleanly</span></div>
+          <div style="display:flex;justify-content:space-between;gap:12px;"><span>🟢 Pricing page</span><span style="color:var(--text3)">Loaded cleanly</span></div>
+          <div style="display:flex;justify-content:space-between;gap:12px;"><span>🟡 Signup form</span><span style="color:var(--text3)">No visible submit button</span></div>
+          <div style="display:flex;justify-content:space-between;gap:12px;"><span>🔴 Console errors</span><span style="color:var(--text3)">3 found</span></div>
+          <div style="display:flex;justify-content:space-between;gap:12px;"><span>🟠 Failed requests</span><span style="color:var(--text3)">2 images 404</span></div>
+        </div>
+        <p style="font-size:0.8rem;color:var(--text3);margin:13px 0 0;font-style:italic;">Illustration of the report format — not a real scan.</p>
+      </div>
+
+      <h3 style="font-size:1rem;font-weight:700;margin:0 0 14px;">How it works</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:30px;">
+        <div style="padding:14px 16px;border-left:2px solid var(--cyan);background:var(--surface1);border-radius:0 10px 10px 0;">
+          <div style="font-size:0.75rem;font-weight:700;color:var(--cyan);letter-spacing:0.06em;margin-bottom:5px;">STEP 1</div>
+          <div style="font-weight:600;font-size:0.9rem;margin-bottom:3px;">Enter your URL</div>
+          <div style="font-size:0.8rem;color:var(--text3);line-height:1.5;">Optionally say which flow matters most.</div>
+        </div>
+        <div style="padding:14px 16px;border-left:2px solid var(--cyan);background:var(--surface1);border-radius:0 10px 10px 0;">
+          <div style="font-size:0.75rem;font-weight:700;color:var(--cyan);letter-spacing:0.06em;margin-bottom:5px;">STEP 2</div>
+          <div style="font-weight:600;font-size:0.9rem;margin-bottom:3px;">VibeSafe explores it</div>
+          <div style="font-size:0.8rem;color:var(--text3);line-height:1.5;">Opens a real browser and follows your internal links.</div>
+        </div>
+        <div style="padding:14px 16px;border-left:2px solid var(--cyan);background:var(--surface1);border-radius:0 10px 10px 0;">
+          <div style="font-size:0.75rem;font-weight:700;color:var(--cyan);letter-spacing:0.06em;margin-bottom:5px;">STEP 3</div>
+          <div style="font-weight:600;font-size:0.9rem;margin-bottom:3px;">Get your report</div>
+          <div style="font-size:0.8rem;color:var(--text3);line-height:1.5;">Errors, friction and screenshots, with a readiness score.</div>
+        </div>
+      </div>
+
+      <!-- Launch Check reports behaviour, not code. Saying so here is what
+           keeps the security claim honest and routes people to the tools that
+           genuinely do it. -->
+      <div style="background:var(--surface1);border:1px solid var(--border2);border-left:3px solid var(--violet);border-radius:0 12px 12px 0;padding:15px 18px;margin-bottom:20px;">
+        <div style="font-weight:600;font-size:0.92rem;margin-bottom:5px;">🔐 Looking for security issues?</div>
+        <div style="font-size:0.85rem;color:var(--text2);line-height:1.6;">Launch Check tests how your app <em>behaves</em> — it does not read your code or probe for vulnerabilities. For exposed API keys, injection risks and missing database rules, run a <a href="#" onclick="closeLaunchCheck();return false;" style="color:var(--cyan);">code scan</a>. To check a deployed site's security headers and exposed paths, use <strong>Live website scanning</strong>.</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -2845,6 +2923,7 @@ async function runLaunchCheck() {
   if (!url) { status.style.color = 'var(--red)'; status.textContent = 'Enter your app URL first.'; return; }
 
   btn.disabled = true; btn.textContent = 'Testing your app…'; out.innerHTML = '';
+  var lcIntro = document.getElementById('lcIntro'); if (lcIntro) lcIntro.style.display = 'none';
   status.style.color = 'var(--text3)';
   var phases = ['Opening your app in a real browser…', 'Clicking through pages like a user…', 'Capturing screenshots and errors…', 'Writing your launch report…'];
   var pi = 0; status.textContent = phases[0];
@@ -2867,7 +2946,7 @@ async function runLaunchCheck() {
     status.textContent = err.message || 'Launch Check failed. Try again.';
   } finally {
     clearInterval(lcTimer);
-    btn.disabled = false; btn.textContent = '🚀 Test my app';
+    btn.disabled = false; btn.textContent = '🚀 Run Launch Check';
   }
 }
 

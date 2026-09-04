@@ -43,6 +43,7 @@
     cta.textContent = 'Open dashboard';
   }
 
-  var links = document.querySelectorAll('nav a[href="/login"], nav a[href="/login.html"]');
-  for (var i = 0; i < links.length; i++) links[i].style.display = 'none';
+  // The Sign in link deliberately stays visible. Hiding it removed a button
+  // people expect to be there, and a stale-session edge case left users with
+  // no visible way back in at all. An extra link costs nothing.
 })();
