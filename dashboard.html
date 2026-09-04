@@ -768,6 +768,18 @@ body {
   flex-shrink: 0;
 }
 
+/* Compact secondary action, three to a row under the primary button. */
+.fix-all-sm {
+  flex: 1; min-width: 0; padding: 7px 6px;
+  background: var(--surface2);
+  border: 1px solid var(--border2); border-radius: 7px;
+  font-size: 0.74rem; font-weight: 600; font-family: inherit;
+  cursor: pointer; transition: all 0.18s;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.fix-all-sm:hover { background: var(--surface3); transform: translateY(-1px); }
+.fix-all-sm:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
 .fix-all-btn {
   width: 100%; padding: 10px;
   background: var(--cyan); color: var(--bg);
@@ -1721,17 +1733,22 @@ document.addEventListener('click', function(e) {
         <button class="fix-all-btn" id="fixAllBtn" onclick="fixAll()">
           ⚡ Auto-fix all issues
         </button>
-        <button class="fix-all-btn" id="copyFixesBtn" onclick="copyFixesForAI()" title="Paste into Lovable, Bolt, Cursor, Replit, Windsurf, v0, Firebase Studio, ChatGPT/Claude — or apply by hand" style="margin-top:8px;background:var(--surface2);color:var(--cyan);border:1px solid rgba(0,212,255,0.3);box-shadow:none">
-          📋 Copy all fixes for your AI editor
-        </button>
-        <button class="fix-all-btn" id="rescanBtn" onclick="startScan()" style="margin-top:8px;background:var(--surface2);color:var(--green);border:1px solid rgba(16,185,129,0.3);box-shadow:none">
-          🔄 Rescan after fixes
-        </button>
-        <a href="/learn" target="_blank" class="fix-all-btn" style="margin-top:8px;display:block;text-align:center;text-decoration:none;background:transparent;color:var(--cyan);border:1px solid rgba(0,212,255,0.3);box-shadow:none">
-          📚 Learn how to fix these issues
-        </a>
-        <p style="margin-top:10px;font-size:0.7rem;line-height:1.5;color:var(--text3);text-align:center">
-          VibeSafe helps detect common code risks and issues, but scan results may not be complete. Always review important apps with a qualified developer or security professional before production launch.
+        <!-- Secondary actions sit on one compact row. Stacked full-width they
+             took four button-heights plus a paragraph, pushing the findings
+             themselves off screen - the report is the thing people came for. -->
+        <div style="display:flex;gap:6px;margin-top:7px;">
+          <button class="fix-all-sm" id="copyFixesBtn" onclick="copyFixesForAI()" title="Copy all fixes — paste into Lovable, Bolt, Cursor, Replit, Windsurf, v0, Firebase Studio, ChatGPT/Claude, or apply by hand" style="color:var(--cyan);border-color:rgba(0,212,255,0.3)">
+            📋 Copy fixes
+          </button>
+          <button class="fix-all-sm" id="rescanBtn" onclick="startScan()" title="Re-run the scan to verify your new score" style="color:var(--green);border-color:rgba(16,185,129,0.3)">
+            🔄 Rescan
+          </button>
+          <a href="/learn" target="_blank" class="fix-all-sm" title="Guides for fixing these issue types" style="color:var(--cyan);border-color:rgba(0,212,255,0.3);text-decoration:none;display:flex;align-items:center;justify-content:center">
+            📚 Learn
+          </a>
+        </div>
+        <p style="margin-top:8px;font-size:0.66rem;line-height:1.45;color:var(--text3);text-align:center">
+          Scan results may not be complete. Review important apps with a qualified developer before launch.
         </p>
       </div>
 
@@ -2794,7 +2811,7 @@ function showResults(apiScore) {
   if (typeof renderScoreTrend === 'function') renderScoreTrend();
   var rb = document.getElementById('rescanBtn');
   if (rb) {
-    rb.textContent = '🔄 Rescan after fixes';
+    rb.textContent = '🔄 Rescan';
     rb.style.background = 'var(--surface2)';
     rb.style.color = 'var(--green)';
     rb.style.border = '1px solid rgba(16,185,129,0.3)';
@@ -3403,7 +3420,8 @@ function fixAll() {
       markScoreEstimated(true);
       var btn = document.getElementById('rescanBtn');
       if (btn) {
-        btn.textContent = '🔄 Rescan to verify your new score';
+        btn.textContent = '🔄 Rescan now';
+        btn.title = 'Rescan to verify your new score';
         btn.style.background = 'var(--cyan)';
         btn.style.color = 'var(--bg)';
         btn.style.border = 'none';
