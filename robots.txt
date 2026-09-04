@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.vibesafe.info/sitemap.xml
 Sitemap: https://www.vibesafe.info/sitemap-2026.xml
