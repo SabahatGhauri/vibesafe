@@ -1178,10 +1178,25 @@ async function loadProfile() {
   }
 }
 
+// Count the SAME rows the API counts when it enforces the free limit:
+// extension_events / scan_success, which the server writes for every source
+// (website, vscode_extension, cli, mcp). The `scans` table is written by the
+// browser and misses every extension scan, so counting it showed the user a
+// lower number than the limit actually being enforced -- someone scanning from
+// VS Code could be blocked while the dashboard still claimed scans remained.
+// Falls back to `scans` only if the events read fails, so usage never renders
+// blank.
 async function getScansThisMonth() {
   if (!currentUser || !sbClient) return 0;
   var start = new Date();
   start.setDate(1); start.setHours(0,0,0,0);
+  try {
+    var ev = await sbClient.from('extension_events').select('id', { count: 'exact', head: true })
+      .eq('user_id', currentUser.id)
+      .eq('event', 'scan_success')
+      .gte('created_at', start.toISOString());
+    if (!ev.error) return ev.count || 0;
+  } catch (e) { /* fall through to the legacy count below */ }
   var res = await sbClient.from('scans').select('id', { count: 'exact', head: true })
     .eq('user_id', currentUser.id)
     .gte('created_at', start.toISOString());
