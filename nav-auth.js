@@ -1,33 +1,48 @@
 // Point the nav CTA at the real scanner once someone is signed in.
 //
-// Every marketing page's nav button sends visitors to /try, which runs the
-// anonymous demo-scan endpoint: no history, no one-click fixes, capped per IP.
-// That is the right destination for a cold visitor and the wrong one for a
-// customer -- a signed-in user clicking "Start free scan" was being routed
-// back through the front door instead of into their dashboard.
+// Every marketing page's nav button sends visitors to /login?mode=signup, which
+// is right for a stranger and wrong for a customer. This upgrades the nav for
+// people who already have a session: the CTA becomes "Open dashboard" and the
+// now-redundant Sign in link is hidden.
 //
-// Supabase keeps its session in localStorage, so presence can be checked
-// without pulling in the whole SDK on 40+ static pages. A stale or expired
-// token is harmless here: /dashboard re-checks properly and redirects to
-// /login if the session is no longer valid.
+// Supabase keeps its session in localStorage, so this needs no SDK on 40+
+// static pages. The token's presence is NOT enough on its own -- an expired
+// token sticks around in storage, and treating it as signed-in hid the Sign in
+// link from people who were actually signed out, leaving them no way back in.
+// So the expiry is checked, and anything unparseable or lapsed is treated as
+// signed out. Being wrong in that direction only shows an extra link; being
+// wrong the other way strands the user.
 (function () {
   var KEY = 'sb-uxsmmpujxbzdgxxburxr-auth-token';
 
-  var signedIn = false;
-  try {
-    signedIn = !!localStorage.getItem(KEY);
-  } catch (e) {
-    return;               // private mode / storage blocked: leave the page as-is
-  }
-  if (!signedIn) return;
+  function hasLiveSession() {
+    var raw;
+    try {
+      raw = localStorage.getItem(KEY);
+    } catch (e) {
+      return false;               // private mode / storage blocked
+    }
+    if (!raw) return false;
 
-  var cta = document.querySelector('a.nav-cta');
+    try {
+      var s = JSON.parse(raw);
+      // Supabase stores seconds since epoch; some versions nest it.
+      var exp = s && (s.expires_at || (s.currentSession && s.currentSession.expires_at));
+      if (!exp) return false;
+      return (Number(exp) * 1000) > Date.now();
+    } catch (e) {
+      return false;               // unreadable token: assume signed out
+    }
+  }
+
+  if (!hasLiveSession()) return;  // leave the page exactly as served
+
+  var cta = document.querySelector('a.nav-cta, a.nav-cta-primary');
   if (cta) {
     cta.setAttribute('href', '/dashboard');
     cta.textContent = 'Open dashboard';
   }
 
-  // The separate "Sign in" link is noise once a session exists.
   var links = document.querySelectorAll('nav a[href="/login"], nav a[href="/login.html"]');
   for (var i = 0; i < links.length; i++) links[i].style.display = 'none';
 })();
