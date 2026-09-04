@@ -1121,7 +1121,7 @@ const SUPABASE_KEY = 'sb_publishable_hgCpN6tsYqEiCkyvJm06qQ_1Ddlvznn';
 const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let currentUser = null;
 let currentPlan = 'free';
-const FREE_SCAN_LIMIT = 3;
+const FREE_SCAN_LIMIT = 10;
 
 // Require login — redirect to login page if not authenticated
 (async function() {
@@ -1193,7 +1193,14 @@ async function updateScanUsage() {
   var used = await getScansThisMonth();
   var metaEl = document.getElementById('planMeta');
   var barFill = document.getElementById('planBarFill');
-  if (metaEl) metaEl.innerHTML = '<span>' + used + ' of ' + FREE_SCAN_LIMIT + ' scans used this month</span>';
+  var left = Math.max(0, FREE_SCAN_LIMIT - used);
+  // Lead with what is still available, not what has been consumed -- the
+  // remaining count is the number that tells someone they can keep going.
+  var label;
+  if (left === 0)      label = 'No free scans left this month';
+  else if (left === 1) label = '1 free scan left this month';
+  else                 label = left + ' free scans left this month';
+  if (metaEl) metaEl.innerHTML = '<span>' + label + ' <span style="color:var(--text3)">· ' + used + ' of ' + FREE_SCAN_LIMIT + ' used</span></span>';
   if (barFill) barFill.style.width = Math.min(100, (used / FREE_SCAN_LIMIT) * 100) + '%';
 }
 
@@ -1399,8 +1406,7 @@ document.addEventListener('click', function(e) {
           <div class="plan-bar-fill" id="planBarFill"></div>
         </div>
         <div class="plan-meta" id="planMeta">
-          <span>1 of 3 scans used</span>
-          <span>resets Jun 30</span>
+          <span>10 free scans left this month</span>
         </div>
         <button class="upgrade-btn" id="upgradeBtn" onclick="upgradeToPro()">
           Upgrade to Pro →
@@ -1411,6 +1417,27 @@ document.addEventListener('click', function(e) {
 
   <!-- MAIN CONTENT -->
   <div class="main">
+
+    <!-- Shown only when an API key exists but the editor has never scanned.
+         Roughly 30 keys have been generated against 8 accounts that ever
+         completed an extension scan, so this is the single biggest drop-off
+         in the product: people take the key and get stuck on setup. -->
+    <div id="connectEditorBanner" style="display:none;grid-column:1/-1;background:var(--surface);border:1px solid rgba(0,212,255,0.32);border-left:3px solid var(--cyan);border-radius:12px;padding:15px 18px;margin-bottom:14px;">
+      <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;">
+        <div style="font-size:1.35rem;line-height:1.2">🔌</div>
+        <div style="flex:1;min-width:230px">
+          <div style="font-weight:600;font-size:0.95rem;margin-bottom:3px;">Finish connecting your editor</div>
+          <div style="font-size:0.83rem;color:var(--text2);line-height:1.6;">
+            You created an API key but no scan has run from VS Code or Cursor yet. Connecting takes about a minute and lets you scan without leaving your editor.
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+            <a href="/connect" class="btn btn-primary" style="text-decoration:none;font-size:0.83rem;">Connect in one click</a>
+            <a href="/user-guide#vscode" class="btn btn-ghost" style="text-decoration:none;font-size:0.83rem;">How to set it up →</a>
+          </div>
+        </div>
+        <button onclick="dismissConnectBanner()" title="Dismiss" style="background:none;border:none;color:var(--text3);font-size:1.05rem;cursor:pointer;line-height:1;padding:2px 4px;">×</button>
+      </div>
+    </div>
 
     <!-- EDITOR PANEL -->
     <div class="editor-panel" id="editorPanel">
@@ -2255,6 +2282,38 @@ function loadSample() {
   showToast('Sample ' + LANG_NAMES[lang] + ' code loaded', 'success');
 }
 
+// ── CONNECT-YOUR-EDITOR NUDGE ──
+// Surfaces for accounts that generated an API key but have never completed a
+// scan from the editor. Both facts come from the server so the banner is right
+// across devices; any failure just leaves the banner hidden.
+function dismissConnectBanner() {
+  var b = document.getElementById('connectEditorBanner');
+  if (b) b.style.display = 'none';
+  try { localStorage.setItem('vsConnectBannerDismissed', '1'); } catch (e) {}
+  if (typeof trackEvent === 'function') try { trackEvent('connect_banner_dismissed', {}); } catch (e) {}
+}
+
+async function maybeShowConnectBanner() {
+  var banner = document.getElementById('connectEditorBanner');
+  if (!banner || !currentUser || !sbClient) return;
+  try { if (localStorage.getItem('vsConnectBannerDismissed') === '1') return; } catch (e) {}
+  try {
+    var keys = await sbClient.from('vibesafe_api_keys')
+      .select('id', { count: 'exact', head: true }).eq('user_id', currentUser.id);
+    if (!keys.count) return;                       // never generated a key — nothing to finish
+
+    var scanned = await sbClient.from('extension_events')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', currentUser.id).eq('event', 'scan_success');
+    if (scanned.count) return;                     // already scanning from the editor
+
+    banner.style.display = 'block';
+    if (typeof trackEvent === 'function') try { trackEvent('connect_banner_shown', {}); } catch (e) {}
+  } catch (e) {
+    // Reading either table can fail under RLS; a hidden banner is the safe default.
+  }
+}
+
 // ── FIRST RUN: load the example and scan it in one go ──
 // The dashboard's biggest drop-off is people who sign up and never scan once.
 // Asking them to supply code before they have seen a single result is the
@@ -2976,6 +3035,7 @@ async function loadScanHistory() {
     renderScanHistory(vsScanHistory);
     renderScoreTrend();
     maybeShowFirstRunGuide();
+    maybeShowConnectBanner();
   } catch (err) {
     console.log('Could not load history:', err);
   }
