@@ -320,7 +320,16 @@ let mode = 'login';
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (session) {
     window.location.href = '/dashboard.html';
+    return;
   }
+  // /login?mode=signup opens on the Sign up tab. The nav CTA sends people who
+  // have no account here, and landing them on "Welcome back" asks them to
+  // remember a password they never set.
+  try {
+    if (new URLSearchParams(window.location.search).get('mode') === 'signup') {
+      switchTab('signup');
+    }
+  } catch (e) { /* leave the default login tab */ }
 })();
 
 function switchTab(newMode) {
