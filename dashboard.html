@@ -135,6 +135,29 @@ body {
 }
 
 /* ── SIDEBAR ── */
+/* Collapsed sidebar: icons only. The item labels are bare text nodes rather
+   than wrapped elements, so they are hidden by zeroing the button's font-size
+   and restoring it on the icon. */
+.sidebar-collapse {
+  align-self: flex-end; margin: 8px 10px -4px; padding: 4px 9px;
+  background: var(--surface2); border: 1px solid var(--border2);
+  color: var(--text3); border-radius: 6px; cursor: pointer;
+  font-size: 0.78rem; line-height: 1; transition: all 0.15s;
+}
+.sidebar-collapse:hover { color: var(--text); background: var(--surface3); }
+.sidebar.collapsed { width: 58px; }
+.sidebar.collapsed .sidebar-collapse { align-self: center; margin: 8px 0 -4px; }
+.sidebar.collapsed .sidebar-label { display: none; }
+.sidebar.collapsed .sidebar-section { padding: 10px 6px 6px; }
+.sidebar.collapsed .sidebar-item {
+  font-size: 0; gap: 0; justify-content: center; padding: 9px 0;
+}
+.sidebar.collapsed .si-icon { font-size: 1.05rem; }
+.sidebar.collapsed .si-new,
+.sidebar.collapsed .si-chevron { display: none; }
+.sidebar.collapsed .history-section { display: none !important; }
+.sidebar.collapsed .sidebar-footer { display: none; }
+
 .sidebar {
   width: 220px; flex-shrink: 0;
   background: var(--surface);
@@ -1154,6 +1177,7 @@ const FREE_SCAN_LIMIT = 10;
     if (em) em.textContent = email;
     // Admin nav is independent of profile loading — show it as soon as we know who you are.
     if (typeof maybeShowAdminNav === 'function') maybeShowAdminNav();
+    if (typeof updateSampleBtnVisibility === 'function') updateSampleBtnVisibility();
     // Load scan history once logged in
     if (typeof loadScanHistory === 'function') loadScanHistory();
     if (typeof loadProfile === 'function') loadProfile();
@@ -1184,6 +1208,7 @@ async function loadProfile() {
     renderPlanCard(currentPlan);
     if (typeof markProFeatures === 'function') markProFeatures();
     maybeShowAdminNav();
+    if (typeof updateSampleBtnVisibility === 'function') updateSampleBtnVisibility();
     await updateScanUsage();
   } catch (err) {
     console.log('Could not load profile:', err);
@@ -1272,6 +1297,47 @@ function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('sidebarBackdrop').classList.toggle('open');
 }
+
+// ── SIDEBAR COLLAPSE (desktop) ──
+// toggleSidebar() above is the mobile slide-in. This is the persistent
+// icons-only mode for wide screens, so the menu can get out of the way of a
+// long report.
+function toggleSidebarCollapse() {
+  var sb = document.getElementById('sidebar');
+  if (!sb) return;
+  var on = sb.classList.toggle('collapsed');
+  try { localStorage.setItem('vsSidebarCollapsed', on ? '1' : '0'); } catch (e) {}
+  var b = document.getElementById('sidebarCollapseBtn');
+  if (b) {
+    b.textContent = on ? '»' : '«';
+    b.title = on ? 'Expand menu' : 'Collapse menu';
+    b.setAttribute('aria-label', b.title);
+  }
+}
+(function restoreSidebarCollapse() {
+  function apply() {
+    var want = false;
+    try { want = localStorage.getItem('vsSidebarCollapsed') === '1'; } catch (e) {}
+    if (!want) return;
+    var sb = document.getElementById('sidebar');
+    var b = document.getElementById('sidebarCollapseBtn');
+    if (sb) sb.classList.add('collapsed');
+    if (b) { b.textContent = '»'; b.title = 'Expand menu'; b.setAttribute('aria-label', b.title); }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', apply);
+  else apply();
+})();
+
+// Keep the sample button in step with what is in the editor.
+(function () {
+  function wire() {
+    var ed = document.getElementById('codeEditor');
+    if (ed) ed.addEventListener('input', updateSampleBtnVisibility);
+    if (typeof updateSampleBtnVisibility === 'function') updateSampleBtnVisibility();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire);
+  else wire();
+})();
 
 function toggleHistory() {
   var list = document.getElementById('historyList');
@@ -1362,6 +1428,7 @@ document.addEventListener('click', function(e) {
 
   <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
+    <button class="sidebar-collapse" id="sidebarCollapseBtn" onclick="toggleSidebarCollapse()" title="Collapse menu" aria-label="Collapse menu">«</button>
     <div class="sidebar-section">
       <div class="sidebar-label">Workspace</div>
       <button class="sidebar-item active" onclick="setPage('scan', event)">
@@ -1480,7 +1547,7 @@ document.addEventListener('click', function(e) {
             <option value="java">Java</option>
             <option value="cs">.NET / C#</option>
           </select>
-          <button class="btn btn-ghost" onclick="loadSample()" id="sampleBtn" title="Load deliberately vulnerable example code">Try an example</button>
+          <button class="btn btn-ghost" onclick="loadSample()" id="sampleBtn" title="Load deliberately vulnerable example code" style="display:none">Try an example</button>
           <button class="btn btn-ghost" onclick="clearEditor()">Clear</button>
 
           <button class="btn btn-primary" id="scanBtn" onclick="startScan()">
@@ -2347,6 +2414,7 @@ function switchEditorTab(el, tab) {
     if (!el) return;
     el.style.display = k === tab ? (k==='editor'?'block':'flex') : 'none';
   });
+  updateSampleBtnVisibility();
 }
 
 // Upgrade prompt shown when a free user tries a Pro-only feature.
@@ -2381,6 +2449,24 @@ function markProFeatures() {
 }
 
 // ── LOAD SAMPLE ──
+// ── SAMPLE BUTTON VISIBILITY ──
+// Onboarding affordance, not a permanent control. Only on the editor tab, and
+// only while the editor is empty -- loading a sample over someone's pasted
+// code would destroy their work.
+function updateSampleBtnVisibility() {
+  var btn = document.getElementById('sampleBtn');
+  if (!btn) return;
+  // Owner-only. Customers reach the sample through the first-run guide in the
+  // empty results panel, which is the onboarding path; this toolbar button is
+  // for testing the scanner and would only be clutter on a customer account.
+  var isAdmin = false;
+  try {
+    isAdmin = !!currentUser &&
+      ADMIN_EMAILS.indexOf((currentUser.email || '').toLowerCase()) !== -1;
+  } catch (e) {}
+  btn.style.display = isAdmin ? '' : 'none';
+}
+
 function loadSample() {
   const lang = document.getElementById('langSelect').value;
   const sample = SAMPLES[lang] || SAMPLES.js;
@@ -2390,6 +2476,7 @@ function loadSample() {
   editor.focus();
   updateLineNumbers();
   showToast('Sample ' + LANG_NAMES[lang] + ' code loaded', 'success');
+  updateSampleBtnVisibility();
 }
 
 // ── CONNECT-YOUR-EDITOR NUDGE ──
@@ -2451,6 +2538,7 @@ function maybeShowFirstRunGuide() {
 function clearEditor() {
   document.getElementById('codeEditor').value = '';
   updateLineNumbers();
+  updateSampleBtnVisibility();
   resetResults();
 }
 
