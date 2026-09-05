@@ -3,6 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google tag (gtag.js) -- Google Ads AW-18432710203 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18432710203"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18432710203');
+</script>
 <script>
   /* Installed-app (PWA) users should never land on the marketing homepage —
      send them straight to the app. Works even for old installs whose cached
@@ -1124,6 +1132,9 @@
     .nav-cta { gap: 8px; }
     .nav-cta .btn { padding: 8px 12px; font-size: 0.78rem; }
   }
+.peerpush-badge{display:inline-block;margin-top:18px;line-height:0}
+.peerpush-badge img{width:230px;height:auto;max-width:100%;opacity:.9;transition:opacity .2s}
+.peerpush-badge:hover img{opacity:1}
 </style>
 </head>
 <body>
@@ -2261,6 +2272,13 @@
           VibeSafe
         </a>
         <p class="footer-tagline">The safety net for AI-generated code. Built for founders who ship fast and need to stay safe.</p>
+        <!-- PeerPush verification badge. Must stay live on the homepage: PeerPush
+             checks for it, and removing it delists the product. -->
+        <a href="https://peerpush.com/p/vibesafe" target="_blank" rel="noopener"
+           class="peerpush-badge" aria-label="VibeSafe on PeerPush">
+          <img src="https://peerpush.com/p/vibesafe/badge.png"
+               alt="VibeSafe on PeerPush" width="230" height="65" loading="lazy">
+        </a>
       </div>
       <div class="footer-links-group">
         <div class="footer-links-title">Product</div>

@@ -3,6 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google tag (gtag.js) -- Google Ads AW-18432710203 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18432710203"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18432710203');
+</script>
 <title>Thank you — your VibeSafe plan is active | VibeSafe</title>
 <!-- Deliberately noindex: a thank-you page must never appear in search results.
      If it were indexable, someone could land here from Google and fire a false
@@ -16,16 +24,23 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
 <link rel="stylesheet" href="/theme.css">
 
-<!-- ─────────────────────────────────────────────────────────────────────────
-     GOOGLE ADS CONVERSION TAG GOES HERE.
+<!-- The global gtag.js loader (AW-18432710203) is in the <head> of every page,
+     added site-wide, so it is already present above. What is still missing is
+     the PURCHASE CONVERSION EVENT, which only fires here.
 
-     In Google Ads: Goals → Conversions → your purchase action → Tag setup.
-     Paste BOTH snippets it gives you (the global gtag.js loader AND the
-     conversion event) in place of this comment.
+     In Google Ads: Goals → Conversions → your purchase action → Tag setup →
+     "Install the tag yourself". Copy the send_to value it shows you — it looks
+     like AW-18432710203/AbC-D_efGhIjKlMnOp — and paste it below in place of
+     PASTE_CONVERSION_LABEL_HERE, then uncomment the block.
 
-     Do not invent the AW- id or the conversion label -- copy them from Google
-     Ads, or the conversion will never record.
-     ───────────────────────────────────────────────────────────────────────── -->
+     Do not invent the label. A wrong one records nothing, silently.
+
+<script>
+  gtag('event', 'conversion', {
+    'send_to': 'AW-18432710203/PASTE_CONVERSION_LABEL_HERE'
+  });
+</script>
+     -->
 
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
