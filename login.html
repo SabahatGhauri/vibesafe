@@ -249,7 +249,7 @@ body{
   <form id="authForm" onsubmit="event.preventDefault(); handleAuth();">
   <!-- Name field (signup only) -->
   <div class="form-group" id="nameGroup" style="display:none">
-    <label class="form-label">Name</label>
+    <label class="form-label">Name <span style="color:var(--text3);font-weight:400">(optional)</span></label>
     <input type="text" class="form-input" id="nameInput" placeholder="Your name">
   </div>
 
@@ -488,10 +488,6 @@ async function handleAuth() {
     showMsg('Password must be at least 6 characters.', 'error');
     return;
   }
-  if (mode === 'signup' && !name) {
-    showMsg('Please enter your name.', 'error');
-    return;
-  }
 
   // Loading state
   btn.disabled = true;
@@ -507,7 +503,7 @@ async function handleAuth() {
       const { data, error } = await supabaseClient.auth.signUp({
         email: email,
         password: password,
-        options: { data: { full_name: name, signup_source: signupSource } }
+        options: { data: { full_name: name || email.split('@')[0], signup_source: signupSource } }
       });
       if (error) throw error;
 
