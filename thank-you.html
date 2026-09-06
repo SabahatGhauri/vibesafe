@@ -24,23 +24,25 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
 <link rel="stylesheet" href="/theme.css">
 
-<!-- The global gtag.js loader (AW-18432710203) is in the <head> of every page,
-     added site-wide, so it is already present above. What is still missing is
-     the PURCHASE CONVERSION EVENT, which only fires here.
+<!-- GOOGLE ADS PURCHASE CONVERSION -- DO NOT ADD A gtag('event','conversion')
+     SNIPPET HERE.
 
-     In Google Ads: Goals → Conversions → your purchase action → Tag setup →
-     "Install the tag yourself". Copy the send_to value it shows you — it looks
-     like AW-18432710203/AbC-D_efGhIjKlMnOp — and paste it below in place of
-     PASTE_CONVERSION_LABEL_HERE, then uncomment the block.
+     The conversion is URL-based, not event-based. In Google Ads it is:
 
-     Do not invent the label. A wrong one records nothing, silently.
+       Purchase  (conversion type ID 7749429109, created 2026-09-05)
+       Event: "Someone visits a page starting with www.vibesafe.info/thank-you"
 
-<script>
-  gtag('event', 'conversion', {
-    'send_to': 'AW-18432710203/PASTE_CONVERSION_LABEL_HERE'
-  });
-</script>
-     -->
+     Google counts the conversion when this page LOADS, using the global
+     gtag.js loader (AW-18432710203) that sits in the <head> of every page.
+     There is no send_to label for this action, and nothing to paste.
+
+     Adding an event snippet here would make BOTH fire and every purchase
+     would be counted twice, which then corrupts Smart Bidding -- it optimises
+     toward a conversion number that is double the truth.
+
+     If this ever needs to become event-based (e.g. to report the real order
+     value, which a URL rule cannot receive), the URL rule must be deleted in
+     Google Ads FIRST, in the same change. Never run both. -->
 
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
