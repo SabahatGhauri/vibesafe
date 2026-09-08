@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google tag (gtag.js) -- Google Ads AW-18432710203 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18432710203"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18432710203');
+</script>
+<title>We Scanned 400 Real AI-Built Apps. Here's What We Found | VibeSafe</title>
+<meta name="description" content="Original research: 400 public repos genuinely built with Lovable, Bolt and v0. 18.5% had a .env committed. 59% of the repos we scanned had at least one critical issue. The full numbers, and the caveats.">
+<meta name="keywords" content="VibeSafe, AI-generated code security study, lovable security research, bolt app security, vibe coding statistics, exposed env file github">
+<link rel="canonical" href="https://www.vibesafe.info/blog/we-scanned-400-ai-built-apps">
+<meta property="og:title" content="We Scanned 400 Real AI-Built Apps. Here's What We Found">
+<meta property="og:description" content="18.5% had a .env committed to the repo. 59% of scanned repos had at least one critical issue. Original data, with the caveats stated plainly.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/blog/we-scanned-400-ai-built-apps">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
+<link rel="stylesheet" href="/theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"We Scanned 400 Real AI-Built Apps. Here's What We Found","description":"Original research across 400 public repositories built with Lovable, Bolt and v0: committed .env files, critical-issue rates, and what the numbers do and don't show.","datePublished":"2026-09-08","author":{"@type":"Organization","name":"VibeSafe"},"publisher":{"@type":"Organization","name":"VibeSafe","url":"https://www.vibesafe.info"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Inter Fallback',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,2.5rem);line-height:1.18;letter-spacing:-0.02em;margin-bottom:18px}
+.lead{font-size:1.08rem;color:var(--text2);margin-bottom:26px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;margin:32px 0 12px}
+h3{font-family:'Space Grotesk',sans-serif;font-size:1.02rem;margin:22px 0 8px;color:var(--text)}
+p{color:var(--text2);margin-bottom:16px}
+ul.plain{margin:0 0 18px 18px;color:var(--text2)}
+ul.plain li{margin-bottom:8px}
+code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:26px 0}
+.stat{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:18px}
+.stat .n{font-family:'Space Grotesk',sans-serif;font-size:1.75rem;font-weight:700;color:var(--cyan);line-height:1.1}
+.stat .l{font-size:0.82rem;color:var(--text3);margin-top:6px}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:0.92rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--border)}
+th{color:var(--text);font-weight:600;font-size:0.85rem}
+td{color:var(--text2)}
+td.num{text-align:right;font-family:'JetBrains Mono',monospace;color:var(--text)}
+.tablewrap{overflow-x:auto}
+.cta-box h3{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;margin:0 0 10px;color:var(--text)}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.method{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:20px 22px;margin:26px 0}
+.method p{font-size:0.92rem;margin-bottom:10px}
+.method p:last-child{margin-bottom:0}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+.meta-row{font-size:0.82rem;color:var(--text3);margin-bottom:28px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt=""> VibeSafe</a>
+  <a href="/#pricing" style="color:var(--text2);text-decoration:none;font-size:0.88rem;font-weight:500;margin-right:18px">Pricing</a>
+  <a href="/login" style="color:var(--text2);text-decoration:none;font-size:0.88rem;font-weight:500;margin-right:18px">Sign in</a>
+  <a href="/login?mode=signup" class="nav-cta">Start free scan</a>
+</nav>
+<main>
+  <p class="eyebrow">Original research</p>
+  <h1>We scanned 400 real AI-built apps. Here's what we found</h1>
+  <div class="meta-row">VibeSafe &middot; September 8, 2026 &middot; 7 min read</div>
+  <p class="lead">Everyone has an opinion about whether AI-built apps are safe. Almost nobody has counted. So we built a frozen list of 400 public repositories genuinely built with Lovable, Bolt and v0, and started scanning them. The headline number: <strong>18.5% had a <code>.env</code> file committed straight into the repository</strong>.</p>
+
+  <div class="stat-grid">
+    <div class="stat"><div class="n">400</div><div class="l">repos in the corpus</div></div>
+    <div class="stat"><div class="n">18.5%</div><div class="l">had a committed .env</div></div>
+    <div class="stat"><div class="n">59%</div><div class="l">of scanned repos had a critical issue</div></div>
+    <div class="stat"><div class="n">2%</div><div class="l">of scanned files were clean</div></div>
+  </div>
+
+  <h2>How we picked the 400</h2>
+  <p>This is the part most "we analysed AI code" posts skip, and it's the part that decides whether the numbers mean anything.</p>
+  <p>Searching GitHub for repos that <em>mention</em> Lovable returns hundreds of thousands of results — tutorials, blog posts, starter templates, people who simply wrote the word in a README. Sampling those gives you a number about people who talk about AI builders, not people who use them.</p>
+  <p>So we selected on a <strong>build artefact</strong> instead: a <code>.lovable</code> file, <code>lovable-tagger</code> in <code>package.json</code>, or a <code>.bolt/</code> directory. Those are written by the tool, not by a human describing it.</p>
+
+  <div class="method">
+    <p><strong>Rules fixed before we looked at any results:</strong></p>
+    <p>&bull; One repo per owner, so a single prolific builder can't dominate the sample<br>
+       &bull; Forks excluded, so one popular template isn't counted many times<br>
+       &bull; Repos with fewer than 8 root entries excluded — that's a scaffold, not an application<br>
+       &bull; File selection by a fixed rule, never hand-picked after looking<br>
+       &bull; A fixed random seed, so the sample is reproducible</p>
+    <p>Changing those after seeing results is how an honest study becomes a dishonest one, so they were written down first.</p>
+  </div>
+
+  <h3>What the corpus looks like</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>Builder</th><th style="text-align:right">Repos</th></tr>
+    <tr><td>Lovable</td><td class="num">290</td></tr>
+    <tr><td>Bolt</td><td class="num">102</td></tr>
+    <tr><td>v0</td><td class="num">8</td></tr>
+  </table>
+  </div>
+  <p>35.2% of them use Supabase — which matters, because Supabase is where row-level security either protects your users' data or doesn't.</p>
+
+  <h2>Finding 1: nearly one in five committed their .env</h2>
+  <p><strong>74 of 400 repositories had a <code>.env</code> file sitting in the repo root.</strong> That is the single most damaging thing you can publish by accident. A <code>.env</code> is where your database URL, your service-role key, your Stripe secret and your AI provider key all live in one text file.</p>
+  <p>We recorded only whether the file was present. <strong>We never opened one.</strong> Those are strangers' live credentials, and there is no version of reading them that's defensible — so the study treats them as a yes/no signal and nothing more.</p>
+  <p>What makes this a tooling failure rather than a user failure: nobody types <code>git add .env</code> on purpose. It happens because the generated project didn't ship a <code>.gitignore</code> rule covering it, and the founder ran <code>git add .</code> exactly as every tutorial tells them to. The AI wrote the app; nothing told them the app came with a live grenade in it.</p>
+
+  <h2>Finding 2: the code itself is worse than the score suggests</h2>
+  <p>We then scanned individual source files with the same engine that powers VibeSafe. This part of the study is <strong>still running</strong> — the numbers below cover 115 files across 41 repositories, not the full corpus. Treat them as a strong signal, not a final answer.</p>
+
+  <div class="tablewrap">
+  <table>
+    <tr><th>Measure</th><th style="text-align:right">Result</th></tr>
+    <tr><td>Files scanned</td><td class="num">115</td></tr>
+    <tr><td>Repositories represented</td><td class="num">41</td></tr>
+    <tr><td>Average security score</td><td class="num">73 / 100</td></tr>
+    <tr><td>Files with zero issues</td><td class="num">2%</td></tr>
+    <tr><td>Files with ≥1 critical issue</td><td class="num">42%</td></tr>
+    <tr><td>Repos with ≥1 critical issue</td><td class="num">59%</td></tr>
+  </table>
+  </div>
+
+  <p>An average of 73/100 sounds survivable. It isn't, and the reason is the distribution: the average is dragged up by files that are mostly fine, while the worst files scored <strong>5, 5, 5, 23 and 27</strong>. Security doesn't average. One file scoring 5 is enough.</p>
+
+  <h3>What the critical issues actually were</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>Category</th><th style="text-align:right">Count</th></tr>
+    <tr><td>Vulnerable dependency</td><td class="num">28</td></tr>
+    <tr><td>Broken access control</td><td class="num">12</td></tr>
+    <tr><td>Sensitive data exposure</td><td class="num">7</td></tr>
+    <tr><td>XSS / HTML injection</td><td class="num">7</td></tr>
+    <tr><td>Prompt injection</td><td class="num">5</td></tr>
+    <tr><td>Missing authentication</td><td class="num">3</td></tr>
+    <tr><td>Open CORS policy</td><td class="num">3</td></tr>
+  </table>
+  </div>
+
+  <p>Two things stand out.</p>
+  <p><strong>Vulnerable dependencies lead by a distance.</strong> These aren't code the AI wrote badly — they're packages it pulled in that already had known holes. The generator picked a plausible library and never checked whether that version was safe.</p>
+  <p><strong>Prompt injection appears at all.</strong> Five criticals in a 115-file sample. These are apps that pass user input into an LLM call without separating instructions from data. It's a brand-new bug class that didn't exist in the tutorials these tools learned from, and it's already shipping.</p>
+
+  <h2>Finding 3: the most common problems aren't "security" problems</h2>
+  <p>Across every severity, the two largest categories were <strong>missing state handling</strong> (53) and <strong>code quality</strong> (53) — ahead of every classic vulnerability class.</p>
+  <p>Missing state handling means a payment, upload or webhook flow that implements the happy path and nothing else. No branch for payment failed, payment pending, webhook delivered twice, or an empty result. AI writes code that makes the demo work, because that's what it was optimised to do. "The demo works" and "the demo works when Stripe calls back twice" are different programs.</p>
+  <p>That's the honest shape of the risk. Most AI-built apps don't fail because of an exotic exploit. They fail because a real user did something slightly unusual on a Tuesday.</p>
+
+  <h2>What these numbers do not show</h2>
+  <div class="method">
+    <p>&bull; <strong>The scan is incomplete.</strong> 115 of 1,185 identified files. The run was stopped part-way and will be finished; the final figures may move.</p>
+    <p>&bull; <strong>Public repos aren't all repos.</strong> People who push an AI-built app to public GitHub may be less careful than people who keep it private. This is a real selection effect and we can't measure it.</p>
+    <p>&bull; <strong>These are scanner findings, not proven exploits.</strong> Nothing here was manually verified as attackable. A critical finding means "this pattern is dangerous", not "we broke into this app".</p>
+    <p>&bull; <strong>No repository, path or snippet is published</strong> — here or anywhere. Aggregate numbers only. Naming a repo with a committed <code>.env</code> would be handing someone a target.</p>
+  </div>
+
+  <h2>What to do with this if you built with AI</h2>
+  <ul class="plain">
+    <li><strong>Check your <code>.env</code> right now.</strong> Run <code>git ls-files | grep .env</code> in your project. If anything comes back, your keys are public — rotate them, then remove the file from history. Deleting it in a new commit is not enough; the old commit still has it.</li>
+    <li><strong>Check your dependencies.</strong> The single biggest critical category, and the easiest to fix — most are a version bump.</li>
+    <li><strong>If you use Supabase, confirm RLS is actually on.</strong> A public anon key with row-level security enabled is the correct, safe pattern. The same key without it exposes every row to anyone who opens DevTools.</li>
+    <li><strong>Walk one flow that can fail.</strong> Try paying with a declining card. Refresh the confirmation page. If your app can't cope, that's the 53-count category showing up in your product.</li>
+  </ul>
+
+  <div class="cta-box">
+    <h3>Find out where your app sits in these numbers</h3>
+    <p style="margin:0 0 16px;color:var(--text2);font-size:0.92rem">VibeSafe runs the same scan used in this study against your own code, GitHub files or live URL — in plain English, with a one-click fix for each issue.</p>
+    <a href="/try?utm_source=blog_400_app_study">Scan your app free &rarr;</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">No signup to try &middot; 10 free scans a month &middot; Your code is never stored</p>
+  </div>
+
+  <div class="disclaimer"><strong>An honest note.</strong> VibeSafe catches the most common risks in AI-built apps quickly. It doesn't replace a professional security audit for high-risk applications, and — as the numbers above show — no automated scan catches everything.</div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related:</p>
+  <div class="related">
+    <a href="/blog/is-vibe-coding-safe-honest-answer">Is vibe coding safe?</a>
+    <a href="/blog/why-ai-generated-code-has-security-bugs">Why AI code has bugs</a>
+    <a href="/blog/how-to-find-exposed-api-keys-in-code">Find exposed API keys</a>
+    <a href="/supabase-security-checklist">Supabase RLS checklist</a>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/blog">Blog</a> · <a href="/legal">Privacy &amp; Terms</a>
+</footer>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/nav-auth.js"></script>
+</body>
+</html>

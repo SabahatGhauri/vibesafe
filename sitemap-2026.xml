@@ -230,4 +230,10 @@
     <priority>0.70</priority>
   </url>
 
+  <url>
+    <loc>https://www.vibesafe.info/blog/we-scanned-400-ai-built-apps</loc>
+    <lastmod>2026-09-08</lastmod>
+    <priority>0.80</priority>
+  </url>
+
 </urlset>
