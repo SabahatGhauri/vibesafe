@@ -236,4 +236,10 @@
     <priority>0.80</priority>
   </url>
 
+  <url>
+    <loc>https://www.vibesafe.info/blog/what-is-vibesafe</loc>
+    <lastmod>2026-09-13</lastmod>
+    <priority>0.80</priority>
+  </url>
+
 </urlset>
