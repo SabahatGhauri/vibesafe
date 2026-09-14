@@ -2058,7 +2058,7 @@
     <div class="pricing-header">
       <p class="section-eyebrow">Pricing</p>
       <h2 class="section-title">Start free. Pay when you ship.</h2>
-      <p class="section-sub">No credit card needed to start. Cancel anytime. Pro includes a 15-day free trial.</p>
+      <p class="section-sub">No credit card needed to start. Cancel anytime. Pro includes a 7-day free trial.</p>
     </div>
 
     <!-- Billing toggle -->
@@ -2108,7 +2108,7 @@
           <span class="price-period" id="pro-period">/ month</span>
         </div>
         <div style="margin-bottom:14px">
-          <span style="background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.2);font-size:0.72rem;font-weight:700;padding:4px 12px;border-radius:100px">15-day free trial — no card needed</span>
+          <span style="background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.2);font-size:0.72rem;font-weight:700;padding:4px 12px;border-radius:100px">7-day free trial — no card needed</span>
         </div>
         <div class="plan-divider"></div>
         <ul class="plan-features">
@@ -2123,7 +2123,7 @@
           <li class="plan-feature"><span class="feat-check">✓</span> Safety score &amp; scan history</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Email support (24h)</li>
         </ul>
-        <button class="plan-btn plan-btn-primary" id="pro-btn" onclick="startCheckout('pro')">Start 15-day free trial</button>
+        <button class="plan-btn plan-btn-primary" id="pro-btn" onclick="startCheckout('pro')">Start 7-day free trial</button>
       </div>
       <!-- Team -->
       <div class="pricing-card">
@@ -2510,7 +2510,7 @@ function vsTypingHide() { var e = document.getElementById('vsTyping'); if (e) e.
 function vsFallback(m) {
   m = m.toLowerCase();
   if (m.includes('price') || m.includes('cost') || m.includes('plan') || m.includes('free'))
-    return 'VibeSafe plans: Free 10 scans per month forever, Pro $29 per month with 15-day free trial, Team $99 per month with 10 seats. Start free at vibesafe.info';
+    return 'VibeSafe plans: Free 10 scans per month forever, Pro $29 per month with 7-day free trial, Team $99 per month with 10 seats. Start free at vibesafe.info';
   if (m.includes('safe') || m.includes('store') || m.includes('privacy'))
     return 'Your code is scanned in memory and never stored. We never retain source code after scanning and never train AI on your code.';
   if (m.includes('start') || m.includes('how') || m.includes('begin'))
