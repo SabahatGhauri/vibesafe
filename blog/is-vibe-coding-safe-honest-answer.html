@@ -11,8 +11,8 @@
   gtag('js', new Date());
   gtag('config', 'AW-18432710203');
 </script>
-<title>Is Vibe Coding Safe? An Honest Answer for 2026 | vibesafe.info</title>
-<meta name="description" content="Is vibe coding safe? An honest look at the real risks of AI-built apps — exposed keys, open databases, runtime errors — and the 30-minute routine that removes most of the risk.">
+<title>Is Vibe Coding Safe? Honest Answer + Data From 400 Apps (2026) | vibesafe.info</title>
+<meta name="description" content="Is vibe coding safe? Yes, if you check the code before launch. We looked at 400 real AI-built apps: 18.5% had committed a .env file. The real risks and a 30-minute safety routine.">
 <meta name="keywords" content="VibeSafe, vibesafe, is vibe coding safe, vibe coding security, vibe-coded apps security, AI app security">
 <link rel="canonical" href="https://www.vibesafe.info/blog/is-vibe-coding-safe-honest-answer">
 <meta property="og:title" content="Is Vibe Coding Safe? An Honest Answer for 2026 | VibeSafe">
@@ -31,7 +31,15 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
 <link rel="stylesheet" href="/theme.css">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Article","headline":"Is Vibe Coding Safe? An Honest Answer for 2026","description":"An honest look at the real risks of AI-built apps and how to ship safely.","datePublished":"2026-07-02","author":{"@type":"Organization","name":"vibesafe.info"},"publisher":{"@type":"Organization","name":"vibesafe.info","url":"https://www.vibesafe.info"}}
+{"@context":"https://schema.org","@type":"Article","headline":"Is Vibe Coding Safe? An Honest Answer for 2026","description":"An honest look at the real risks of AI-built apps and how to ship safely.","datePublished":"2026-07-02","dateModified":"2026-09-15","author":{"@type":"Organization","name":"vibesafe.info"},"publisher":{"@type":"Organization","name":"vibesafe.info","url":"https://www.vibesafe.info"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is vibe coding safe?","acceptedAnswer":{"@type":"Answer","text":"Vibe coding is safe to ship once the code has been checked, and risky if it has not. The common failures are exposed API keys, database tables without access rules, and login checks that only exist in the browser. All of them are quick to find and fix before launch."}},
+{"@type":"Question","name":"How common are security problems in vibe-coded apps?","acceptedAnswer":{"@type":"Answer","text":"In a VibeSafe study of 400 public repositories built with Lovable, Bolt and v0, 18.5% had a .env file committed to the repository. In the subset whose source files were scanned (115 files across 41 repositories), 59% of repositories had at least one critical issue."}},
+{"@type":"Question","name":"Is it safe to build a real business on a vibe-coded app?","acceptedAnswer":{"@type":"Answer","text":"Yes, provided secrets live in environment variables, every database table has access rules, and every API route checks who is calling it. For apps handling payments at scale or health data, add a professional security review."}},
+{"@type":"Question","name":"Do I need to know how to code to make a vibe-coded app safe?","acceptedAnswer":{"@type":"Answer","text":"No. The 30-minute routine in this article can be followed without writing code, and a scanner explains each problem and its fix in plain English."}}
+]}
 </script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -56,6 +64,9 @@ code{background:var(--surface2);border:1px solid var(--border2);border-radius:5p
 .cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
 .cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
 .disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.faq details{background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:14px 18px;margin-bottom:10px}
+.faq summary{cursor:pointer;font-weight:600;color:var(--text)}
+.faq p{margin:10px 0 0}
 .related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
 .related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
 .meta-row{font-size:0.82rem;color:var(--text3);margin-bottom:28px}
@@ -73,11 +84,12 @@ footer a{color:var(--text3);text-decoration:none}
 <main>
   <p class="eyebrow">Vibe Coding</p>
   <h1>Is vibe coding safe? An honest answer</h1>
-  <div class="meta-row">VibeSafe &middot; July 2, 2026 &middot; 6 min read</div>
-  <p class="lead">Short version: vibe coding is safe to ship <em>after</em> you check the code — and genuinely risky if you don't. Here's what actually goes wrong, how often, and the 30-minute routine that removes most of the risk.</p>
+  <div class="meta-row">vibesafe.info &middot; July 2, 2026 &middot; Updated September 15, 2026 &middot; 7 min read</div>
+  <p class="lead"><strong>Is vibe coding safe? Yes, once you have checked the code, and no if you ship it unchecked.</strong> Short version: vibe coding is safe to ship <em>after</em> you check the code — and genuinely risky if you don't. Here's what actually goes wrong, how often, and the 30-minute routine that removes most of the risk.</p>
 
   <h2>What the data says</h2>
-  <p>Independent audits keep landing in the same range: roughly <strong>45% of AI-generated code contains at least one security weakness</strong>. That's not because AI tools are bad — it's because they optimize for code that runs, not code that survives contact with attackers. The preview works, the demo impresses, and the problems stay invisible until real users (and bots) arrive.</p>
+  <p>We built a frozen list of <a href="/blog/we-scanned-400-ai-built-apps" style="color:var(--cyan)">400 public repositories genuinely built with Lovable, Bolt and v0</a> and checked them. <strong>18.5% had a <code>.env</code> file committed straight into the repository.</strong> In the part of the study where we scanned source files (115 files across 41 repos, so treat it as a signal rather than a final answer), <strong>59% of repositories had at least one critical issue</strong>.</p>
+  <p>That's not because AI tools are bad — it's because they optimize for code that runs, not code that survives contact with attackers. The preview works, the demo impresses, and the problems stay invisible until real users (and bots) arrive.</p>
 
   <h2>The five failures that actually happen</h2>
   <ul class="plain">
@@ -101,6 +113,13 @@ footer a{color:var(--text3);text-decoration:none}
   </ul>
   <p>A scanner like <a href="/try?utm_source=is_vibe_coding_safe_honest_answer" style="color:var(--cyan)">vibesafe.info</a> automates the code checks in about ten seconds and explains each fix in plain English — so the answer to "is vibe coding safe?" becomes "yes, because I checked."</p>
 
+  <h2>Questions founders ask</h2>
+  <div class="faq">
+    <details><summary>How common are security problems in vibe-coded apps?</summary><p>In our study of 400 Lovable, Bolt and v0 repositories, 18.5% had committed a <code>.env</code> file. Among the repositories whose source we scanned, 59% had at least one critical issue.</p></details>
+    <details><summary>Is it safe to build a real business on a vibe-coded app?</summary><p>Yes, provided secrets live in environment variables, every database table has access rules, and every API route checks who is calling it. For payments at scale or health data, add a professional review.</p></details>
+    <details><summary>Do I need to know how to code to make it safe?</summary><p>No. The routine above works without writing code, and a scanner explains each problem and its fix in plain English.</p></details>
+  </div>
+
   <div class="cta-box">
     <h3>The answer depends on what's actually in your code</h3>
     <p style="margin:0 0 16px;color:var(--text2);font-size:0.92rem">VibeSafe reads it and tells you — exposed keys, missing database rules, broken auth — in plain English, with one-click AI fixes on a free account.</p>
@@ -115,6 +134,8 @@ footer a{color:var(--text3);text-decoration:none}
     <a href="/vibe-coding-security">Vibe coding security guide</a>
     <a href="/lovable-security-checklist">Lovable checklist</a>
     <a href="/pre-launch-security-checklist">Pre-launch checklist</a>
+    <a href="/blog/we-scanned-400-ai-built-apps">We scanned 400 AI-built apps</a>
+    <a href="/blog/is-cursor-safe-security-risks-explained">Is Cursor safe?</a>
   </div>
 </main>
 <footer>
