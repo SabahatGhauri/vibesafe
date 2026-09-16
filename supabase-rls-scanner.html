@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google tag (gtag.js) -- Google Ads AW-18432710203 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18432710203"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18432710203');
+</script>
+<title>Supabase RLS Scanner: Find Missing Row-Level Security | vibesafe.info</title>
+<meta name="description" content="Scan Supabase migrations and app code for missing RLS, using(true) policies, unprotected UPDATE/DELETE and leaked service_role keys. With fixes and a 2-minute manual test.">
+<link rel="canonical" href="https://www.vibesafe.info/supabase-rls-scanner">
+<meta property="og:title" content="Supabase RLS Scanner">
+<meta property="og:description" content="Scan Supabase migrations and app code for missing RLS, using(true) policies, unprotected UPDATE/DELETE and leaked service_role keys. With fixes and a 2-minute manual test.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/supabase-rls-scanner">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebPage", "name": "Supabase RLS Scanner", "url": "https://www.vibesafe.info/supabase-rls-scanner", "dateModified": "2026-09-16", "publisher": {"@type": "Organization", "@id": "https://www.vibesafe.info/#organization", "name": "VibeSafe", "url": "https://www.vibesafe.info"}}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What does a Supabase RLS scanner check?", "acceptedAnswer": {"@type": "Answer", "text": "It looks for tables reachable from the browser without Row-Level Security, RLS enabled with policies that allow everyone, policies covering SELECT but not UPDATE or DELETE, INSERT and UPDATE policies without WITH CHECK, user filtering done only in app code, and a service_role key in client code that bypasses RLS entirely."}}, {"@type": "Question", "name": "Can VibeSafe read my live Supabase policies?", "acceptedAnswer": {"@type": "Answer", "text": "No. VibeSafe scans code: your SQL migrations, schema files and the app code that queries Supabase. It does not log in to your database. Use the manual test on this page to confirm what your live project actually allows."}}, {"@type": "Question", "name": "Is the Supabase anon key a security problem?", "acceptedAnswer": {"@type": "Answer", "text": "No. The anon or publishable key is designed to be public, which is exactly why RLS matters: anyone holding it can call your tables directly, and RLS limits what they get back. VibeSafe does not flag the anon key; it flags a service_role key in client code."}}, {"@type": "Question", "name": "I enabled RLS and my app stopped returning data. Is that normal?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Enabling RLS denies everything until you add policies. Add a policy for each operation the app needs, scoped to the owner, for example auth.uid() = user_id."}}]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Inter Fallback',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--cyan),var(--violet));display:flex;align-items:center;justify-content:center;font-size:15px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4vw,2.7rem);line-height:1.15;letter-spacing:-0.02em;margin-bottom:18px}
+.lead{font-size:1.1rem;color:var(--text2);margin-bottom:26px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.35rem;margin:36px 0 14px}
+p{color:var(--text2);margin-bottom:16px}
+ul{list-style:none;margin:0 0 18px}
+li{padding:8px 0 8px 28px;position:relative;border-bottom:1px solid var(--border);color:var(--text2)}
+li::before{content:'✓';position:absolute;left:0;color:var(--cyan);font-weight:700}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.faq-q{font-weight:600;color:var(--text);margin:20px 0 6px}
+code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+pre{background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:14px 16px;overflow-x:auto;margin:0 0 18px;font-size:0.85rem;line-height:1.55}
+pre code{background:none;border:0;padding:0;color:var(--text)}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:0.92rem}th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:top}th{color:var(--text)}td{color:var(--text2)}.tablewrap{overflow-x:auto}
+.plain li{padding-left:0}.plain li::before{content:none}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt="" style="object-fit:cover"> vibesafe.info</a>
+  <a href="/#pricing" style="color:var(--text2);text-decoration:none;font-size:0.88rem;font-weight:500;margin-right:18px">Pricing</a>
+  <a href="/login" style="color:var(--text2);text-decoration:none;font-size:0.88rem;font-weight:500;margin-right:18px">Sign in</a>
+  <a href="/login?mode=signup" class="nav-cta">Start free scan</a>
+</nav>
+<main>
+  <p class="eyebrow">Supabase security</p>
+  <h1>Supabase RLS scanner</h1>
+  <p class="lead">Your Supabase anon key is public by design. Row-Level Security is the only thing stopping someone who copies it from your site from reading, or rewriting, every row in your tables. VibeSafe scans your migrations and app code for the RLS mistakes AI builders ship, and explains each fix.</p>
+
+  <div class="cta-box">
+    <a href="/try?utm_source=supabase_rls_scanner">Scan your Supabase code free →</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">Paste your SQL migrations and the files that query Supabase · No signup to try</p>
+  </div>
+
+  <h2>Why this matters more in AI-built apps</h2>
+  <p>Lovable, Bolt and similar tools wire the browser straight to Supabase. That's fine when RLS is on and scoped correctly, and a data leak when it isn't. In our <a href="/blog/we-scanned-400-ai-built-apps" style="color:var(--cyan)">400-app study</a>, 35.2% of the repositories used Supabase, which makes RLS the single most important setting for a large share of vibe-coded apps.</p>
+
+  <h2>The six RLS mistakes the scanner looks for</h2>
+  <ul class="plain">
+    <li><strong>1. A table with no RLS at all.</strong> Created in a migration, queried from the client, never given <code>enable row level security</code>. Anyone with the anon key can read every row.</li>
+    <li><strong>2. RLS on, but a policy that lets everyone in.</strong> <code>using (true)</code> on a table holding user data switches RLS on in name only.</li>
+    <li><strong>3. Reads protected, writes not.</strong> A SELECT policy scoped to the owner, but UPDATE or DELETE left broad. Users can't <em>see</em> each other's rows but can change or delete them.</li>
+    <li><strong>4. INSERT or UPDATE without <code>with check</code>.</strong> A user can write a row that claims to belong to someone else.</li>
+    <li><strong>5. Filtering only in app code.</strong> <code>.eq('user_id', user.id)</code> in the frontend looks like protection, but anyone can call the table without that filter.</li>
+    <li><strong>6. A service_role key in the browser.</strong> The service role bypasses RLS completely, so every policy above stops mattering.</li>
+  </ul>
+
+  <h2>What a finding looks like, and the fix</h2>
+  <p>A typical AI-generated migration:</p>
+<pre><code>create table notes (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users not null,
+  body text
+);
+-- no RLS: every row readable and writable with the anon key</code></pre>
+  <p>The fix, scoped for every operation:</p>
+<pre><code>alter table notes enable row level security;
+
+create policy "owner can read"   on notes for select using (auth.uid() = user_id);
+create policy "owner can insert" on notes for insert with check (auth.uid() = user_id);
+create policy "owner can update" on notes for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
+create policy "owner can delete" on notes for delete using (auth.uid() = user_id);</code></pre>
+
+  <h2>Check your live project by hand (2 minutes)</h2>
+  <p>The scanner reads code; this confirms what your deployed database actually allows. Take the project URL and anon key from your site's network requests, then, <strong>on your own project only</strong>:</p>
+<pre><code>curl "https://YOUR-PROJECT.supabase.co/rest/v1/notes?select=*" \
+  -H "apikey: YOUR_ANON_KEY" \
+  -H "Authorization: Bearer YOUR_ANON_KEY"</code></pre>
+  <p>If that returns other users' rows while logged out, RLS isn't protecting that table. An empty array <code>[]</code> is what you want. Repeat for each table that holds user data. The Supabase dashboard's security advisor also lists tables with RLS disabled.</p>
+
+  <h2>What the scanner does not do</h2>
+  <ul class="plain">
+    <li>It doesn't connect to your database, so policies created only in the dashboard and never saved to a migration aren't visible to it. Use the manual test above.</li>
+    <li>It doesn't flag your anon or publishable key. Those are public by design.</li>
+    <li>It can't know your business rules, such as whether team members should see each other's rows. It flags policies that look too broad and explains why; you decide.</li>
+  </ul>
+
+  <h2>Questions</h2>
+  <p class="faq-q">What does a Supabase RLS scanner check?</p>
+  <p>It looks for tables reachable from the browser without Row-Level Security, RLS enabled with policies that allow everyone, policies covering SELECT but not UPDATE or DELETE, INSERT and UPDATE policies without WITH CHECK, user filtering done only in app code, and a service_role key in client code that bypasses RLS entirely.</p>
+  <p class="faq-q">Can VibeSafe read my live Supabase policies?</p>
+  <p>No. VibeSafe scans code: your SQL migrations, schema files and the app code that queries Supabase. It does not log in to your database. Use the manual test on this page to confirm what your live project actually allows.</p>
+  <p class="faq-q">Is the Supabase anon key a security problem?</p>
+  <p>No. The anon or publishable key is designed to be public, which is exactly why RLS matters: anyone holding it can call your tables directly, and RLS limits what they get back. VibeSafe does not flag the anon key; it flags a service_role key in client code.</p>
+  <p class="faq-q">I enabled RLS and my app stopped returning data. Is that normal?</p>
+  <p>Yes. Enabling RLS denies everything until you add policies. Add a policy for each operation the app needs, scoped to the owner, for example auth.uid() = user_id.</p>
+
+  <div class="disclaimer"><strong>An honest note.</strong> VibeSafe catches the common RLS mistakes quickly. For apps holding sensitive or regulated data, have a person review your policies as well.</div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related:</p>
+  <div class="related">
+    <a href="/supabase-security-checklist">Supabase security checklist</a>
+    <a href="/blog/supabase-rls-explained-for-founders">Supabase RLS explained for founders</a>
+    <a href="/lovable-security-checklist">Lovable security checklist</a>
+    <a href="/vibe-coding-security">Vibe coding security scanner</a>
+    <a href="/exposed-api-key-scanner">Exposed API key scanner</a>
+  </div>
+</main>
+<footer>
+  © 2026 SG Digital Ventures LLC · VibeSafe — vibesafe.info · <a href="/">Home</a> · <a href="/legal">Privacy &amp; Terms</a> · <a href="/faq">FAQ</a> · <a href="https://vibesafebuilder.com">VibeSafe Builder</a>
+</footer>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+  <script defer src="/nav-auth.js"></script>
+</body>
+</html>

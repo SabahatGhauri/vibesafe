@@ -51,7 +51,7 @@
   </url>
   <url>
     <loc>https://www.vibesafe.info/vibe-coding-security</loc>
-    <lastmod>2026-07-07</lastmod>
+    <lastmod>2026-09-16</lastmod>
     <priority>0.90</priority>
   </url>
   <url>
@@ -242,4 +242,9 @@
     <priority>0.80</priority>
   </url>
 
+  <url>
+    <loc>https://www.vibesafe.info/supabase-rls-scanner</loc>
+    <lastmod>2026-09-16</lastmod>
+    <priority>0.80</priority>
+  </url>
 </urlset>
