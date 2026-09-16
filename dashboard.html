@@ -2632,6 +2632,7 @@ async function scanFromGitHub() {
     window.vsPassedChecks = result.passed || [];
     window.vsScannedUrl = '';
     window.vsSummary = result.summary || '';
+    window.vsCoverageNotes = coverageNotes(result);
 
     document.getElementById('scanProgressFill').style.width = '100%';
     document.getElementById('scanPct').textContent = '100%';
@@ -2734,6 +2735,7 @@ function renderResults(result) {
   window.vsPassedChecks = result.passed || [];
   window.vsScannedUrl = result.finalUrl || result.url || '';
   window.vsSummary = result.summary || '';
+    window.vsCoverageNotes = coverageNotes(result);
   window.vsDetectedLang = result.language || 'Live URL';
   showResults(result.score);
 
@@ -2847,6 +2849,7 @@ async function startScan() {
     window.vsPassedChecks = result.passed || [];
     window.vsScannedUrl = '';
     window.vsSummary = result.summary || '';
+    window.vsCoverageNotes = coverageNotes(result);
     window.vsDetectedLang = result.language || langName;
 
     const scanningEl = document.getElementById('scanningState');
@@ -2863,7 +2866,35 @@ async function startScan() {
   }
 }
 
+// What the scan could NOT cover (truncated input, dependencies without a
+// version, checks a live-site scan can't verify). Shown above the findings so
+// a clean result is never read as more coverage than the scan had.
+function coverageNotes(r) {
+  r = r || {};
+  var notes = (r.coverage && Array.isArray(r.coverage.notes)) ? r.coverage.notes.slice() : [];
+  (Array.isArray(r.not_checked) ? r.not_checked : []).forEach(function(x) { notes.push('Not checked: ' + x); });
+  return notes;
+}
+
+function renderCoverageNotes() {
+  var list = document.getElementById('issuesList');
+  if (!list || !list.parentNode) return;
+  var box = document.getElementById('coverageNotes');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'coverageNotes';
+    box.style.cssText = 'margin:0 0 14px;padding:12px 14px;border:1px solid rgba(245,158,11,0.35);border-left:3px solid #F59E0B;border-radius:10px;background:rgba(245,158,11,0.06);font-size:0.84rem;line-height:1.55;color:var(--text2)';
+    list.parentNode.insertBefore(box, list);
+  }
+  var notes = window.vsCoverageNotes || [];
+  if (!notes.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  box.style.display = 'block';
+  box.innerHTML = '<div style="font-weight:600;color:var(--text);margin-bottom:4px">What this scan did not cover</div><ul style="margin:0;padding-left:18px">'
+    + notes.map(function(t) { var d = document.createElement('div'); d.textContent = t; return '<li>' + d.innerHTML + '</li>'; }).join('') + '</ul>';
+}
+
 function showResults(apiScore) {
+  renderCoverageNotes();
   const criticals = issues.filter(i => i.sev === 'critical').length;
   const warnings  = issues.filter(i => i.sev === 'warning').length;
   const passed    = (window.vsPassedChecks || []).length || Math.max(0, 8 - criticals - warnings);
@@ -3278,6 +3309,7 @@ function loadPastScan(scan) {
   if (!scan.results) return;
   issues = (scan.results.issues || []).map(function(i) { return Object.assign({}, i, { fixed: false }); });
   window.vsSummary = scan.results.summary || '';
+  window.vsCoverageNotes = coverageNotes(scan.results);
   window.vsPassedChecks = scan.results.passed || [];
   window.vsScannedUrl = scan.results.finalUrl || scan.results.url || '';
   showResults(scan.score);
