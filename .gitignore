@@ -3,3 +3,11 @@
 *.pre-ftfy.bak
 
 .vercel
+
+# Never commit secrets or local environment files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.vercel
