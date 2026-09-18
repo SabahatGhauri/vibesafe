@@ -766,6 +766,13 @@ body {
 .code-snippet .del { color: var(--red); }
 .code-snippet .add { color: var(--green); }
 
+.fix-why { background: var(--surface2); border-left: 3px solid var(--violet); border-radius: 8px; padding: 10px 13px; margin: 0 0 12px; font-size: 0.85rem; color: var(--text2); line-height: 1.55; }
+.fix-why b { color: var(--text); font-weight: 600; }
+.fix-steps { margin: 12px 0 14px; }
+.fix-steps-title { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text3); margin-bottom: 7px; }
+.fix-steps ol { margin: 0; padding-left: 20px; }
+.fix-steps li { font-size: 0.86rem; color: var(--text2); line-height: 1.55; margin-bottom: 6px; }
+.fix-steps li::marker { color: var(--cyan); font-weight: 700; }
 .fix-row { display: flex; gap: 8px; align-items: center; }
 
 .fix-btn {
@@ -2626,6 +2633,7 @@ async function scanFromGitHub() {
         title: issue.title || 'Unknown issue', line: issue.line || '', desc: issue.description || '',
         impact: issue.impact || '', before: issue.before || '', after: issue.after || '',
         fix: issue.fix_explanation || 'Apply the suggested fix.', fixed: false,
+        why: issue.why_it_happened || '', steps: issue.fix_steps || [],
         category: issue.category || null, owasp: issue.owasp || null
       };
     });
@@ -2726,6 +2734,8 @@ function renderResults(result) {
       before: issue.before || '',
       after: issue.after || issue.fix || '',
       fix: issue.fix_explanation || issue.fix || 'Apply the suggested fix.',
+      why: issue.why_it_happened || '',
+      steps: issue.fix_steps || [],
       fixed: false,
       category: issue.category || null,
       owasp: issue.owasp || null
@@ -2840,6 +2850,8 @@ async function startScan() {
       before: issue.before || '',
       after: issue.after || '',
       fix: issue.fix_explanation || 'Apply the suggested fix.',
+      why: issue.why_it_happened || '',
+      steps: issue.fix_steps || [],
       fixed: false,
       category: issue.category || null,
       owasp: issue.owasp || null,
@@ -3406,21 +3418,52 @@ function buildIssueCard(issue, idx) {
     </div>
     <div class="issue-body">
       <div class="issue-desc">${issue.desc}</div>
-      <div class="code-snippet">
+      ${issue.why ? `<div class="fix-why"><b>Why this happened:</b> ${escHtml(issue.why)}</div>` : ''}
+      ${(issue.before || issue.after) ? `<div class="code-snippet">
         <div class="del">− ${issue.before}</div>
         <div class="add">+ ${issue.after}</div>
-      </div>
+      </div>` : ''}
+      ${(issue.steps && issue.steps.length) ? `<div class="fix-steps">
+        <div class="fix-steps-title">How to fix it</div>
+        <ol>${issue.steps.map(st => `<li>${escHtml(st)}</li>`).join('')}</ol>
+      </div>` : `<div class="fix-steps"><div class="fix-steps-title">How to fix it</div><ol><li>${escHtml(issue.fix || 'Apply the suggested fix.')}</li><li>Re-scan to confirm the issue is gone.</li></ol></div>`}
       <div class="fix-row">
-        <button class="fix-btn fix-btn-primary" id="fix-btn-${issue.id}" onclick="fixIssue(${issue.id})">
+        ${(issue.before && issue.after) ? `<button class="fix-btn fix-btn-primary" id="fix-btn-${issue.id}" onclick="fixIssue(${issue.id})">
           ⚡ Auto-fix
-        </button>
-        <button class="fix-btn fix-btn-ghost" onclick="showToast('Explanation copied','success')">
-          Copy explanation
+        </button>` : ''}
+        <button class="fix-btn fix-btn-ghost" onclick="copyFixCard(${issue.id})">
+          Copy fix steps
         </button>
       </div>
     </div>
   `;
   return card;
+}
+
+// Copies the finding as plain text: what it is, why, the steps, and the code
+// change. Written to be pasted straight into Cursor, Lovable or a ticket.
+function copyFixCard(id) {
+  var i = issues.filter(function(x) { return x.id === id; })[0];
+  if (!i) return;
+  var out = 'VibeSafe finding: ' + i.title + '\n'
+    + (i.line ? 'Where: ' + i.line + '\n' : '')
+    + 'Severity: ' + (i.sev === 'critical' ? 'High' : i.sev === 'warning' ? 'Medium' : 'Low') + '\n\n'
+    + 'Problem: ' + (i.desc || '') + '\n'
+    + (i.impact ? 'If ignored: ' + i.impact + '\n' : '')
+    + (i.why ? 'Why this happened: ' + i.why + '\n' : '')
+    + '\nHow to fix it:\n'
+    + ((i.steps && i.steps.length) ? i.steps.map(function(s, n) { return (n + 1) + '. ' + s; }).join('\n')
+                                   : '1. ' + (i.fix || 'Apply the suggested fix.') + '\n2. Re-scan to confirm.')
+    + (i.before && i.after ? '\n\nChange this:\n' + i.before + '\nTo this:\n' + i.after : '')
+    + '\n\nFound by VibeSafe — https://www.vibesafe.info';
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(out).then(
+      function() { showToast('Fix steps copied', 'success'); },
+      function() { showToast('Could not copy — select the text instead', 'error'); }
+    );
+  } else {
+    showToast('Could not copy — select the text instead', 'error');
+  }
 }
 
 function toggleIssue(card) {
@@ -4667,6 +4710,11 @@ function copyFixesForAI() {
     out += (idx + 1) + '. [' + (issue.sev || 'issue').toUpperCase() + '] ' + (issue.type || '') + ' — ' + (issue.title || '') + '\n';
     if (issue.line) out += '   Location: ' + issue.line + '\n';
     if (issue.desc) out += '   Problem: ' + issue.desc + '\n';
+    if (issue.why) out += '   Why it happened: ' + issue.why + '\n';
+    if (issue.steps && issue.steps.length) {
+      out += '   How to fix it:\n';
+      issue.steps.forEach(function(st, n) { out += '     ' + (n + 1) + '. ' + st + '\n'; });
+    }
     if (issue.before) out += '   Current code: ' + issue.before + '\n';
     if (issue.after) out += '   Fix to: ' + issue.after + '\n';
     out += '\n';
