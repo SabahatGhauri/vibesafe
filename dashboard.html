@@ -1941,6 +1941,20 @@ document.addEventListener('click', function(e) {
       Run one read-only query in your Supabase project and paste the result. VibeSafe never connects to your database and never sees a single row of customer data.
     </p>
 
+    <!-- Step 0: no setup at all -->
+    <div style="background:var(--surface1);border:1px solid var(--border1);border-left:3px solid var(--cyan);border-radius:12px;padding:20px;margin-bottom:16px;">
+      <div style="font-weight:600;margin-bottom:4px;">Start here — no setup needed</div>
+      <div style="font-size:0.8rem;color:var(--text3);margin-bottom:12px;">
+        Paste your app's address. VibeSafe reads the page the way any visitor's browser does, finds the database it talks to, and checks what a signed-out stranger can read from it. Nothing is written, changed or deleted.
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <input id="expUrl" placeholder="https://myapp.com" style="flex:1;min-width:220px;padding:9px 12px;background:var(--surface2);border:1px solid var(--border2);border-radius:7px;color:var(--text);font-size:0.85rem;" onkeydown="if(event.key==='Enter')runExposureCheck()">
+        <button class="btn btn-primary" id="expRunBtn" onclick="runExposureCheck()">Check what strangers can see</button>
+      </div>
+      <div id="expStatus" style="font-size:0.8rem;color:var(--text3);margin-top:8px;min-height:18px;"></div>
+      <div id="expResults" style="display:none;margin-top:14px;"></div>
+    </div>
+
     <!-- Step 1 -->
     <div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:20px;margin-bottom:16px;">
       <div style="font-weight:600;margin-bottom:4px;">Step 1 — Run this in your Supabase SQL editor</div>
@@ -3905,6 +3919,81 @@ function copyAccessSqlFix(i) {
   );
 }
 
+
+
+// ── Zero-setup exposure check ──
+var EXPOSURE_API = 'https://vibesafe-api.vercel.app/api/exposure-check';
+
+async function runExposureCheck() {
+  var url = (document.getElementById('expUrl').value || '').trim();
+  var status = document.getElementById('expStatus');
+  var btn = document.getElementById('expRunBtn');
+  if (!url) { status.textContent = 'Enter your app address first.'; return; }
+  btn.disabled = true;
+  status.textContent = 'Reading the page and checking the database…';
+  try {
+    var token = await freshAuthToken();
+    if (!token) { status.textContent = 'Please sign in again.'; btn.disabled = false; return; }
+    var res = await fetch(EXPOSURE_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ url: url })
+    });
+    var d = await res.json().catch(function () { return {}; });
+    if (!res.ok) { status.textContent = d.error || ('Check failed (' + res.status + ')'); btn.disabled = false; return; }
+    status.textContent = '';
+    renderExposureResults(d);
+  } catch (e) {
+    status.textContent = e.message || 'Check failed.';
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function renderExposureResults(d) {
+  var el = document.getElementById('expResults');
+  var colour = (d.findings || []).length ? '#EF4444' : '#10B981';
+
+  var findings = (d.findings || []).map(function (f) {
+    var steps = (f.fix_steps || []).map(function (st) { return '<li>' + escHtml(st) + '</li>'; }).join('');
+    return '<div style="background:var(--surface2);border-left:3px solid #EF4444;border-radius:9px;padding:14px 16px;margin-bottom:10px;">'
+      + '<div style="font-weight:700;color:#EF4444;font-size:0.92rem;margin-bottom:5px;">' + escHtml(f.title) + '</div>'
+      + '<div style="font-size:0.85rem;color:var(--text2);line-height:1.6;margin-bottom:8px;">' + escHtml(f.description) + '</div>'
+      + (f.evidence ? '<div style="font-size:0.74rem;color:var(--text3);font-family:\'JetBrains Mono\',monospace;margin-bottom:8px;">' + escHtml(f.evidence) + '</div>' : '')
+      + (steps ? '<ol style="margin:0 0 0 18px;font-size:0.84rem;color:var(--text2);line-height:1.6;">' + steps + '</ol>' : '')
+      + '</div>';
+  }).join('');
+
+  var rows = (d.tables || []).map(function (t) {
+    var pill = t.status === 'exposed'
+      ? '<span style="color:#EF4444;background:rgba(239,68,68,0.12);border-radius:100px;padding:2px 9px;font-size:0.72rem;font-weight:600;">Readable by anyone</span>'
+      : t.status === 'empty_or_protected'
+        ? '<span style="color:var(--text3);background:var(--surface3);border-radius:100px;padding:2px 9px;font-size:0.72rem;font-weight:600;">Empty or protected</span>'
+        : '<span style="color:#10B981;background:rgba(16,185,129,0.12);border-radius:100px;padding:2px 9px;font-size:0.72rem;font-weight:600;">Refused</span>';
+    return '<tr>'
+      + '<td style="padding:7px 10px;border-bottom:1px solid var(--border1);font-family:\'JetBrains Mono\',monospace;font-size:0.8rem;color:var(--text)">' + escHtml(t.table) + '</td>'
+      + '<td style="padding:7px 10px;border-bottom:1px solid var(--border1);font-size:0.8rem;color:var(--text2)">' + (t.rows_visible || 0) + '</td>'
+      + '<td style="padding:7px 10px;border-bottom:1px solid var(--border1);font-size:0.78rem;color:var(--text3)">' + escHtml((t.columns || []).join(', ')) + '</td>'
+      + '<td style="padding:7px 10px;border-bottom:1px solid var(--border1);text-align:right">' + pill + '</td>'
+      + '</tr>';
+  }).join('');
+
+  var notChecked = (d.not_checked || []).map(function (n) { return '<li>' + escHtml(n) + '</li>'; }).join('');
+
+  el.innerHTML =
+      '<div style="font-weight:700;font-size:0.98rem;color:' + colour + ';margin-bottom:4px;">' + escHtml(d.summary || '') + '</div>'
+    + (d.project_url ? '<div style="font-size:0.76rem;color:var(--text3);margin-bottom:12px;">Backend found in your page: ' + escHtml(d.project_url) + ' · ' + (d.scripts_searched || 0) + ' file(s) searched</div>' : '<div style="margin-bottom:12px;"></div>')
+    + findings
+    + (rows ? '<div style="overflow-x:auto;margin-bottom:12px;"><table style="width:100%;border-collapse:collapse;min-width:520px;"><thead><tr>'
+        + ['Table', 'Rows a stranger sees', 'Columns seen', 'Result'].map(function (h) {
+            return '<th style="text-align:left;padding:7px 10px;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text3);">' + h + '</th>';
+          }).join('')
+        + '</tr></thead><tbody>' + rows + '</tbody></table></div>' : '')
+    + (notChecked ? '<div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:9px;padding:12px 14px;margin-bottom:10px;"><div style="font-size:0.8rem;font-weight:600;margin-bottom:4px;">What this did not check</div><ul style="margin:0 0 0 18px;font-size:0.8rem;color:var(--text2);line-height:1.55;">' + notChecked + '</ul></div>' : '')
+    + '<div style="font-size:0.76rem;color:var(--text3);">' + escHtml(d.note || '') + '</div>';
+
+  el.style.display = 'block';
+}
 
 // ── Two-user test (Access Check step 3) ──
 var ACCESS_TEST_API = 'https://vibesafe-api.vercel.app/api/access-test';
