@@ -455,6 +455,46 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
 
   <div class="faq-list" id="faqList">
 
+    <!-- DATA ACCESS (NEW) -->
+    <div class="faq-item" data-cat="general">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">🔐 What is the Data Access check? (New)</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-general">General</span>
+          <span class="faq-chevron">▼</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        It answers the question that matters most in an AI-built app, with evidence: <strong>can one of your customers see, change or delete another customer's records?</strong><br><br>Paste your app's address and VibeSafe reads the page the way any visitor's browser does, finds the database and API behind it, and reports every table and route that answers someone with <strong>no account at all</strong>. That part needs no setup and takes seconds.<br><br>On a staging project it goes further: VibeSafe signs in as two test users you created and actually tries to reach one user's rows as the other, then shows a grid of what was blocked and what was allowed.<br><br><strong>Pro and Team.</strong> Find it in your dashboard sidebar under 🔐 Data Access.
+      </div>
+    </div>
+
+    <div class="faq-item" data-cat="general">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">Is the Data Access check safe to run on my app?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-general">General</span>
+          <span class="faq-chevron">▼</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        The quick check is <strong>read-only</strong> — it never writes, changes or deletes anything, and it keeps table names, column names and counts, never your customers' data.<br><br>The deeper two-user test does create one marker row per table and delete it afterwards, so it asks you to confirm you are pointing it at a <strong>staging</strong> project, never the database your customers use.<br><br>VibeSafe will not accept your Supabase secret (<code>service_role</code>) key, and the test-user passwords you enter are used for that run only — never stored or logged.
+      </div>
+    </div>
+
+    <div class="faq-item" data-cat="general">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">What does the Data Access check NOT cover?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-general">General</span>
+          <span class="faq-chevron">▼</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        It tests the tables and routes your app names in its own code, so anything your app never mentions is not tested — and the report says so.<br><br>It does not test storage buckets, database functions that bypass access rules, or business rules only you know (for example whether teammates should see each other's rows).<br><br>A table that is simply <strong>empty</strong> looks identical to a protected one from outside, so those are reported as "empty or protected", never as safe. Only the two-user test proves protection.
+      </div>
+    </div>
+
     <!-- LAUNCH CHECK (NEW) -->
     <div class="faq-item" data-cat="general">
       <div class="faq-q" onclick="toggleFaq(this.parentElement)">

@@ -96,6 +96,7 @@ footer a{color:var(--text3)}
     <a href="#vscode">6. Use the VS Code extension</a>
     <a href="#history">7. Scan history &amp; reports</a>
     <a href="#launchcheck">8. Run a Launch Check</a>
+    <a href="#dataaccess">9. Check who can see your data</a>
     <a href="#plans">9. Plans and limits</a>
     <a href="#trouble">10. Troubleshooting</a>
   </div>
@@ -222,7 +223,16 @@ footer a{color:var(--text3)}
   </ol>
   <div class="tip">📬 <strong>No news is good news.</strong> You won't get weekly "all clear" emails — only an alert when something actually needs your attention. Pro watches up to 5 sites, Team up to 25.</div>
 
-  <h2 id="plans"><span class="step-num">9</span>Plans and limits</h2>
+  <h2 id="dataaccess"><span class="step-num">9</span>Check who can see your data 🔐</h2>
+  <p>Open <strong>Data Access</strong> in the dashboard sidebar. It answers the question that matters most in an AI-built app: can one customer reach another customer's records?</p>
+  <p><strong>The quick check — no setup.</strong> Paste your app's address and press <em>Check what strangers can see</em>. VibeSafe reads your page the way any visitor's browser does, finds the database and API behind it, and reports every table and route that answers someone with no account. It only reads: nothing is written, changed or deleted, and no customer data is kept — only table names, column names and counts.</p>
+  <p><strong>The full check — your database's rules.</strong> Run the read-only query VibeSafe gives you in your Supabase SQL editor and paste the result back. You get every table with its access rule, what is at risk, and the exact SQL to fix each one.</p>
+  <p><strong>The proof — two test users.</strong> On a <em>staging</em> project, create two test users yourself, then enter your project address, your public (anon) key and both logins. VibeSafe signs in as each and tries to read, change, delete and impersonate across them, then shows a grid: blocked, allowed, or not tested with the reason. It creates one marker row per table and deletes it afterwards.</p>
+  <p><strong>Then prove the fix.</strong> Apply the SQL, run the test again, and VibeSafe compares it with your last run: what is now closed, what is still open, and anything new.</p>
+  <p><strong>Never point the two-user test at the database your customers use.</strong> It writes and deletes test rows. VibeSafe asks you to confirm it is staging, refuses your Supabase secret (service_role) key, and uses the test-user passwords for that run only — they are never stored.</p>
+  <p>The Data Access check is part of Pro.</p>
+
+  <h2 id="plans"><span class="step-num">10</span>Plans and limits</h2>
   <ul class="plain">
     <li><strong>Starter (free)</strong> — 10 scans every month, all scan types, forever</li>
     <li><strong>Pro ($29/mo)</strong> — unlimited scans, auto-fixes, priority support</li>
@@ -231,7 +241,7 @@ footer a{color:var(--text3)}
   <img class="shot" src="/assets/manual/12-pricing.png" alt="VibeSafe pricing plans" loading="lazy">
   <p class="caption">Plans — start free, upgrade when you're shipping</p>
 
-  <h2 id="trouble"><span class="step-num">10</span>Troubleshooting</h2>
+  <h2 id="trouble"><span class="step-num">11</span>Troubleshooting</h2>
   <div class="trouble">
     <div class="trouble-row">
       <div class="trouble-q">"Not connected yet" in the extension</div>

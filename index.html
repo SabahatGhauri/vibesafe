@@ -1149,6 +1149,7 @@
     <li><a href="#how">How it works</a></li>
     <li><a href="#features">Features</a></li>
     <li><a href="#launch-check">Launch Check</a></li>
+    <li><a href="#access-check">Data Access check</a></li>
     <li><a href="/learn">Learn</a></li>
     <li><a href="#pricing">Pricing</a></li>
   </ul>
@@ -2054,6 +2055,42 @@
 }
 </style>
 
+<!-- ACCESS CHECK -->
+<section id="access-check" style="padding:70px 5%;border-top:1px solid var(--border);">
+  <div class="container" style="max-width:1140px;margin:0 auto;">
+    <div style="text-align:center;max-width:680px;margin:0 auto 18px;">
+      <p class="section-eyebrow">New — Data Access</p>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(1.7rem,3.5vw,2.4rem);letter-spacing:-0.02em;margin:0 0 14px;">Can one customer see another customer's data?</h2>
+      <p style="color:var(--text2);font-size:1rem;line-height:1.7;margin:0 0 24px;">
+        The most expensive mistake in an AI-built app is a database anyone can read. Paste your app's address and VibeSafe answers in seconds, using only the public key your site already ships — no setup, nothing written or changed.
+      </p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;">
+        <a href="/login?mode=signup" class="btn btn-primary btn-lg" style="text-decoration:none;">🔐 Check my app</a>
+        <a href="/user-guide#dataaccess" class="btn btn-outline btn-lg" style="text-decoration:none;">How it works</a>
+      </div>
+      <p style="font-size:0.78rem;color:var(--text3);">Read-only · Nothing is written, changed or deleted · Part of Pro</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:40px;">
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:22px;">
+        <div style="font-size:1.5rem;margin-bottom:10px;">👀</div>
+        <h3 style="font-size:1rem;margin:0 0 8px;">What a stranger can see</h3>
+        <p style="color:var(--text2);font-size:0.9rem;line-height:1.6;margin:0;">VibeSafe reads your page like any browser, finds the database and API behind it, and reports every table and route that answers someone with no account at all.</p>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:22px;">
+        <div style="font-size:1.5rem;margin-bottom:10px;">🧪</div>
+        <h3 style="font-size:1rem;margin:0 0 8px;">Proved with two users</h3>
+        <p style="color:var(--text2);font-size:0.9rem;line-height:1.6;margin:0;">On a staging project, VibeSafe signs in as two of your test users and actually tries to read, change and delete one user's rows as the other. Every result is blocked, allowed, or not tested with the reason.</p>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:22px;">
+        <div style="font-size:1.5rem;margin-bottom:10px;">✅</div>
+        <h3 style="font-size:1rem;margin:0 0 8px;">Fixed, then proved again</h3>
+        <p style="color:var(--text2);font-size:0.9rem;line-height:1.6;margin:0;">Each finding comes with the exact SQL and the steps to apply it. Re-run the check and VibeSafe shows what is now closed, what is still open, and anything new.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- PRICING -->
 <section class="pricing-section" id="pricing">
   <div class="section-tint tint-cyan"></div>
@@ -2118,6 +2155,7 @@
           <li class="plan-feature"><span class="feat-check">✓</span> Unlimited scans</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Full security scan suite</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Live URL / DAST scanning</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Data Access check (who can see what)</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Private GitHub repo scanning</li>
           <li class="plan-feature"><span class="feat-check">✓</span> CI/CD GitHub Action</li>
           <li class="plan-feature"><span class="feat-check">✓</span> VS Code &amp; Cursor extension</li>
