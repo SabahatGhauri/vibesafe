@@ -4071,9 +4071,30 @@ function renderTwoUserResults(d) {
 
   var notTested = (d.not_tested || []).map(function (n) { return '<li>' + escHtml(n) + '</li>'; }).join('');
 
+  // A re-test against the same project: what actually changed since last time.
+  var cmp = d.comparison;
+  var cmpHtml = '';
+  if (cmp) {
+    var list = function (title, items, colour) {
+      if (!items || !items.length) return '';
+      return '<div style="margin-top:8px;"><div style="font-size:0.78rem;font-weight:700;color:' + colour + ';margin-bottom:3px;">' + title + '</div>'
+        + '<ul style="margin:0 0 0 18px;font-size:0.82rem;color:var(--text2);line-height:1.55;">'
+        + items.slice(0, 8).map(function (x) { return '<li>' + escHtml(x) + '</li>'; }).join('') + '</ul></div>';
+    };
+    var good = (cmp.fixed || []).length && !(cmp.still_open || []).length && !(cmp.newly_open || []).length;
+    cmpHtml = '<div style="background:var(--surface2);border-left:3px solid ' + (good ? '#10B981' : '#F59E0B') + ';border-radius:9px;padding:14px 16px;margin-bottom:14px;">'
+      + '<div style="font-weight:700;font-size:0.9rem;color:' + (good ? '#10B981' : '#F59E0B') + ';">' + escHtml(cmp.verdict || '') + '</div>'
+      + '<div style="font-size:0.74rem;color:var(--text3);margin-top:2px;">compared with your run on ' + escHtml(new Date(cmp.compared_with).toLocaleString()) + '</div>'
+      + list('Now fixed', cmp.fixed, '#10B981')
+      + list('Still open', cmp.still_open, '#EF4444')
+      + list('New since last time', cmp.newly_open, '#EF4444')
+      + '</div>';
+  }
+
   el.innerHTML =
       '<div style="font-size:1rem;font-weight:700;margin-bottom:6px;color:' + ((d.findings || []).length ? '#EF4444' : '#10B981') + ';">' + escHtml(d.summary || '') + '</div>'
     + '<div style="font-size:0.78rem;color:var(--text3);margin-bottom:14px;">' + (d.tested_tables || 0) + ' tables tested · ' + (d.requests_made || 0) + ' requests · run ' + escHtml(d.run_id || '') + '</div>'
+    + cmpHtml
     + (findings || '')
     + '<div style="overflow-x:auto;margin-bottom:14px;"><table style="width:100%;border-collapse:collapse;min-width:640px;"><thead><tr>'
     +   ['Table', 'B reads A\'s row', 'B changes it', 'B deletes it', 'B writes as A', 'Signed out reads'].map(function (h) {
