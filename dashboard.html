@@ -3989,6 +3989,14 @@ function renderExposureResults(d) {
       + '</tr>';
   }).join('');
 
+  var costRows = (d.expensive_routes || []).map(function (x) {
+    var label = { runs_without_account: 'Runs for anyone', reachable_without_account: 'Answers strangers', needs_account: 'Needs an account', rate_limited: 'Rate limited', no_post_here: 'No POST here', refused: 'Refused', unreachable: 'Unreachable', error: 'Server error' }[x.result] || x.result;
+    var tone = x.result === 'runs_without_account' ? '#EF4444' : x.result === 'reachable_without_account' ? '#F59E0B' : '#10B981';
+    return '<li style="margin-bottom:4px;"><span style="font-family:monospace;color:var(--text)">' + escHtml(x.route) + '</span> — <span style="color:' + tone + ';font-weight:600">' + escHtml(label) + '</span>'
+      + ' <span style="color:var(--text3)">(' + (x.requests_sent || 0) + ' request' + ((x.requests_sent || 0) === 1 ? '' : 's') + ' sent'
+      + (x.rate_limited ? ', rate limit seen' : '') + ')</span></li>';
+  }).join('');
+
   var notChecked = (d.not_checked || []).map(function (n) { return '<li>' + escHtml(n) + '</li>'; }).join('');
 
   el.innerHTML =
@@ -4005,6 +4013,7 @@ function renderExposureResults(d) {
             return '<th style="text-align:left;padding:7px 10px;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text3);">' + h + '</th>';
           }).join('')
         + '</tr></thead><tbody>' + routeRows + '</tbody></table></div>' : '')
+    + (costRows ? '<div style="background:var(--surface2);border-radius:9px;padding:12px 14px;margin-bottom:12px;"><div style="font-size:0.82rem;font-weight:600;margin-bottom:6px;">Endpoints that cost money to run</div><ul style="margin:0 0 6px 18px;font-size:0.82rem;color:var(--text2);line-height:1.55;">' + costRows + '</ul><div style="font-size:0.74rem;color:var(--text3);">One request each. An endpoint that actually ran is never called a second time.</div></div>' : '')
     + (notChecked ? '<div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:9px;padding:12px 14px;margin-bottom:10px;"><div style="font-size:0.8rem;font-weight:600;margin-bottom:4px;">What this did not check</div><ul style="margin:0 0 0 18px;font-size:0.8rem;color:var(--text2);line-height:1.55;">' + notChecked + '</ul></div>' : '')
     + '<div style="font-size:0.76rem;color:var(--text3);">' + escHtml(d.note || '') + '</div>';
 
