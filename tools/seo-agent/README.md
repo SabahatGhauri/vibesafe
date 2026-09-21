@@ -79,10 +79,32 @@ Tool output is untrusted input. The defenses are in code, not in the prompt:
   `<untrusted-file-content>` and the system prompt says that is data, never
   instruction. This is the weakest layer, so it is the outermost one.
 
+## A sitemap URL is not a file path
+
+`audit_sitemap` resolves each sitemap URL the way the host does, in priority
+order:
+
+1. An explicit server route — `app.get("/", … sendFile("landing.html"))`
+2. A static-host rewrite — `rewrites` in `vercel.json`
+3. The plain file guess — `/how-it-works` → `how-it-works.html`
+
+If a server is detected and no route for that URL could be read, the file
+guess is only a guess. The tool then reports `UNVERIFIED` with the `curl` that
+settles it, instead of asserting a blocker. A wrong "your homepage is
+noindex" costs more than a missing finding.
+
 ## Tools lie before prompts do
 
-Both false positives found while building this were tool bugs, not prompt
-problems: `glob` instead of `rglob` missed every page in `blog/`, and assuming
-clean URLs turned `/demo.html` into `demo.html.html`. Neither was fixable by
-rewording anything. Verify a finding against the filesystem before acting on
-it.
+Every false positive this tool produced was a tool bug, not a prompt problem:
+
+| Symptom | Cause |
+|---|---|
+| 21 blog posts flagged as 404 | `glob` doesn't descend into `blog/` — needed `rglob` |
+| 17 pages flagged as 404 | assumed clean URLs; `/demo.html` → `demo.html.html` |
+| Homepage flagged as a noindex blocker | only modelled static hosting; the site routes `/` in Express |
+| `/favicon.ico` paired with `landing.html` | the route regex bridged two `app.get` calls; needed a tempered gap |
+
+None were fixable by rewording anything. The model reasoned correctly over bad
+observations every time. Check a finding against the source before acting on
+it, and prefer `UNVERIFIED` plus the command that resolves it over a confident
+wrong answer.

@@ -229,6 +229,38 @@ def build_local_tools(reg: ToolRegistry, sandbox: Sandbox) -> None:
                     out.append(f"duplicate {label} on {len(pages)} pages: {pages}\n    {value[:100]!r}")
         return "\n".join(out) if out else "no duplicate titles or descriptions among indexable pages"
 
+    # A sitemap URL is not a file path. Before claiming a page is missing or
+    # noindex, resolve the URL the way the HOST resolves it. Three layers, in
+    # priority order: an explicit server route, a static-host rewrite, then the
+    # plain file guess. Skipping the first layer is what produced a false
+    # "HARD BLOCKER" on a site whose Express app serves a different file at /.
+    # The gap between the path and sendFile is "tempered": it may not contain
+    # another app.get/app.all, or the match bridges two separate routes and
+    # pairs the wrong file with the wrong URL.
+    ROOT_ROUTE = re.compile(
+        r"""app\.(?:get|all)\(\s*["']([^"']+)["']"""
+        r"""(?:(?!app\.(?:get|all)\()[\s\S]){0,300}?"""
+        r"""sendFile\([^)]*?["']([\w./-]+\.html)["']"""
+    )
+
+    def _server_routes() -> tuple[dict[str, str], bool]:
+        """(slug -> html file, server_detected). A detected server means file
+        layout alone cannot prove what a URL serves."""
+        routes: dict[str, str] = {}
+        detected = False
+        for base in (sandbox.root, sandbox.root.parent):
+            for pattern in ("*.js", "lib/*.js", "api/*.js", "src/*.js", "server/*.js"):
+                for js in base.glob(pattern):
+                    try:
+                        text = js.read_text(errors="replace")
+                    except OSError:
+                        continue
+                    if "express.static" in text or "app.get(" in text:
+                        detected = True
+                    for m in ROOT_ROUTE.finditer(text):
+                        routes[m.group(1).strip("/")] = m.group(2).lstrip("./")
+        return routes, detected
+
     def _rewrites() -> dict[str, str]:
         """Exact-match rewrites from vercel.json, so '/' -> '/landing.html' is
         understood. A sitemap audit that ignores routing reports blockers the
@@ -256,10 +288,12 @@ def build_local_tools(reg: ToolRegistry, sandbox: Sandbox) -> None:
         locs = [e.text.strip() for e in root.iter(f"{ns}loc") if e.text]
         pages = _pages()
         rewrites = _rewrites()
+        routes, server = _server_routes()
         problems, listed = [], set()
         for loc in locs:
             slug = re.sub(r"^https?://[^/]+/?", "", loc).strip("/")
-            slug = rewrites.get(slug, slug)   # follow the host's routing first
+            routed = slug in routes or slug in rewrites
+            slug = routes.get(slug) or rewrites.get(slug, slug)
             # A sitemap URL may be a clean URL (/how-it-works), an explicit file
             # (/how-it-works.html), or a directory (/blog/). Try each shape --
             # guessing only one is how this tool produced 21 false positives.
@@ -269,11 +303,24 @@ def build_local_tools(reg: ToolRegistry, sandbox: Sandbox) -> None:
             ]
             hit = next((c for c in candidates if c in pages), None)
             listed.update(candidates)
+            # Only assert a blocker when we know what the URL serves. With a
+            # server present and no route we could read, the file guess is a
+            # guess -- say so and name the check instead of crying wolf.
+            unproven = server and not routed
             if hit is None:
-                problems.append(f"  404 RISK: {loc} -> no file matching {candidates}")
+                problems.append(
+                    f"  {'UNVERIFIED' if unproven else '404 RISK'}: {loc} -> no file matching {candidates}"
+                    + ("; a server routes this host, so check with:"
+                       f" curl -sI {loc}" if unproven else ""))
             elif "noindex" in pages[hit]["meta_robots"].lower():
-                problems.append(f"  HARD BLOCKER: {loc} is in the sitemap but {hit} is noindex "
-                                f"-- Search Console reports \"Submitted URL marked 'noindex'\"")
+                if unproven:
+                    problems.append(
+                        f"  UNVERIFIED: {loc} would map to {hit}, which is noindex -- but a server "
+                        f"routes this host, so it may serve something else. Confirm with:"
+                        f" curl -s {loc} | grep -i robots")
+                else:
+                    problems.append(f"  HARD BLOCKER: {loc} is in the sitemap but {hit} is noindex "
+                                    f"-- Search Console reports \"Submitted URL marked 'noindex'\"")
         orphans = [n for n, f in pages.items()
                    if n not in listed and "noindex" not in f["meta_robots"].lower()]
         out = [f"sitemap {path.name}: {len(locs)} URLs, {len(pages)} html files on disk"]
