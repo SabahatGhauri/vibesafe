@@ -229,6 +229,23 @@ def build_local_tools(reg: ToolRegistry, sandbox: Sandbox) -> None:
                     out.append(f"duplicate {label} on {len(pages)} pages: {pages}\n    {value[:100]!r}")
         return "\n".join(out) if out else "no duplicate titles or descriptions among indexable pages"
 
+    def _rewrites() -> dict[str, str]:
+        """Exact-match rewrites from vercel.json, so '/' -> '/landing.html' is
+        understood. A sitemap audit that ignores routing reports blockers the
+        host has already solved."""
+        import json
+        for cfg in (sandbox.root / "vercel.json", sandbox.root.parent / "vercel.json"):
+            if not cfg.is_file():
+                continue
+            try:
+                data = json.loads(cfg.read_text())
+            except json.JSONDecodeError:
+                return {}
+            return {r["source"].strip("/"): r["destination"].strip("/")
+                    for r in data.get("rewrites", [])
+                    if "source" in r and "destination" in r and "(" not in r["source"]}
+        return {}
+
     def audit_sitemap(sitemap: str = "") -> str:
         files = sorted(sandbox.root.glob("sitemap*.xml"))
         path = sandbox.resolve(sitemap) if sitemap else (files[0] if files else None)
@@ -238,9 +255,11 @@ def build_local_tools(reg: ToolRegistry, sandbox: Sandbox) -> None:
         ns = "{http://www.sitemaps.org/schemas/sitemap/0.9}"
         locs = [e.text.strip() for e in root.iter(f"{ns}loc") if e.text]
         pages = _pages()
+        rewrites = _rewrites()
         problems, listed = [], set()
         for loc in locs:
             slug = re.sub(r"^https?://[^/]+/?", "", loc).strip("/")
+            slug = rewrites.get(slug, slug)   # follow the host's routing first
             # A sitemap URL may be a clean URL (/how-it-works), an explicit file
             # (/how-it-works.html), or a directory (/blog/). Try each shape --
             # guessing only one is how this tool produced 21 false positives.
