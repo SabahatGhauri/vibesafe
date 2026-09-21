@@ -3978,6 +3978,17 @@ function renderExposureResults(d) {
       + '</tr>';
   }).join('');
 
+  var routeRows = (d.routes || []).map(function (x) {
+    var label = { open: 'Answers anyone', open_but_empty: 'Answers, no data', protected: 'Needs sign-in', not_a_get_route: 'No GET here', not_json: 'Not an API answer', unreachable: 'Unreachable', error: 'Server error' }[x.result] || x.result;
+    var tone = x.result === 'open' ? '#EF4444' : x.result === 'protected' ? '#10B981' : 'var(--text3)';
+    return '<tr>'
+      + '<td style="padding:7px 10px;border-bottom:1px solid var(--border1);font-family:\'JetBrains Mono\',monospace;font-size:0.78rem;color:var(--text)">' + escHtml(x.route) + '</td>'
+      + '<td style="padding:7px 10px;border-bottom:1px solid var(--border1);font-size:0.78rem;color:var(--text3)">' + (x.status || '—') + '</td>'
+      + '<td style="padding:7px 10px;border-bottom:1px solid var(--border1);font-size:0.76rem;color:var(--text3)">' + escHtml((x.fields || []).join(', ')) + '</td>'
+      + '<td style="padding:7px 10px;border-bottom:1px solid var(--border1);text-align:right;font-size:0.76rem;font-weight:600;color:' + tone + '">' + escHtml(label) + '</td>'
+      + '</tr>';
+  }).join('');
+
   var notChecked = (d.not_checked || []).map(function (n) { return '<li>' + escHtml(n) + '</li>'; }).join('');
 
   el.innerHTML =
@@ -3989,6 +4000,11 @@ function renderExposureResults(d) {
             return '<th style="text-align:left;padding:7px 10px;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text3);">' + h + '</th>';
           }).join('')
         + '</tr></thead><tbody>' + rows + '</tbody></table></div>' : '')
+    + (routeRows ? '<div style="overflow-x:auto;margin-bottom:12px;"><div style="font-size:0.82rem;font-weight:600;margin-bottom:6px;">Your app\'s own API routes, requested signed out</div><table style="width:100%;border-collapse:collapse;min-width:520px;"><thead><tr>'
+        + ['Route', 'Status', 'Fields returned', 'Result'].map(function (h) {
+            return '<th style="text-align:left;padding:7px 10px;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text3);">' + h + '</th>';
+          }).join('')
+        + '</tr></thead><tbody>' + routeRows + '</tbody></table></div>' : '')
     + (notChecked ? '<div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:9px;padding:12px 14px;margin-bottom:10px;"><div style="font-size:0.8rem;font-weight:600;margin-bottom:4px;">What this did not check</div><ul style="margin:0 0 0 18px;font-size:0.8rem;color:var(--text2);line-height:1.55;">' + notChecked + '</ul></div>' : '')
     + '<div style="font-size:0.76rem;color:var(--text3);">' + escHtml(d.note || '') + '</div>';
 
