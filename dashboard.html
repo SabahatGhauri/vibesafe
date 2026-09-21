@@ -2178,12 +2178,12 @@ document.addEventListener('click', function(e) {
       <button onclick="closeMonitorPanel()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">← Back</button>
       <h2 style="margin:0;font-size:1.3rem;font-weight:700;">📡 Continuous monitoring</h2>
     </div>
-    <p style="font-size:0.88rem;color:var(--text2);margin:0 0 22px;line-height:1.6;">Add your live sites and VibeSafe re-scans them every week. We only email you when something gets <strong>worse</strong> — the score drops or a new critical appears. No news is good news.</p>
+    <p style="font-size:0.88rem;color:var(--text2);margin:0 0 22px;line-height:1.6;">Watch your live URLs for weekly security checks and optional daily SEO checks. SEO alerts highlight new problems or changes to titles, descriptions, canonicals and redirects. Your first check sets a baseline; unchanged results stay quiet.</p>
 
     <!-- Add site -->
     <div id="monitorAddCard" style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:20px;margin-bottom:20px;">
       <div style="font-weight:600;margin-bottom:4px;">Watch a live site</div>
-      <div style="font-size:0.8rem;color:var(--text3);margin-bottom:14px;">Enter the URL of your deployed app. We'll check it weekly and alert you if its security drops.</div>
+      <div style="font-size:0.8rem;color:var(--text3);margin-bottom:14px;">Add each important page you want to watch. SEO checks inspect this URL, robots.txt and the first declared sitemap, without crawling the whole site.</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <input type="url" id="monitorUrlInput" placeholder="https://yourapp.vercel.app"
           style="flex:1;min-width:220px;padding:9px 12px;background:var(--surface2);border:1px solid var(--border2);border-radius:7px;color:var(--text);font-size:0.82rem;outline:none;font-family:'Inter','Inter Fallback',sans-serif;"
@@ -2192,7 +2192,12 @@ document.addEventListener('click', function(e) {
           style="width:150px;padding:9px 12px;background:var(--surface2);border:1px solid var(--border2);border-radius:7px;color:var(--text);font-size:0.82rem;outline:none;font-family:'Inter','Inter Fallback',sans-serif;">
         <button class="btn btn-primary" id="monitorAddBtn" onclick="addMonitoredUrl()">+ Watch</button>
       </div>
-      <div id="monitorStatus" style="font-size:0.78rem;margin-top:8px;min-height:18px;"></div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:0.82rem;">
+        <label><input id="monitorSeoInput" type="checkbox" checked> Daily SEO checks</label>
+        <label><input id="monitorIndexInput" type="checkbox" checked> This page should appear in search</label>
+      </div>
+      <p style="font-size:0.75rem;color:var(--text3);">Public indexability checks do not confirm Google indexing. Search Console is not connected.</p>
+      <div id="monitorStatus" role="status" style="font-size:0.78rem;margin-top:8px;min-height:18px;"></div>
     </div>
 
     <!-- Watched sites -->
@@ -4186,14 +4191,14 @@ async function loadMonitoredUrls() {
       var scoreBadge = hasScore
         ? '<span style="font-weight:700;color:' + col + ';">' + u.last_score + '/100</span>' + (u.last_criticals ? ' <span style="color:var(--red);font-size:0.75rem;">' + u.last_criticals + ' critical</span>' : '')
         : '<span style="color:var(--text3);font-size:0.78rem;">pending first scan</span>';
-      return '<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border1);">'
+      return '<div style="padding:12px 0;border-bottom:1px solid var(--border1);"><div style="display:flex;align-items:center;gap:12px;">'
         + '<div style="flex:1;min-width:0;">'
         + '<div style="font-weight:600;font-size:0.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escHtml(u.label || u.url) + '</div>'
         + '<div style="font-size:0.75rem;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escHtml(u.url) + ' · checked ' + relTime(u.last_scanned_at) + '</div>'
         + '</div>'
-        + '<div style="text-align:right;white-space:nowrap;">' + scoreBadge + '</div>'
+        + '<div style="text-align:right;white-space:nowrap;">Security: ' + scoreBadge + '</div>'
         + '<button onclick="removeMonitoredUrl(' + u.id + ')" title="Stop watching" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text3);border-radius:6px;padding:5px 9px;cursor:pointer;font-size:0.75rem;">Remove</button>'
-        + '</div>';
+        + '</div>' + renderSeoMonitor(u) + '</div>';
     }).join('');
   } catch (e) {
     list.innerHTML = '<div style="font-size:0.8rem;color:var(--red);padding:16px 0;">Could not load watched sites.</div>';
@@ -4212,7 +4217,7 @@ async function addMonitoredUrl() {
     var res = await fetch(MONITOR_API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-      body: JSON.stringify({ url: url, label: (labelInput.value || '').trim() }),
+      body: JSON.stringify({ url: url, label: (labelInput.value || '').trim(), seo_enabled: document.getElementById('monitorSeoInput').checked, expected_indexable: document.getElementById('monitorIndexInput').checked }),
     });
     var data = await res.json();
     if (!res.ok) {
@@ -4221,7 +4226,7 @@ async function addMonitoredUrl() {
       return;
     }
     status.style.color = 'var(--green)';
-    status.textContent = data.duplicate ? 'Already watching that site.' : 'Added — first scan runs within a week.';
+    status.textContent = data.duplicate ? 'Already watching that site.' : 'Added — SEO checks enter the scheduled queue; security checks run weekly.';
     input.value = ''; labelInput.value = '';
     loadMonitoredUrls();
   } catch (e) {
@@ -4241,6 +4246,58 @@ async function removeMonitoredUrl(id) {
     if (res.ok) { showToast('Stopped watching', 'info'); loadMonitoredUrls(); }
     else showToast('Could not remove', 'error');
   } catch (e) { showToast('Could not remove', 'error'); }
+}
+
+function seoIssuesHtml(snapshot) {
+  if (!snapshot) return '';
+  var states = { 'blocked': 'Indexing or crawling restriction found', 'unknown': 'Indexability could not be confirmed', 'no-blocker-observed': 'No indexing blocker observed', 'intentionally-excluded': 'Intentionally excluded from search' };
+  return '<p><strong>SEO health: ' + escHtml(snapshot.score) + '/100</strong> · ' + escHtml(states[snapshot.indexability] || 'Unknown') + '</p>'
+    + '<p>Google indexing: unverified</p>'
+    + (snapshot.issues || []).map(function(i) { return '<p><strong>' + escHtml(i.severity) + ': ' + escHtml(i.title) + '</strong><br>' + escHtml(i.evidence) + '<br>Fix: ' + escHtml(i.fix) + '</p>'; }).join('')
+    + '<p style="color:var(--text3);">Not checked: ' + (snapshot.notChecked || []).map(escHtml).join('; ') + '</p>';
+}
+function renderSeoMonitor(u) {
+  var id = String(u.id);
+  if (!/^\d+$/.test(id)) return '';
+  var state = Array.isArray(u.seo_monitor_state) ? u.seo_monitor_state[0] : u.seo_monitor_state;
+  state = state || {};
+  return '<div style="font-size:0.8rem;margin-top:12px;overflow-wrap:anywhere;">'
+    + '<label><input type="checkbox" id="seo-enable-' + id + '" ' + (u.seo_enabled ? 'checked' : '') + '> Daily SEO</label> '
+    + '<label><input type="checkbox" id="seo-index-' + id + '" ' + (u.expected_indexable ? 'checked' : '') + '> Should appear in search</label> '
+    + '<button class="btn" onclick="saveSeoSettings(' + id + ', this)">Save settings</button>'
+    + (u.seo_enabled ? '<div>SEO last checked: ' + escHtml(state.last_checked_at ? relTime(state.last_checked_at) : 'Pending first check') + '</div>' : '<p>SEO monitoring is off.</p>')
+    + (state.last_error ? '<p style="color:var(--amber);">Latest attempt needs attention: ' + escHtml(state.last_error) + '. Previous results below may be stale.</p>' : '')
+    + (state.snapshot ? '<details><summary>View SEO results</summary>' + seoIssuesHtml(state.snapshot) + '</details>' : '')
+    + '<button class="btn" onclick="loadSeoHistory(' + id + ')">SEO history</button><div id="seo-history-' + id + '" role="status"></div></div>';
+}
+async function saveSeoSettings(id, button) {
+  button.disabled = true;
+  try {
+    var token = await monitorAuth();
+    var r = await fetch(MONITOR_API, { method: 'PATCH', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token }, body: JSON.stringify({ id: id, seo_enabled: document.getElementById('seo-enable-' + id).checked, expected_indexable: document.getElementById('seo-index-' + id).checked }) });
+    var data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'Could not save settings.');
+    showToast('SEO settings saved', 'info');
+    await loadMonitoredUrls();
+  } catch (e) { showToast(e.message || 'Could not save settings.', 'error'); }
+  finally { button.disabled = false; }
+}
+async function loadSeoHistory(id) {
+  var target = document.getElementById('seo-history-' + id);
+  target.textContent = 'Loading history…';
+  try {
+    var token = await monitorAuth();
+    var r = await fetch(MONITOR_API + '?history=' + encodeURIComponent(id), { headers: { Authorization: 'Bearer ' + token } });
+    var data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'Could not load history.');
+    target.innerHTML = (data.history || []).map(function(h) {
+      var changes = h.changes || {};
+      return '<details><summary>' + escHtml(new Date(h.checked_at).toLocaleString()) + (changes.baseline ? ' · Baseline' : '') + '</summary>'
+        + '<p>' + escHtml((changes.added || []).length) + ' new findings · ' + escHtml((changes.resolved || []).length) + ' resolved</p>'
+        + (changes.changed || []).map(function(c) { return '<p>' + escHtml(c.field) + ': ' + escHtml(c.before) + ' → ' + escHtml(c.after) + '</p>'; }).join('')
+        + seoIssuesHtml(h.snapshot) + '</details>';
+    }).join('') || 'No completed SEO checks yet.';
+  } catch (e) { target.textContent = e.message || 'Could not load history.'; }
 }
 
 // ── API KEYS ──
