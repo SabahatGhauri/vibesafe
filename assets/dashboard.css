@@ -10,17 +10,19 @@ body { background: #0a101c; }
 .sidebar-label { letter-spacing: 1.4px; }
 .sidebar-footer { padding: 14px; }
 .plan-card { background: #131e2e; border: 1px solid var(--border); box-shadow: none; }
-.main { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(340px, 1fr); grid-template-rows: auto minmax(0, 1fr); gap: 20px; padding: 28px; min-width: 0; overflow-y: auto; }
+.main { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(340px, 1fr); grid-template-rows: auto minmax(0, 1fr); gap: 16px; padding: 18px; min-width: 0; overflow-y: auto; }
 .workspace-heading { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .workspace-kicker { font-size: 10px; font-weight: 600; letter-spacing: 1.8px; text-transform: uppercase; color: var(--cyan); margin-bottom: 8px; }
-.workspace-heading h1 { font: 600 clamp(24px, 2.5vw, 32px)/1.2 'Space Grotesk', sans-serif; letter-spacing: -.9px; }
-.workspace-heading p { color: var(--text2); font-size: 13px; line-height: 1.7; margin-top: 8px; max-width: 560px; }
+.workspace-heading h1 { font: 600 clamp(21px, 2vw, 26px)/1.2 'Space Grotesk', sans-serif; letter-spacing: -.9px; }
+.workspace-heading p { color: var(--text2); font-size: 12px; line-height: 1.6; margin-top: 5px; max-width: 560px; }
 .workspace-actions { display: flex; gap: 8px; flex-shrink: 0; }
 .workspace-actions .btn { min-height: 40px; }
 .editor-panel, .results-panel { width: auto; min-width: 0; min-height: 440px; border: 1px solid var(--border); border-radius: 14px; background: #101a2a; box-shadow: 0 8px 24px #00000012; }
-.panel-header { min-height: 64px; height: auto; padding: 14px 18px; gap: 12px; flex-wrap: wrap; background: #131e2e; }
+.panel-header { min-height: 54px; height: auto; padding: 9px 14px; gap: 12px; flex-wrap: wrap; background: #131e2e; }
 .panel-title { font-size: 13px; }
 .panel-actions { flex-wrap: wrap; }
+#editorPanel > .panel-header .panel-actions { width: 100%; justify-content: flex-start; }
+#scanBtn { margin-left: auto; }
 .btn { min-height: 36px; padding: 8px 12px; }
 .btn-primary, .fix-all-btn, .upgrade-btn { background: #66ddec; border: 1px solid #66ddec; color: #071820; box-shadow: none; }
 .btn-primary:hover, .fix-all-btn:hover, .upgrade-btn:hover { background: #91eaf4; box-shadow: none; transform: none; }
@@ -32,7 +34,7 @@ body { background: #0a101c; }
 .code-editor { font-size: 13px; line-height: 1.8; }
 .line-numbers { background: #0c1422; color: #71849e; line-height: 1.8; }
 .editor-footer { min-height: 38px; background: #101a2a; }
-.source-hint { padding: 12px 18px; background: #101a2a; color: var(--text2); font-size: 12px; line-height: 1.6; border-bottom: 1px solid var(--border); }
+.source-hint { padding: 8px 14px; background: #101a2a; color: var(--text2); font-size: 12px; line-height: 1.6; border-bottom: 1px solid var(--border); }
 .empty-state { padding: 36px 28px; justify-content: center; }
 .empty-icon { width: 58px; height: 58px; display: grid; place-items: center; border-radius: 16px; background: #16313e; color: #83e5f0; border: 1px solid #285062; font-size: 26px; margin-bottom: 20px; }
 .empty-title { font-size: 21px; letter-spacing: -.5px; }
@@ -51,8 +53,8 @@ body { background: #0a101c; }
 .main:has(#connectEditorBanner:not([style*="display:none"]):not([style*="display: none"])) { grid-template-rows: auto auto minmax(0,1fr); }
 @media (max-width: 1200px) {
   .main { padding: 20px; gap: 16px; }
-  .workspace-heading { align-items: flex-start; }
-  .workspace-actions { flex-direction: column; }
+  .workspace-heading { align-items: center; }
+  .workspace-actions { flex-wrap: wrap; }
 }
 @media (max-width: 1024px) {
   .main { display: flex; flex-direction: column; overflow: visible; }
@@ -68,12 +70,12 @@ body { background: #0a101c; }
 }
 @media (max-width: 640px) {
   .topnav { padding: 0 16px; }
-  .main { padding: 20px 12px; }
+  .main { padding: 14px 12px; }
   .workspace-heading { display: block; padding: 0 4px 4px; }
   .workspace-heading p { font-size: 12px; }
   .workspace-actions { flex-direction: row; flex-wrap: wrap; margin-top: 16px; }
   .workspace-actions .btn { flex: 1; justify-content: center; }
-  .panel-header { padding: 14px; }
+  .panel-header { padding: 10px 12px; }
   .panel-actions { width: 100%; justify-content: flex-start; gap: 6px; }
   .panel-actions .btn, .lang-select { min-height: 40px; }
   #scanBtn { margin-left: auto; }
