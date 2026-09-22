@@ -90,3 +90,48 @@ body { background: #0a101c; }
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
 .code-editor, .line-numbers { line-height: 23.4px; } ::-webkit-scrollbar-thumb { background: #334158; } .editor-tabs { overflow-y: hidden; }
+/* Data Access */
+#accessPanel { --surface1: var(--surface); --border1: var(--border); position: fixed; inset: 0; z-index: 200; overflow-y: auto; background: var(--bg); padding: 28px 24px 60px; }
+#accessPanel [hidden] { display: none !important; }
+.access-shell { max-width: 1100px; margin: auto; }
+.access-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 36px; }
+.access-eyebrow { color: var(--text2); font-size: 12px; }
+.access-hero { margin-bottom: 30px; }
+.access-hero h1 { font: 600 clamp(28px,4vw,40px)/1.2 'Space Grotesk', sans-serif; letter-spacing: -1.2px; margin: 10px 0 14px; }
+.access-hero p { max-width: 650px; font-size: 14px; color: var(--text2); line-height: 1.8; }
+.access-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 26px; }
+.access-choice { display: flex; align-items: center; gap: 14px; text-align: left; padding: 20px; background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; color: var(--text); cursor: pointer; font-family: inherit; }
+.access-choice[aria-pressed="true"] { border-color: #66ddec; background: #102833; box-shadow: inset 0 0 0 1px #66ddec22; }
+.access-choice strong { display: block; font-size: 14px; margin-bottom: 6px; }
+.access-choice small { color: var(--text2); font-size: 12px; line-height: 1.6; }
+.access-choice-icon { font-size: 23px; color: #83e5f0; }
+.access-tag { font-size: 10px; font-weight: 600; color: #83e5f0; background: #16333f; padding: 6px 9px; border-radius: 20px; white-space: nowrap; margin-left: auto; }
+.access-card { border: 1px solid var(--border); border-radius: 14px; padding: 26px; background: var(--surface); min-width: 0; }
+.access-section-heading { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 28px; }
+#accessPanel h2 { font-size: 20px; letter-spacing: -.4px; }
+#accessPanel h3 { font-size: 16px; margin: 8px 0 12px; }
+.access-section-heading p, .access-database-intro p { color: var(--text2); font-size: 13px; line-height: 1.8; margin-top: 10px; max-width: 670px; }
+.access-label { display: block; font-size: 12px; font-weight: 500; margin-bottom: 9px; }
+.access-url-row, .access-query-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.access-url-row input { flex: 1; min-width: 180px; }
+#accessPanel input:not([type="checkbox"]), #accessPanel textarea { background: var(--bg2); border: 1px solid var(--border2); padding: 13px; color: var(--text); border-radius: 8px; font: inherit; font-size: 13px; }
+#accessPanel .btn { min-height: 42px; }
+#accessPanel .btn-secondary { border: 1px solid var(--border2); background: var(--surface2); color: var(--text); }
+.access-help { color: var(--text2); font-size: 12px; line-height: 1.8; margin: 10px 0; }
+.access-status { font-size: 12px; color: var(--text2); line-height: 1.7; margin-top: 12px; }
+.access-status:empty { display: none; }
+.access-coverage { display: grid; grid-template-columns: repeat(3,1fr); border-top: 1px solid var(--border); gap: 24px; padding-top: 24px; margin-top: 26px; }
+.access-coverage strong { font-size: 12px; font-weight: 500; }
+.access-coverage p, .access-next p { font-size: 12px; color: var(--text2); line-height: 1.8; margin-top: 6px; }
+.access-setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 22px 0; align-items: start; }
+.access-step { color: #83e5f0; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+.access-query { margin-top: 20px; border-top: 1px solid var(--border); padding-top: 16px; }
+.access-query summary { font-size: 12px; color: var(--text2); cursor: pointer; }
+.access-query summary span { float: right; font-size: 11px; }
+#accessSql { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 260px; overflow: auto; font: 11px/1.7 'JetBrains Mono',monospace; background: var(--bg2); border-radius: 8px; padding: 14px; margin-top: 16px; color: var(--text2); }
+#accessMetadata { width: 100%; min-height: 155px; resize: vertical; font-family: 'JetBrains Mono',monospace !important; font-size: 12px !important; line-height: 1.7 !important; }
+.access-next { padding: 18px 22px; border-left: 2px solid var(--border2); margin-top: 24px; }
+.access-results { overflow-wrap: anywhere; scroll-margin-top: 20px; }
+#accessPanel th { white-space: nowrap; }
+#accessPanel button:disabled { opacity: .5; cursor: not-allowed; }
+@media(max-width:700px) { #accessPanel { padding: 20px 16px 40px; } .access-top { margin-bottom: 28px; } .access-choices, .access-setup-grid, .access-coverage { grid-template-columns: 1fr; } .access-choices { gap: 10px; } .access-choice { padding: 16px; } .access-card { padding: 20px; } .access-section-heading > .access-tag { display: none; } .access-url-row { flex-direction: column; align-items: stretch; } .access-url-row input { width: 100%; min-width: 0; } .access-coverage { gap: 16px; } #accessTestBlock > div[style*="display:grid"] { grid-template-columns: minmax(0,1fr) !important; } }
