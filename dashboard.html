@@ -971,136 +971,6 @@ body {
 .fix-priority-item.warning .fix-priority-sev { background: rgba(245,158,11,0.15); color: #FCD34D; }
 .fix-priority-item.info .fix-priority-sev { background: rgba(0,212,255,0.12); color: #7DD3F5; }
 
-/* ===== MOCKUP NEON RESTYLE (CSS ONLY) ===== */
-
-/* Step 2: Glassy panels */
-.topnav,
-.sidebar,
-.panel-header,
-.score-header,
-.results-footer {
-  background: rgba(10, 16, 36, 0.92);
-  backdrop-filter: blur(18px);
-  border-color: rgba(0, 212, 255, 0.2);
-}
-.editor-panel,
-.results-panel,
-.plan-card,
-.code-area-wrap {
-  background: rgba(12, 20, 46, 0.92);
-  border-color: rgba(0, 212, 255, 0.22);
-  box-shadow: 0 0 35px rgba(0, 140, 255, 0.08);
-}
-
-/* Step 3: Neon borders + spacing */
-.editor-panel,
-.results-panel {
-  border: 1px solid rgba(0, 212, 255, 0.18);
-  border-radius: 22px;
-  overflow: hidden;
-}
-.main {
-  padding: 18px;
-  gap: 18px;
-}
-
-/* Step 4: Gradient buttons */
-.btn-primary,
-.fix-all-btn,
-.upgrade-btn {
-  background: linear-gradient(135deg, #00D4FF, #2563EB 45%, #7C3AED);
-  color: #ffffff;
-  border: 1px solid rgba(255,255,255,0.12);
-  box-shadow: 0 0 22px rgba(0, 212, 255, 0.35);
-}
-.btn-primary:hover,
-.fix-all-btn:hover,
-.upgrade-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 0 32px rgba(124, 58, 237, 0.45);
-}
-
-/* Step 5: Premium sidebar */
-.sidebar {
-  width: 240px;
-  background: rgba(6, 12, 30, 0.78);
-  backdrop-filter: blur(20px);
-}
-.sidebar-item {
-  border: 1px solid transparent;
-  border-radius: 12px;
-  padding: 11px 12px;
-}
-.sidebar-item:hover {
-  background: rgba(0, 212, 255, 0.08);
-  border-color: rgba(0, 212, 255, 0.18);
-}
-.sidebar-item.active {
-  background: linear-gradient(135deg, rgba(0,212,255,0.16), rgba(124,58,237,0.14));
-  color: #ffffff;
-  border-color: rgba(0, 212, 255, 0.28);
-  box-shadow: inset 0 0 18px rgba(0, 212, 255, 0.06);
-}
-
-/* Step 6: Code editor area */
-.code-area-wrap {
-  background:
-    linear-gradient(180deg, rgba(6, 12, 28, 0.96), rgba(8, 15, 35, 0.96));
-}
-.code-editor {
-  color: #EAF3FF;
-  font-size: 0.84rem;
-}
-.line-numbers {
-  background: rgba(4, 9, 22, 0.88);
-  color: rgba(148, 163, 184, 0.55);
-}
-
-/* Step 7: Score gauge + result cards */
-.score-header {
-  background:
-    radial-gradient(circle at 50% 0%, rgba(0, 212, 255, 0.12), transparent 55%),
-    rgba(9, 17, 38, 0.8);
-}
-.gauge {
-  filter: drop-shadow(0 0 22px rgba(0, 212, 255, 0.18));
-}
-.gauge-fill {
-  stroke: url(#gradient);
-}
-.issue-card {
-  background: rgba(18, 28, 56, 0.92) !important;
-  border: 1px solid rgba(0, 212, 255, 0.18);
-  box-shadow: 0 10px 28px rgba(0,0,0,0.3);
-}
-.issue-card:hover {
-  border-color: rgba(0, 212, 255, 0.4);
-  box-shadow: 0 0 26px rgba(0, 212, 255, 0.16);
-}
-
-/* Step 8: Glow grid lines */
-.app-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(rgba(0,212,255,0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,212,255,0.035) 1px, transparent 1px);
-  background-size: 70px 70px;
-  mask-image: radial-gradient(circle at center, black, transparent 75%);
-  z-index: 0;
-}
-.main {
-  position: relative;
-  z-index: 1;
-}
-.topnav,
-.sidebar {
-  position: relative;
-  z-index: 10;
-}
-
 /* ── RESPONSIVE ── */
 .menu-btn {
   display: none;
@@ -1162,8 +1032,10 @@ body {
 }
 
 </style>
+<link rel="stylesheet" href="/assets/dashboard.css">
 </head>
 <body>
+<a class="skip-link" href="#workspace">Skip to workspace</a>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ── SUPABASE AUTH ──
@@ -1419,8 +1291,7 @@ document.addEventListener('click', function(e) {
   </div>
   <div class="topnav-right">
     <div class="nav-badge">
-      <span class="badge-pulse"></span>
-      <span class="nav-badge-text">All systems operational</span>
+      <span class="nav-badge-text">Your security workspace</span>
     </div>
     <div style="position:relative">
       <button class="avatar-btn" id="userAvatar" onclick="toggleUserMenu(event)" title="Account">YO</button>
@@ -1463,31 +1334,10 @@ document.addEventListener('click', function(e) {
         <span class="si-new">New</span>
       </button>
       <button class="sidebar-item" onclick="setPage('monitor', event)">
-        <span class="si-icon">📡</span> Monitoring
+        <span class="si-icon">📡</span> Monitoring &amp; SEO
       </button>
       <button class="sidebar-item" onclick="setPage('team', event)">
         <span class="si-icon">👥</span> Team
-      </button>
-    </div>
-
-    <div class="sidebar-sep"></div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">Scan from</div>
-      <button class="sidebar-item" onclick="switchEditorTab(document.querySelectorAll('.etab')[2],'url')">
-        <span class="si-icon">🐱</span> Scan GitHub file
-      </button>
-      <button class="sidebar-item" onclick="switchEditorTab(document.querySelectorAll('.etab')[1],'upload')">
-        <span class="si-icon">📁</span> Upload file
-      </button>
-      <button class="sidebar-item" onclick="switchEditorTab(document.querySelectorAll('.etab')[0],'editor')">
-        <span class="si-icon">📝</span> Paste code
-      </button>
-      <button class="sidebar-item" onclick="switchEditorTab(document.querySelectorAll('.etab')[3],'liveurl')">
-        <span class="si-icon">🌐</span> Scan live website
-      </button>
-      <button class="sidebar-item" onclick="openLaunchCheck()">
-        <span class="si-icon">🚀</span> Launch Check <span style="font-size:0.6rem;background:rgba(0,212,255,0.15);color:var(--cyan);border-radius:100px;padding:2px 8px;margin-left:6px;font-weight:700;">NEW</span>
       </button>
     </div>
 
@@ -1530,7 +1380,17 @@ document.addEventListener('click', function(e) {
   </aside>
 
   <!-- MAIN CONTENT -->
-  <div class="main">
+  <main class="main" id="workspace" tabindex="-1">
+    <header class="workspace-heading">
+      <div><div class="workspace-kicker">Build · Check · Improve</div>
+        <h1>Ship with confidence.</h1>
+        <p>Find security issues in your code, review the fixes, and keep watch after launch.</p>
+      </div>
+      <div class="workspace-actions">
+        <button class="btn btn-ghost" onclick="openLaunchCheck()">Launch check <span aria-hidden="true">↗</span></button>
+        <button class="btn btn-ghost" onclick="openMonitorPanel()">Monitoring &amp; SEO <span aria-hidden="true">↗</span></button>
+      </div>
+    </header>
 
     <!-- Shown only when an API key exists but the editor has never scanned.
          Roughly 30 keys have been generated against 8 accounts that ever
@@ -1557,10 +1417,10 @@ document.addEventListener('click', function(e) {
     <div class="editor-panel" id="editorPanel">
       <div class="panel-header">
         <div class="panel-title">
-          <span>📝</span> Code input
+          <span aria-hidden="true">01</span> Scan your app
         </div>
         <div class="panel-actions">
-          <select class="lang-select" id="langSelect">
+          <select class="lang-select" id="langSelect" aria-label="Code language">
             <option value="js">JavaScript</option>
             <option value="ts">TypeScript</option>
             <option value="py">Python</option>
@@ -1577,19 +1437,20 @@ document.addEventListener('click', function(e) {
       </div>
 
       <div class="editor-tabs">
-        <button class="etab active" onclick="switchEditorTab(this,'editor')">Editor</button>
-        <button class="etab" onclick="switchEditorTab(this,'upload')">Upload file</button>
-        <button class="etab" onclick="switchEditorTab(this,'url')">GitHub file</button>
-        <button class="etab" onclick="switchEditorTab(this,'liveurl')">🌐 Live website</button>
+        <button class="etab active" aria-pressed="true" onclick="switchEditorTab(this,'editor')">Paste code</button>
+        <button class="etab" aria-pressed="false" onclick="switchEditorTab(this,'upload')">Upload file</button>
+        <button class="etab" aria-pressed="false" onclick="switchEditorTab(this,'url')">GitHub file</button>
+        <button class="etab" aria-pressed="false" onclick="switchEditorTab(this,'liveurl')">🌐 Live website</button>
       </div>
 
+      <p class="source-hint" id="sourceHint">Paste a file below, choose its language, then run your scan.</p>
       <div class="code-area-wrap" id="editorTab">
         <div class="line-highlights" id="lineHighlights" aria-hidden="true"></div>
         <div class="line-numbers" id="lineNumbers">1</div>
         <textarea
           class="code-editor"
           id="codeEditor"
-          autofocus
+          aria-label="Code to scan"
           spellcheck="false"
           placeholder="// Paste your AI-generated code here...
 // VibeSafe will scan for:
@@ -1620,7 +1481,7 @@ document.addEventListener('click', function(e) {
           Paste a link to a specific file in any GitHub repo. Public repos work for everyone — private repos work if you signed in with GitHub.
         </div>
         <div style="display:flex; gap:8px; width:100%; max-width:440px;">
-          <input type="text" id="githubUrlInput" placeholder="https://github.com/user/repo/blob/main/app.js"
+          <input type="text" id="githubUrlInput" aria-label="GitHub file URL" placeholder="https://github.com/user/repo/blob/main/app.js"
             style="flex:1; padding:9px 12px; background:var(--surface2); border:1px solid var(--border2); border-radius:7px; color:var(--text); font-size:0.82rem; outline:none; font-family:'Inter','Inter Fallback',sans-serif;"
             onkeydown="if(event.key==='Enter')scanFromGitHub()"
           >
@@ -1636,7 +1497,7 @@ document.addEventListener('click', function(e) {
           Enter your app's URL and VibeSafe will check it for missing security headers, exposed paths, HTTPS issues, and more — without touching your code.
         </div>
         <div style="display:flex; gap:8px; width:100%; max-width:480px;">
-          <input type="text" id="liveUrlInput" placeholder="https://yourapp.vercel.app"
+          <input type="text" id="liveUrlInput" aria-label="Website URL" placeholder="https://yourapp.vercel.app"
             style="flex:1; padding:9px 12px; background:var(--surface2); border:1px solid var(--border2); border-radius:7px; color:var(--text); font-size:0.82rem; outline:none; font-family:'Inter','Inter Fallback',sans-serif;"
             onkeydown="if(event.key==='Enter')scanLiveUrl()"
           >
@@ -1741,9 +1602,14 @@ document.addEventListener('click', function(e) {
 
         <!-- Empty state -->
         <div class="empty-state" id="emptyState">
-          <div class="empty-icon">🔬</div>
-          <div class="empty-title">No scan yet</div>
-          <div class="empty-desc">Paste your AI-generated code in the editor and click "Run scan" to detect errors, security vulnerabilities, and bugs.</div>
+          <div class="empty-icon" aria-hidden="true">◎</div>
+          <div class="empty-title">Your next step, made clear.</div>
+          <div class="empty-desc">Run a scan to see what needs attention and how to fix it. Your results will appear here.</div>
+          <div class="result-steps">
+            <div class="result-step"><span>1</span><div><strong>Choose what to check</strong><p>Paste code, upload a file, or add a URL.</p></div></div>
+            <div class="result-step"><span>2</span><div><strong>Focus on what matters</strong><p>Review findings ordered by severity.</p></div></div>
+            <div class="result-step"><span>3</span><div><strong>Fix it and verify</strong><p>Apply suggested changes, then scan again.</p></div></div>
+          </div>
 
           <!-- First-run guide: only shown to people who have never scanned.
                Most accounts never run a single scan, so the empty state has to
@@ -1773,7 +1639,7 @@ document.addEventListener('click', function(e) {
               ▶ Show me — scan an example
             </button>
             <div style="font-size:0.75rem;color:var(--text3);text-align:center;line-height:1.5">
-              Loads deliberately vulnerable code and scans it. Takes about 20 seconds and doesn&rsquo;t use your quota&rsquo;s worth of guesswork — you&rsquo;ll see exactly what a real report looks like.
+              Loads deliberately vulnerable code so you can explore a real report. This runs a scan using your plan.
             </div>
           </div>
         </div>
@@ -1840,7 +1706,7 @@ document.addEventListener('click', function(e) {
       </div>
 
     </div>
-  </div>
+  </main>
 </div>
 
 <!-- ADMIN / EXTENSION HEALTH PANEL OVERLAY -->
@@ -2526,6 +2392,15 @@ function switchEditorTab(el, tab) {
     if (!el) return;
     el.style.display = k === tab ? (k==='editor'?'block':'flex') : 'none';
   });
+  document.querySelectorAll('.etab').forEach(t => t.setAttribute('aria-pressed', String(t === el)));
+  document.getElementById('scanBtn').style.display = ['editor', 'upload'].includes(tab) ? '' : 'none';
+  document.getElementById('langSelect').style.display = ['editor', 'upload'].includes(tab) ? '' : 'none';
+  document.getElementById('sourceHint').textContent = {
+    editor: 'Paste a file below, choose its language, then run your scan.',
+    upload: 'Choose a code file from your device to start a scan.',
+    url: 'Use a direct link to a file in a GitHub repository.',
+    liveurl: 'Check the security of a website you own or are authorized to test.'
+  }[tab];
   updateSampleBtnVisibility();
 }
 

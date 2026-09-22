@@ -1,0 +1,92 @@
+/* Dashboard workspace: restrained surfaces, clear actions, responsive panels. */
+:root { --text2: #a6b4c8; --text3: #8b9bb2; --border: #253044; --border2: #334158; }
+body { background: #0a101c; }
+.topnav { background: #0e1624; padding: 0 24px; }
+.logo-icon { box-shadow: none; }
+.nav-badge { background: transparent; border: 0; color: var(--text2); }
+.sidebar { width: 224px; background: #0e1624; }
+.sidebar-item { min-height: 42px; border-radius: 8px; }
+.sidebar-item.active { background: #15303e; color: #81e7f6; box-shadow: inset 3px 0 #4cd5e9; }
+.sidebar-label { letter-spacing: 1.4px; }
+.sidebar-footer { padding: 14px; }
+.plan-card { background: #131e2e; border: 1px solid var(--border); box-shadow: none; }
+.main { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(340px, 1fr); grid-template-rows: auto minmax(0, 1fr); gap: 20px; padding: 28px; min-width: 0; overflow-y: auto; }
+.workspace-heading { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.workspace-kicker { font-size: 10px; font-weight: 600; letter-spacing: 1.8px; text-transform: uppercase; color: var(--cyan); margin-bottom: 8px; }
+.workspace-heading h1 { font: 600 clamp(24px, 2.5vw, 32px)/1.2 'Space Grotesk', sans-serif; letter-spacing: -.9px; }
+.workspace-heading p { color: var(--text2); font-size: 13px; line-height: 1.7; margin-top: 8px; max-width: 560px; }
+.workspace-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.workspace-actions .btn { min-height: 40px; }
+.editor-panel, .results-panel { width: auto; min-width: 0; min-height: 440px; border: 1px solid var(--border); border-radius: 14px; background: #101a2a; box-shadow: 0 8px 24px #00000012; }
+.panel-header { min-height: 64px; height: auto; padding: 14px 18px; gap: 12px; flex-wrap: wrap; background: #131e2e; }
+.panel-title { font-size: 13px; }
+.panel-actions { flex-wrap: wrap; }
+.btn { min-height: 36px; padding: 8px 12px; }
+.btn-primary, .fix-all-btn, .upgrade-btn { background: #66ddec; border: 1px solid #66ddec; color: #071820; box-shadow: none; }
+.btn-primary:hover, .fix-all-btn:hover, .upgrade-btn:hover { background: #91eaf4; box-shadow: none; transform: none; }
+.btn-ghost { background: transparent; }
+.editor-tabs { padding: 0 14px; gap: 4px; background: #101a2a; overflow-x: auto; flex-shrink: 0; }
+.etab { padding: 14px 12px; white-space: nowrap; min-height: 46px; }
+.etab.active { color: #83e5f0; border-bottom-color: #66ddec; }
+.code-area-wrap { background: #0c1422; min-height: 220px; }
+.code-editor { font-size: 13px; line-height: 1.8; }
+.line-numbers { background: #0c1422; color: #71849e; line-height: 1.8; }
+.editor-footer { min-height: 38px; background: #101a2a; }
+.source-hint { padding: 12px 18px; background: #101a2a; color: var(--text2); font-size: 12px; line-height: 1.6; border-bottom: 1px solid var(--border); }
+.empty-state { padding: 36px 28px; justify-content: center; }
+.empty-icon { width: 58px; height: 58px; display: grid; place-items: center; border-radius: 16px; background: #16313e; color: #83e5f0; border: 1px solid #285062; font-size: 26px; margin-bottom: 20px; }
+.empty-title { font-size: 21px; letter-spacing: -.5px; }
+.empty-desc { max-width: 330px; font-size: 13px; line-height: 1.8; }
+.result-steps { width: 100%; max-width: 330px; display: grid; gap: 16px; margin-top: 28px; text-align: left; }
+.result-step { display: flex; align-items: flex-start; gap: 12px; }
+.result-step > span { display: grid; place-items: center; border: 1px solid var(--border2); border-radius: 7px; width: 26px; height: 26px; flex-shrink: 0; color: #83e5f0; font-size: 11px; }
+.result-step strong { font-size: 12px; font-weight: 500; }
+.result-step p { font-size: 12px; line-height: 1.6; color: var(--text2); margin-top: 3px; }
+.score-header { background: #111d2e; }
+.issue-card { box-shadow: none; }
+:is(button, a, input, textarea, select, summary):focus-visible { outline: 2px solid #83e5f0; outline-offset: 3px; }
+.skip-link { position: fixed; top: -60px; left: 20px; z-index: 1000; padding: 12px; background: var(--cyan); color: #071820; border-radius: 8px; }
+.skip-link:focus { top: 8px; }
+#connectEditorBanner { grid-column: 1 / -1; }
+.main:has(#connectEditorBanner:not([style*="display:none"]):not([style*="display: none"])) { grid-template-rows: auto auto minmax(0,1fr); }
+@media (max-width: 1200px) {
+  .main { padding: 20px; gap: 16px; }
+  .workspace-heading { align-items: flex-start; }
+  .workspace-actions { flex-direction: column; }
+}
+@media (max-width: 1024px) {
+  .main { display: flex; flex-direction: column; overflow: visible; }
+  .workspace-heading { flex-shrink: 0; }
+  .editor-panel { min-height: 480px; }
+  .results-panel { min-height: 400px; }
+  .sidebar { width: 260px; }
+  .sidebar-collapse { display: none; }
+  .sidebar.collapsed { width: 260px; }
+  .sidebar.collapsed .sidebar-item { font-size: .82rem; justify-content: flex-start; gap: 10px; padding: 10px 12px; }
+  .sidebar.collapsed .sidebar-label, .sidebar.collapsed .sidebar-footer { display: block; }
+  .sidebar.collapsed .sidebar-section { padding: 16px 12px 8px; }
+}
+@media (max-width: 640px) {
+  .topnav { padding: 0 16px; }
+  .main { padding: 20px 12px; }
+  .workspace-heading { display: block; padding: 0 4px 4px; }
+  .workspace-heading p { font-size: 12px; }
+  .workspace-actions { flex-direction: row; flex-wrap: wrap; margin-top: 16px; }
+  .workspace-actions .btn { flex: 1; justify-content: center; }
+  .panel-header { padding: 14px; }
+  .panel-actions { width: 100%; justify-content: flex-start; gap: 6px; }
+  .panel-actions .btn, .lang-select { min-height: 40px; }
+  #scanBtn { margin-left: auto; }
+  #sampleBtn { order: 4; }
+  .editor-tabs { padding: 0 6px; gap: 0; }
+  .etab { padding: 14px 10px; font-size: 11px; }
+  #urlTab, #liveurlTab, #uploadTab { padding: 24px 16px !important; }
+  #urlTab > div:has(input), #liveurlTab > div:has(input) { flex-direction: column; }
+  #urlTab input, #liveurlTab input { width: 100%; min-width: 0; }
+  .empty-state { padding: 30px 20px; }
+  .nav-badge { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+.code-editor, .line-numbers { line-height: 23.4px; } ::-webkit-scrollbar-thumb { background: #334158; } .editor-tabs { overflow-y: hidden; }
