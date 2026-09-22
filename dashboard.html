@@ -13,6 +13,7 @@
 </script>
 <meta name="robots" content="noindex">
 <title>VibeSafe — Dashboard</title>
+<link rel="stylesheet" href="/assets/monitoring.css">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
 <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
@@ -2172,43 +2173,27 @@ document.addEventListener('click', function(e) {
 </div>
 
 <!-- MONITORING PANEL OVERLAY -->
-<div id="monitorPanel" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;padding:32px 24px;">
-  <div style="max-width:740px;margin:0 auto;">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
-      <button onclick="closeMonitorPanel()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">← Back</button>
-      <h2 style="margin:0;font-size:1.3rem;font-weight:700;">📡 Continuous monitoring</h2>
-    </div>
-    <p style="font-size:0.88rem;color:var(--text2);margin:0 0 22px;line-height:1.6;">Watch your live URLs for weekly security checks and optional daily SEO checks. SEO alerts highlight new problems or changes to titles, descriptions, canonicals and redirects. Your first check sets a baseline; unchanged results stay quiet.</p>
-
-    <!-- Add site -->
-    <div id="monitorAddCard" style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:20px;margin-bottom:20px;">
-      <div style="font-weight:600;margin-bottom:4px;">Watch a live site</div>
-      <div style="font-size:0.8rem;color:var(--text3);margin-bottom:14px;">Add each important page you want to watch. SEO checks inspect this URL, robots.txt and the first declared sitemap, without crawling the whole site.</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <input type="url" id="monitorUrlInput" placeholder="https://yourapp.vercel.app"
-          style="flex:1;min-width:220px;padding:9px 12px;background:var(--surface2);border:1px solid var(--border2);border-radius:7px;color:var(--text);font-size:0.82rem;outline:none;font-family:'Inter','Inter Fallback',sans-serif;"
-          onkeydown="if(event.key==='Enter')addMonitoredUrl()">
-        <input type="text" id="monitorLabelInput" maxlength="80" placeholder="Label (optional)"
-          style="width:150px;padding:9px 12px;background:var(--surface2);border:1px solid var(--border2);border-radius:7px;color:var(--text);font-size:0.82rem;outline:none;font-family:'Inter','Inter Fallback',sans-serif;">
-        <button class="btn btn-primary" id="monitorAddBtn" onclick="addMonitoredUrl()">+ Watch</button>
-      </div>
-      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:0.82rem;">
-        <label><input id="monitorSeoInput" type="checkbox" checked> Daily SEO checks</label>
-        <label><input id="monitorIndexInput" type="checkbox" checked> This page should appear in search</label>
-      </div>
-      <p style="font-size:0.75rem;color:var(--text3);">Public indexability checks do not confirm Google indexing. Search Console is not connected.</p>
-      <div id="monitorStatus" role="status" style="font-size:0.78rem;margin-top:8px;min-height:18px;"></div>
-    </div>
-
-    <!-- Watched sites -->
-    <div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:20px;">
-      <div style="font-weight:600;margin-bottom:14px;">Watched sites</div>
-      <div id="monitorList">
-        <div style="font-size:0.8rem;color:var(--text3);text-align:center;padding:16px 0;">Loading...</div>
-      </div>
+<section id="monitorPanel" style="display:none" aria-labelledby="monitorHeading">
+  <div class="mon-shell">
+    <div class="mon-top"><button class="mon-button" onclick="closeMonitorPanel()">← Back to dashboard</button><span class="mon-badge">● Post-launch protection</span></div>
+    <header class="mon-hero"><div class="mon-eyebrow">Continuous monitoring</div><h2 id="monitorHeading">Keep an eye on what you ship.</h2><p>Catch security changes and SEO problems after launch. Choose the pages that matter, and get an email when something needs your attention.</p><div class="mon-schedule"><span class="mon-badge">Security · weekly</span><span class="mon-badge">SEO · daily</span><span class="mon-badge">Alerts on changes</span></div></header>
+    <div class="mon-layout">
+      <aside class="mon-add mon-box" id="monitorAddCard">
+        <h3>Add a page to watch</h3><p class="mon-sub">Start with your homepage, pricing page, or another important URL.</p>
+        <form onsubmit="event.preventDefault();addMonitoredUrl()">
+          <label class="mon-field" for="monitorUrlInput">Page URL</label><input class="mon-input" id="monitorUrlInput" type="text" inputmode="url" autocomplete="url" required placeholder="https://yourapp.com/pricing">
+          <label class="mon-field" for="monitorLabelInput">Page name <span class="mon-muted">(optional)</span></label><input class="mon-input" id="monitorLabelInput" maxlength="80" placeholder="e.g. Pricing page">
+          <label class="mon-option"><input id="monitorSeoInput" type="checkbox" checked><span><strong>Daily SEO monitoring</strong><small>Watch indexing rules, metadata and sitemaps.</small></span></label>
+          <label class="mon-option"><input id="monitorIndexInput" type="checkbox" checked><span><strong>This page should appear in search</strong><small>Uncheck for private or intentionally excluded pages.</small></span></label>
+          <button type="submit" class="mon-primary" id="monitorAddBtn">+ Start monitoring</button>
+          <div id="monitorStatus" class="mon-status" role="status" aria-live="polite"></div>
+        </form>
+        <div class="mon-form-footer"><p class="mon-note" style="margin:0">Your first check sets a baseline. After that, we email you about new problems or metadata changes. Unchanged results stay quiet.</p><details class="mon-disclosure"><summary>What do SEO checks cover?</summary><p class="mon-note">Each check reads this page, robots.txt and one sitemap. It does not crawl your whole site or confirm Google indexing. Search Console is not connected.</p></details></div>
+      </aside>
+      <section class="mon-watched" aria-label="Watched pages"><div class="mon-section-head"><h3>Watched pages <span id="monitorCount"></span></h3><button class="mon-button" onclick="loadMonitoredUrls()" title="Refresh saved monitoring results">↻ Refresh results</button></div><div id="monitorList" aria-live="polite"><div class="mon-empty">Loading your pages…</div></div></section>
     </div>
   </div>
-</div>
+</section>
 
 <div class="toast-wrap" id="toastWrap"></div>
 
@@ -3191,7 +3176,7 @@ async function runLaunchCheck() {
   var btn = document.getElementById('lcRunBtn');
   var status = document.getElementById('lcStatus');
   var out = document.getElementById('lcReport');
-  if (!url) { status.style.color = 'var(--red)'; status.textContent = 'Enter your app URL first.'; return; }
+  if (!url) { input.focus(); status.style.color = 'var(--red)'; status.textContent = 'Enter your app URL first.'; return; }
 
   btn.disabled = true; btn.textContent = 'Testing your app…'; out.innerHTML = '';
   var lcIntro = document.getElementById('lcIntro'); if (lcIntro) lcIntro.style.display = 'none';
@@ -4166,7 +4151,8 @@ function closeMonitorPanel() {
 async function loadMonitoredUrls() {
   var list = document.getElementById('monitorList');
   var addCard = document.getElementById('monitorAddCard');
-  list.innerHTML = '<div style="font-size:0.8rem;color:var(--text3);text-align:center;padding:16px 0;">Loading...</div>';
+  list.innerHTML = '<div class="mon-skeleton" role="status" aria-label="Loading monitored pages"></div>';
+  document.getElementById('monitorCount').textContent = '';
   try {
     var token = await monitorAuth();
     var res = await fetch(MONITOR_API, { headers: { 'Authorization': 'Bearer ' + token } });
@@ -4181,25 +4167,12 @@ async function loadMonitoredUrls() {
     }
 
     var urls = data.urls || [];
+    document.getElementById('monitorCount').textContent = '(' + urls.length + ')';
     if (!urls.length) {
-      list.innerHTML = '<div style="font-size:0.82rem;color:var(--text3);text-align:center;padding:16px 0;">No sites watched yet.' + (isPro() ? ' Add one above to start weekly monitoring.' : '') + '</div>';
+      list.innerHTML = '<div class="mon-empty"><div class="mon-icon">◎</div><h4>Your next launch deserves a safety net.</h4><p>Add your first page to track security and SEO changes here.</p>' + (isPro() ? '<button class="mon-primary" onclick="document.getElementById(\'monitorUrlInput\').focus()">+ Add your first page</button>' : '') + '</div>';
       return;
     }
-    list.innerHTML = urls.map(function(u) {
-      var hasScore = u.last_score !== null && u.last_score !== undefined;
-      var col = !hasScore ? 'var(--text3)' : u.last_score >= 75 ? 'var(--green)' : u.last_score >= 50 ? 'var(--amber)' : 'var(--red)';
-      var scoreBadge = hasScore
-        ? '<span style="font-weight:700;color:' + col + ';">' + u.last_score + '/100</span>' + (u.last_criticals ? ' <span style="color:var(--red);font-size:0.75rem;">' + u.last_criticals + ' critical</span>' : '')
-        : '<span style="color:var(--text3);font-size:0.78rem;">pending first scan</span>';
-      return '<div style="padding:12px 0;border-bottom:1px solid var(--border1);"><div style="display:flex;align-items:center;gap:12px;">'
-        + '<div style="flex:1;min-width:0;">'
-        + '<div style="font-weight:600;font-size:0.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escHtml(u.label || u.url) + '</div>'
-        + '<div style="font-size:0.75rem;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escHtml(u.url) + ' · checked ' + relTime(u.last_scanned_at) + '</div>'
-        + '</div>'
-        + '<div style="text-align:right;white-space:nowrap;">Security: ' + scoreBadge + '</div>'
-        + '<button onclick="removeMonitoredUrl(' + u.id + ')" title="Stop watching" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text3);border-radius:6px;padding:5px 9px;cursor:pointer;font-size:0.75rem;">Remove</button>'
-        + '</div>' + renderSeoMonitor(u) + '</div>';
-    }).join('');
+    list.innerHTML = urls.map(renderMonitorCard).join('');
   } catch (e) {
     list.innerHTML = '<div style="font-size:0.8rem;color:var(--red);padding:16px 0;">Could not load watched sites.</div>';
   }
@@ -4210,8 +4183,8 @@ async function addMonitoredUrl() {
   var status = document.getElementById('monitorStatus');
   var btn = document.getElementById('monitorAddBtn');
   var url = (input.value || '').trim();
-  if (!url) { status.style.color = 'var(--red)'; status.textContent = 'Enter a URL first.'; return; }
-  btn.disabled = true; status.style.color = 'var(--text3)'; status.textContent = 'Adding…';
+  if (!url) { input.focus(); status.style.color = 'var(--red)'; status.textContent = 'Enter a URL first.'; return; }
+  btn.disabled = true; btn.textContent = 'Adding page…'; status.style.color = 'var(--text2)'; status.textContent = 'Saving your monitoring preferences…';
   try {
     var token = await monitorAuth();
     var res = await fetch(MONITOR_API, {
@@ -4232,7 +4205,7 @@ async function addMonitoredUrl() {
   } catch (e) {
     status.style.color = 'var(--red)'; status.textContent = 'Could not add. Try again.';
   } finally {
-    btn.disabled = false;
+    btn.disabled = false; btn.textContent = '+ Start monitoring';
   }
 }
 async function removeMonitoredUrl(id) {
@@ -4250,28 +4223,44 @@ async function removeMonitoredUrl(id) {
 
 function seoIssuesHtml(snapshot) {
   if (!snapshot) return '';
-  var states = { 'blocked': 'Indexing or crawling restriction found', 'unknown': 'Indexability could not be confirmed', 'no-blocker-observed': 'No indexing blocker observed', 'intentionally-excluded': 'Intentionally excluded from search' };
-  return '<p><strong>SEO health: ' + escHtml(snapshot.score) + '/100</strong> · ' + escHtml(states[snapshot.indexability] || 'Unknown') + '</p>'
-    + '<p>Google indexing: unverified</p>'
-    + (snapshot.issues || []).map(function(i) { return '<p><strong>' + escHtml(i.severity) + ': ' + escHtml(i.title) + '</strong><br>' + escHtml(i.evidence) + '<br>Fix: ' + escHtml(i.fix) + '</p>'; }).join('')
-    + '<p style="color:var(--text3);">Not checked: ' + (snapshot.notChecked || []).map(escHtml).join('; ') + '</p>';
+  var states = { blocked: 'Indexing or crawling restriction found', unknown: 'Indexability could not be confirmed', 'no-blocker-observed': 'No indexing blocker observed', 'intentionally-excluded': 'Intentionally excluded from search' };
+  return '<div class="mon-findings"><div class="mon-results-summary"><strong>' + escHtml(states[snapshot.indexability] || 'Unknown') + '</strong><span>' + escHtml(snapshot.score) + '/100</span></div>'
+    + '<p class="mon-note">Google indexing: unverified</p>'
+    + ((snapshot.issues || []).length ? snapshot.issues.map(function(i) {
+      var severity = ['critical','warning','info'].includes(i.severity) ? i.severity : 'info';
+      return '<article class="mon-issue ' + severity + '"><span class="mon-severity">' + severity + '</span><h4>' + escHtml(i.title) + '</h4><p>' + escHtml(i.evidence) + '</p><p class="mon-fix"><strong>How to fix it</strong><br>' + escHtml(i.fix) + '</p></article>';
+    }).join('') : '<p class="mon-note mon-good">✓ No issues found in the checks completed.</p>')
+    + '<details class="mon-disclosure"><summary>Coverage and limitations</summary><p class="mon-note">Not checked: ' + (snapshot.notChecked || []).map(escHtml).join('; ') + '</p></details></div>';
+}
+function renderMonitorCard(u) {
+  var id = String(u.id); if (!/^\d+$/.test(id)) return '';
+  var hasScore = u.last_score !== null && u.last_score !== undefined;
+  var state = (Array.isArray(u.seo_monitor_state) ? u.seo_monitor_state[0] : u.seo_monitor_state) || {};
+  var snapshot = state.snapshot;
+  var scoreClass = function(score) { return score >= 75 ? 'mon-good' : 'mon-warn'; };
+  return '<article class="mon-site"><header class="mon-card-head"><div class="mon-identity"><span class="mon-icon" aria-hidden="true">◎</span><div><h4 class="mon-site-title">' + escHtml(u.label || u.url) + '</h4><p class="mon-url">' + escHtml(u.url) + '</p></div></div><span class="mon-badge">' + (u.active === false ? 'Paused' : 'Watching') + '</span></header>'
+    + '<div class="mon-metrics"><div class="mon-metric"><div class="mon-metric-label"><span>Security</span><span>Weekly</span></div><strong class="' + (hasScore ? u.last_criticals > 0 ? 'mon-critical' : scoreClass(u.last_score) : 'mon-muted') + '">' + (hasScore ? escHtml(u.last_score) + '<small> /100</small>' : '—') + '</strong><p>' + (hasScore ? escHtml(u.last_criticals || 0) + ' critical · ' + escHtml(relTime(u.last_scanned_at)) : 'Waiting for first check') + '</p></div>'
+    + '<div class="mon-metric"><div class="mon-metric-label"><span>SEO health</span><span>' + (u.seo_enabled ? 'Daily' : 'Off') + '</span></div><strong class="' + (snapshot && u.seo_enabled ? (snapshot.issues || []).some(i => i.severity === 'critical') ? 'mon-critical' : (snapshot.issues || []).some(i => i.severity === 'warning') ? 'mon-warn' : scoreClass(snapshot.score) : 'mon-muted') + '">' + (snapshot && u.seo_enabled ? escHtml(snapshot.score) + '<small> /100</small>' : '—') + '</strong><p>' + (u.seo_enabled ? state.last_error ? 'Latest check needs attention' : snapshot ? escHtml((snapshot.issues || []).length) + ((snapshot.issues || []).length === 1 ? ' finding · ' : ' findings · ') + escHtml(relTime(state.last_checked_at)) : 'First check queued' : 'Enable in monitoring settings') + '</p></div></div>'
+    + renderSeoMonitor(u) + '</article>';
 }
 function renderSeoMonitor(u) {
-  var id = String(u.id);
-  if (!/^\d+$/.test(id)) return '';
-  var state = Array.isArray(u.seo_monitor_state) ? u.seo_monitor_state[0] : u.seo_monitor_state;
-  state = state || {};
-  return '<div style="font-size:0.8rem;margin-top:12px;overflow-wrap:anywhere;">'
-    + '<label><input type="checkbox" id="seo-enable-' + id + '" ' + (u.seo_enabled ? 'checked' : '') + '> Daily SEO</label> '
-    + '<label><input type="checkbox" id="seo-index-' + id + '" ' + (u.expected_indexable ? 'checked' : '') + '> Should appear in search</label> '
-    + '<button class="btn" onclick="saveSeoSettings(' + id + ', this)">Save settings</button>'
-    + (u.seo_enabled ? '<div>SEO last checked: ' + escHtml(state.last_checked_at ? relTime(state.last_checked_at) : 'Pending first check') + '</div>' : '<p>SEO monitoring is off.</p>')
-    + (state.last_error ? '<p style="color:var(--amber);">Latest attempt needs attention: ' + escHtml(state.last_error) + '. Previous results below may be stale.</p>' : '')
-    + (state.snapshot ? '<details><summary>View SEO results</summary>' + seoIssuesHtml(state.snapshot) + '</details>' : '')
-    + '<button class="btn" onclick="loadSeoHistory(' + id + ')">SEO history</button><div id="seo-history-' + id + '" role="status"></div></div>';
+  var id = String(u.id); if (!/^\d+$/.test(id)) return '';
+  var state = (Array.isArray(u.seo_monitor_state) ? u.seo_monitor_state[0] : u.seo_monitor_state) || {};
+  return (state.last_error ? '<div class="mon-alert"><strong>We couldn’t complete the latest check.</strong><br>' + escHtml(state.last_error) + ' Previous results may be out of date.</div>' : '')
+    + (!u.seo_enabled ? '<button class="mon-primary" onclick="document.getElementById(\'seo-settings-' + id + '\').open=true;document.getElementById(\'seo-enable-' + id + '\').focus()">Set up SEO monitoring</button><p class="mon-note">Enable daily checks in monitoring settings.</p>' : '')
+    + '<div class="mon-actions"><button class="mon-primary" ' + (state.snapshot ? '' : 'disabled') + ' aria-expanded="false" aria-controls="seo-results-' + id + '" onclick="toggleSeoResults(' + id + ', this)">View SEO results</button><button class="mon-button" onclick="loadSeoHistory(' + id + ', this)" aria-expanded="false" aria-controls="seo-history-' + id + '">SEO history</button></div>'
+    + (state.snapshot ? '<div id="seo-results-' + id + '" hidden>' + seoIssuesHtml(state.snapshot) + '</div>' : '<p class="mon-note">' + (u.seo_enabled ? 'Results appear after the first scheduled check. Refresh results to see the latest saved scan.' : 'Turn on Daily SEO below to start receiving results.') + '</p>')
+    + '<div class="mon-history" id="seo-history-' + id + '" role="status" hidden></div>'
+    + '<details class="mon-disclosure" id="seo-settings-' + id + '"><summary>Monitoring settings</summary><label class="mon-option"><input type="checkbox" id="seo-enable-' + id + '" ' + (u.seo_enabled ? 'checked' : '') + '><span><strong>Daily SEO monitoring</strong><small>Check this page automatically after launch.</small></span></label><label class="mon-option"><input type="checkbox" id="seo-index-' + id + '" ' + (u.expected_indexable ? 'checked' : '') + '><span><strong>Should appear in search</strong><small>Uncheck if this page is intentionally excluded.</small></span></label><div class="mon-actions"><button class="mon-primary" onclick="saveSeoSettings(' + id + ', this)">Save settings</button><button class="mon-button mon-danger" onclick="if(confirm(\'Stop monitoring this page? Its saved scan history will also be removed.\'))removeMonitoredUrl(' + id + ')">Stop monitoring</button></div></details>';
+}
+function toggleSeoResults(id, button) {
+  var target = document.getElementById('seo-results-' + id);
+  target.hidden = !target.hidden;
+  button.setAttribute('aria-expanded', String(!target.hidden));
+  button.textContent = target.hidden ? 'View SEO results' : 'Hide SEO results';
 }
 async function saveSeoSettings(id, button) {
-  button.disabled = true;
+  button.disabled = true; button.textContent = 'Saving…';
   try {
     var token = await monitorAuth();
     var r = await fetch(MONITOR_API, { method: 'PATCH', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token }, body: JSON.stringify({ id: id, seo_enabled: document.getElementById('seo-enable-' + id).checked, expected_indexable: document.getElementById('seo-index-' + id).checked }) });
@@ -4280,10 +4269,13 @@ async function saveSeoSettings(id, button) {
     showToast('SEO settings saved', 'info');
     await loadMonitoredUrls();
   } catch (e) { showToast(e.message || 'Could not save settings.', 'error'); }
-  finally { button.disabled = false; }
+  finally { button.disabled = false; button.textContent = 'Save settings'; }
 }
-async function loadSeoHistory(id) {
+async function loadSeoHistory(id, button) {
   var target = document.getElementById('seo-history-' + id);
+  if (button && !target.hidden) { target.hidden = true; button.setAttribute('aria-expanded', 'false'); button.textContent = 'SEO history'; return; }
+  target.hidden = false;
+  if (button) { button.setAttribute('aria-expanded', 'true'); button.textContent = 'Hide history'; }
   target.textContent = 'Loading history…';
   try {
     var token = await monitorAuth();
@@ -4292,7 +4284,7 @@ async function loadSeoHistory(id) {
     if (!r.ok) throw new Error(data.error || 'Could not load history.');
     target.innerHTML = (data.history || []).map(function(h) {
       var changes = h.changes || {};
-      return '<details><summary>' + escHtml(new Date(h.checked_at).toLocaleString()) + (changes.baseline ? ' · Baseline' : '') + '</summary>'
+      return '<details class="mon-disclosure"><summary>' + escHtml(new Date(h.checked_at).toLocaleString()) + (changes.baseline ? ' · Baseline' : '') + '</summary>'
         + '<p>' + escHtml((changes.added || []).length) + ' new findings · ' + escHtml((changes.resolved || []).length) + ' resolved</p>'
         + (changes.changed || []).map(function(c) { return '<p>' + escHtml(c.field) + ': ' + escHtml(c.before) + ' → ' + escHtml(c.after) + '</p>'; }).join('')
         + seoIssuesHtml(h.snapshot) + '</details>';
