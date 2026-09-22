@@ -1336,6 +1336,7 @@ document.addEventListener('click', function(e) {
       <button class="sidebar-item" onclick="setPage('monitor', event)">
         <span class="si-icon">📡</span> Monitoring &amp; SEO
       </button>
+      <button class="sidebar-item" onclick="openLaunchCheck()"><span class="si-icon">🚀</span> Launch Check</button>
       <button class="sidebar-item" onclick="setPage('team', event)">
         <span class="si-icon">👥</span> Team
       </button>
@@ -1381,17 +1382,6 @@ document.addEventListener('click', function(e) {
 
   <!-- MAIN CONTENT -->
   <main class="main" id="workspace" tabindex="-1">
-    <header class="workspace-heading">
-      <div>
-        <h1>Ship with confidence.</h1>
-        <p>Find security issues in your code, review the fixes, and keep watch after launch.</p>
-      </div>
-      <div class="workspace-actions">
-        <button class="btn btn-ghost" onclick="openLaunchCheck()">Launch check <span aria-hidden="true">↗</span></button>
-        <button class="btn btn-ghost" onclick="openMonitorPanel()">Monitoring &amp; SEO <span aria-hidden="true">↗</span></button>
-      </div>
-    </header>
-
     <!-- Shown only when an API key exists but the editor has never scanned.
          Roughly 30 keys have been generated against 8 accounts that ever
          completed an extension scan, so this is the single biggest drop-off
@@ -1416,6 +1406,7 @@ document.addEventListener('click', function(e) {
     <!-- EDITOR PANEL -->
     <div class="editor-panel" id="editorPanel">
       <div class="panel-header">
+        <div class="panel-title">📝 Code input</div>
         <div class="panel-actions">
           <select class="lang-select" id="langSelect" aria-label="Code language">
             <option value="js">JavaScript</option>
@@ -1527,7 +1518,7 @@ document.addEventListener('click', function(e) {
     </div>
 
     <!-- RESULTS PANEL -->
-    <div class="results-panel" id="resultsPanel">
+    <div class="results-panel" id="resultsPanel" data-view="beginner">
 
       <!-- Panel header (always pinned at top) -->
       <div class="panel-header">
@@ -1536,6 +1527,7 @@ document.addEventListener('click', function(e) {
           <span id="resultsPanelTitle">Scan results</span>
         </div>
         <div class="panel-actions" id="resultsPanelActions">
+          <div class="result-view" role="group" aria-label="Result detail level"><button type="button" id="beginnerView" aria-pressed="true" onclick="setResultView('beginner')">Beginner</button><button type="button" id="developerView" aria-pressed="false" onclick="setResultView('developer')">Developer</button></div>
           <button class="btn btn-ghost" id="exportBtn" style="display:none" onclick="exportReport()">
             Export PDF
           </button>
@@ -1878,41 +1870,14 @@ document.addEventListener('click', function(e) {
   </div>
 </div>
 
-<div id="teamPanel" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;padding:32px 24px;">
-  <div style="max-width:740px;margin:0 auto;">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;">
-      <button onclick="closeTeamPanel()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:0.82rem;">← Back</button>
-      <h2 style="margin:0;font-size:1.3rem;font-weight:700;">👥 Team</h2>
-    </div>
-
-    <!-- Invite -->
-    <div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:20px;margin-bottom:20px;">
-      <div style="font-weight:600;margin-bottom:4px;">Invite a team member</div>
-      <div style="font-size:0.8rem;color:var(--text3);margin-bottom:14px;">They'll get an email to join your VibeSafe team and can view shared scan history.</div>
-      <div style="display:flex;gap:8px;">
-        <input type="email" id="inviteEmailInput" placeholder="colleague@company.com"
-          style="flex:1;padding:9px 12px;background:var(--surface2);border:1px solid var(--border2);border-radius:7px;color:var(--text);font-size:0.82rem;outline:none;font-family:'Inter','Inter Fallback',sans-serif;"
-          onkeydown="if(event.key==='Enter')sendTeamInvite()"
-        >
-        <button class="btn btn-primary" id="inviteBtn" onclick="sendTeamInvite()">Send invite</button>
-      </div>
-      <div id="inviteStatus" style="font-size:0.78rem;margin-top:8px;min-height:18px;"></div>
-    </div>
-
-    <!-- Members -->
-    <div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:20px;margin-bottom:20px;">
-      <div style="font-weight:600;margin-bottom:14px;">Team members</div>
-      <div id="teamMembersList">
-        <div style="font-size:0.8rem;color:var(--text3);text-align:center;padding:16px 0;">Loading...</div>
-      </div>
-    </div>
-
-    <!-- Shared scan history -->
-    <div style="background:var(--surface1);border:1px solid var(--border1);border-radius:12px;padding:20px;">
-      <div style="font-weight:600;margin-bottom:14px;">Shared scan history</div>
-      <div id="teamScanHistory">
-        <div style="font-size:0.8rem;color:var(--text3);text-align:center;padding:16px 0;">Loading...</div>
-      </div>
+<div id="teamPanel" style="display:none;" aria-labelledby="teamTitle">
+  <div class="team-shell">
+    <div class="team-top"><button class="btn btn-ghost" onclick="closeTeamPanel()">← Dashboard</button><span>Workspace / Team</span></div>
+    <header class="team-heading"><h1 id="teamTitle">Your team, in sync.</h1><p>Bring your team together to review security findings and shared scan history.</p></header>
+    <div class="team-grid">
+      <section class="team-card team-invite"><h2>Invite a teammate</h2><p>Invite someone by email to join your team and view shared scan history.</p><label for="inviteEmailInput">Email address</label><input type="email" id="inviteEmailInput" placeholder="colleague@company.com" autocomplete="email" aria-describedby="inviteStatus" onkeydown="if(event.key==='Enter')sendTeamInvite()"><button class="btn btn-primary" id="inviteBtn" onclick="sendTeamInvite()">Send invite</button><div id="inviteStatus" role="status" aria-live="polite"></div><div class="team-note">Pending means the invitation hasn’t been accepted yet.</div></section>
+      <section class="team-card team-members"><h2>Team members</h2><p>People invited to this workspace.</p><div id="teamMembersList"><div class="team-empty" role="status">Loading members…</div></div></section>
+      <section class="team-card team-history"><div class="team-section-head"><div><h2>Shared scan history</h2><p>The latest 30 scans, newest first.</p></div><button class="btn btn-ghost" onclick="loadTeamScanHistory()">Refresh</button></div><div id="teamScanHistory" tabindex="0" aria-label="Shared scan history"><div class="team-empty" role="status">Loading scans…</div></div></section>
     </div>
   </div>
 </div>
@@ -2496,8 +2461,17 @@ function maybeShowFirstRunGuide() {
   var guide = document.getElementById('firstRunGuide');
   if (!guide) return;
   var n = (typeof vsScanHistory !== 'undefined' && vsScanHistory) ? vsScanHistory.length : 0;
-  guide.style.display = n === 0 ? 'block' : 'none';
+  guide.style.display = n === 0 && currentUser && ADMIN_EMAILS.includes((currentUser.email || '').toLowerCase()) ? 'block' : 'none';
 }
+
+function setResultView(view) {
+  view = view === 'developer' ? 'developer' : 'beginner';
+  document.getElementById('resultsPanel').dataset.view = view;
+  document.getElementById('beginnerView').setAttribute('aria-pressed', String(view === 'beginner'));
+  document.getElementById('developerView').setAttribute('aria-pressed', String(view === 'developer'));
+  try { localStorage.setItem('vsResultView', view); } catch (e) {}
+}
+try { setResultView(localStorage.getItem('vsResultView')); } catch (e) {}
 
 // ── CLEAR EDITOR ──
 function clearEditor() {
@@ -4648,7 +4622,7 @@ async function sendTeamInvite() {
     status.textContent = 'Please enter a valid email address.';
     return;
   }
-  if (!currentUser || !sbClient) return;
+  if (!currentUser || !sbClient) { status.textContent = 'Please sign in to invite a teammate.'; return; }
 
   btn.disabled = true; btn.textContent = 'Sending...';
   status.textContent = '';
@@ -4755,7 +4729,7 @@ async function _getOrCreateTeam() {
 
 async function loadTeamMembers() {
   var container = document.getElementById('teamMembersList');
-  if (!currentUser || !sbClient) return;
+  if (!currentUser || !sbClient) { container.innerHTML = '<div class="team-empty">Sign in to view your team.</div>'; return; }
 
   var teamId = await getOrCreateTeam().catch(() => null);
   if (!teamId) {
@@ -4763,7 +4737,8 @@ async function loadTeamMembers() {
     return;
   }
 
-  var { data: members } = await sbClient.from('team_members').select('*').eq('team_id', teamId).order('created_at');
+  var { data: members, error: memberError } = await sbClient.from('team_members').select('*').eq('team_id', teamId).order('created_at');
+  if (memberError) { container.innerHTML = '<div class="team-empty">Could not load members. Please reopen Team to retry.</div>'; return; }
   if (!members || members.length === 0) {
     container.innerHTML = '<div style="font-size:0.8rem;color:var(--text3);text-align:center;padding:12px 0;">No members yet. Invite someone above.</div>';
     return;
@@ -4771,24 +4746,24 @@ async function loadTeamMembers() {
 
   container.innerHTML = members.map(function(m) {
     var badge = m.status === 'active'
-      ? '<span style="font-size:0.7rem;padding:2px 7px;border-radius:4px;background:rgba(16,185,129,0.12);color:#10B981;">' + (m.role || 'member') + '</span>'
-      : '<span style="font-size:0.7rem;padding:2px 7px;border-radius:4px;background:rgba(245,158,11,0.12);color:#F59E0B;">pending</span>';
+      ? '<span style="font-size:0.7rem;padding:2px 7px;border-radius:4px;background:rgba(16,185,129,0.12);color:#10B981;">' + escHtml(m.role || 'member') + '</span>'
+      : '<span style="font-size:0.7rem;padding:2px 7px;border-radius:4px;background:rgba(245,158,11,0.12);color:#F59E0B;">Invite pending</span>';
     return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border1);">' +
       '<div style="width:32px;height:32px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:0.9rem;font-weight:600;">' +
-        (m.invited_email || '?').charAt(0).toUpperCase() +
+        escHtml((m.invited_email || '?').charAt(0).toUpperCase()) +
       '</div>' +
       '<div style="flex:1;">' +
-        '<div style="font-size:0.83rem;font-weight:500;">' + (m.invited_email || 'Unknown') + '</div>' +
+        '<div style="font-size:0.83rem;font-weight:500;">' + escHtml(m.invited_email || 'Unknown') + '</div>' +
       '</div>' + badge + '</div>';
   }).join('');
 }
 
 async function loadTeamScanHistory() {
   var container = document.getElementById('teamScanHistory');
-  if (!currentUser || !sbClient) return;
+  if (!currentUser || !sbClient) { container.innerHTML = '<div class="team-empty">Sign in to view your team.</div>'; return; }
 
   var teamId = await getOrCreateTeam().catch(() => null);
-  if (!teamId) return;
+  if (!teamId) { container.innerHTML = '<div class="team-empty">Could not load team history. Please refresh.</div>'; return; }
 
   // Always include the team owner + any active members
   var { data: members } = await sbClient.from('team_members').select('user_id').eq('team_id', teamId).eq('status', 'active');
@@ -4820,9 +4795,9 @@ async function loadTeamScanHistory() {
       var email = (s.user_id === currentUser.id) ? 'You' : (s.user_id || '').slice(0, 8) + '…';
       var label = s.scan_type === 'url' ? '🌐 ' + (s.target || 'URL') : (s.language || 'Code') + ' scan';
       return '<tr style="border-bottom:1px solid var(--border1);">' +
-        '<td style="padding:7px 8px;color:var(--text2);">' + email + '</td>' +
-        '<td style="padding:7px 8px;">' + label + '</td>' +
-        '<td style="padding:7px 8px;text-align:center;font-weight:600;color:' + cls + ';">' + (s.score || '—') + '</td>' +
+        '<td style="padding:7px 8px;color:var(--text2);">' + escHtml(email) + '</td>' +
+        '<td style="padding:7px 8px;">' + escHtml(label) + '</td>' +
+        '<td style="padding:7px 8px;text-align:center;font-weight:600;color:' + cls + ';">' + escHtml(s.score == null ? '—' : s.score) + '</td>' +
         '<td style="padding:7px 8px;text-align:center;color:var(--text2);">' + (s.issues_count || 0) + '</td>' +
         '<td style="padding:7px 8px;color:var(--text3);">' + date + '</td>' +
         '</tr>';
