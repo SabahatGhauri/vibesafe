@@ -1050,7 +1050,9 @@ const FREE_SCAN_LIMIT = 10;
 (async function() {
   const { data: { session } } = await sbClient.auth.getSession();
   if (!session) {
-    window.location.href = '/login.html';
+    var wantsTrial = false;
+    try { wantsTrial = new URLSearchParams(window.location.search).get('trial') === '1'; } catch (e) {}
+    window.location.href = wantsTrial ? '/login.html?trial=1&mode=signup' : '/login.html';
     return;
   }
   currentUser = session.user;
@@ -1068,7 +1070,7 @@ const FREE_SCAN_LIMIT = 10;
     if (typeof updateSampleBtnVisibility === 'function') updateSampleBtnVisibility();
     // Load scan history once logged in
     if (typeof loadScanHistory === 'function') loadScanHistory();
-    if (typeof loadProfile === 'function') loadProfile();
+    if (typeof loadProfile === 'function') loadProfile().then(maybeAutoStartTrial);
     if (typeof showSiteBroadcast === 'function') showSiteBroadcast();
   }
   // The session check is async — DOMContentLoaded may have already fired by now.
@@ -1100,12 +1102,132 @@ function upgradeToPro() {
   window.open(url, '_blank');
 }
 
+var currentTrial = { on_trial: false, trial_used: false, days_left: null, ends_at: null };
+var TRIAL_API = 'https://vibesafe-api.vercel.app/api/start-trial';
+
+// Mirrors lib/plan.js on the server: a paid subscription always wins, and an
+// expired trial is free again.
+function effectivePlanOf(row) {
+  if (!row) return 'free';
+  var stored = row.plan || 'free';
+  if (row.stripe_subscription_id) return stored;
+  if (!row.trial_ends_at) return stored;
+  return Date.parse(row.trial_ends_at) > Date.now() ? stored : 'free';
+}
+
+function trialStateOf(row) {
+  if (!row || !row.trial_ends_at || row.stripe_subscription_id) {
+    return { on_trial: false, trial_used: !!(row && row.trial_used), days_left: null, ends_at: null };
+  }
+  var msLeft = Date.parse(row.trial_ends_at) - Date.now();
+  return {
+    on_trial: msLeft > 0,
+    trial_used: true,
+    expired: msLeft <= 0,
+    days_left: msLeft > 0 ? Math.ceil(msLeft / 86400000) : 0,
+    ends_at: row.trial_ends_at
+  };
+}
+
+function trialDateText(iso) {
+  try {
+    return new Date(iso).toLocaleDateString(undefined, { month: 'long', day: 'numeric' });
+  } catch (e) { return ''; }
+}
+
+// The customer pressed "Try Pro free for 7 days". No card is collected here and
+// nothing is charged: the server switches Pro on and stops it on day 7.
+async function startTrial(btn) {
+  if (!currentUser) { window.location.href = '/login.html?trial=1'; return; }
+  var label = btn && btn.textContent;
+  if (btn) { btn.disabled = true; btn.textContent = 'Starting...'; }
+  try {
+    var { data: { session } } = await sbClient.auth.getSession();
+    var res = await fetch(TRIAL_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (session ? session.access_token : '') },
+      body: '{}'
+    });
+    var out = await res.json().catch(function () { return {}; });
+    if (!res.ok || !out.ok) {
+      showToast(out.error || 'Could not start the trial. Please try again.', 'error');
+      if (btn) { btn.disabled = false; btn.textContent = label; }
+      return;
+    }
+    showToast(out.message || 'Pro is on for 7 days - no card needed', 'success');
+    await loadProfile();
+  } catch (e) {
+    showToast('Could not start the trial - check your connection and try again', 'error');
+    if (btn) { btn.disabled = false; btn.textContent = label; }
+  }
+}
+
+function renderTrialBanner() {
+  var wrap = document.getElementById('trialBanner');
+  if (!wrap) return;
+  var icon = document.getElementById('trialBannerIcon');
+  var title = document.getElementById('trialBannerTitle');
+  var text = document.getElementById('trialBannerText');
+  var actions = document.getElementById('trialBannerActions');
+
+  // On trial: countdown, and the card only once it is nearly over.
+  if (currentTrial.on_trial) {
+    var d = currentTrial.days_left;
+    var ending = d <= 2;
+    wrap.style.borderLeftColor = ending ? '#F59E0B' : '#10B981';
+    icon.textContent = ending ? '\u23F3' : '\u2728';
+    title.textContent = ending
+      ? (d === 1 ? 'Your Pro trial ends tomorrow' : 'Your Pro trial ends in ' + d + ' days')
+      : 'Pro trial \u2014 ' + d + ' day' + (d === 1 ? '' : 's') + ' left';
+    text.textContent = 'Unlimited scans, live website scanning, monitoring and the Data Access check are switched on until '
+      + trialDateText(currentTrial.ends_at) + '. There is no card on file and nothing to cancel \u2014 if you do nothing, '
+      + 'your account simply goes back to the free plan.';
+    actions.innerHTML = '<button class="btn btn-primary" style="font-size:0.83rem;" onclick="upgradeToPro()">Keep Pro \u2014 add a card</button>'
+      + '<button class="btn btn-ghost" style="font-size:0.83rem;" onclick="setPage(\'access\', event)">Try the Data Access check \u2192</button>';
+    wrap.style.display = 'block';
+    return;
+  }
+
+  // Never tried it and still free: offer it.
+  if (currentPlan === 'free' && !currentTrial.trial_used) {
+    wrap.style.borderLeftColor = '#00D4FF';
+    icon.textContent = '\u2728';
+    title.textContent = 'Try Pro free for 7 days \u2014 no card needed';
+    text.textContent = 'Unlimited scans, live website scanning, continuous monitoring and the Data Access check. '
+      + 'We do not ask for a card, and it ends by itself after 7 days.';
+    actions.innerHTML = '<button class="btn btn-primary" style="font-size:0.83rem;" onclick="startTrial(this)">Start my 7 days</button>';
+    wrap.style.display = 'block';
+    return;
+  }
+
+  wrap.style.display = 'none';
+}
+
+async function maybeAutoStartTrial() {
+  var wants = false;
+  try { wants = new URLSearchParams(window.location.search).get('trial') === '1'; } catch (e) {}
+  if (!wants) return;
+  // Clear the flag first, so a refresh is never a second attempt.
+  try { history.replaceState(null, '', window.location.pathname); } catch (e) {}
+  if (currentPlan !== 'free' || currentTrial.trial_used) {
+    renderTrialBanner();
+    return;
+  }
+  await startTrial(null);
+}
+
 async function loadProfile() {
   if (!currentUser || !sbClient) return;
   try {
-    var res = await sbClient.from('vibesafe_plans').select('plan').eq('id', currentUser.id).maybeSingle();
-    currentPlan = (res.data && res.data.plan) || 'free';
+    var res = await sbClient.from('vibesafe_plans')
+      .select('plan,trial_ends_at,trial_used,stripe_subscription_id')
+      .eq('id', currentUser.id).maybeSingle();
+    currentTrial = trialStateOf(res.data);
+    // Same rule as effectivePlan() in vibesafe-api/lib/plan.js, so the dashboard
+    // never shows Pro for a trial the API has already stopped honouring.
+    currentPlan = effectivePlanOf(res.data);
     renderPlanCard(currentPlan);
+    renderTrialBanner();
     if (typeof markProFeatures === 'function') markProFeatures();
     maybeShowAdminNav();
     if (typeof updateSampleBtnVisibility === 'function') updateSampleBtnVisibility();
@@ -1180,16 +1302,45 @@ function renderPlanCard(plan) {
   if (!nameEl) return;
 
   if (plan === 'pro' || plan === 'team') {
-    nameEl.textContent = plan === 'team' ? 'Team' : 'Pro';
+    var onTrial = currentTrial && currentTrial.on_trial;
+    nameEl.textContent = plan === 'team' ? 'Team' : (onTrial ? 'Pro \u2014 trial' : 'Pro');
     if (barFill) barFill.style.width = '100%';
-    if (metaEl) metaEl.innerHTML = '<span>Unlimited scans</span>';
-    if (upgradeBtn) {
-      upgradeBtn.textContent = plan === 'team' ? "You're on Team ✓" : "You're on Pro ✓";
-      upgradeBtn.disabled = true;
-      upgradeBtn.style.opacity = '0.6';
-      upgradeBtn.style.cursor = 'default';
-      upgradeBtn.onclick = null;
+    if (metaEl) {
+      metaEl.innerHTML = onTrial
+        ? '<span>' + currentTrial.days_left + ' day' + (currentTrial.days_left === 1 ? '' : 's') + ' left \u00B7 no card on file</span>'
+        : '<span>Unlimited scans</span>';
     }
+    if (upgradeBtn) {
+      if (onTrial) {
+        // Still the real upgrade button: this is how a trial becomes a customer.
+        upgradeBtn.textContent = 'Keep Pro \u2014 add a card';
+        upgradeBtn.disabled = false;
+        upgradeBtn.style.opacity = '';
+        upgradeBtn.style.cursor = '';
+        upgradeBtn.onclick = upgradeToPro;
+      } else {
+        upgradeBtn.textContent = plan === 'team' ? "You're on Team ✓" : "You're on Pro ✓";
+        upgradeBtn.disabled = true;
+        upgradeBtn.style.opacity = '0.6';
+        upgradeBtn.style.cursor = 'default';
+        upgradeBtn.onclick = null;
+      }
+    }
+    return;
+  }
+
+  // Free: offer the trial once, then the paid plan.
+  if (upgradeBtn) {
+    if (!currentTrial.trial_used) {
+      upgradeBtn.textContent = 'Try Pro free for 7 days';
+      upgradeBtn.onclick = function () { startTrial(upgradeBtn); };
+    } else {
+      upgradeBtn.textContent = 'Upgrade to Pro \u2192';
+      upgradeBtn.onclick = upgradeToPro;
+    }
+    upgradeBtn.disabled = false;
+    upgradeBtn.style.opacity = '';
+    upgradeBtn.style.cursor = '';
   }
 }
 
@@ -1412,6 +1563,19 @@ document.addEventListener('click', function(e) {
           </div>
         </div>
         <button onclick="dismissConnectBanner()" title="Dismiss" style="background:none;border:none;color:var(--text3);font-size:1.05rem;cursor:pointer;line-height:1;padding:2px 4px;">×</button>
+      </div>
+    </div>
+
+    <!-- Card-free 7-day Pro trial. Rendered by renderTrialBanner(); the
+         countdown is there so nobody is surprised on day 7. -->
+    <div id="trialBanner" style="display:none;grid-column:1/-1;background:var(--surface);border:1px solid rgba(16,185,129,0.32);border-left:3px solid #10B981;border-radius:12px;padding:15px 18px;margin-bottom:14px;">
+      <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;">
+        <div style="font-size:1.35rem;line-height:1.2" id="trialBannerIcon">&#10024;</div>
+        <div style="flex:1;min-width:230px">
+          <div style="font-weight:600;font-size:0.95rem;margin-bottom:3px;" id="trialBannerTitle"></div>
+          <div style="font-size:0.83rem;color:var(--text2);line-height:1.6;" id="trialBannerText"></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;" id="trialBannerActions"></div>
+        </div>
       </div>
     </div>
 

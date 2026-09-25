@@ -327,7 +327,7 @@ let mode = 'login';
   }
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (session) {
-    window.location.href = '/dashboard.html';
+    window.location.href = afterAuthDest();
     return;
   }
   // /login?mode=signup opens on the Sign up tab. The nav CTA sends people who
@@ -339,6 +339,16 @@ let mode = 'login';
     }
   } catch (e) { /* leave the default login tab */ }
 })();
+
+// Someone who clicked "Start 7-day free trial" before signing in arrives here
+// with ?trial=1. Carry it to the dashboard so the trial starts on arrival
+// instead of making them find the button again.
+function afterAuthDest() {
+  try {
+    return new URLSearchParams(window.location.search).get('trial') === '1'
+      ? '/dashboard.html?trial=1' : '/dashboard.html';
+  } catch (e) { return '/dashboard.html'; }
+}
 
 function switchTab(newMode) {
   mode = newMode;
@@ -394,7 +404,7 @@ async function handleOAuth(provider) {
   try {
     const { error } = await supabaseClient.auth.signInWithOAuth({
       provider: provider,
-      options: { redirectTo: window.location.origin + '/dashboard.html' }
+      options: { redirectTo: window.location.origin + afterAuthDest() }
     });
     if (error) throw error;
   } catch (err) {
@@ -451,7 +461,7 @@ async function handleReset() {
     const { error } = await supabaseClient.auth.updateUser({ password: password });
     if (error) throw error;
     showMsg('Password updated! Redirecting to your dashboard...', 'success');
-    setTimeout(function() { window.location.href = '/dashboard.html'; }, 1500);
+    setTimeout(function() { window.location.href = afterAuthDest(); }, 1500);
   } catch (err) {
     showMsg(err.message || 'Could not update password. Please request a new reset link.', 'error');
     btnText.textContent = 'Set new password';
@@ -514,7 +524,7 @@ async function handleAuth() {
         setTimeout(function() { switchTab('login'); }, 3000);
       } else {
         showMsg('Account created! Redirecting...', 'success');
-        setTimeout(function() { window.location.href = '/dashboard.html'; }, 1000);
+        setTimeout(function() { window.location.href = afterAuthDest(); }, 1000);
       }
     } else {
       const { data, error } = await supabaseClient.auth.signInWithPassword({
@@ -523,7 +533,7 @@ async function handleAuth() {
       });
       if (error) throw error;
       showMsg('Signed in! Redirecting...', 'success');
-      setTimeout(function() { window.location.href = '/dashboard.html'; }, 800);
+      setTimeout(function() { window.location.href = afterAuthDest(); }, 800);
     }
   } catch (err) {
     let msg = err.message || 'Something went wrong. Please try again.';

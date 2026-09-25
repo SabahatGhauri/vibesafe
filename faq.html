@@ -35,7 +35,7 @@
 {"@type":"Question","name":"Do I need to know how to code to use VibeSafe?","acceptedAnswer":{"@type":"Answer","text":"No. Every issue is explained in plain English, and the auto-fix button applies the change for you after you review the before-and-after diff."}},
 {"@type":"Question","name":"What languages and frameworks does VibeSafe support?","acceptedAnswer":{"@type":"Answer","text":"JavaScript, TypeScript, Python, Java, and .NET/C#, including frameworks like React, Next.js, Flask, FastAPI, Django, and Spring Boot. Mixed-language projects are auto-detected."}},
 {"@type":"Question","name":"What kinds of security vulnerabilities does VibeSafe find?","acceptedAnswer":{"@type":"Answer","text":"Exposed secrets, SQL injection, cross-site scripting (XSS), insecure authentication, path traversal, debug mode left on in production, and missing HTTPS enforcement."}},
-{"@type":"Question","name":"Is VibeSafe really free? What's the catch?","acceptedAnswer":{"@type":"Answer","text":"Yes — the free plan includes 10 scans per month with full vulnerability detection and plain-English explanations, no credit card required. Pro adds unlimited scans, one-click auto-fix, and GitHub integration."}},
+{"@type":"Question","name":"Is VibeSafe really free? What's the catch?","acceptedAnswer":{"@type":"Answer","text":"Yes — the free plan includes 10 scans per month with full vulnerability detection and plain-English explanations, no credit card required. Pro adds unlimited scans, one-click auto-fix, and GitHub integration."}},{"@type":"Question","name":"Do I need a card to try Pro?","acceptedAnswer":{"@type":"Answer","text":"No. Pressing Start 7-day free trial switches Pro on immediately with no card details, so nothing can be charged and there is nothing to cancel. After 7 days the account returns to the free plan by itself, and you only add a card if you want to keep Pro at $29 per month. One trial per account."}},
 {"@type":"Question","name":"Is my code safe with VibeSafe? Do you store it?","acceptedAnswer":{"@type":"Answer","text":"Your code is scanned in memory and never stored permanently. VibeSafe doesn't train AI models on your code or share it with third parties. Only your scan results and safety score are saved to your account."}},
 {"@type":"Question","name":"What if VibeSafe misses a vulnerability?","acceptedAnswer":{"@type":"Answer","text":"No security tool catches every vulnerability. VibeSafe focuses on the most common, most dangerous issues in AI-generated code. For high-security applications, combine VibeSafe with a professional security audit."}}
 ]}
@@ -736,7 +736,7 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
         </div>
       </div>
       <div class="faq-a">
-        <strong>Yes, genuinely free.</strong> No credit card required. No trial period. The free plan gives you:<br><br>
+        <strong>Yes, genuinely free.</strong> No credit card required, and the free plan does not expire. The free plan gives you:<br><br>
         <ul>
           <li>10 scans per month</li>
           <li>Full security vulnerability detection</li>
@@ -744,6 +744,24 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
           <li>Basic safety score</li>
         </ul>
         The catch: you can't auto-fix on the free plan (you see the fix, but apply it manually) and no GitHub integration. That's what Pro is for — $29/month, unlimited scans, one-click auto-fix, everything.
+      </div>
+    </div>
+
+    <div class="faq-item" data-cat="pricing">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">Do I need a card to try Pro?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-pricing">Pricing</span>
+          <span class="faq-chevron">&#9654;</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        <strong>No.</strong> Press &ldquo;Start 7-day free trial&rdquo; and Pro switches on straight away &mdash; unlimited scans,
+        live website scanning, continuous monitoring and the Data Access check. We never ask for card details to start it,
+        so there is nothing to cancel and nothing can be charged by mistake.<br><br>
+        After 7 days your account goes back to the free plan on its own. We email you two days before the end and again when
+        it finishes, and every scan you ran stays in your dashboard. If you want to keep Pro, that is the point where you
+        add a card &mdash; $29/month, cancel anytime. One trial per account.
       </div>
     </div>
 
