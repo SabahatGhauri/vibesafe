@@ -2725,8 +2725,11 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ── STRIPE CHECKOUT (Payment Links) ──
+// pro_monthly was retired in Stripe and its old link now answers
+// "The link is no longer active". Until a replacement link exists, the monthly
+// button must not send anyone to a dead checkout — see startCheckout below.
 var STRIPE_LINKS = {
-  pro_monthly:  'https://buy.stripe.com/00w8wQgCAb6N85Jdblg3604',
+  pro_monthly:  null,
   pro_annual:   'https://buy.stripe.com/7sY3cweus3Elfyb1sDg3603',
   team_monthly: 'https://buy.stripe.com/5kQ7sMbig1wd2Lp0ozg3602',
   team_annual:  'https://buy.stripe.com/bJe5kE1HGfn35XB8V5g3601'
@@ -2735,13 +2738,25 @@ var STRIPE_LINKS = {
 function startCheckout(plan) {
   // vsIsAnnual is set by the billing toggle (true = annual, false = monthly)
   var billing = (typeof vsIsAnnual !== 'undefined' && vsIsAnnual) ? 'annual' : 'monthly';
-  var key = plan + '_' + billing;
-  var link = STRIPE_LINKS[key];
-  if (link) {
-    window.location.href = link;
-  } else {
-    window.location.href = '/login.html';
+  var link = STRIPE_LINKS[plan + '_' + billing];
+  if (link) { window.location.href = link; return; }
+
+  // No working link for this combination. Say so plainly and offer the paths
+  // that do work, rather than dropping the customer on a dead Stripe page.
+  var annual = STRIPE_LINKS[plan + '_annual'];
+  var msg = document.getElementById('checkoutFallback');
+  if (!msg) {
+    msg = document.createElement('div');
+    msg.id = 'checkoutFallback';
+    msg.style.cssText = 'position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:9999;max-width:460px;'
+      + 'background:#111827;border:1px solid rgba(245,158,11,0.4);border-radius:12px;padding:16px 18px;'
+      + 'box-shadow:0 12px 40px rgba(0,0,0,0.5);color:#CBD5E1;font-size:0.88rem;line-height:1.6;';
+    document.body.appendChild(msg);
   }
+  msg.innerHTML = 'Monthly checkout is being updated right now. '
+    + (annual ? '<a href="' + annual + '" style="color:#00D4FF;font-weight:600;">Start annual instead (save 25%)</a> or e' : 'E')
+    + 'mail <a href="mailto:contact@vibesafe.info" style="color:#00D4FF;">contact@vibesafe.info</a> and we will set you up on monthly today.'
+    + ' <button onclick="this.parentElement.remove()" style="background:none;border:none;color:#64748B;cursor:pointer;font-size:1.1rem;float:right;line-height:1;">&times;</button>';
 }
 
 // ── LEAD CAPTURE ──

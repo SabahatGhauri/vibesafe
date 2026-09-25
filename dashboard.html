@@ -1080,11 +1080,23 @@ const FREE_SCAN_LIMIT = 10;
 })();
 
 // ── PLAN / BILLING ──
-const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/00w8wQgCAb6N85Jdblg3604';
+// The monthly Pro link was retired in Stripe and now answers "The link is no
+// longer active", so upgrading from here used to open a dead page. Until a
+// replacement exists, fall back to the annual link, which works.
+const STRIPE_PAYMENT_LINK = null;
+const STRIPE_PAYMENT_LINK_ANNUAL = 'https://buy.stripe.com/7sY3cweus3Elfyb1sDg3603';
 
 function upgradeToPro() {
   if (!currentUser) return;
-  var url = STRIPE_PAYMENT_LINK + '?client_reference_id=' + encodeURIComponent(currentUser.id);
+  var link = STRIPE_PAYMENT_LINK || STRIPE_PAYMENT_LINK_ANNUAL;
+  if (!link) {
+    showToast('Checkout is being updated — email contact@vibesafe.info and we will upgrade you today', 'error');
+    return;
+  }
+  if (!STRIPE_PAYMENT_LINK) {
+    showToast('Monthly checkout is being updated — opening annual (save 25%). Prefer monthly? Email contact@vibesafe.info', 'info');
+  }
+  var url = link + '?client_reference_id=' + encodeURIComponent(currentUser.id);
   window.open(url, '_blank');
 }
 
