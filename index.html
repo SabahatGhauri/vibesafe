@@ -2725,11 +2725,11 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ── STRIPE CHECKOUT (Payment Links) ──
-// pro_monthly was retired in Stripe and its old link now answers
-// "The link is no longer active". Until a replacement link exists, the monthly
-// button must not send anyone to a dead checkout — see startCheckout below.
+// startCheckout below still guards against a null link: if a payment link is
+// ever retired again, the monthly button explains itself instead of opening a
+// dead Stripe page (which is what happened to the previous pro_monthly link).
 var STRIPE_LINKS = {
-  pro_monthly:  null,
+  pro_monthly:  'https://buy.stripe.com/3cIbJ25XW6Qx99Nc7hg3608',
   pro_annual:   'https://buy.stripe.com/7sY3cweus3Elfyb1sDg3603',
   team_monthly: 'https://buy.stripe.com/5kQ7sMbig1wd2Lp0ozg3602',
   team_annual:  'https://buy.stripe.com/bJe5kE1HGfn35XB8V5g3601'

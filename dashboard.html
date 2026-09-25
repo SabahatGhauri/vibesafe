@@ -1080,10 +1080,10 @@ const FREE_SCAN_LIMIT = 10;
 })();
 
 // ── PLAN / BILLING ──
-// The monthly Pro link was retired in Stripe and now answers "The link is no
-// longer active", so upgrading from here used to open a dead page. Until a
-// replacement exists, fall back to the annual link, which works.
-const STRIPE_PAYMENT_LINK = null;
+// The previous monthly link was retired in Stripe and answered "The link is no
+// longer active", so this button opened a dead page. Replaced 2026-09-25. The
+// annual fallback below stays as a safety net if a link is ever retired again.
+const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/3cIbJ25XW6Qx99Nc7hg3608';
 const STRIPE_PAYMENT_LINK_ANNUAL = 'https://buy.stripe.com/7sY3cweus3Elfyb1sDg3603';
 
 function upgradeToPro() {
