@@ -1415,6 +1415,93 @@ function openAccountMenu(e) {
   if (menu) menu.style.display = 'block';
 }
 
+// PASSWORD
+// Accounts created with Google or GitHub have no password to confirm, so for
+// them this sets one for the first time rather than changing an existing one.
+function hasEmailPassword() {
+  var ids = (currentUser && currentUser.identities) || null;
+  // If we cannot tell what the account has, assume there is a password and ask
+  // for it. Guessing the other way would let anyone at an unlocked laptop set a
+  // new password without proving they know the old one.
+  if (!ids || !ids.length) return true;
+  return ids.some(function (i) { return i.provider === 'email'; });
+}
+
+function pwdSay(text, kind) {
+  var el = document.getElementById('pwdMsg');
+  if (!el) return;
+  if (!text) { el.style.display = 'none'; return; }
+  el.textContent = text;
+  el.style.color = kind === 'error' ? '#FCA5A5' : 'var(--green)';
+  el.style.display = 'block';
+}
+
+function openPasswordModal() {
+  var menu = document.getElementById('userMenu');
+  if (menu) menu.style.display = 'none';
+  var setting = !hasEmailPassword();
+  document.getElementById('pwdTitle').textContent = setting ? 'Set a password' : 'Change password';
+  document.getElementById('pwdSub').textContent = setting
+    ? 'You signed in with Google or GitHub, so this account has no password yet. Setting one lets you also sign in with your email address. Your existing sign-in keeps working either way.'
+    : 'Choose a new password for your account. You will stay signed in here.';
+  document.getElementById('pwdCurrentGroup').style.display = setting ? 'none' : 'block';
+  document.getElementById('pwdForm').reset();
+  pwdSay('');
+  document.getElementById('pwdModal').classList.add('open');
+  setTimeout(function () {
+    var first = document.getElementById(setting ? 'pwdNew' : 'pwdCurrent');
+    if (first) first.focus();
+  }, 60);
+}
+
+function closePasswordModal() {
+  document.getElementById('pwdModal').classList.remove('open');
+  // Never leave a typed password sitting in the DOM.
+  document.getElementById('pwdForm').reset();
+  pwdSay('');
+}
+
+async function savePassword(e) {
+  if (e) e.preventDefault();
+  var current = document.getElementById('pwdCurrent').value;
+  var next = document.getElementById('pwdNew').value;
+  var confirmPw = document.getElementById('pwdConfirm').value;
+  var needsCurrent = hasEmailPassword();
+
+  if (needsCurrent && !current) { pwdSay('Enter your current password.', 'error'); return; }
+  if (next.length < 8) { pwdSay('Your new password needs to be at least 8 characters.', 'error'); return; }
+  if (next !== confirmPw) { pwdSay('The two new passwords do not match.', 'error'); return; }
+
+  var btn = document.getElementById('pwdSaveBtn');
+  btn.disabled = true;
+  var label = btn.textContent;
+  btn.textContent = 'Saving...';
+  pwdSay('');
+
+  try {
+    // Check the current password before changing it, so someone who walks up to
+    // an unlocked laptop cannot lock the owner out of their own account.
+    if (needsCurrent) {
+      var check = await sbClient.auth.signInWithPassword({ email: currentUser.email, password: current });
+      if (check.error) {
+        pwdSay('That current password is not correct.', 'error');
+        btn.disabled = false; btn.textContent = label;
+        return;
+      }
+    }
+    var res = await sbClient.auth.updateUser({ password: next });
+    if (res.error) throw res.error;
+    document.getElementById('pwdForm').reset();
+    pwdSay('Password updated.', 'success');
+    showToast('Password updated', 'success');
+    setTimeout(closePasswordModal, 1200);
+  } catch (err) {
+    pwdSay(err.message || 'Could not update the password. Please try again.', 'error');
+  }
+  btn.disabled = false;
+  btn.textContent = label;
+}
+
 async function handleLogout() {
   await sbClient.auth.signOut();
   window.location.href = '/login.html';
@@ -1463,6 +1550,9 @@ document.addEventListener('click', function(e) {
           <div style="font-size:0.72rem;color:var(--text3)">Signed in as</div>
           <div style="font-size:0.82rem;color:var(--text);font-weight:500;word-break:break-all" id="userEmail">loading...</div>
         </div>
+        <button id="pwdMenuItem" onclick="openPasswordModal()" style="width:100%;text-align:left;padding:8px 12px;background:none;border:none;color:var(--text2);font-size:0.82rem;cursor:pointer;border-radius:6px;font-family:'Inter','Inter Fallback',sans-serif" onmouseover="this.style.background='var(--surface3)'" onmouseout="this.style.background='none'">
+          Change password
+        </button>
         <button onclick="handleLogout()" style="width:100%;text-align:left;padding:8px 12px;background:none;border:none;color:var(--text2);font-size:0.82rem;cursor:pointer;border-radius:6px;font-family:'Inter','Inter Fallback',sans-serif" onmouseover="this.style.background='var(--surface3)'" onmouseout="this.style.background='none'">
           Sign out
         </button>
@@ -2183,6 +2273,38 @@ document.addEventListener('click', function(e) {
 <div class="toast-wrap" id="toastWrap"></div>
 
 <!-- LOW-SCORE "WHY" POPUP -->
+<!-- Change password. Until this existed, a signed-in customer had to sign out
+     and go through "Forgot password" to change theirs. -->
+<div class="vs-modal-overlay" id="pwdModal" onclick="if(event.target===this)closePasswordModal()">
+  <div class="vs-modal" style="max-width:420px">
+    <button class="vs-modal-close" onclick="closePasswordModal()" aria-label="Close">&times;</button>
+    <div class="vs-modal-head">
+      <span class="vs-modal-ico">&#128274;</span>
+      <span class="vs-modal-title" id="pwdTitle">Change password</span>
+    </div>
+    <div class="vs-modal-sub" id="pwdSub">Choose a new password for your account.</div>
+    <form id="pwdForm" onsubmit="savePassword(event)" autocomplete="off">
+      <div id="pwdCurrentGroup" style="margin-bottom:12px">
+        <label for="pwdCurrent" style="display:block;font-size:0.76rem;color:var(--text3);margin-bottom:6px">Current password</label>
+        <input type="password" id="pwdCurrent" autocomplete="current-password" style="width:100%;padding:11px 12px;border-radius:9px;background:var(--bg2);border:1px solid var(--border2);color:var(--text);font-size:0.88rem;font-family:inherit">
+      </div>
+      <div style="margin-bottom:12px">
+        <label for="pwdNew" style="display:block;font-size:0.76rem;color:var(--text3);margin-bottom:6px">New password</label>
+        <input type="password" id="pwdNew" autocomplete="new-password" style="width:100%;padding:11px 12px;border-radius:9px;background:var(--bg2);border:1px solid var(--border2);color:var(--text);font-size:0.88rem;font-family:inherit">
+      </div>
+      <div style="margin-bottom:4px">
+        <label for="pwdConfirm" style="display:block;font-size:0.76rem;color:var(--text3);margin-bottom:6px">Confirm new password</label>
+        <input type="password" id="pwdConfirm" autocomplete="new-password" style="width:100%;padding:11px 12px;border-radius:9px;background:var(--bg2);border:1px solid var(--border2);color:var(--text);font-size:0.88rem;font-family:inherit">
+      </div>
+      <div id="pwdMsg" style="display:none;font-size:0.8rem;line-height:1.5;margin-top:12px"></div>
+      <div class="vs-modal-actions">
+        <button type="button" class="vs-modal-btn ghost" onclick="closePasswordModal()">Cancel</button>
+        <button type="submit" class="vs-modal-btn primary" id="pwdSaveBtn">Save password</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <div class="vs-modal-overlay" id="lowScoreModal" onclick="if(event.target===this)closeLowScoreModal()">
   <div class="vs-modal" id="lowScoreModalCard"></div>
 </div>
