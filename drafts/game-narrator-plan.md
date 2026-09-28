@@ -232,3 +232,44 @@ Script (plain English) ──► LLM turns each step into bot actions ──► 
 3. Replay Mod installed in the client (with Fabric).
 4. A first 3-scene script (like the example above).
 5. First milestone: bot runs the 3 scenes from fixed commands, recorded, with Piper narration merged into one MP4.
+
+---
+
+## 10. YouTube goal
+
+The end product is gameplay videos for a YouTube channel. This adds steps after assembly.
+
+### Extra pipeline steps
+
+```
+final.mp4 ──► Thumbnail ──► Title, description, chapters, tags ──► Shorts cut ──► Upload (private) ──► Review ──► Publish
+```
+
+- **Thumbnail:** grab the best frame from the key scene, add large text; 1280x720.
+- **Metadata from the script:** title, description and chapter timestamps generated from the scene timeline (chapters need a 0:00 first entry).
+- **Shorts:** 9:16 crop of the best scene with burned-in subtitles.
+- **Upload:** YouTube Data API v3, always as **private** first; publish only after a human watch-through. The API has a daily quota.
+- **Format:** 1080p (or 1440p) at 60 fps, H.264, loudness around -14 LUFS.
+
+### Rules to stay monetizable (check current YouTube policy before launch)
+
+- **Avoid "mass-produced" content.** YouTube demonetizes channels that upload repetitive, low-effort, templated videos. Each video needs a real story, varied scripts and a human creative touch; don't auto-publish many near-identical videos.
+- **Disclose AI where required.** YouTube Studio asks about realistic altered or synthetic content. Tick it when it applies, especially for a cloned voice; never clone a real person's voice without permission.
+- **Commercial-safe voices only:** Kokoro (Apache 2.0), Piper voices whose license allows commercial use, or a paid TTS. Not XTTS-v2 (non-commercial license).
+- **Music:** only royalty-free or YouTube Audio Library tracks, or Content ID claims will take the revenue.
+- **Game permission:** Mojang's usage guidelines allow monetized Minecraft videos; check each new game's video policy before using it.
+- **Monetization thresholds (YouTube Partner Program):** roughly 1,000 subscribers plus 4,000 public watch hours in 12 months, or 10M Shorts views in 90 days. Confirm the current numbers.
+
+### Channel ideas that suit this system
+
+- Minecraft story series with a recurring character (survival day-by-day, "100 days" style).
+- Challenge videos ("building a house with only X").
+- Build timelapses with narration.
+- Shorts made from the best moment of each long video.
+
+### Weekly rhythm (suggested)
+
+1. Write 1–2 scripts (Claude can draft, you edit for story and humor).
+2. Run, record and assemble.
+3. Watch through, fix, pick the thumbnail.
+4. Upload private, then schedule.
