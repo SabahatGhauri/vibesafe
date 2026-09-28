@@ -2,6 +2,8 @@
 name: checkpoint
 description: Save the current session's state to .claude/memory/NOTES.md so it survives compaction and new sessions. Use when the user says /checkpoint, "save progress", "remember this", or before a long task switches direction.
 ---
+<!-- installed by claude-memory-gateway -->
+
 
 Update `.claude/memory/NOTES.md` so a fresh Claude with no memory of this
 conversation could pick the work up correctly.

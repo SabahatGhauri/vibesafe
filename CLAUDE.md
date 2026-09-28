@@ -19,12 +19,9 @@ handle it automatically:
 - If the context after compaction doesn't answer a question, read NOTES.md and
   `git log` before asking the user. Never guess at what was agreed.
 
-To get the same memory in every repo, run `bash .claude/install-global.sh`
-once on a machine. For cloud sessions, put these lines in the environment's
-setup script (cloud environment menu in the session title bar, then Edit):
-
-    git clone --depth 1 https://github.com/sabahatghauri/vibesafe /tmp/vibesafe-gw
-    bash /tmp/vibesafe-gw/.claude/install-global.sh
+To get the same memory in every repo, see `tools/memory-gateway/README.md`
+(one self-contained installer). After editing the hook or the checkpoint
+skill, run `tools/memory-gateway/build.sh` then `tools/memory-gateway/test.sh`.
 
 ## Conventions
 

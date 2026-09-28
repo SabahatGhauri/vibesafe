@@ -1,3 +1,5 @@
-# Claude session memory is for development only; never publish it.
+# Development-only files: Claude session memory and internal tools.
+# Never publish them on vibesafe.info.
 CLAUDE.md
 .claude
+tools
