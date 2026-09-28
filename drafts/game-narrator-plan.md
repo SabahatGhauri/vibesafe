@@ -173,3 +173,62 @@ Claude estimate assumes ~300 steps per 10-min video; each step ≈ 1 screenshot 
 - **Premium (~$300 once + $10–25/video):** Opus 5.5 player, XTTS on a GPU (personal use) or paid commercial TTS for monetized videos.
 
 **Recommended start:** phases 1–4 with scripted input ($0, proves the pipeline), then add a Claude player on Haiku/Sonnet and measure real token use before scaling.
+
+---
+
+## 9. Minecraft track (first target)
+
+The script drives the character directly through a bot, not by clicking on screenshots.
+
+```
+Script (plain English) ──► LLM turns each step into bot actions ──► Mineflayer bot acts in the world
+        │                                                                  │
+        └──► narration ──► TTS ──────────────► merged at the end ◄─────────┘ recorded video
+```
+
+- **Mineflayer** (Node.js, Minecraft Java Edition): joins the world as a player; walk, pathfind, mine, craft, build, fight, chat, follow, look.
+- **LLM (e.g. Claude)** turns a step like "chop a tree and build a small hut" into bot calls (`goto`, `dig`, `craft`, `place`).
+- **Server commands** set up scenes deterministically: `/time set night`, `/weather rain`, `/tp`, `/summon zombie`.
+- Build on existing LLM + Mineflayer projects (Voyager, Mindcraft) instead of from scratch.
+
+### Example script
+
+```yaml
+- scene: morning
+  setup: ["/time set day", "/tp bot 100 64 200"]
+  action: "Walk to the forest and chop 5 oak logs"
+  narration: "A new day begins. First job: wood."
+
+- scene: build
+  action: "Build a 5x5 wooden hut with a door"
+  narration: "Time to build a shelter before night falls."
+
+- scene: night_attack
+  setup: ["/time set night", "/summon zombie ~5 ~ ~"]
+  action: "Fight the zombie with the sword"
+  narration: "And here they come..."
+```
+
+### Recording
+
+| Option | Quality | How |
+|---|---|---|
+| Replay Mod (best) | Cinematic | Record the session, render with smooth camera paths |
+| Spectator client + OBS | Good | Your client `/spectate`s the bot; OBS records |
+| prismarine-viewer | Basic | Bot's view in a browser; simplified look |
+
+### Limits
+
+- Good at clear tasks (go, mine, build, fight, follow, chat); complex builds are more reliable from a schematic (WorldEdit) than a vague description.
+- No real "acting"; use camera angles and narration for drama.
+- Steps can fail (falls, getting lost): retry the scene or re-teleport.
+- Java Edition only, on your own local server/world, not public servers.
+- Cost: roughly $0.50–3 per video on Sonnet 5 (estimate; no screenshots sent), $0 for scenes written as fixed commands.
+
+### Day-one checklist
+
+1. Minecraft Java Edition installed and a local server (Paper or vanilla) running in offline mode.
+2. Node.js 18+ and Python 3.11+, FFmpeg, OBS.
+3. Replay Mod installed in the client (with Fabric).
+4. A first 3-scene script (like the example above).
+5. First milestone: bot runs the 3 scenes from fixed commands, recorded, with Piper narration merged into one MP4.
