@@ -11,6 +11,3 @@
 *.pem
 *.key
 .vercel
-
-# Claude memory gateway: per-session snapshot holds raw user messages
-.claude/memory/last-snapshot.md

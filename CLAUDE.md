@@ -6,17 +6,25 @@ straight from this repo (no build step). The scanner API lives elsewhere
 
 ## Session memory
 
-Long sessions get compacted and lose detail. To stop that:
+Long sessions get compacted and lose detail. Hooks in `.claude/settings.json`
+handle it automatically:
 
-- `.claude/memory/NOTES.md` holds durable handoff notes. A SessionStart hook
-  loads it into context automatically, including right after compaction.
-- Run `/checkpoint` (or update NOTES.md yourself) after any decision, finished
-  task or change of direction.
-- Before compaction a hook saves the user's recent requests and the git state
-  to `.claude/memory/last-snapshot.md` (not committed), and they come back
-  after compaction.
+- **Session start and after compaction:** `.claude/memory/NOTES.md` (durable
+  handoff notes), the pre-compaction snapshot of the user's recent requests,
+  and the git state are loaded into context.
+- **Before compaction:** the user's recent requests and git state are saved to
+  `~/.claude/memory-gateway/` (outside the repo, never committed).
+- **When Claude commits work without touching NOTES.md**, it is asked once to
+  update the notes before finishing. `/checkpoint` does the same on demand.
 - If the context after compaction doesn't answer a question, read NOTES.md and
   `git log` before asking the user. Never guess at what was agreed.
+
+To get the same memory in every repo, run `bash .claude/install-global.sh`
+once on a machine. For cloud sessions, put these lines in the environment's
+setup script (cloud environment menu in the session title bar, then Edit):
+
+    git clone --depth 1 https://github.com/sabahatghauri/vibesafe /tmp/vibesafe-gw
+    bash /tmp/vibesafe-gw/.claude/install-global.sh
 
 ## Conventions
 
