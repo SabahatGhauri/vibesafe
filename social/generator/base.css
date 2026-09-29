@@ -1,0 +1,50 @@
+/* Shared brand styles for social templates — colours mirror /theme.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@600;700&display=block');
+
+:root {
+  --bg: #080C18; --bg2: #0D1220; --surface: #111827; --surface2: #1A2438;
+  --border: #253650;
+  --cyan: #00D4FF; --violet: #7C3AED; --green: #10B981; --amber: #F59E0B; --red: #EF4444;
+  --text: #F1F5F9; --text2: #94A3B8; --text3: #64748B;
+  --display: 'Space Grotesk', 'Inter', 'DejaVu Sans', sans-serif;
+  --body: 'Inter', 'DejaVu Sans', sans-serif;
+  --mono: 'JetBrains Mono', 'DejaVu Sans Mono', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--text); font-family: var(--body); overflow: hidden; }
+
+.canvas {
+  position: relative; overflow: hidden;
+  background:
+    radial-gradient(ellipse 70% 45% at 85% 0%, rgba(124,58,237,.30), transparent 70%),
+    radial-gradient(ellipse 70% 45% at 0% 100%, rgba(0,212,255,.20), transparent 70%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+}
+.canvas::before { /* faint grid */
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%);
+}
+.grad { background: linear-gradient(90deg, var(--cyan), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.brand { display: flex; align-items: center; gap: .45em; font-family: var(--display); font-weight: 700; }
+.brand img { width: 1.6em; height: 1.6em; border-radius: .35em; }
+.chip {
+  display: inline-flex; align-items: center; gap: .4em;
+  padding: .45em .95em; border-radius: 999px;
+  background: rgba(255,255,255,.05); border: 1px solid var(--border); color: var(--text);
+  font-weight: 600;
+}
+.code {
+  font-family: var(--mono); background: #0A0F1C; border: 1px solid var(--border); border-radius: 18px;
+  box-shadow: 0 30px 80px rgba(0,0,0,.55), 0 0 60px rgba(0,212,255,.08);
+}
+.code-top { display: flex; align-items: center; gap: 10px; padding: 18px 22px; border-bottom: 1px solid var(--border); color: var(--text2); }
+.code-top i { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+.cta {
+  display: inline-block; padding: .7em 1.4em; border-radius: 16px; font-weight: 800; color: #04111d;
+  background: linear-gradient(90deg, var(--cyan), #6aa8ff 55%, var(--violet));
+  box-shadow: 0 12px 40px rgba(0,212,255,.35);
+}
