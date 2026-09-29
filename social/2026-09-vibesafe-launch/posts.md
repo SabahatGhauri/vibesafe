@@ -35,10 +35,19 @@ Links use UTM tags so you can see which platform sends visitors.
 
 ## 2. Short video (YouTube Shorts · TikTok · Instagram Reels)
 
-**Video:** `short-1080x1920.mp4` (vertical 9:16, 27 s, no voiceover so it works muted; add a trending sound inside each app)
+**Video:** `short-1080x1920.mp4` (vertical 9:16, 31 s, with voiceover, background music and sound effects; on-screen text still carries the message when muted)
+
+**Voiceover** (Kokoro TTS, free for commercial use):
+1. "Built your app with AI? It works, and the demo looks great. But is it safe to ship?"
+2. "Your AI tool might have put your live Stripe key in the frontend, where anyone can use it."
+3. "Three mistakes AI tools ship all the time: exposed API keys, Supabase tables anyone can read, and admin pages with no login."
+4. "VibeSafe finds them in seconds, and explains every fix in plain English."
+5. "Scan your app free, no signup, at vibesafe dot info."
+
+The music and effects are generated in code, so there's nothing to license. If you add a trending sound in TikTok/Reels for reach, keep it at low volume under the voice (both apps have a volume slider).
 **Thumbnail / cover:** `short-cover-1080x1920.png`
 
-The images and video are made by `social/generator/render.py` (free: headless Chromium + ffmpeg). Edit the HTML templates next to it and re-run to change them.
+The images and video are made by `social/generator/render.py` (free: headless Chromium, ffmpeg and Kokoro TTS). Edit `NARRATION` in that file to change the voiceover. Edit the HTML templates next to it and re-run to change them.
 
 **On-screen script** (already in the video):
 1. "Built your app with AI?" — Lovable · Bolt · Cursor · Replit · v0
