@@ -1,5 +1,5 @@
 /* Shared brand styles for social templates — colours mirror /theme.css */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@600;700&display=block');
+@import url('fonts/fonts.css');
 
 :root {
   --bg: #080C18; --bg2: #0D1220; --surface: #111827; --surface2: #1A2438;

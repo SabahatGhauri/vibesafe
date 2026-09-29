@@ -6,9 +6,9 @@ HTML templates in this folder, ffmpeg encodes them into an H.264 MP4.
 
     pip install playwright && python3 social/generator/render.py [out_dir]
 
-Needs ffmpeg on PATH. Output defaults to social/2026-09-vibesafe-launch/.
+Uses ffmpeg from PATH, or `pip install imageio-ffmpeg` for a static build. Output defaults to social/2026-09-vibesafe-launch/.
 """
-import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -19,6 +19,15 @@ HERE = Path(__file__).resolve().parent
 ARGS = [a for a in sys.argv[1:] if not a.startswith("--")]
 OUT = Path(ARGS[0]) if ARGS else HERE.parent / "2026-09-vibesafe-launch"
 FPS = 30
+
+
+def ffmpeg_exe():
+    """ffmpeg on PATH, else the static build from `pip install imageio-ffmpeg`."""
+    found = shutil.which("ffmpeg")
+    if found:
+        return found
+    import imageio_ffmpeg
+    return imageio_ffmpeg.get_ffmpeg_exe()
 
 STILLS = [
     ("square.html", 1200, 1200, "facebook-1200x1200.png"),
@@ -31,9 +40,6 @@ def launch(p):
     exe = "/opt/pw-browsers/chromium"
     if Path(exe).is_file():
         kwargs["executable_path"] = exe
-    proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy")
-    if proxy:  # lets Chromium fetch Google Fonts through the environment's proxy
-        kwargs["proxy"] = {"server": proxy}
     return p.chromium.launch(**kwargs)
 
 
@@ -59,7 +65,7 @@ def render_short(browser):
     frames = int(duration * FPS)
     out = OUT / "short-1080x1920.mp4"
     ffmpeg = subprocess.Popen(
-        ["ffmpeg", "-y", "-loglevel", "error",
+        [ffmpeg_exe(), "-y", "-loglevel", "error",
          "-f", "image2pipe", "-framerate", str(FPS), "-c:v", "mjpeg", "-i", "-",
          # silent stereo track: some apps reject video-only uploads
          "-f", "lavfi", "-i", "anullsrc=channel_layout=stereo:sample_rate=44100",

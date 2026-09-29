@@ -35,7 +35,10 @@ Links use UTM tags so you can see which platform sends visitors.
 
 ## 2. Short video (YouTube Shorts · TikTok · Instagram Reels)
 
-**Video:** `short-1080x1920.mp4` (vertical, ~27 s, no voiceover so it works muted; add a trending sound inside each app)
+**Video:** `short-1080x1920.mp4` (vertical 9:16, 27 s, no voiceover so it works muted; add a trending sound inside each app)
+**Thumbnail / cover:** `short-cover-1080x1920.png`
+
+The images and video are made by `social/generator/render.py` (free: headless Chromium + ffmpeg). Edit the HTML templates next to it and re-run to change them.
 
 **On-screen script** (already in the video):
 1. "Built your app with AI?" — Lovable · Bolt · Cursor · Replit · v0
