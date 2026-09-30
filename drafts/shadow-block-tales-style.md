@@ -27,6 +27,8 @@ Read this before making any video for the channel. It is also fed to the app's "
 ## Story series so far
 - **Glitch** (long video + Short): the faceless white entity you bring home; the world corrupts.
 - **Copycats** (Short): villagers mimic you, become hollow-eyed copies of you, and swap places with you ("WHICH ONE IS ME?"). Tools: `skin: steve_hollow`, `fx.chat` (in-game chat lines), blink jump-cuts (`fx.fade` spikes plus position jumps).
+- **Seer** (Short, a sequel to Copycats): a hollow-eyed villager whose trades predict your next moves, then offer your head. Tools: `skin: villager_hollow`, `gui: {type: trade, offers: [...]}` (villager trading screen; `head:` for player heads, `sold: true` for a red X), and `highlight: [[t, index], ...]` stepping through the offers.
+- **Planned (from YouTube Studio suggestions):** "The Chest That Warns Me Never To Place It Down" as a long video (a forbidden rule, then worse and worse consequences, like *DON'T BREAK THE WALL*). Skip "moving shadows" (the engine can't draw real shadows).
 - Next ideas from trend research (Sept 2026): a helpful thing that turns evil (the *Verity* trend), Alpha/found-footage nostalgia, testing scary seeds, "what mobs do when you log off", and "Giant Alex".
 
 ## Look (glitch-horror toolkit)
