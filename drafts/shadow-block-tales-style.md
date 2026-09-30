@@ -24,6 +24,11 @@ Read this before making any video for the channel. It is also fed to the app's "
 - The music degrades with the story: `home` → `home_stutter` (the disc skips and cuts out) → `warped` (pitched down) → `void` (purple-noise distortion).
 - Use a static burst for the scares and at the very end, then hard black.
 
+## Story series so far
+- **Glitch** (long video + Short): the faceless white entity you bring home; the world corrupts.
+- **Copycats** (Short): villagers mimic you, become hollow-eyed copies of you, and swap places with you ("WHICH ONE IS ME?"). Tools: `skin: steve_hollow`, `fx.chat` (in-game chat lines), blink jump-cuts (`fx.fade` spikes plus position jumps).
+- Next ideas from trend research (Sept 2026): a helpful thing that turns evil (the *Verity* trend), Alpha/found-footage nostalgia, testing scary seeds, "what mobs do when you log off", and "Giant Alex".
+
 ## Look (glitch-horror toolkit)
 - The entity is white and faceless (`skin: glitch`, `glow: 0.8`, `float`, `still`), with head tilts. The mouth reveal uses `glitch_mouth`.
 - Corruption visuals: missing-texture magenta/black blocks (`cubes`), a grey grid sky (`fx.grid`), villagers without skins (`skin: missing`), a chest full of red `null` items, and void holes (break y 58–63).
