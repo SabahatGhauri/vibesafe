@@ -29,6 +29,7 @@ Read this before making any video for the channel. It is also fed to the app's "
 - **Copycats** (Short): villagers mimic you, become hollow-eyed copies of you, and swap places with you ("WHICH ONE IS ME?"). Tools: `skin: steve_hollow`, `fx.chat` (in-game chat lines), blink jump-cuts (`fx.fade` spikes plus position jumps).
 - **Seer** (Short, a sequel to Copycats): a hollow-eyed villager whose trades predict your next moves, then offer your head. Tools: `skin: villager_hollow`, `gui: {type: trade, offers: [...]}` (villager trading screen; `head:` for player heads, `sold: true` for a red X), and `highlight: [[t, index], ...]` stepping through the offers.
 - **Music Box** (music Short, no narration): an original creepy lullaby (`music: music_box`, 90 bpm) with beat-synced cuts to all the monsters (Glitch, the Copycats, the Seer). Every shot is exactly one bar (2.667 s), with text-only captions and a question at the end. This format recycles the monsters and promotes the other Shorts. The music is also exported as an MP3.
+- **Myths** (long video + Short): "I Tested 20 Scary Minecraft Myths... 11 Are REAL". It's a fast myth-testing format with a counter (`fx.counter`), a myth banner (`fx.label`) and REAL/BUSTED stamps (`fx.stamp`); the Short cut is myth #20, "you're never alone in singleplayer".
 - **Planned (from YouTube Studio suggestions):** "The Chest That Warns Me Never To Place It Down" as a long video (a forbidden rule, then worse and worse consequences, like *DON'T BREAK THE WALL*). Skip "moving shadows" (the engine can't draw real shadows).
 - Next ideas from trend research (Sept 2026): a helpful thing that turns evil (the *Verity* trend), Alpha/found-footage nostalgia, testing scary seeds, "what mobs do when you log off", and "Giant Alex".
 
@@ -59,6 +60,12 @@ The first Glitch Short had 42.6% "stayed to watch", so more than half of viewers
   - Big Anton title with a magenta/cyan RGB split.
   - A small red `null` tag, a magenta/black checker stripe, and a one-line warning ("DON'T BRING IT HOME.").
 - **Text:** a 2–3 line eerie tease in first person, the video title, then a question to drive comments ("Would YOU have brought him home? 👇").
+
+## Fact-checking (myth, fact and "is it real?" videos)
+- Every REAL/BUSTED verdict must be true about the actual game. Minecraft fans correct mistakes in the comments fast, and a wrong "REAL" costs trust.
+- Scripts from other tools often make up "real code" facts, like proximity-triggered cave sounds, seed 404 pits or 16-block sculk range. Check each claim, and replace or bust anything that isn't true.
+- Keep the counter honest: count only the myths actually shown (20, not "100"), and make the final tally match the verdicts.
+- Story videos (Glitch, Copycats, Seer) are fiction and can say anything. Only "is it real?" formats need this.
 
 ## Titles and descriptions
 - **Title:** "I Adopted a 'Glitch' in Minecraft..." style (first person, ellipsis). Shorts add an emoji (😨).
