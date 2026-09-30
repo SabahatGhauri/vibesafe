@@ -67,9 +67,14 @@ The first Glitch Short had 42.6% "stayed to watch", so more than half of viewers
 - Keep the counter honest: count only the myths actually shown (20, not "100"), and make the final tally match the verdicts.
 - Story videos (Glitch, Copycats, Seer) are fiction and can say anything. Only "is it real?" formats need this.
 
-## Titles and descriptions
-- **Title:** "I Adopted a 'Glitch' in Minecraft..." style (first person, ellipsis). Shorts add an emoji (😨).
-- **Description:** 1–2 teaser lines, then hashtags: #minecraft #minecrafthorror #minecraftcreepypasta (+ #shorts for Shorts).
+## Titles and descriptions (search keywords, from YouTube Studio's tips)
+Most viewers find the channel through the Shorts feed. Search is the second way in, so every title and description carries the words people actually search for.
+- **Title:** a curiosity hook plus a searchable keyword, with "Minecraft" near the front. Put the genre in brackets at the end: "(Minecraft Horror)", "(Minecraft Creepypasta)", "(Scary Villager Trades)". Keep it under about 70 characters, with CAPS on one key word (COPYING, NEVER). Shorts add 😨.
+  - Examples: "My Minecraft Villagers Started COPYING Me… 😨 (Minecraft Horror)", "Testing 20 Scary Minecraft Myths (Herobrine, Seed 666, Far Lands) – 11 Are REAL".
+- **Keywords to use naturally:** Minecraft horror, Minecraft creepypasta, scary Minecraft, Minecraft myths, Herobrine, Minecraft villager, glitch / missing texture mob, seed, Far Lands, Warden, singleplayer. Name specific mobs, mechanics and myths, because people search for those.
+- **Description:** the first line is a keyword sentence (it shows in search): "Minecraft horror story: …". The second line adds related terms ("Scary Minecraft Short / Minecraft creepypasta"). End with **3 hashtags only**, since YouTube shows the first 3 above the title: #minecrafthorror #minecraft plus one topic tag (#minecraftcreepypasta, #minecraftmyths, #herobrine, #minecraftvillager…).
+- Never stuff keywords, and never use a keyword the video doesn't actually deliver.
+- **Hooks:** the 0:00 retention rules above (the scary thing on screen, a text question, and a glitch blip in the first 2–3 seconds) are the first thing to check on every Short, before the keywords.
 
 ## Working notes
 - The owner works on Windows.
