@@ -114,3 +114,25 @@ Shorts: "Viewed vs swiped away" should be 70–90%; under 60% means the first 1�
 - Steady slide → pacing too slow / shots too long.
 - Sudden cliff at one moment → that beat is boring or confusing; cut or move it.
 - Spikes (rewatches) → do more of what's at that timestamp.
+
+## Kids audience mode (the channel's viewers are mostly kids) — researched Oct 2026
+Top kids Minecraft channels (Maizen / JJ & Mikey, Aphmau etc.) use: a sound effect roughly every 3 s, constant zooms,
+fast cuts, bright saturated colours, characters with big reactions, and simple story drama (good guy vs scary thing).
+Keep it spooky-fun, never gory: jump scares + funny relief, no blood, no real-world violence.
+
+**Engine tools (use them every video)**
+- `grade: vivid` at script level: bright, saturated colours (horror scenes can override per shot with `fx.grade: cold` or null).
+- `fx.pop: [[t, "WHAT?! 😱", "#ffd21f"]]`: bouncy reaction text with emoji (auto "pop" sound). 1–2 per shot in Shorts, every ~5 s in long form.
+- `fx.flash: [[t, "#ff2b2b"]]`: colour flash on hits/scares (pair with a `boom`).
+- `fx.speed: 1` (or keys): speed lines for chases and reveals.
+- Sounds (`sfx` type): boom (bass drop), pop, boing, ding, riser (with `dur`), scratch (record scratch for "wait, WHAT?"), dundun (dramatic), sparkle, plus whoosh/sting/blip/thud.
+- Camera: handheld sway + automatic jolt and punch-in on every `sting`.
+
+**Rhythm**
+- Shorts: a sound or visual hit every 2–3 s; long form every 3–5 s. Never more than ~5 s of nothing new.
+- Pattern per beat: riser → boom + flash + pop text → reaction line. Use scratch before a twist ("wait...").
+- Voice: fast and excited (vo_speed 1.2+), short sentences, lots of questions ("Who did this?!").
+
+**Made for kids setting**: YouTube requires an honest "made for kids" label. If it's set to Made for kids, comments and the
+notification bell are turned off and ads aren't personalised. Decide using YouTube's own guidance (Studio → Settings → Channel → Advanced),
+not to protect comments.
