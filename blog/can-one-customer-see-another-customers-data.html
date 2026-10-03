@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google tag (gtag.js) -- Google Ads AW-18432710203 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18432710203"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18432710203');
+</script>
+<title>Can One of Your Customers See Another Customer's Data? | VibeSafe</title>
+<meta name="description" content="The quiet failure in AI-built SaaS apps: one customer can read another's rows. Why AI builders produce it, the using (true) RLS trap we found in 39 files, and three ways to find out whether your app has it.">
+<meta name="keywords" content="multi-tenant security, Supabase RLS, customer data leak, row level security, AI-built app security, data isolation, using true policy">
+<link rel="canonical" href="https://www.vibesafe.info/blog/can-one-customer-see-another-customers-data">
+<meta property="og:title" content="Can one of your customers see another customer's data?">
+<meta property="og:description" content="Your app works. Every page loads. And customer A can read customer B's rows. How to find out in three escalating checks.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/blog/can-one-customer-see-another-customers-data">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"></noscript>
+<link rel="stylesheet" href="/theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Can one of your customers see another customer's data?","description":"Why AI-built apps leak data between customers, the using (true) RLS trap found in 39 of 1,163 scanned files, and three escalating ways to test your own app.","datePublished":"2026-10-03","author":{"@type":"Organization","name":"VibeSafe"},"publisher":{"@type":"Organization","name":"VibeSafe","url":"https://www.vibesafe.info"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Inter Fallback',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,2.5rem);line-height:1.18;letter-spacing:-0.02em;margin-bottom:18px}
+.lead{font-size:1.08rem;color:var(--text2);margin-bottom:26px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;margin:38px 0 12px}
+h3{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;margin:24px 0 8px;color:var(--text)}
+p{color:var(--text2);margin-bottom:16px}
+strong{color:var(--text)}
+ul.plain{margin:0 0 18px 18px;color:var(--text2)}
+ul.plain li{margin-bottom:8px}
+code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+pre{background:#0B1120;border:1px solid var(--border2);border-radius:10px;padding:16px 18px;overflow-x:auto;margin:0 0 18px;font-size:0.82rem;line-height:1.6}
+pre code{background:none;border:none;padding:0;color:#CBD5E1}
+.quote{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--cyan);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:0 0 18px;font-style:italic}
+.finding{border:1px solid var(--border2);border-left-width:3px;border-radius:10px;padding:12px 16px;margin-bottom:10px}
+.finding.critical{border-left-color:#EF4444}
+.finding.warning{border-left-color:#F59E0B}
+.finding-title{font-weight:600;font-size:0.9rem;color:var(--text)}
+.pill{display:inline-block;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;padding:2px 8px;border-radius:100px;margin-right:8px;vertical-align:middle}
+.pill.critical{background:rgba(239,68,68,0.15);color:#FCA5A5}
+.pill.warning{background:rgba(245,158,11,0.15);color:#FCD34D}
+.score-row{display:flex;align-items:baseline;gap:10px;margin:20px 0}
+.score-num{font-family:'Space Grotesk',sans-serif;font-size:2.2rem;font-weight:700}
+.score-arrow{color:var(--text3);font-size:1.2rem}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.faq-item{margin-bottom:18px}
+.faq-item h3{margin:0 0 6px}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+.meta-row{font-size:0.82rem;color:var(--text3);margin-bottom:28px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt=""> VibeSafe</a>
+  <a href="/#pricing" style="color:var(--text2);text-decoration:none;font-size:0.88rem;font-weight:500;margin-right:18px">Pricing</a>
+  <a href="/login" style="color:var(--text2);text-decoration:none;font-size:0.88rem;font-weight:500;margin-right:18px">Sign in</a>
+  <a href="/login?mode=signup" class="nav-cta">Start free scan</a>
+</nav>
+<main>
+  <p class="eyebrow">Guide</p>
+  <h1>Can one of your customers see another customer's data?</h1>
+  <div class="meta-row">VibeSafe &middot; October 3, 2026 &middot; 6 min read</div>
+  <p class="lead">Most security advice for AI-built apps is about secrets — keys in the source, a committed <code>.env</code>. Those are real, and they are also the easy ones. The failure that actually ends a small SaaS is quieter: customer A logs in and sees customer B's rows. Your app works perfectly. Every page loads. Nothing in your dashboard looks wrong.</p>
+
+  <h2>Why AI builders produce this specific bug</h2>
+  <p>Ask any AI coding tool for "a table of orders with a page to view them" and you will get working code in seconds. The generated query says: fetch the orders. It does not say: fetch the orders <em>belonging to the person asking</em>, because nobody mentioned that, and the demo works either way — when you are the only user, every row is yours.</p>
+  <p>The bug only becomes visible when you have two customers. By then you have shipped.</p>
+  <p>Two things usually have to go wrong together, and both are easy to get wrong in a Supabase-backed app:</p>
+  <ul class="plain">
+    <li><strong>The query does not filter by user.</strong> Nothing in the frontend restricts rows to the signed-in person.</li>
+    <li><strong>The database does not enforce it either.</strong> Row-level security is off, or on with a policy that permits everything.</li>
+  </ul>
+  <p>Either alone is survivable. Together they mean the public key in your frontend bundle — which is public by design, visible in any browser's network tab — is enough to read the whole table.</p>
+
+  <h2>The trap: RLS that is enabled and still does nothing</h2>
+  <p>When we scanned 1,163 files from 393 AI-built repositories, <strong>39 contained a policy written as <code>using (true)</code></strong>.</p>
+  <pre><code>alter table orders enable row level security;
+create policy "read orders" on orders for select using (true);</code></pre>
+  <p>Read that policy as the database reads it: for every row, is <code>true</code> true? Yes. Return it. The dashboard reports row-level security as enabled, the checkbox is ticked, and the table is as open as it was before. This is what "add RLS to my tables" often produces, because it is a literal answer to the question asked.</p>
+  <p>What it needs to say is who the row belongs to:</p>
+  <pre><code>create policy "read own orders" on orders
+  for select using (auth.uid() = user_id);</code></pre>
+  <p>And the same consideration applies to writing, which is the half people forget. A read policy stops someone reading another customer's order. It does nothing to stop them <em>updating</em> one.</p>
+
+  <h2>How to find out, in three escalating steps</h2>
+
+  <h3>1. Look from outside, with no login</h3>
+  <p>The fastest check needs no credentials and no setup: visit your own app as a stranger would and see what comes back. Paste your app's address into the Data Access check and it will report which tables answer a signed-out request, which API routes return personal data to nobody in particular, and which endpoints are reachable without a session. It reads only — nothing is written, nothing is changed. Free on every plan.</p>
+  <div class="disclaimer">One honest limitation: from outside, an empty table and a properly protected table look identical. Both return nothing. That is why the next step exists.</div>
+
+  <h3>2. Read your own policies</h3>
+  <p>Open the SQL editor on a copy of your project and look at what the policies actually say, not whether RLS is ticked. You are looking for three shapes: tables with RLS off, tables with RLS on and no policy at all, and policies whose condition does not mention the user — <code>using (true)</code> being the common one.</p>
+
+  <h3>3. Prove it with two users</h3>
+  <p>A policy that looks correct and a policy that is correct are different things, and reading SQL is not proof. The only real answer comes from trying it: create two accounts on a staging copy, sign in as the second, and attempt to read, change and delete the first one's row.</p>
+  <p>That is what the two-user test does. It signs in as both accounts and works through the matrix one cell at a time — can B read A's row, change it, delete it, write a row as A; can a signed-out visitor read it — and gives you a grid of what was allowed and what was blocked, plus the SQL for anything that should not have been allowed. It runs only against a staging project you confirm, refuses service-role keys outright, and deletes its own test rows afterwards.</p>
+
+  <h2>If you find something</h2>
+  <ul class="plain">
+    <li><strong>Do not start by deleting data.</strong> Work out what was reachable and for how long first; your logs are evidence and panicking destroys them.</li>
+    <li><strong>Fix the database before the frontend.</strong> A frontend filter is a convenience. The policy is the control. Anyone can bypass your UI; nobody can bypass the database.</li>
+    <li><strong>Fix writes as well as reads.</strong> Add policies for <code>update</code> and <code>delete</code>, not just <code>select</code>.</li>
+    <li><strong>Re-test afterwards.</strong> Verify the hole closed, rather than assuming the change worked.</li>
+    <li><strong>Check your obligations.</strong> If real customer data was exposed, notification rules may apply depending on where your users are.</li>
+  </ul>
+
+  <div class="cta-box">
+    <a href="/login?mode=signup&amp;utm_source=blog_customer_data">Check what a stranger can read &rarr;</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">Free on every plan &middot; No card needed &middot; Read-only</p>
+  </div>
+
+  <h2>Questions</h2>
+  <div class="faq-item">
+    <h3>Is my Supabase anon key supposed to be public?</h3>
+    <p>Yes. The anon key is designed to ship in your frontend and is visible to anyone. It is not a secret and leaking it is not the problem. Row-level security is what makes a public key safe — which is exactly why a policy of <code>using (true)</code> matters so much. The service_role key is the opposite: it bypasses every policy and must never appear in client code.</p>
+  </div>
+  <div class="faq-item">
+    <h3>I filter by user id in my frontend code. Is that enough?</h3>
+    <p>No. A frontend filter decides what your app displays, not what the database will hand over. Anyone can open the network tab, take the public key and the endpoint, and ask for whatever they like. The filter has to live in the database.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Why test against staging rather than production?</h3>
+    <p>Because a real test writes rows, changes them and deletes them. On production that means touching real customers' data. Point it at a copy.</p>
+  </div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related:</p>
+  <div class="related">
+    <a href="/blog/supabase-rls-explained-for-founders">Supabase RLS explained</a>
+    <a href="/blog/393-ai-built-repos-rules-scan">What we found in 393 AI-built repos</a>
+    <a href="/blog/security-checklist-non-technical-founders">Security checklist for founders</a>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/blog">Blog</a> · <a href="/legal">Privacy &amp; Terms</a> · <a href="https://vibesafebuilder.com">VibeSafe Builder</a>
+</footer>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/nav-auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google tag (gtag.js) -- Google Ads AW-18432710203 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18432710203"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18432710203');
+</script>
+<title>We Re-Scanned 393 AI-Built Repos Without AI — 1 in 8 Had a Critical Flaw | VibeSafe</title>
+<meta name="description" content="Deterministic re-run of our AI-built app study: 1,163 files across 393 Lovable, Bolt and v0 repos. 1 in 8 repos had a critical flaw, 39 had an RLS policy of using (true). Every finding traces to a rule and a line.">
+<meta name="keywords" content="AI-built app security, Lovable security, Bolt security, Supabase RLS, using true policy, AI code security study, vibe coding research">
+<link rel="canonical" href="https://www.vibesafe.info/blog/393-ai-built-repos-rules-scan">
+<meta property="og:title" content="We re-scanned 393 AI-built repos without using AI. 1 in 8 shipped a critical flaw.">
+<meta property="og:description" content="A reproducible re-run of our 400-app study using 26 deterministic rules instead of a model. 1 in 8 repos had a critical flaw, and 39 files had an RLS policy that passes every row.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.vibesafe.info/blog/393-ai-built-repos-rules-scan">
+<meta property="og:image" content="https://www.vibesafe.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"></noscript>
+<link rel="stylesheet" href="/theme.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"We re-scanned 393 AI-built repos without using AI. 1 in 8 shipped a critical flaw.","description":"A reproducible re-run of our 400-app study with deterministic rules. 1 in 8 of 393 repos had a critical flaw; 39 files had an RLS policy of using (true).","datePublished":"2026-10-03","author":{"@type":"Organization","name":"VibeSafe"},"publisher":{"@type":"Organization","name":"VibeSafe","url":"https://www.vibesafe.info"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Inter Fallback',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:rgba(8,12,24,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px}
+.nav-cta{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:8px;background:var(--cyan);color:var(--bg);font-weight:700;font-size:0.85rem;text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:52px 5% 70px}
+.eyebrow{color:var(--cyan);font-weight:700;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,2.5rem);line-height:1.18;letter-spacing:-0.02em;margin-bottom:18px}
+.lead{font-size:1.08rem;color:var(--text2);margin-bottom:26px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;margin:38px 0 12px}
+h3{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;margin:24px 0 8px;color:var(--text)}
+p{color:var(--text2);margin-bottom:16px}
+strong{color:var(--text)}
+ul.plain{margin:0 0 18px 18px;color:var(--text2)}
+ul.plain li{margin-bottom:8px}
+code{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--cyan)}
+pre{background:#0B1120;border:1px solid var(--border2);border-radius:10px;padding:16px 18px;overflow-x:auto;margin:0 0 18px;font-size:0.82rem;line-height:1.6}
+pre code{background:none;border:none;padding:0;color:#CBD5E1}
+.quote{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--cyan);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:0 0 18px;font-style:italic}
+.finding{border:1px solid var(--border2);border-left-width:3px;border-radius:10px;padding:12px 16px;margin-bottom:10px}
+.finding.critical{border-left-color:#EF4444}
+.finding.warning{border-left-color:#F59E0B}
+.finding-title{font-weight:600;font-size:0.9rem;color:var(--text)}
+.pill{display:inline-block;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;padding:2px 8px;border-radius:100px;margin-right:8px;vertical-align:middle}
+.pill.critical{background:rgba(239,68,68,0.15);color:#FCA5A5}
+.pill.warning{background:rgba(245,158,11,0.15);color:#FCD34D}
+.score-row{display:flex;align-items:baseline;gap:10px;margin:20px 0}
+.score-num{font-family:'Space Grotesk',sans-serif;font-size:2.2rem;font-weight:700}
+.score-arrow{color:var(--text3);font-size:1.2rem}
+.cta-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin:40px 0}
+.cta-box a{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;border-radius:10px;background:var(--cyan);color:var(--bg);font-weight:700;text-decoration:none;font-size:1rem}
+.disclaimer{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:0.92rem;color:var(--text2);margin:28px 0}
+.faq-item{margin-bottom:18px}
+.faq-item h3{margin:0 0 6px}
+.related{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.related a{font-size:0.85rem;color:var(--cyan);text-decoration:none;border:1px solid var(--border2);border-radius:100px;padding:6px 14px}
+.meta-row{font-size:0.82rem;color:var(--text3);margin-bottom:28px}
+footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--text3);font-size:0.8rem}
+footer a{color:var(--text3);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo"><img class="logo-icon" src="/favicon.svg" alt=""> VibeSafe</a>
+  <a href="/#pricing" style="color:var(--text2);text-decoration:none;font-size:0.88rem;font-weight:500;margin-right:18px">Pricing</a>
+  <a href="/login" style="color:var(--text2);text-decoration:none;font-size:0.88rem;font-weight:500;margin-right:18px">Sign in</a>
+  <a href="/login?mode=signup" class="nav-cta">Start free scan</a>
+</nav>
+<main>
+  <p class="eyebrow">Research</p>
+  <h1>We re-scanned 393 AI-built repos without using AI. 1 in 8 shipped a critical flaw.</h1>
+  <div class="meta-row">VibeSafe &middot; October 3, 2026 &middot; 8 min read</div>
+  <p class="lead">In September we published what a language model found across 400 AI-built repositories. The obvious criticism of that study was fair: a model's judgement is not reproducible, and you cannot audit it. So we did the whole thing again with deterministic rules, where every single finding traces back to a rule and a line number. Here is what changed, what held, and the number that went <em>down</em>.</p>
+
+  <h2>Why run it twice</h2>
+  <p>The first pass asked a model to read each file and describe what was wrong with it. That produces rich, readable findings — and it has two problems if you want to publish a statistic. Run it again and you may get a slightly different answer. And when someone asks "how exactly did you count that?", the honest reply is "the model decided", which is not a method anyone can check.</p>
+  <p>The second pass uses 26 deterministic rules. Same frozen corpus, same files, no model involved. Every finding carries a rule id and a line number, so any number below can be traced to the exact pattern that produced it. Run it tomorrow and you get the same answer.</p>
+
+  <h2>The corpus</h2>
+  <p>400 public repositories built with Lovable, Bolt and v0, selected by build artefact rather than by README text — a repo qualifies because it contains <code>.lovable</code>, <code>lovable-tagger</code> or <code>.bolt</code>, not because someone wrote "built with Lovable" in the readme. One repo per owner, forks excluded, up to three files each, frozen on 5 September 2026 so the sample cannot drift.</p>
+  <p>Of 1,185 files, 1,163 were readable across 393 repos. The missing 22 are files deleted from GitHub since the corpus was frozen. The whole run takes about 90 seconds.</p>
+
+  <h2>What the rules found</h2>
+  <p>309 of 1,163 files — 27% — had at least one finding. 58 files had something critical, spread across 49 repos. That is <strong>1 in 8 repositories carrying at least one critical flaw</strong>, by rules alone.</p>
+  <pre><code>Cookie set without Secure or SameSite       111
+Access-Control-Allow-Origin: *               74
+dangerouslySetInnerHTML from a variable      60
+RLS policy written as using (true)           39
+SQL built by template interpolation          14
+innerHTML assigned from a variable            6
+Google API key committed in source            3
+eval(), weak token randomness, no RLS         7</code></pre>
+
+  <h2>The finding that matters most</h2>
+  <p>39 files contained a row-level security policy written as <code>using (true)</code>.</p>
+  <p>This is worse than it looks, because it is the signature of someone who <em>tried</em>. They read that Supabase tables need row-level security. They enabled it. Then they wrote a policy that returns true for every row — which passes every check, for every user, every time. The dashboard shows RLS as enabled. The table is wide open.</p>
+  <pre><code>-- Enabled, and completely ineffective
+alter table orders enable row level security;
+create policy "read orders" on orders for select using (true);
+
+-- What it needs to say
+create policy "read own orders" on orders
+  for select using (auth.uid() = user_id);</code></pre>
+  <p>An AI builder will happily generate the first version when asked to "add RLS", because it satisfies the literal request. Nothing in your app breaks. Nothing warns you. Your customers' rows are readable by anyone holding the public key, which ships in your frontend bundle by design.</p>
+
+  <h2>The number that went down, and why that is the point</h2>
+  <p>Our September post reported that 59% of scanned repos had a critical issue. This pass says 12%. Both are true, and the gap is the most useful thing in this post.</p>
+  <p>On the 115 files both passes read, the model flagged something in 113. The rules flagged something in 32. They agreed on the verdict only 30% of the time. Rules catch syntactic patterns — a cookie without a flag, a wildcard CORS header, SQL glued together with a template literal. They are blind to everything that requires reading intent: an endpoint that never checks who is asking, user input reaching a sink three functions later, an error handler that leaks a stack trace to the browser.</p>
+  <div class="disclaimer"><strong>So treat 12% as a floor, not an estimate.</strong> It is the share of repositories where a pattern-matching rule, with no understanding of the code, could prove something was wrong. The real figure is higher. We publish the floor because it is the number we can defend line by line.</div>
+
+  <h2>One more thing worth noticing</h2>
+  <p>Only three secrets turned up in source files across 1,163 files. That sounds like good news and is not. Neither pass opens <code>.env</code> files — and our earlier study found 18.5% of these repositories had committed one. Secrets in these projects are not pasted into components. They sit in the environment file that got committed on the first push.</p>
+
+  <h2>How to check your own app in about a minute</h2>
+  <ul class="plain">
+    <li><strong>Search your SQL for <code>using (true)</code>.</strong> If you find one on a table holding customer data, that is the whole of this post in your own repository.</li>
+    <li><strong>Run <code>git log --all -- .env</code>.</strong> Any output means the file is in your history, and rotating the keys is the only fix — deleting the file is not.</li>
+    <li><strong>Check what a signed-out visitor can read.</strong> Paste your app's address into the Data Access check and it will tell you what it can reach without logging in. That one is free on every plan.</li>
+  </ul>
+
+  <div class="cta-box">
+    <a href="/login?mode=signup&amp;utm_source=blog_393_repos">Check your own app free &rarr;</a>
+    <p style="margin:14px 0 0;font-size:0.85rem">10 scans a month &middot; No card needed</p>
+  </div>
+
+  <h2>Questions</h2>
+  <div class="faq-item">
+    <h3>Can I see the raw data?</h3>
+    <p>Yes — ask and we will send the per-file and per-finding CSVs. Every row carries the repository, the file, the rule id and the line number, so any finding can be re-checked against the public repository it came from.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Are you naming the repositories?</h3>
+    <p>Not publicly. These are real projects by real people, and most of the owners do not know. The aggregate is the useful part; publishing a list of vulnerable apps would just be handing someone a target list.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Does this mean Lovable and Bolt are insecure?</h3>
+    <p>It means code generated quickly and shipped without review tends to carry the same handful of defects, which has been true of every generation of development tooling. The sample is heavily Lovable-weighted — 849 of the files — and only 24 came from v0, which is far too few to say anything about v0 at all.</p>
+  </div>
+
+  <p style="color:var(--text3);font-size:0.85rem">Related:</p>
+  <div class="related">
+    <a href="/blog/we-scanned-400-ai-built-apps">The original 400-app study</a>
+    <a href="/blog/supabase-rls-explained-for-founders">Supabase RLS explained</a>
+    <a href="/blog/can-one-customer-see-another-customers-data">Can one customer see another's data?</a>
+  </div>
+</main>
+<footer>
+  © VibeSafe · <a href="/">Home</a> · <a href="/blog">Blog</a> · <a href="/legal">Privacy &amp; Terms</a> · <a href="https://vibesafebuilder.com">VibeSafe Builder</a>
+</footer>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/nav-auth.js"></script>
+</body>
+</html>
