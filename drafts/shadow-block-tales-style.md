@@ -80,3 +80,37 @@ Most viewers find the channel through the Shorts feed. Search is the second way 
 - The owner works on Windows.
 - Git commits are authored only as the owner (no co-author lines).
 - YouTube links can't be opened from the build machine. When given a reference video, ask for a short description or its script.
+
+## Retention playbook (researched Oct 2026, applies to every video)
+
+Targets: long videos under 5 min should keep 50–70% average; 10–20 min videos 40–55%. Keep 60%+ of viewers past 0:30.
+Shorts: "Viewed vs swiped away" should be 70–90%; under 60% means the first 1–3 seconds failed.
+
+**First 30 seconds (the algorithm judges these on their own)**
+- Frame 1 is the scariest image of the video, with a spoken question or claim in the first sentence. No logo, no "welcome back".
+- "Previously…" recaps go AFTER the hook and stay under 4 s (one line), or are cut. Never shot 2 at 8 s again.
+- State the promise by 0:20 ("by day 100 he was at my door").
+
+**Every 5–10 seconds something changes** (long form; every 2–3 s in Shorts)
+- New camera angle, a punch-in, a text pop, a glitch, a sound hit. A shot longer than ~8 s gets split into two angles.
+- Engine does this automatically now: handheld sway on every shot (`camera.shake`, default 0.25; set 0 for a locked tripod shot),
+  and a jolt + 12% punch-in zoom on every `sting` sound (`camera.auto_scare: false` to turn off; manual `camera.jolt` / `camera.punch: [[t, amount]]`).
+
+**Story structure**
+- Open loop in the hook ("the journal stopped at day 99"), paid off late. Max 1–2 open loops per video.
+- Every reveal is followed immediately by a new question (hook → deliver → new hook). No flat pause between beats.
+- Re-hook every ~60–90 s in long videos: a mid-video "but then…" turn or a new threat.
+
+**Horror pacing**
+- Slow burn: quiet holds and near-silence BEFORE a scare, then a loud sting. Silence is a tool; don't keep music on wall to wall.
+- Speed up cuts during chases/montages, slow down on reveals so they land.
+- Sound design over music: footsteps, door creaks, breathing, distant noises.
+
+**Shorts**
+- First frame = hook; audio or visual beat every 2–3 s; the last line should flow back into the first (loop), e.g. end on a question the opening answers.
+
+**Diagnose with the retention graph (YouTube Studio → Analytics → video → Audience retention)**
+- Big drop in first 30 s → hook/thumbnail mismatch or slow opening.
+- Steady slide → pacing too slow / shots too long.
+- Sudden cliff at one moment → that beat is boring or confusing; cut or move it.
+- Spikes (rewatches) → do more of what's at that timestamp.
