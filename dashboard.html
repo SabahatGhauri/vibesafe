@@ -3301,7 +3301,13 @@ async function runLaunchCheck() {
   var btn = document.getElementById('lcRunBtn');
   var status = document.getElementById('lcStatus');
   var out = document.getElementById('lcReport');
-  if (!url) { input.focus(); status.style.color = 'var(--red)'; status.textContent = 'Enter your app URL first.'; return; }
+  var urlInput = document.getElementById('lcUrl');
+  if (!url) {
+    if (urlInput) urlInput.focus();
+    status.style.color = 'var(--red)';
+    status.textContent = 'Enter your app URL first.';
+    return;
+  }
 
   btn.disabled = true; btn.textContent = 'Testing your app…'; out.innerHTML = '';
   var lcIntro = document.getElementById('lcIntro'); if (lcIntro) lcIntro.style.display = 'none';
@@ -3322,9 +3328,13 @@ async function runLaunchCheck() {
     if (!res.ok) throw new Error(data.error || 'Launch Check failed.');
     out.innerHTML = renderLaunchReport(data);
     status.textContent = '';
+    // Scroll the score into view. Without this the report appears below the
+    // fold and a completed check looks like a button that did nothing.
+    try { out.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { out.scrollIntoView(); }
   } catch (err) {
     status.style.color = 'var(--red)';
     status.textContent = err.message || 'Launch Check failed. Try again.';
+    try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
   } finally {
     clearInterval(lcTimer);
     btn.disabled = false; btn.textContent = '🚀 Run Launch Check';
