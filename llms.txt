@@ -1,0 +1,31 @@
+# VibeSafe
+
+> VibeSafe (https://www.vibesafe.info) is a security scanner for code written by AI tools such as Lovable, Bolt, Cursor, Replit, v0, Windsurf and Firebase Studio. It finds exposed API keys, injection risks, missing Supabase row-level security, broken authentication, vulnerable or hallucinated packages and runtime errors, and explains each finding in plain English with a fix. Findings are mapped to OWASP Top 10:2025.
+
+VibeSafe is operated by SG Digital Ventures LLC (Wyoming, USA). Contact: contact@vibesafe.info.
+
+VibeSafe at vibesafe.info is not affiliated with vibesafe.net, vibesafe.in, vibesafe.dev, vibesafeai.com or vibe-safe.net. Its sibling product, VibeSafe Builder (https://vibesafebuilder.com), is a separate AI app builder from the same company.
+
+What VibeSafe does not do: it is not a penetration test, it does not detect an existing compromise, and it does not guarantee complete coverage. Code is analysed and then discarded; it is not stored or used for training.
+
+## Key pages
+
+- [About VibeSafe](https://www.vibesafe.info/about): who builds it, what it does and does not do
+- [How it works](https://www.vibesafe.info/how-it-works): the five steps from pasted code to a fixed launch
+- [Try a scan, no signup](https://www.vibesafe.info/try)
+- [FAQ](https://www.vibesafe.info/faq)
+- [Security issues explained](https://www.vibesafe.info/learn)
+- [Pricing](https://www.vibesafe.info/#pricing): Free (10 scans a month), Pro ($29 a month), Team ($99 a month)
+
+## Ways to use it
+
+- Web scanner and live URL scan at https://www.vibesafe.info
+- Launch Check: opens your app in a real browser and reports broken pages, console errors and failed requests
+- VS Code and Cursor extension: https://marketplace.visualstudio.com/items?itemName=vibesafe-info.vibesafe-scanner
+- MCP server: https://github.com/SabahatGhauri/vibesafe-mcp
+- Command-line tool: https://github.com/SabahatGhauri/vibesafe-scan
+- GitHub Action: https://github.com/SabahatGhauri/vibesafe-action
+
+## Research
+
+- [We scanned 400 AI-built apps](https://www.vibesafe.info/blog/we-scanned-400-ai-built-apps)
