@@ -30,12 +30,12 @@
 <meta name="twitter:image" content="https://www.vibesafe.info/og-image.png">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-{"@type":"Question","name":"What exactly is VibeSafe and what does it do?","acceptedAnswer":{"@type":"Answer","text":"VibeSafe is an AI-powered code security scanner built for non-technical founders who build apps using vibe coding tools like Lovable, Bolt, Cursor, and Replit. It scans for exposed API keys, security vulnerabilities, runtime errors, and missing packages, then explains every issue in plain English with a one-click auto-fix."}},
+{"@type":"Question","name":"What exactly is VibeSafe and what does it do?","acceptedAnswer":{"@type":"Answer","text":"VibeSafe is an AI-powered code security scanner built for non-technical founders who build apps using vibe coding tools like Lovable, Bolt, Cursor, and Replit. It scans for exposed API keys, security vulnerabilities, broken access control, payment and webhook mistakes, runtime errors, and vulnerable or hallucinated packages, then explains every issue in plain English with a one-click auto-fix."}},
 {"@type":"Question","name":"Who is VibeSafe built for?","acceptedAnswer":{"@type":"Answer","text":"VibeSafe is built for non-technical founders using Lovable, Bolt.new, Cursor, or Replit, indie hackers without a technical co-founder, agencies building client apps with AI tools, and anyone who can build an app but can't tell if it's secure."}},
 {"@type":"Question","name":"Do I need to know how to code to use VibeSafe?","acceptedAnswer":{"@type":"Answer","text":"No. Every issue is explained in plain English, and the auto-fix button applies the change for you after you review the before-and-after diff."}},
-{"@type":"Question","name":"What languages and frameworks does VibeSafe support?","acceptedAnswer":{"@type":"Answer","text":"JavaScript, TypeScript, Python, Java, and .NET/C#, including frameworks like React, Next.js, Flask, FastAPI, Django, and Spring Boot. Mixed-language projects are auto-detected."}},
-{"@type":"Question","name":"What kinds of security vulnerabilities does VibeSafe find?","acceptedAnswer":{"@type":"Answer","text":"Exposed secrets, SQL injection, cross-site scripting (XSS), insecure authentication, path traversal, debug mode left on in production, and missing HTTPS enforcement."}},
-{"@type":"Question","name":"Is VibeSafe really free? What's the catch?","acceptedAnswer":{"@type":"Answer","text":"Yes — the free plan includes 10 scans per month with full vulnerability detection and plain-English explanations, no credit card required. Pro adds unlimited scans, one-click auto-fix, and GitHub integration."}},{"@type":"Question","name":"Do I need a card to try Pro?","acceptedAnswer":{"@type":"Answer","text":"No. Pressing Start 7-day free trial switches Pro on immediately with no card details, so nothing can be charged and there is nothing to cancel. After 7 days the account returns to the free plan by itself, and you only add a card if you want to keep Pro at $29 per month. One trial per account."}},
+{"@type":"Question","name":"What languages and frameworks does VibeSafe support?","acceptedAnswer":{"@type":"Answer","text":"JavaScript, TypeScript, Python, Java and .NET/C#, including frameworks like React, Next.js, Flask, FastAPI, Django and Spring Boot, plus HTML, CSS, SQL, JSON, YAML, .env and Markdown files. Mixed-language projects are auto-detected."}},
+{"@type":"Question","name":"What kinds of security vulnerabilities does VibeSafe find?","acceptedAnswer":{"@type":"Answer","text":"Exposed secrets, SQL and other injection, cross-site scripting (XSS), missing Supabase row-level security, broken access control, insecure authentication, path traversal, unverified payment webhooks and prices set in the browser, cost abuse on AI endpoints, vulnerable and hallucinated packages, prompt injection, debug mode left on in production, and missing HTTPS enforcement. Findings are mapped to the OWASP Top 10:2025."}},
+{"@type":"Question","name":"Is VibeSafe really free? What's the catch?","acceptedAnswer":{"@type":"Answer","text":"Yes. The free plan includes 10 scans per month, one-click fixes, GitHub file scanning, the editor extension, CLI, MCP server and GitHub Action, one Launch Check a month and the what-a-stranger-can-see data check, with no credit card. Pro ($29/month) adds unlimited scans, live website scanning, the full Data Access check, unlimited Launch Checks and continuous monitoring."}},{"@type":"Question","name":"Do I need a card to try Pro?","acceptedAnswer":{"@type":"Answer","text":"No. Pressing Start 7-day free trial switches Pro on immediately with no card details, so nothing can be charged and there is nothing to cancel. After 7 days the account returns to the free plan by itself, and you only add a card if you want to keep Pro at $29 per month. One trial per account."}},
 {"@type":"Question","name":"Is my code safe with VibeSafe? Do you store it?","acceptedAnswer":{"@type":"Answer","text":"Your code is scanned in memory and never stored permanently. VibeSafe doesn't train AI models on your code or share it with third parties. Only your scan results and safety score are saved to your account."}},
 {"@type":"Question","name":"What if VibeSafe misses a vulnerability?","acceptedAnswer":{"@type":"Answer","text":"No security tool catches every vulnerability. VibeSafe focuses on the most common, most dangerous issues in AI-generated code. For high-security applications, combine VibeSafe with a professional security audit."}}
 ]}
@@ -206,10 +206,10 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
   <p class="section-sub">VibeSafe is an AI-powered security scanner built specifically for non-technical founders who build apps using vibe coding tools like Lovable, Bolt, Cursor, and Replit. It finds errors, security holes, and bugs in AI-generated code — and fixes them automatically in plain English.</p>
 
   <div class="stats-row">
-    <div class="stat-box"><div class="stat-num">45%</div><div class="stat-label">of AI-generated code has security vulnerabilities</div></div>
-    <div class="stat-box"><div class="stat-num">63%</div><div class="stat-label">of vibe coders are non-technical founders</div></div>
-    <div class="stat-box"><div class="stat-num">$4.7B</div><div class="stat-label">vibe coding market growing at 38% annually</div></div>
-    <div class="stat-box"><div class="stat-num">10s</div><div class="stat-label">average time for VibeSafe to complete a full scan</div></div>
+    <div class="stat-box"><div class="stat-num">18.5%</div><div class="stat-label">of 400 public AI-built repos had committed a .env file (<a href="/blog/we-scanned-400-ai-built-apps" style="color:inherit">our study</a>)</div></div>
+    <div class="stat-box"><div class="stat-num">1 in 8</div><div class="stat-label">repos had a critical issue in a rules-only re-scan of 393 (<a href="/blog/393-ai-built-repos-rules-scan" style="color:inherit">a floor, not a ceiling</a>)</div></div>
+    <div class="stat-box"><div class="stat-num">10</div><div class="stat-label">free scans every month, no card needed</div></div>
+    <div class="stat-box"><div class="stat-num">~10s</div><div class="stat-label">typical time for a code scan to finish</div></div>
   </div>
 
   <div class="purpose-grid">
@@ -225,8 +225,8 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
     </div>
     <div class="purpose-card pc-green">
       <div class="purpose-icon">📦</div>
-      <div class="purpose-title">Auto dependency installer</div>
-      <div class="purpose-desc">Identifies missing, outdated, or hallucinated packages and installs the correct versions automatically — for Python, JavaScript, TypeScript, Java, and .NET.</div>
+      <div class="purpose-title">Dependency checks</div>
+      <div class="purpose-desc">Flags packages with known vulnerabilities (checked against OSV.dev), missing packages, and "hallucinated" packages an AI made up that attackers can register — with the correct version to install.</div>
     </div>
     <div class="purpose-card pc-cyan">
       <div class="purpose-icon">💬</div>
@@ -307,7 +307,7 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
         </div>
         <div class="diff-col">
           <div class="diff-col-label">VibeSafe</div>
-          <div class="diff-col-text">Free plan forever. Pro at $29/month. Team at $99/month for up to 5 people. Built for bootstrapped founders.</div>
+          <div class="diff-col-text">Free plan forever. Pro at $29/month. Team at $99/month for up to 10 people. Built for bootstrapped founders.</div>
         </div>
       </div>
     </div>
@@ -384,7 +384,7 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
           <td class="partial">⚡ Manual</td>
         </tr>
         <tr>
-          <td>Auto dependency installer</td>
+          <td>Dependency &amp; hallucinated-package checks</td>
           <td class="highlight check">✓ Yes</td>
           <td class="partial">⚡ Alerts only</td>
           <td class="cross">✗ No</td>
@@ -455,6 +455,29 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
 
   <div class="faq-list" id="faqList">
 
+    <!-- WHERE TO USE IT -->
+    <div class="faq-item" data-cat="general">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">🧭 Where can I use VibeSafe?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-general">General</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        Everywhere you build. All of them use the same scanner and the same plan:<br><br>
+        <ul>
+          <li><strong>Web, no signup</strong> — paste code at <a href="/try">vibesafe.info/try</a></li>
+          <li><strong>Dashboard</strong> — paste code, upload a file, scan a GitHub file (private repos too), scan a live website, run a Launch Check, run the Data Access check, and set up monitoring</li>
+          <li><strong>VS Code &amp; Cursor extension</strong> — on the VS Marketplace and Open VSX</li>
+          <li><strong>MCP server</strong> — <code>npx vibesafe-mcp</code> in Claude, Cursor, Windsurf or any MCP client</li>
+          <li><strong>Command line</strong> — <code>npx vibesafe-scan ./src</code></li>
+          <li><strong>GitHub Action</strong> — <code>SabahatGhauri/vibesafe-action@v1</code> on every pull request</li>
+        </ul>
+        The CLI, MCP server and GitHub Action need a free API key (it starts with <code>vibesafe_sk_</code>) from <strong>🔑 API keys</strong> in your dashboard.
+      </div>
+    </div>
+
     <!-- DATA ACCESS (NEW) -->
     <div class="faq-item" data-cat="general">
       <div class="faq-q" onclick="toggleFaq(this.parentElement)">
@@ -465,7 +488,7 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
         </div>
       </div>
       <div class="faq-a">
-        It answers the question that matters most in an AI-built app, with evidence: <strong>can one of your customers see, change or delete another customer's records?</strong><br><br>Paste your app's address and VibeSafe reads the page the way any visitor's browser does, finds the database and API behind it, and reports every table and route that answers someone with <strong>no account at all</strong>. That part needs no setup and takes seconds.<br><br>On a staging project it goes further: VibeSafe signs in as two test users you created and actually tries to reach one user's rows as the other, then shows a grid of what was blocked and what was allowed.<br><br><strong>Pro and Team.</strong> Find it in your dashboard sidebar under 🔐 Data Access.
+        It answers the question that matters most in an AI-built app, with evidence: <strong>can one of your customers see, change or delete another customer's records?</strong><br><br>Paste your app's address and VibeSafe reads the page the way any visitor's browser does, finds the database and API behind it, and reports every table and route that answers someone with <strong>no account at all</strong>. That part needs no setup and takes seconds.<br><br>On a staging project it goes further: VibeSafe signs in as two test users you created and actually tries to reach one user's rows as the other, then shows a grid of what was blocked and what was allowed.<br><br>You can also review your Supabase rules: run the read-only query VibeSafe gives you, paste the result back, and get every table's rule with the exact SQL to fix it. After a fix, re-run the check and VibeSafe shows what is now closed, what is still open, and anything new.<br><br><strong>The stranger check is on every plan, free included. The rules review and the two-user test are Pro and Team.</strong> Find it in your dashboard sidebar under 🔐 Data Access.
       </div>
     </div>
 
@@ -523,7 +546,8 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
       </div>
       <div class="faq-a">
         Yes — with <strong>continuous monitoring</strong>, VibeSafe re-scans your live sites automatically every week and <strong>only emails you when security gets worse</strong> — the score drops or a new critical issue appears. No news means you're still safe, so you're never spammed.<br><br>
-        Add a site from <strong>📡 Monitoring</strong> in your dashboard sidebar; the first scan sets a baseline quietly, and you'll only hear from us if something changes. Available on <strong>Pro</strong> (up to 5 sites) and <strong>Team</strong> (up to 25 sites).
+        It also tells you when a <strong>third-party script</strong> on your page changes (code from someone else that runs on your site), and it can run <strong>daily SEO checks</strong> on each page — indexing rules, titles and descriptions, and your sitemap — so a deploy that accidentally hides you from Google gets caught.<br><br>
+        Add a site from <strong>📡 Monitoring &amp; SEO</strong> in your dashboard sidebar; the first scan sets a baseline quietly, and you'll only hear from us if something changes. Available on <strong>Pro</strong> (up to 5 sites) and <strong>Team</strong> (up to 25 sites).
       </div>
     </div>
 
@@ -537,7 +561,7 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
         </div>
       </div>
       <div class="faq-a">
-        Yes. VibeSafe has a free <strong>VS Code &amp; Cursor extension</strong> — open the Extensions panel, search <em>"VibeSafe"</em>, install it, then connect in one click. Open any file and press <strong>Ctrl/Cmd+Shift+V</strong> to scan without leaving your editor. You get the same score, issues, and one-click fixes right in a side panel.
+        Yes. VibeSafe has a free <strong>VS Code &amp; Cursor extension</strong> — open the Extensions panel, search <em>"VibeSafe"</em>, install it, then connect in one click. Open any file and press <strong>Ctrl/Cmd+Shift+V</strong> to scan without leaving your editor. You get the same score, issues, and one-click fixes right in a side panel, with each flagged line underlined. It is on the <a href="https://marketplace.visualstudio.com/items?itemName=vibesafe-info.vibesafe-scanner" target="_blank" rel="noopener">VS Marketplace</a> and <a href="https://open-vsx.org/extension/vibesafe-info/vibesafe-scanner" target="_blank" rel="noopener">Open VSX</a>.
       </div>
     </div>
 
@@ -551,7 +575,7 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
         </div>
       </div>
       <div class="faq-a">
-        Yes — VibeSafe has an <strong>MCP server</strong>. Add it to Claude Desktop, Cursor, or any MCP client and just ask <em>"scan this file with VibeSafe"</em> — it runs as a native AI tool. It offers three tools: scan code, scan a live website, and run a Launch Check.<br><br>
+        Yes — VibeSafe has an <strong>MCP server</strong>. Add it to Claude Desktop, Claude Code, Cursor, Windsurf or any MCP client and just ask <em>"scan this file with VibeSafe"</em> — it runs as a native AI tool. It offers four tools: scan code, scan a live website, run a Launch Check, and write the Supabase row-level security policies for a table (that last one runs on your machine, so no keys leave it).<br><br>
         Install with <code>npx vibesafe-mcp</code> and a free API key. Full copy-paste setup is in the <a href="https://github.com/SabahatGhauri/vibesafe-mcp" target="_blank" rel="noopener">MCP server README</a>.
       </div>
     </div>
@@ -567,7 +591,7 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
       </div>
       <div class="faq-a">
         Yes — VibeSafe has a <strong>command-line scanner</strong>. Point it at a file or folder and it scans everything in seconds, printing each issue with a one-line fix. It exits with an error code when critical issues are found, so it's perfect for a pre-commit hook or CI step.<br><br>
-        No install needed — just run <code>npx vibesafe-scan ./src</code> with a free API key set as <code>VIBESAFE_API_KEY</code>. Setup and options are in the <a href="https://github.com/SabahatGhauri/vibesafe-scan" target="_blank" rel="noopener">CLI README</a>.
+        No install needed — just run <code>npx vibesafe-scan ./src</code> with a free API key set as <code>VIBESAFE_API_KEY</code>. Use <code>--fail-on warning</code> to be stricter, <code>--max</code> to cap how many files it scans, and <code>--json</code> for machine-readable output. Setup and options are in the <a href="https://github.com/SabahatGhauri/vibesafe-scan" target="_blank" rel="noopener">CLI README</a>.
       </div>
     </div>
 
@@ -581,7 +605,8 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
         </div>
       </div>
       <div class="faq-a">
-        Yes — the <strong>VibeSafe Vulnerability Scanner</strong> GitHub Action scans your code on every push or pull request and <strong>fails the build if critical issues are found</strong>, so risky code never reaches production. Add it from the <a href="https://github.com/marketplace/actions/vibesafe-vulnerability-scanner" target="_blank" rel="noopener">GitHub Marketplace</a> and drop a few lines into your workflow file with a free API key stored as a repository secret.
+        Yes — the <strong>VibeSafe Vulnerability Scanner</strong> GitHub Action scans your code on every push or pull request and <strong>fails the build if critical issues are found</strong>, so risky code never reaches production. It scans the files that changed, posts a summary comment on the pull request with a score per file, and by default also fails when a changed file could not be fully scanned, because a partial scan is not a pass.<br><br>
+        Store a free API key as a repository secret named <code>VIBESAFE_API_KEY</code> and add <code>uses: SabahatGhauri/vibesafe-action@v1</code> to your workflow. You can choose to fail on <code>critical</code>, <code>warning</code> or <code>never</code>. Copy-paste setup is in the <a href="https://github.com/SabahatGhauri/vibesafe-action" target="_blank" rel="noopener">Action README</a> and it is listed on the <a href="https://github.com/marketplace/actions/vibesafe-vulnerability-scanner" target="_blank" rel="noopener">GitHub Marketplace</a>. On the free plan each file scanned counts as one of your 10 monthly scans, so Pro or Team suits regular CI use.
       </div>
     </div>
 
@@ -600,10 +625,13 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
         <ul>
           <li>Exposed API keys and hardcoded secrets</li>
           <li>Security vulnerabilities (SQL injection, XSS, etc.)</li>
+          <li>Missing database rules and broken access control</li>
+          <li>Payment and webhook mistakes, and endpoints a stranger can use to run up your bill</li>
           <li>Runtime errors — missing awaits, null crashes</li>
-          <li>Missing or outdated packages</li>
+          <li>Vulnerable, missing or hallucinated packages</li>
           <li>Logic bugs and type errors</li>
         </ul>
+        Findings are mapped to the OWASP Top 10:2025. Beyond the code, VibeSafe can scan your live site, test it in a real browser with Launch Check, check who can read your data, and keep watching it after launch.<br><br>
         Every issue gets a plain-English explanation and a one-click auto-fix button. No coding knowledge required.
       </div>
     </div>
@@ -658,6 +686,7 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
           <li><strong>Python</strong> — including Flask, FastAPI, Django</li>
           <li><strong>Java</strong> — including Spring Boot</li>
           <li><strong>.NET / C#</strong> — including ASP.NET</li>
+          <li><strong>Web and config files</strong> — HTML, CSS, SQL, JSON, YAML, <code>.env</code> and Markdown</li>
         </ul>
         Mixed-language projects are supported — VibeSafe auto-detects your stack.
       </div>
@@ -682,7 +711,33 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
           <li><strong>Path traversal</strong> — user-controlled file paths that allow attackers to read server files</li>
           <li><strong>Debug mode in production</strong> — Flask/Django debug=True exposing an interactive shell</li>
           <li><strong>Missing HTTPS enforcement</strong> — sensitive data sent over unencrypted connections</li>
+          <li><strong>Missing Supabase row-level security</strong> — tables any logged-in (or logged-out) user can read or change</li>
+          <li><strong>Broken access control</strong> — admin routes with no server check, and routes that act on any ID you send (IDOR)</li>
+          <li><strong>Risky packages</strong> — known-vulnerable dependencies and hallucinated (slopsquatted) package names</li>
+          <li><strong>Prompt injection</strong> — user input that reaches an AI model unchecked</li>
+          <li><strong>Unsafe configuration</strong> — permissive CORS, missing security headers, exposed <code>.env</code> or <code>.git/config</code></li>
         </ul>
+        Every finding is mapped to the matching OWASP Top 10:2025 category. Reliability issues like missing awaits are reported too, but are not given an OWASP label.
+      </div>
+    </div>
+
+    <div class="faq-item" data-cat="security">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span class="faq-q-text">💳 Does VibeSafe check payment and webhook code?</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span class="faq-tag tag-security">Security</span>
+          <span class="faq-chevron">▶</span>
+        </div>
+      </div>
+      <div class="faq-a">
+        Yes. AI-built apps often get the money path wrong, so the scanner looks for it specifically:<br><br>
+        <ul>
+          <li><strong>Prices set in the browser</strong> — checkout code that trusts an amount the user can change</li>
+          <li><strong>Unverified webhooks</strong> — Stripe, Paddle, Lemon Squeezy and similar handlers that never check the signature</li>
+          <li><strong>Webhooks processed twice</strong> — no check that the same event has already been handled</li>
+          <li><strong>Cost abuse</strong> — endpoints that call an AI model or another paid API with no login or limit, so a stranger can run up your bill</li>
+        </ul>
+        Public keys that are meant to be public, like Stripe <code>pk_live_</code> keys, are not flagged.
       </div>
     </div>
 
@@ -740,10 +795,14 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
         <ul>
           <li>10 scans per month</li>
           <li>Full security vulnerability detection</li>
-          <li>Plain-English explanations for every issue</li>
-          <li>Basic safety score</li>
+          <li>Plain-English explanations and one-click fixes</li>
+          <li>Safety score and scan history</li>
+          <li>GitHub file scanning, including private repos</li>
+          <li>The VS Code &amp; Cursor extension, CLI, MCP server and GitHub Action</li>
+          <li>1 Launch Check per month</li>
+          <li>The Data Access stranger check</li>
         </ul>
-        The catch: you can't auto-fix on the free plan (you see the fix, but apply it manually) and no GitHub integration. That's what Pro is for — $29/month, unlimited scans, one-click auto-fix, everything.
+        The catch is the limits. Pro ($29/month, or $264/year) adds unlimited scans, live website scanning, the full Data Access check with the two-user test, unlimited Launch Checks, monitoring for 5 sites, and a per-area breakdown and score trend on your results. Team ($99/month) is Pro for up to 10 people, with monitoring for 25 sites.
       </div>
     </div>
 
@@ -837,9 +896,9 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
         </div>
       </div>
       <div class="faq-a">
-        <strong>GitHub integration is available on the Pro plan.</strong> Connect your repo and VibeSafe automatically scans every new commit or pull request.<br><br>
-        Vercel integration (auto-scan on every deployment) is on the roadmap for Q3 2026.<br><br>
-        CI/CD pipeline integration (GitHub Actions, GitLab CI) is available on the Team plan — every deployment triggers a scan and blocks if critical issues are found.
+        <strong>GitHub:</strong> sign in with GitHub and paste a link to any file, in a public or private repo, to scan it from the dashboard. This is on every plan.<br><br>
+        <strong>CI/CD:</strong> the <a href="https://github.com/SabahatGhauri/vibesafe-action" target="_blank" rel="noopener">VibeSafe GitHub Action</a> scans changed files on every pull request or push, comments the results and blocks the merge on critical issues. For other CI systems, run the <code>vibesafe-scan</code> CLI as a step: it exits with an error code when critical issues are found.<br><br>
+        <strong>Vercel and other hosts:</strong> there is no deploy hook yet. Scan the deployed URL from the dashboard, run a Launch Check, or add it to monitoring so it is re-checked every week.
       </div>
     </div>
 
@@ -854,8 +913,7 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
       </div>
       <div class="faq-a">
         Your code is <strong>scanned in memory and never stored permanently</strong>. We don't retain your source code after the scan completes. We don't train our models on your code. We don't share it with third parties.<br><br>
-        What we do store: your scan results and safety score (so you can reference them later). You can delete these at any time from your account settings.<br><br>
-        If you're building something highly sensitive, you can also use VibeSafe's self-hosted option (coming on the Enterprise plan) where your code never leaves your infrastructure.
+        What we do store: your scan results and safety score (so you can reference them later). You can delete these at any time from your account settings.
       </div>
     </div>
 
@@ -921,7 +979,7 @@ footer { text-align: center; padding: 32px 5%; border-top: 1px solid var(--borde
 <!-- CTA -->
 <div class="cta-box">
   <h2>Ready to ship safely?</h2>
-  <p>Join 800+ founders who scan before they ship. Free plan available — no credit card required.</p>
+  <p>Scan before you ship. Free plan available — no credit card required.</p>
   <a href="https://www.vibesafe.info" class="cta-btn" target="_blank">
     Start free scan → vibesafe.info
   </a>

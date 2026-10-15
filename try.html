@@ -142,7 +142,7 @@ footer a{color:var(--text3)}
     <div id="issues"></div>
     <div class="cta-box">
       <h2 id="ctaTitle">Want the fixes applied for you?</h2>
-      <p id="ctaBody">A free account adds one-click AI fixes, scan history, GitHub and live-site scanning, and 10 scans every month.</p>
+      <p id="ctaBody">A free account adds one-click AI fixes, scan history, GitHub file scanning, a monthly Launch Check, and 10 scans every month.</p>
       <a href="/login?mode=signup" id="ctaBtn" class="btn btn-primary" style="text-decoration:none">Create a free account →</a>
     </div>
   </section>
@@ -261,15 +261,15 @@ function render(data) {
     ctaBtn.textContent = 'Get the fix, free →';
   } else if (worst && worst.sev === 'warning') {
     ctaTitle.innerHTML = '<span class="pill warning" style="margin-right:8px">Warning</span>' + esc(worst.title || worst.type || 'Issue found');
-    ctaBody.textContent = 'A free account adds one-click AI fixes, scan history, GitHub and live-site scanning, and 10 scans every month.';
+    ctaBody.textContent = 'A free account adds one-click AI fixes, scan history, GitHub file scanning, a monthly Launch Check, and 10 scans every month.';
     ctaBtn.textContent = 'Create a free account →';
   } else if (!issues.length) {
     ctaTitle.textContent = 'Clean scan — keep it that way';
-    ctaBody.textContent = 'A free account adds continuous monitoring, GitHub scanning, and 10 scans every month, so the next change gets checked too.';
+    ctaBody.textContent = 'A free account adds scan history, GitHub scanning, and 10 scans every month, so the next change gets checked too. Pro adds weekly monitoring of your live site.';
     ctaBtn.textContent = 'Create a free account →';
   } else {
     ctaTitle.textContent = 'Want the fixes applied for you?';
-    ctaBody.textContent = 'A free account adds one-click AI fixes, scan history, GitHub and live-site scanning, and 10 scans every month.';
+    ctaBody.textContent = 'A free account adds one-click AI fixes, scan history, GitHub file scanning, a monthly Launch Check, and 10 scans every month.';
     ctaBtn.textContent = 'Create a free account →';
   }
 
