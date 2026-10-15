@@ -83,8 +83,10 @@ footer a{color:var(--text3);text-decoration:none}
     <li><strong>Code scanning</strong> — paste code, upload a file, or connect a GitHub repository. Finds exposed secrets, injection risks, broken auth, missing database rules, vulnerable and hallucinated dependencies, and runtime errors.</li>
     <li><strong>Live URL scanning</strong> — checks a deployed site for missing security headers and accidentally exposed paths such as <code>.env</code> or <code>.git/config</code>.</li>
     <li><strong>Launch Check</strong> — opens your app in a real browser, clicks through pages like a first-time visitor, and reports broken pages, console errors and failed requests, with screenshots.</li>
-    <li><strong>Continuous monitoring</strong> — re-scans after changes and alerts only when something actually gets worse.</li>
+    <li><strong>Data Access check</strong> — shows what a signed-out stranger can read from your database and API, reviews your Supabase rules, and on a staging project proves with two test users whether one customer can reach another's data.</li>
+    <li><strong>Continuous monitoring</strong> — re-checks your live pages every week, watches for changed third-party scripts, can run daily SEO checks, and alerts only when something actually gets worse.</li>
     <li><strong>Editor extension</strong> — scan from inside VS Code and Cursor, before the code is even committed.</li>
+    <li><strong>Developer tools</strong> — an <a href="https://github.com/SabahatGhauri/vibesafe-mcp" style="color:var(--cyan)">MCP server</a> for Claude and Cursor, a <a href="https://github.com/SabahatGhauri/vibesafe-scan" style="color:var(--cyan)">command-line scanner</a>, and a <a href="https://github.com/SabahatGhauri/vibesafe-action" style="color:var(--cyan)">GitHub Action</a> that blocks merges on critical issues.</li>
   </ul>
 
   <h2>What it deliberately does not do</h2>

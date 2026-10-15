@@ -92,15 +92,16 @@ footer a{color:var(--text3);text-decoration:none}
     <tr><td><strong>Broken access control</strong></td><td>API routes that let a logged-in user read <em>or change or delete</em> someone else's record by swapping an ID, and checks that only exist in the UI.</td></tr>
     <tr><td><strong>Injection and XSS</strong></td><td>SQL built from user input, unsafe HTML rendering, and path traversal.</td></tr>
     <tr><td><strong>Dependencies</strong></td><td>Packages with known vulnerabilities, and imports of packages that don't exist, a supply-chain risk when AI invents a name.</td></tr>
-    <tr><td><strong>Live site (Launch Check)</strong></td><td>Security headers, HTTPS, CORS, and exposed paths such as <code>/.env</code> or <code>/.git</code> on your deployed URL. Login-protected pages are reported as protected, not exposed.</td></tr>
+    <tr><td><strong>Live site (URL scan, Pro)</strong></td><td>Security headers, HTTPS, CORS, and exposed paths such as <code>/.env</code> or <code>/.git</code> on your deployed URL. Login-protected pages are reported as protected, not exposed.</td></tr>
   </table></div>
 
   <h2>How to run it</h2>
   <ul>
     <li><strong>In the browser</strong> — paste code or connect a GitHub repo at <a href="/try?utm_source=vibe_coding_security_scanner_steps" style="color:var(--cyan)">vibesafe.info/try</a>.</li>
     <li><strong>In your editor</strong> — the VibeSafe extension for VS Code and Cursor (VS Marketplace and Open VSX).</li>
-    <li><strong>In CI</strong> — a GitHub Action that scans on every push, or the <code>vibesafe-scan</code> CLI.</li>
-    <li><strong>On your live site</strong> — Launch Check scans the deployed URL before you announce it.</li>
+    <li><strong>In your AI assistant</strong> — the <a href="https://github.com/SabahatGhauri/vibesafe-mcp" target="_blank" rel="noopener" style="color:var(--cyan)">VibeSafe MCP server</a> for Claude, Cursor and other MCP clients.</li>
+    <li><strong>In CI</strong> — the <a href="https://github.com/SabahatGhauri/vibesafe-action" target="_blank" rel="noopener" style="color:var(--cyan)">VibeSafe GitHub Action</a>, which comments on every pull request and blocks the merge on critical issues, or the <code>vibesafe-scan</code> CLI.</li>
+    <li><strong>On your live site</strong> — a URL scan checks headers and exposed paths, Launch Check opens the app in a real browser and reports what breaks, and the Data Access check shows what a stranger can read from your database.</li>
   </ul>
 
   <h2>Tool-specific guides</h2>

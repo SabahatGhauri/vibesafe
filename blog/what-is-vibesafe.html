@@ -138,16 +138,19 @@ footer a{color:var(--text3);text-decoration:none}
 
   <h2>Beyond the code: checking the live app</h2>
   <h3>Launch Check</h3>
-  <p>Code can be correct and the app can still be broken. Launch Check opens your deployed app in a real browser and uses it the way a first-time visitor would &mdash; clicking through pages, filling forms &mdash; then reports dead links, console errors and failed requests with screenshots and a launch-readiness score. <a href="/blog/launch-check-can-now-see-your-app" style="color:var(--cyan)">More on how it works</a>.</p>
+  <p>Code can be correct and the app can still be broken. Launch Check opens your deployed app in a real browser and uses it the way a first-time visitor would &mdash; clicking through pages without submitting anything &mdash; then reports dead links, console errors and failed requests with screenshots and a launch-readiness score. <a href="/blog/launch-check-can-now-see-your-app" style="color:var(--cyan)">More on how it works</a>.</p>
   <h3>Live website scanning and monitoring</h3>
   <p>On paid plans, VibeSafe also scans a deployed URL from the outside: missing security headers, exposed files like <code>.env</code> or <code>.git/config</code>, insecure cookies and misconfigured CORS. It tells a real exposure apart from a page that merely loads &mdash; a correctly locked admin sign-in screen is reported as passing, not as a problem. Continuous monitoring re-scans your sites every week and alerts you if the security score drops.</p>
+
+  <h3>Who can see your data</h3>
+  <p>The Data Access check answers the question that matters most in an AI-built app: can one customer reach another customer's records? Paste your app's address and VibeSafe reports every table and route that answers someone with no account, on every plan. On Pro it can also review your Supabase rules and, on a staging project, sign in as two test users to prove what is blocked and what is allowed.</p>
 
   <h2>What VibeSafe is not</h2>
   <p>Honesty matters more in security than anywhere else, so plainly:</p>
   <ul class="plain">
     <li><strong>It's not a replacement for a professional audit.</strong> If your app handles payments at scale, health records or other high-risk data, pay for a human security review as well.</li>
     <li><strong>It doesn't catch everything.</strong> No automated scanner does. It catches the common, costly mistakes quickly &mdash; which is where most AI-built apps are actually exposed.</li>
-    <li><strong>It can't see your database settings from your code.</strong> It can tell you your app assumes row-level security is on; it can't confirm it is. That check is a few clicks in your Supabase dashboard.</li>
+    <li><strong>A code scan can't see your database settings.</strong> It can tell you your app assumes row-level security is on; it can't confirm it is. The separate Data Access check does that, from the outside and, on a staging project, with two test users.</li>
   </ul>
 
   <h2>Your code stays yours</h2>
@@ -157,9 +160,9 @@ footer a{color:var(--text3);text-decoration:none}
   <div class="tablewrap">
   <table>
     <tr><th>Plan</th><th>Price</th><th>Includes</th></tr>
-    <tr><td><strong>Free</strong></td><td>$0</td><td>10 code scans a month, 1 Launch Check a month, GitHub file scanning, the VS Code &amp; Cursor extension. No card required.</td></tr>
-    <tr><td><strong>Pro</strong></td><td>$29/month, or $264/year</td><td>Unlimited scans, live website scanning, the GitHub Action, monitoring for 5 sites. <strong>Cancel anytime.</strong></td></tr>
-    <tr><td><strong>Team</strong></td><td>$99/month, or $888/year</td><td>Everything in Pro for your whole team, monitoring for 25 sites.</td></tr>
+    <tr><td><strong>Free</strong></td><td>$0</td><td>10 code scans a month, 1 Launch Check a month, GitHub file scanning, the Data Access stranger check, the VS Code &amp; Cursor extension, CLI, MCP server and GitHub Action. No card required.</td></tr>
+    <tr><td><strong>Pro</strong></td><td>$29/month, or $264/year</td><td>Unlimited scans, live website scanning, the full Data Access check, unlimited Launch Checks, monitoring for 5 sites. 7-day free trial with no card. <strong>Cancel anytime.</strong></td></tr>
+    <tr><td><strong>Team</strong></td><td>$99/month, or $888/year</td><td>Everything in Pro for up to 10 people, monitoring for 25 sites.</td></tr>
   </table>
   </div>
 

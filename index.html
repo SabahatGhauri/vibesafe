@@ -69,7 +69,8 @@
   "description": "VibeSafe is an AI code security scanner for AI-built apps. It scans AI-generated code for exposed API keys, runtime errors, missing packages, and weak security settings before launch, with plain-English fixes.",
   "offers": [
     { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD", "description": "10 scans per month, free forever" },
-    { "@type": "Offer", "name": "Pro", "price": "29", "priceCurrency": "USD", "description": "Unlimited scans and continuous monitoring" }
+    { "@type": "Offer", "name": "Pro", "price": "29", "priceCurrency": "USD", "description": "Unlimited scans, live website scanning, the full Data Access check and continuous monitoring for 5 sites. 7-day free trial, no card needed." },
+    { "@type": "Offer", "name": "Team", "price": "99", "priceCurrency": "USD", "description": "Everything in Pro for up to 10 team members, with monitoring for 25 sites" }
   ],
   "featureList": [
     "Exposed API key & secret detection",
@@ -80,8 +81,15 @@
     "Hallucinated package detection (slopsquatting)",
     "Prompt injection risk detection",
     "Live URL / DAST scanning for deployed apps",
+    "Payment and webhook (money path) checks",
+    "Cost-abuse checks on AI and paid endpoints",
+    "Data Access check: what a signed-out stranger can read, plus a two-user access test",
+    "Launch Check: tests the deployed app in a real browser with screenshots",
+    "Continuous security, SEO and third-party script monitoring",
     "GitHub Action CI/CD integration",
-    "VS Code extension with inline diagnostics",
+    "VS Code and Cursor extension with inline diagnostics",
+    "MCP server for Claude, Cursor and other MCP clients",
+    "Command-line scanner (vibesafe-scan)",
     "Private GitHub repo scanning",
     "Team collaboration and shared scan history",
     "Plain-English fixes and pre-launch safety score"
@@ -1801,7 +1809,7 @@
       <div class="feature-card">
         <div class="feature-icon">🔁</div>
         <div class="feature-title">Continuous monitoring</div>
-        <div class="feature-desc">Connect your repo and VibeSafe automatically scans every new deployment. Ship fast and stay safe without thinking about it.</div>
+        <div class="feature-desc">Add your live pages and VibeSafe re-checks security every week and SEO every day, and tells you when a third-party script changes. You only get an email when something gets worse.</div>
         <span class="feature-tag tag-violet">Pro</span>
       </div>
       <div class="feature-card">
@@ -1932,12 +1940,12 @@
       <a href="https://github.com/SabahatGhauri/vibesafe-mcp" target="_blank" rel="noopener" style="text-decoration:none;background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:22px;display:block;">
         <div style="font-size:1.6rem;margin-bottom:10px;">🔌</div>
         <div style="font-weight:700;color:var(--text);margin-bottom:6px;">MCP server</div>
-        <div style="font-size:0.85rem;color:var(--text2);line-height:1.6;">Use VibeSafe as a tool inside Claude &amp; Cursor. <code style="color:var(--cyan)">npx vibesafe-mcp</code></div>
+        <div style="font-size:0.85rem;color:var(--text2);line-height:1.6;">Scan code, scan a live site, run a Launch Check or write Supabase RLS policies from Claude, Cursor or any MCP client. <code style="color:var(--cyan)">npx vibesafe-mcp</code></div>
       </a>
       <a href="https://github.com/marketplace/actions/vibesafe-vulnerability-scanner" target="_blank" rel="noopener" style="text-decoration:none;background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:22px;display:block;">
         <div style="font-size:1.6rem;margin-bottom:10px;">🔧</div>
         <div style="font-weight:700;color:var(--text);margin-bottom:6px;">GitHub Action</div>
-        <div style="font-size:0.85rem;color:var(--text2);line-height:1.6;">Scan every pull request and block merges on critical issues.</div>
+        <div style="font-size:0.85rem;color:var(--text2);line-height:1.6;">Scan every pull request, comment the results and block merges on critical issues. <code style="color:var(--cyan)">SabahatGhauri/vibesafe-action@v1</code></div>
       </a>
     </div>
   </div>
@@ -1964,6 +1972,9 @@
       <div style="font-size:0.92rem;color:var(--text2);padding:8px 0;border-bottom:1px solid var(--border);">🔀 <b style="color:var(--text)">Dangerous CORS &amp; open debug routes</b></div>
       <div style="font-size:0.92rem;color:var(--text2);padding:8px 0;border-bottom:1px solid var(--border);">🐛 <b style="color:var(--text)">Runtime errors &amp; logic bugs</b></div>
       <div style="font-size:0.92rem;color:var(--text2);padding:8px 0;border-bottom:1px solid var(--border);">🤖 <b style="color:var(--text)">Prompt-injection risks</b></div>
+      <div style="font-size:0.92rem;color:var(--text2);padding:8px 0;border-bottom:1px solid var(--border);">🚪 <b style="color:var(--text)">Broken access control &amp; IDOR</b></div>
+      <div style="font-size:0.92rem;color:var(--text2);padding:8px 0;border-bottom:1px solid var(--border);">💳 <b style="color:var(--text)">Unverified payment webhooks &amp; browser-set prices</b></div>
+      <div style="font-size:0.92rem;color:var(--text2);padding:8px 0;border-bottom:1px solid var(--border);">💸 <b style="color:var(--text)">Cost abuse on AI &amp; paid endpoints</b></div>
     </div>
     <div style="text-align:center;margin-top:32px;">
       <a href="/learn" class="btn btn-outline" style="text-decoration:none;">See every issue explained →</a>
@@ -2073,7 +2084,7 @@
         <a href="/login?mode=signup" class="btn btn-primary btn-lg" style="text-decoration:none;">🔐 Check my app</a>
         <a href="/user-guide#dataaccess" class="btn btn-outline btn-lg" style="text-decoration:none;">How it works</a>
       </div>
-      <p style="font-size:0.78rem;color:var(--text3);">Read-only · Nothing is written, changed or deleted · Part of Pro</p>
+      <p style="font-size:0.78rem;color:var(--text3);">Read-only · Nothing is written, changed or deleted · Stranger check on every plan, full check and two-user test on Pro</p>
     </div>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:40px;">
@@ -2133,10 +2144,14 @@
           <li class="plan-feature"><span class="feat-check">✓</span> 10 scans per month</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Security vulnerability scan</li>
           <li class="plan-feature"><span class="feat-check">✓</span> GitHub URL &amp; private repo scan</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> One-click fixes &amp; copy-to-AI prompt</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> 1 Launch Check per month</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> What-a-stranger-can-see data check</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Runtime error detection</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Plain-English explanations</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Safety score (0–100)</li>
           <li class="plan-feature"><span class="feat-check">✓</span> VS Code &amp; Cursor extension</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> CLI, MCP server &amp; GitHub Action (with a free API key)</li>
           <li class="plan-feature"><span class="feat-x">–</span> Team collaboration</li>
           <li class="plan-feature"><span class="feat-x">–</span> Shared scan history</li>
         </ul>
@@ -2160,10 +2175,10 @@
           <li class="plan-feature"><span class="feat-check">✓</span> Unlimited scans</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Full security scan suite</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Live URL / DAST scanning</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Data Access check (who can see what)</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Full Data Access check &amp; two-user test</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Unlimited Launch Checks</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Monitoring for 5 sites (security, SEO, scripts)</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Private GitHub repo scanning</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> CI/CD GitHub Action</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> VS Code &amp; Cursor extension</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Team collaboration (up to 5)</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Shared team scan history</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Safety score &amp; scan history</li>
@@ -2189,13 +2204,9 @@
         <ul class="plan-features">
           <li class="plan-feature"><span class="feat-check">✓</span> Everything in Pro</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Up to 10 team members</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Continuous monitoring</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> CI/CD pipeline integration</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Slack &amp; email alerts</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> OWASP Top 10 compliance report</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Custom scan rules</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> Role-based access control</li>
-          <li class="plan-feature"><span class="feat-check">✓</span> API access</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Monitoring for 25 sites</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Shared team scan history</li>
+          <li class="plan-feature"><span class="feat-check">✓</span> Email alerts when security or SEO gets worse</li>
           <li class="plan-feature"><span class="feat-check">✓</span> Priority support (4h)</li>
         </ul>
         <button class="plan-btn plan-btn-outline" onclick="startCheckout('team')">Upgrade to Team</button>
