@@ -2585,10 +2585,11 @@ async function vsSend() {
     var hist = vsMessages
       .filter(function(m) { return m.role !== 'typing'; })
       .map(function(m) { return { role: m.role === 'bot' ? 'assistant' : 'user', content: m.text }; });
+    var chatToken = window.vsTurnstile ? await window.vsTurnstile.getToken('chat') : null;
     var res = await fetch('https://vibesafe-api.vercel.app/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: hist })
+      body: JSON.stringify({ messages: hist, turnstileToken: chatToken })
     });
     var data = await res.json();
     reply = (data && data.reply) ? data.reply : vsFallback(msg);
@@ -2783,10 +2784,12 @@ async function submitLead(e) {
   }
   btn.disabled = true; btn.textContent = 'Sending…'; msg.textContent = '';
   try {
+    var leadToken = null;
+    try { leadToken = window.vsTurnstile ? await window.vsTurnstile.getToken('lead') : null; } catch (e) {}
     await fetch('https://vibesafe-api.vercel.app/api/lead', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email, name: name, website: (document.getElementById('leadHp')||{}).value || '', source: 'homepage', magnet: 'security-checklist' })
+      body: JSON.stringify({ turnstileToken: leadToken, email: email, name: name, website: (document.getElementById('leadHp')||{}).value || '', source: 'homepage', magnet: 'security-checklist' })
     });
     // Deliver the value immediately: open the free checklist.
     document.getElementById('leadForm').style.display = 'none';
@@ -3137,6 +3140,7 @@ async function submitLead(e) {
   <script defer src="/_vercel/insights/script.js"></script>
   <script defer src="/_vercel/speed-insights/script.js"></script>
   <script defer src="/nav-auth.js"></script>
+<script src="/turnstile.js" defer></script>
 </body>
 </html>
 
