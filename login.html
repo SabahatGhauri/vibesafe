@@ -281,6 +281,7 @@ body{
     </div>
   </div>
 
+  <div id="vs-turnstile" style="display:flex;justify-content:center;margin-bottom:10px"></div>
   <button type="submit" class="auth-btn" id="authBtn">
     <span id="authBtnText">Sign in</span>
   </button>
@@ -303,6 +304,7 @@ body{
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/turnstile.js"></script>
 <script>
 // ── SUPABASE CONFIG ──
 const SUPABASE_URL = 'https://uxsmmpujxbzdgxxburxr.supabase.co';
@@ -433,7 +435,9 @@ async function sendReset() {
   btnText.innerHTML = '<span class="spinner"></span>';
   hideMsg();
   try {
+    const captchaToken = await window.vsTurnstile.getToken('reset') || undefined;
     const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+      captchaToken: captchaToken,
       redirectTo: window.location.origin + '/login.html'
     });
     if (error) throw error;
@@ -510,10 +514,11 @@ async function handleAuth() {
       // localStorage on first touch (utm_source, or referrer host, or 'direct').
       var signupSource = 'direct';
       try { signupSource = localStorage.getItem('vs_source') || 'direct'; } catch (e) {}
+      const captchaToken = await window.vsTurnstile.getToken('signup') || undefined;
       const { data, error } = await supabaseClient.auth.signUp({
         email: email,
         password: password,
-        options: { data: { full_name: name || email.split('@')[0], signup_source: signupSource } }
+        options: { captchaToken: captchaToken, data: { full_name: name || email.split('@')[0], signup_source: signupSource } }
       });
       if (error) throw error;
 
@@ -527,9 +532,11 @@ async function handleAuth() {
         setTimeout(function() { window.location.href = afterAuthDest(); }, 1000);
       }
     } else {
+      const captchaToken = await window.vsTurnstile.getToken('login') || undefined;
       const { data, error } = await supabaseClient.auth.signInWithPassword({
         email: email,
-        password: password
+        password: password,
+        options: { captchaToken: captchaToken }
       });
       if (error) throw error;
       showMsg('Signed in! Redirecting...', 'success');
