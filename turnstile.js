@@ -7,7 +7,7 @@
 // when it isn't sure, inside the element with id "vs-turnstile" if the page
 // has one (otherwise a small box pinned to the bottom of the screen).
 (function () {
-  var SITE_KEY = ''; // Cloudflare Turnstile site key (public). Empty = off.
+  var SITE_KEY = '0x4AAAAAAFs99bThVIoiwUZL'; // Cloudflare Turnstile site key (public). Empty = off.
 
   var scriptPromise = null;
   function loadScript() {
