@@ -3641,19 +3641,19 @@ function buildIssueCard(issue, idx) {
     <div class="issue-card-header" onclick="toggleIssue(this.parentElement)">
       <div class="issue-sev-dot"></div>
       <div class="issue-meta">
-        <div class="issue-type">${issue.type}${issue.owasp ? ` <span class="owasp-tag" title="OWASP Top 10:2025">${issue.owasp.id} ${issue.owasp.name}</span>` : ''}</div>
-        <div class="issue-title">${issue.title}</div>
-        <div class="issue-line">${issue.line}</div>
+        <div class="issue-type">${escHtml(issue.type)}${issue.owasp ? ` <span class="owasp-tag" title="OWASP Top 10:2025">${escHtml(issue.owasp.id)} ${escHtml(issue.owasp.name)}</span>` : ''}</div>
+        <div class="issue-title">${escHtml(issue.title)}</div>
+        <div class="issue-line">${escHtml(issue.line)}</div>
       </div>
       <span class="sev-pill sev-pill-${issue.sev}">${issue.sev === 'critical' ? 'High' : issue.sev === 'warning' ? 'Medium' : 'Low'}</span>
       <div class="issue-chevron">▶</div>
     </div>
     <div class="issue-body">
-      <div class="issue-desc">${issue.desc}</div>
+      <div class="issue-desc">${escHtml(issue.desc)}</div>
       ${issue.why ? `<div class="fix-why"><b>Why this happened:</b> ${escHtml(issue.why)}</div>` : ''}
       ${(issue.before || issue.after) ? `<div class="code-snippet">
-        <div class="del">− ${issue.before}</div>
-        <div class="add">+ ${issue.after}</div>
+        <div class="del">− ${escHtml(issue.before)}</div>
+        <div class="add">+ ${escHtml(issue.after)}</div>
       </div>` : ''}
       ${(issue.steps && issue.steps.length) ? `<div class="fix-steps">
         <div class="fix-steps-title">How to fix it</div>
@@ -3775,7 +3775,7 @@ function fixIssue(id) {
   const fixBtn = document.getElementById(`fix-btn-${id}`);
   fixBtn.parentElement.innerHTML = `
     <div class="fixed-label">
-      ✅ Fixed — ${issue.fix}
+      ✅ Fixed — ${escHtml(issue.fix)}
     </div>
   `;
 
@@ -5130,7 +5130,7 @@ function showToast(msg, type='info') {
   const t = document.createElement('div');
   t.dataset.msg = msg;
   t.className = `toast ${type}`;
-  t.innerHTML = `<span>${icons[type]||'•'}</span><span>${msg}</span>`;
+  t.innerHTML = `<span>${icons[type]||'•'}</span><span>${escHtml(msg)}</span>`;
   wrap.appendChild(t);
   setTimeout(() => {
     t.style.opacity = '0';
