@@ -1193,8 +1193,8 @@ function renderTrialBanner() {
     if (currentTrial.card_on_file) {
       // Card-on-file trial: Pro carries on by itself, so say when the first charge is.
       text.textContent = 'Unlimited scans, live website scanning, monitoring and the Data Access check are on. '
-        + 'Your first $29 is charged on ' + trialDateText(currentTrial.ends_at) + '. To cancel before then, '
-        + 'email contact@vibesafe.info and nothing is charged.';
+        + 'Your first $29 is charged on ' + trialDateText(currentTrial.ends_at) + '. To stop it, press '
+        + 'Cancel subscription under your plan before then and nothing is charged.';
       actions.innerHTML = '<button class="btn btn-primary" style="font-size:0.83rem;" onclick="setPage(\'access\', event)">Try the Data Access check \u2192</button>';
     } else {
       text.textContent = 'Unlimited scans, live website scanning, monitoring and the Data Access check are switched on until '
@@ -1240,6 +1240,67 @@ async function handleCheckoutReturn() {
     : (currentTrial.card_on_file ? 'Your Pro trial has started. Nothing is charged today.' : 'You are on Pro. Thank you!'), 'success');
 }
 
+// Cancel / resume. Cancelling ends the plan at the end of the period it is in
+// (during the trial: day 7), so a trial cancelled in time is never charged.
+var SUB_API = 'https://vibesafe-api.vercel.app/api/cancel-subscription';
+var currentSub = null;
+
+async function subFetch(method, body) {
+  var { data: { session } } = await sbClient.auth.getSession();
+  var res = await fetch(SUB_API, {
+    method: method,
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (session ? session.access_token : '') },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  var out = await res.json().catch(function () { return {}; });
+  if (!res.ok) throw new Error(out.error || 'Could not reach billing. Please try again.');
+  return out;
+}
+
+function renderSubManage() {
+  var wrap = document.getElementById('subManage');
+  if (!wrap) return;
+  if (!currentSub || !currentSub.has_subscription) { wrap.style.display = 'none'; return; }
+  var note = document.getElementById('subNote');
+  var btn = document.getElementById('cancelSubBtn');
+  var when = currentSub.ends_at ? trialDateText(currentSub.ends_at) : '';
+  if (currentSub.cancel_at_period_end) {
+    note.textContent = 'Cancelled. Pro stays on until ' + when + (currentSub.on_trial ? ' and nothing will be charged.' : ', then no more charges.');
+    btn.textContent = 'Keep my subscription';
+  } else {
+    note.textContent = '';
+    btn.textContent = 'Cancel subscription';
+  }
+  btn.disabled = false;
+  wrap.style.display = 'block';
+}
+
+async function refreshSubscription(hasSub) {
+  if (!hasSub) { currentSub = null; renderSubManage(); return; }
+  try { currentSub = await subFetch('GET'); } catch (e) { currentSub = null; }
+  renderSubManage();
+}
+
+async function toggleSubscription(btn) {
+  if (!currentSub) return;
+  var cancelling = !currentSub.cancel_at_period_end;
+  if (cancelling) {
+    var when = currentSub.ends_at ? trialDateText(currentSub.ends_at) : 'the end of this billing period';
+    var msg = currentSub.on_trial
+      ? 'Cancel your Pro trial? Pro stays on until ' + when + ' and your card will not be charged.'
+      : 'Cancel your subscription? Pro stays on until ' + when + ', then your account moves to the free plan.';
+    if (!window.confirm(msg)) return;
+  }
+  btn.disabled = true;
+  try {
+    currentSub = await subFetch('POST', { action: cancelling ? 'cancel' : 'resume' });
+    showToast(cancelling ? 'Subscription cancelled. Nothing more will be charged.' : 'Your subscription will continue.', 'success');
+  } catch (e) {
+    showToast(e.message, 'error');
+  }
+  renderSubManage();
+}
+
 async function maybeAutoStartTrial() {
   var wants = false;
   try { wants = new URLSearchParams(window.location.search).get('trial') === '1'; } catch (e) {}
@@ -1264,6 +1325,7 @@ async function loadProfile() {
     // never shows Pro for a trial the API has already stopped honouring.
     currentPlan = effectivePlanOf(res.data);
     renderPlanCard(currentPlan);
+    refreshSubscription(!!(res.data && res.data.stripe_subscription_id));
     renderTrialBanner();
     if (typeof markProFeatures === 'function') markProFeatures();
     maybeShowAdminNav();
@@ -1667,6 +1729,12 @@ document.addEventListener('click', function(e) {
         <button class="upgrade-btn" id="upgradeBtn" onclick="upgradeToPro()">
           Upgrade to Pro →
         </button>
+        <!-- Shown only to subscribers (incl. trial with a card). See refreshSubscription(). -->
+        <div id="subManage" style="display:none;margin-top:8px;text-align:center;">
+          <div id="subNote" style="font-size:0.74rem;color:var(--text3);line-height:1.45;margin-bottom:4px;"></div>
+          <button id="cancelSubBtn" type="button" onclick="toggleSubscription(this)"
+            style="background:none;border:none;color:var(--text3);font-size:0.76rem;text-decoration:underline;cursor:pointer;padding:2px 4px;">Cancel subscription</button>
+        </div>
       </div>
     </div>
   </aside>
