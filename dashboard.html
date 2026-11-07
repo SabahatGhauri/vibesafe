@@ -1070,7 +1070,7 @@ const FREE_SCAN_LIMIT = 10;
     if (typeof updateSampleBtnVisibility === 'function') updateSampleBtnVisibility();
     // Load scan history once logged in
     if (typeof loadScanHistory === 'function') loadScanHistory();
-    if (typeof loadProfile === 'function') loadProfile().then(maybeAutoStartTrial);
+    if (typeof loadProfile === 'function') loadProfile().then(maybeAutoStartTrial).then(handleCheckoutReturn);
     if (typeof showSiteBroadcast === 'function') showSiteBroadcast();
   }
   // The session check is async — DOMContentLoaded may have already fired by now.
@@ -1116,6 +1116,11 @@ function effectivePlanOf(row) {
 }
 
 function trialStateOf(row) {
+  // Pro trial with a card on file (Stripe subscription still in its 7 days).
+  if (row && row.stripe_subscription_id && row.trial_ends_at && Date.parse(row.trial_ends_at) > Date.now()) {
+    var left = Date.parse(row.trial_ends_at) - Date.now();
+    return { on_trial: true, card_on_file: true, trial_used: true, days_left: Math.ceil(left / 86400000), ends_at: row.trial_ends_at };
+  }
   if (!row || !row.trial_ends_at || row.stripe_subscription_id) {
     return { on_trial: false, trial_used: !!(row && row.trial_used), days_left: null, ends_at: null };
   }
@@ -1135,8 +1140,9 @@ function trialDateText(iso) {
   } catch (e) { return ''; }
 }
 
-// The customer pressed "Try Pro free for 7 days". No card is collected here and
-// nothing is charged: the server switches Pro on and stops it on day 7.
+// The customer pressed "Try Pro free for 7 days". The server opens a Stripe
+// checkout: they add a card, nothing is charged today, and the first $29 is
+// charged on day 7 unless they cancel. The webhook switches Pro on.
 async function startTrial(btn) {
   if (!currentUser) { window.location.href = '/login.html?trial=1'; return; }
   var label = btn && btn.textContent;
@@ -1154,7 +1160,12 @@ async function startTrial(btn) {
       if (btn) { btn.disabled = false; btn.textContent = label; }
       return;
     }
-    showToast(out.message || 'Pro is on for 7 days - no card needed', 'success');
+    if (out.checkout_url) {
+      if (btn) btn.textContent = 'Opening checkout...';
+      window.location.href = out.checkout_url;
+      return;
+    }
+    showToast(out.message || 'Pro is on', 'success');
     await loadProfile();
   } catch (e) {
     showToast('Could not start the trial - check your connection and try again', 'error');
@@ -1179,11 +1190,19 @@ function renderTrialBanner() {
     title.textContent = ending
       ? (d === 1 ? 'Your Pro trial ends tomorrow' : 'Your Pro trial ends in ' + d + ' days')
       : 'Pro trial \u2014 ' + d + ' day' + (d === 1 ? '' : 's') + ' left';
-    text.textContent = 'Unlimited scans, live website scanning, monitoring and the Data Access check are switched on until '
-      + trialDateText(currentTrial.ends_at) + '. There is no card on file and nothing to cancel \u2014 if you do nothing, '
-      + 'your account simply goes back to the free plan.';
-    actions.innerHTML = '<button class="btn btn-primary" style="font-size:0.83rem;" onclick="upgradeToPro()">Keep Pro \u2014 add a card</button>'
-      + '<button class="btn btn-ghost" style="font-size:0.83rem;" onclick="setPage(\'access\', event)">Try the Data Access check \u2192</button>';
+    if (currentTrial.card_on_file) {
+      // Card-on-file trial: Pro carries on by itself, so say when the first charge is.
+      text.textContent = 'Unlimited scans, live website scanning, monitoring and the Data Access check are on. '
+        + 'Your first $29 is charged on ' + trialDateText(currentTrial.ends_at) + '. To cancel before then, '
+        + 'email contact@vibesafe.info and nothing is charged.';
+      actions.innerHTML = '<button class="btn btn-primary" style="font-size:0.83rem;" onclick="setPage(\'access\', event)">Try the Data Access check \u2192</button>';
+    } else {
+      text.textContent = 'Unlimited scans, live website scanning, monitoring and the Data Access check are switched on until '
+        + trialDateText(currentTrial.ends_at) + '. There is no card on file and nothing to cancel \u2014 if you do nothing, '
+        + 'your account simply goes back to the free plan.';
+      actions.innerHTML = '<button class="btn btn-primary" style="font-size:0.83rem;" onclick="upgradeToPro()">Keep Pro \u2014 add a card</button>'
+        + '<button class="btn btn-ghost" style="font-size:0.83rem;" onclick="setPage(\'access\', event)">Try the Data Access check \u2192</button>';
+    }
     wrap.style.display = 'block';
     return;
   }
@@ -1192,15 +1211,33 @@ function renderTrialBanner() {
   if (currentPlan === 'free' && !currentTrial.trial_used) {
     wrap.style.borderLeftColor = '#00D4FF';
     icon.textContent = '\u2728';
-    title.textContent = 'Try Pro free for 7 days \u2014 no card needed';
+    title.textContent = 'Try Pro free for 7 days';
     text.textContent = 'Unlimited scans, live website scanning, continuous monitoring and the Data Access check. '
-      + 'We do not ask for a card, and it ends by itself after 7 days.';
+      + 'Add a card to start: nothing is charged today, and the first $29 is charged on day 7 unless you cancel before then.';
     actions.innerHTML = '<button class="btn btn-primary" style="font-size:0.83rem;" onclick="startTrial(this)">Start my 7 days</button>';
     wrap.style.display = 'block';
     return;
   }
 
   wrap.style.display = 'none';
+}
+
+// Back from Stripe checkout. The webhook can land a few seconds after the
+// redirect, so re-read the plan a couple of times before giving up.
+async function handleCheckoutReturn() {
+  var status = null;
+  try { status = new URLSearchParams(window.location.search).get('checkout'); } catch (e) {}
+  if (!status) return;
+  try { history.replaceState(null, '', window.location.pathname); } catch (e) {}
+  if (status === 'cancelled') { showToast('Checkout cancelled. Nothing was charged.', 'info'); return; }
+  if (status !== 'success') return;
+  for (var i = 0; i < 5 && currentPlan === 'free'; i++) {
+    await new Promise(function (r) { setTimeout(r, 2000); });
+    await loadProfile();
+  }
+  showToast(currentPlan === 'free'
+    ? 'Payment details received. Pro will switch on in a minute, refresh if it has not.'
+    : (currentTrial.card_on_file ? 'Your Pro trial has started. Nothing is charged today.' : 'You are on Pro. Thank you!'), 'success');
 }
 
 async function maybeAutoStartTrial() {
@@ -1307,19 +1344,20 @@ function renderPlanCard(plan) {
     if (barFill) barFill.style.width = '100%';
     if (metaEl) {
       metaEl.innerHTML = onTrial
-        ? '<span>' + currentTrial.days_left + ' day' + (currentTrial.days_left === 1 ? '' : 's') + ' left \u00B7 no card on file</span>'
+        ? '<span>' + currentTrial.days_left + ' day' + (currentTrial.days_left === 1 ? '' : 's') + ' left \u00B7 '
+          + (currentTrial.card_on_file ? 'first charge ' + trialDateText(currentTrial.ends_at) : 'no card on file') + '</span>'
         : '<span>Unlimited scans</span>';
     }
     if (upgradeBtn) {
-      if (onTrial) {
-        // Still the real upgrade button: this is how a trial becomes a customer.
+      if (onTrial && !currentTrial.card_on_file) {
+        // Still the real upgrade button: this is how a card-free trial becomes a customer.
         upgradeBtn.textContent = 'Keep Pro \u2014 add a card';
         upgradeBtn.disabled = false;
         upgradeBtn.style.opacity = '';
         upgradeBtn.style.cursor = '';
         upgradeBtn.onclick = upgradeToPro;
       } else {
-        upgradeBtn.textContent = plan === 'team' ? "You're on Team ✓" : "You're on Pro ✓";
+        upgradeBtn.textContent = plan === 'team' ? "You're on Team ✓" : (onTrial ? "Pro trial ✓" : "You're on Pro ✓");
         upgradeBtn.disabled = true;
         upgradeBtn.style.opacity = '0.6';
         upgradeBtn.style.cursor = 'default';
@@ -1656,7 +1694,8 @@ document.addEventListener('click', function(e) {
       </div>
     </div>
 
-    <!-- Card-free 7-day Pro trial. Rendered by renderTrialBanner(); the
+    <!-- 7-day Pro trial (card on file since Nov 2026; older card-free trials
+         still show until they run out). Rendered by renderTrialBanner(); the
          countdown is there so nobody is surprised on day 7. -->
     <div id="trialBanner" style="display:none;grid-column:1/-1;background:var(--surface);border:1px solid rgba(16,185,129,0.32);border-left:3px solid #10B981;border-radius:12px;padding:15px 18px;margin-bottom:14px;">
       <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;">
