@@ -691,6 +691,11 @@ function showDoc(doc) {
   });
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+// Deep links: /legal#terms and /legal#cookies open that tab.
+(function () {
+  var h = (location.hash || '').slice(1);
+  if (h === 'terms' || h === 'cookies' || h === 'privacy') showDoc(h);
+})();
 </script>
   <script defer src="/_vercel/insights/script.js"></script>
   <script defer src="/_vercel/speed-insights/script.js"></script>
