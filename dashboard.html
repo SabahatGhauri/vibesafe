@@ -1502,6 +1502,109 @@ async function savePassword(e) {
   btn.textContent = label;
 }
 
+// ── ACCOUNT: email preferences + delete account (vibesafe-api/api/account.js) ──
+var ACCOUNT_API = 'https://vibesafe-api.vercel.app/api/account';
+
+async function accountFetch(method, body) {
+  var { data: { session } } = await sbClient.auth.getSession();
+  var res = await fetch(ACCOUNT_API, {
+    method: method,
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (session ? session.access_token : '') },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  var out = await res.json().catch(function () { return {}; });
+  if (!res.ok) throw new Error(out.error || 'Something went wrong. Please try again.');
+  return out;
+}
+
+function acctSay(id, text, kind) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  if (!text) { el.style.display = 'none'; return; }
+  el.textContent = text;
+  el.style.color = kind === 'error' ? '#FCA5A5' : kind === 'success' ? 'var(--green)' : 'var(--text3)';
+  el.style.display = 'block';
+}
+
+function closeUserMenu() {
+  var menu = document.getElementById('userMenu');
+  if (menu) menu.style.display = 'none';
+}
+
+async function openEmailPrefsModal() {
+  closeUserMenu();
+  var box = document.getElementById('emailPrefsMarketing');
+  document.getElementById('emailPrefsAddr').textContent = (currentUser && currentUser.email) || 'your address';
+  box.disabled = true;
+  acctSay('emailPrefsMsg', 'Loading your preferences…');
+  document.getElementById('emailPrefsModal').classList.add('open');
+  try {
+    var out = await accountFetch('GET');
+    box.checked = !!out.marketing_emails;
+    box.disabled = false;
+    acctSay('emailPrefsMsg', '');
+  } catch (e) {
+    acctSay('emailPrefsMsg', e.message, 'error');
+  }
+}
+
+function closeEmailPrefsModal() {
+  document.getElementById('emailPrefsModal').classList.remove('open');
+}
+
+async function saveEmailPrefs(box) {
+  var want = box.checked;
+  box.disabled = true;
+  try {
+    await accountFetch('POST', { action: 'email-prefs', marketing: want });
+    acctSay('emailPrefsMsg', want ? 'Saved. You will get product updates and offers.' : 'Saved. You are unsubscribed from product updates and offers.', 'success');
+  } catch (e) {
+    box.checked = !want;
+    acctSay('emailPrefsMsg', e.message, 'error');
+  }
+  box.disabled = false;
+}
+
+async function openDeleteAccountModal() {
+  closeUserMenu();
+  document.getElementById('deleteAcctAddr').textContent = (currentUser && currentUser.email) || 'your account';
+  document.getElementById('deleteAcctForm').reset();
+  document.getElementById('deleteAcctBtn').disabled = true;
+  document.getElementById('deleteAcctBilling').style.display = 'none';
+  acctSay('deleteAcctMsg', '');
+  document.getElementById('deleteAcctModal').classList.add('open');
+  setTimeout(function () { var i = document.getElementById('deleteAcctConfirm'); if (i) i.focus(); }, 60);
+  try {
+    var out = await accountFetch('GET');
+    if (out.has_subscription) document.getElementById('deleteAcctBilling').style.display = 'list-item';
+  } catch (e) { /* the list still reads correctly without the billing line */ }
+}
+
+function closeDeleteAccountModal() {
+  var btn = document.getElementById('deleteAcctBtn');
+  if (btn && btn.dataset.busy === '1') return; // never close mid-delete
+  document.getElementById('deleteAcctModal').classList.remove('open');
+  document.getElementById('deleteAcctForm').reset();
+}
+
+async function confirmDeleteAccount(e) {
+  if (e) e.preventDefault();
+  var input = document.getElementById('deleteAcctConfirm');
+  var btn = document.getElementById('deleteAcctBtn');
+  if (input.value.trim() !== 'DELETE') { acctSay('deleteAcctMsg', 'Type DELETE to confirm.', 'error'); return; }
+  btn.disabled = true; btn.dataset.busy = '1'; btn.textContent = 'Deleting…';
+  acctSay('deleteAcctMsg', 'Cancelling billing and removing your data. This takes a few seconds.');
+  try {
+    await accountFetch('POST', { action: 'delete', confirm: 'DELETE' });
+    acctSay('deleteAcctMsg', 'Your account has been deleted. Signing you out…', 'success');
+    try { await sbClient.auth.signOut(); } catch (err) { /* the session is already gone server-side */ }
+    setTimeout(function () { window.location.href = '/?account=deleted'; }, 1400);
+  } catch (err) {
+    btn.dataset.busy = ''; btn.disabled = false; btn.textContent = 'Delete account';
+    acctSay('deleteAcctMsg', err.message, 'error');
+  }
+}
+
 async function handleLogout() {
   await sbClient.auth.signOut();
   window.location.href = '/login.html';
@@ -1553,8 +1656,15 @@ document.addEventListener('click', function(e) {
         <button id="pwdMenuItem" onclick="openPasswordModal()" style="width:100%;text-align:left;padding:8px 12px;background:none;border:none;color:var(--text2);font-size:0.82rem;cursor:pointer;border-radius:6px;font-family:'Inter','Inter Fallback',sans-serif" onmouseover="this.style.background='var(--surface3)'" onmouseout="this.style.background='none'">
           Change password
         </button>
+        <button onclick="openEmailPrefsModal()" style="width:100%;text-align:left;padding:8px 12px;background:none;border:none;color:var(--text2);font-size:0.82rem;cursor:pointer;border-radius:6px;font-family:'Inter','Inter Fallback',sans-serif" onmouseover="this.style.background='var(--surface3)'" onmouseout="this.style.background='none'">
+          Email preferences
+        </button>
         <button onclick="handleLogout()" style="width:100%;text-align:left;padding:8px 12px;background:none;border:none;color:var(--text2);font-size:0.82rem;cursor:pointer;border-radius:6px;font-family:'Inter','Inter Fallback',sans-serif" onmouseover="this.style.background='var(--surface3)'" onmouseout="this.style.background='none'">
           Sign out
+        </button>
+        <div style="border-top:1px solid var(--border);margin:6px 0 4px"></div>
+        <button onclick="openDeleteAccountModal()" style="width:100%;text-align:left;padding:8px 12px;background:none;border:none;color:#FCA5A5;font-size:0.82rem;cursor:pointer;border-radius:6px;font-family:'Inter','Inter Fallback',sans-serif" onmouseover="this.style.background='rgba(239,68,68,0.12)'" onmouseout="this.style.background='none'">
+          Delete account
         </button>
       </div>
     </div>
@@ -2305,6 +2415,61 @@ document.addEventListener('click', function(e) {
   </div>
 </div>
 
+<!-- Email preferences: the in-dashboard twin of the unsubscribe link in every
+     marketing email. Both read and write the same email_optout list. -->
+<div class="vs-modal-overlay" id="emailPrefsModal" onclick="if(event.target===this)closeEmailPrefsModal()">
+  <div class="vs-modal" style="max-width:440px">
+    <button class="vs-modal-close" onclick="closeEmailPrefsModal()" aria-label="Close">&times;</button>
+    <div class="vs-modal-head">
+      <span class="vs-modal-ico">&#9993;&#65039;</span>
+      <span class="vs-modal-title">Email preferences</span>
+    </div>
+    <div class="vs-modal-sub">Choose what VibeSafe sends to <strong id="emailPrefsAddr" style="color:var(--text)"></strong>.</div>
+    <label class="acct-pref">
+      <span class="acct-pref-text"><strong>Product updates and offers</strong><small>New features, tips for securing your app, and the occasional discount. A few emails a month at most.</small></span>
+      <span class="acct-switch"><input type="checkbox" id="emailPrefsMarketing" onchange="saveEmailPrefs(this)" disabled><span class="acct-slider" aria-hidden="true"></span></span>
+    </label>
+    <div class="acct-pref acct-pref-locked">
+      <span class="acct-pref-text"><strong>Account and security emails</strong><small>Receipts, trial reminders, password resets and monitoring alerts for pages you watch. These always send while you have an account.</small></span>
+      <span class="acct-always">Always on</span>
+    </div>
+    <div id="emailPrefsMsg" class="acct-msg" role="status"></div>
+    <div class="vs-modal-actions">
+      <button type="button" class="vs-modal-btn ghost" onclick="closeEmailPrefsModal()">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete account. Cancels any subscription first; if that fails nothing is
+     deleted (see vibesafe-api/api/account.js). -->
+<div class="vs-modal-overlay" id="deleteAcctModal" onclick="if(event.target===this)closeDeleteAccountModal()">
+  <div class="vs-modal acct-danger" style="max-width:460px">
+    <button class="vs-modal-close" onclick="closeDeleteAccountModal()" aria-label="Close">&times;</button>
+    <div class="vs-modal-head">
+      <span class="vs-modal-ico">&#9888;&#65039;</span>
+      <span class="vs-modal-title">Delete your account</span>
+    </div>
+    <div class="vs-modal-sub">This permanently deletes <strong id="deleteAcctAddr" style="color:var(--text)"></strong> and everything in it. It cannot be undone.</div>
+    <ul class="acct-list">
+      <li>Your scan history and results</li>
+      <li>Watched pages, monitoring and SEO history</li>
+      <li>API keys, so the editor extension, CLI, MCP and GitHub Action stop working</li>
+      <li>Your team, if you own one. Members lose access to it</li>
+      <li id="deleteAcctBilling" style="display:none"><strong>Your paid subscription is cancelled</strong> straight away, with no further charges</li>
+    </ul>
+    <div class="acct-note">We keep only your email address on our do-not-email list, so you never get marketing from us again. Past invoices stay with our payment provider, as tax law requires.</div>
+    <form id="deleteAcctForm" onsubmit="confirmDeleteAccount(event)" autocomplete="off">
+      <label for="deleteAcctConfirm" class="acct-label">Type <strong>DELETE</strong> to confirm</label>
+      <input type="text" id="deleteAcctConfirm" class="acct-input" oninput="document.getElementById('deleteAcctBtn').disabled = this.value.trim() !== 'DELETE'" autocapitalize="characters" spellcheck="false">
+      <div id="deleteAcctMsg" class="acct-msg" role="status"></div>
+      <div class="vs-modal-actions">
+        <button type="button" class="vs-modal-btn ghost" onclick="closeDeleteAccountModal()">Keep my account</button>
+        <button type="submit" class="vs-modal-btn acct-delete-btn" id="deleteAcctBtn" disabled>Delete account</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <div class="vs-modal-overlay" id="lowScoreModal" onclick="if(event.target===this)closeLowScoreModal()">
   <div class="vs-modal" id="lowScoreModalCard"></div>
 </div>
@@ -2334,6 +2499,33 @@ document.addEventListener('click', function(e) {
 .vs-modal-btn.primary:hover { background: #33DCFF; }
 .vs-modal-btn.ghost { background: var(--surface2); color: var(--text); border: 1px solid var(--border2); }
 .vs-modal-btn.ghost:hover { border-color: var(--cyan); }
+.acct-pref { display: flex; align-items: center; gap: 14px; padding: 14px; border: 1px solid var(--border2); border-radius: 12px; background: var(--bg2); margin-bottom: 10px; cursor: pointer; }
+.acct-pref-locked { cursor: default; opacity: 0.85; }
+.acct-pref-text { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.acct-pref-text strong { font-size: 0.88rem; color: var(--text); }
+.acct-pref-text small { font-size: 0.76rem; color: var(--text3); line-height: 1.5; }
+.acct-always { font-size: 0.7rem; font-weight: 700; color: var(--green); background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); padding: 4px 8px; border-radius: 999px; white-space: nowrap; }
+.acct-switch { position: relative; width: 42px; height: 24px; flex-shrink: 0; }
+.acct-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+.acct-slider { position: absolute; inset: 0; background: var(--surface3); border: 1px solid var(--border2); border-radius: 999px; transition: background 0.18s; }
+.acct-slider::before { content: ''; position: absolute; width: 18px; height: 18px; left: 2px; top: 2px; background: var(--text2); border-radius: 50%; transition: transform 0.18s, background 0.18s; }
+.acct-switch input:checked + .acct-slider { background: var(--cyan); border-color: var(--cyan); }
+.acct-switch input:checked + .acct-slider::before { transform: translateX(18px); background: var(--bg); }
+.acct-switch input:focus-visible + .acct-slider { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.acct-switch input:disabled + .acct-slider { opacity: 0.5; }
+.acct-msg { display: none; font-size: 0.8rem; line-height: 1.5; margin-top: 10px; }
+.acct-danger { border-color: rgba(239,68,68,0.45); }
+.acct-danger::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px; border-radius: 16px 16px 0 0; background: linear-gradient(90deg, #EF4444, #F59E0B); }
+.acct-list { margin: 0 0 14px; padding: 12px 14px 12px 32px; background: var(--red-dim); border: 1px solid rgba(239,68,68,0.22); border-radius: 10px; font-size: 0.82rem; color: var(--text2); line-height: 1.75; }
+.acct-list strong { color: #FCA5A5; }
+.acct-note { font-size: 0.76rem; color: var(--text3); line-height: 1.55; margin-bottom: 16px; }
+.acct-label { display: block; font-size: 0.78rem; color: var(--text2); margin-bottom: 6px; }
+.acct-label strong { color: #FCA5A5; letter-spacing: 0.04em; }
+.acct-input { width: 100%; padding: 11px 12px; border-radius: 9px; background: var(--bg2); border: 1px solid var(--border2); color: var(--text); font-size: 0.9rem; font-family: inherit; letter-spacing: 0.06em; }
+.acct-input:focus { outline: none; border-color: var(--red); }
+.vs-modal-btn.acct-delete-btn { background: var(--red); color: #fff; }
+.vs-modal-btn.acct-delete-btn:hover:not(:disabled) { background: #DC2626; }
+.vs-modal-btn.acct-delete-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 </style>
 
 <script>
