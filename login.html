@@ -203,7 +203,7 @@ body{
 <div class="top-links">
   <a href="/how-it-works">How it works</a>
   <a href="/#pricing">Pricing</a>
-  <a href="/try?utm_source=login_page" class="cta">Start free scan</a>
+  <a href="/try#from=login_page" class="cta">Start free scan</a>
 </div>
 
 <div class="auth-card">
@@ -554,5 +554,14 @@ async function handleAuth() {
 </script>
   <script defer src="/_vercel/insights/script.js"></script>
   <script defer src="/_vercel/speed-insights/script.js"></script>
+<script>
+// First-touch source for blog CTAs that land straight on signup (#from=...).
+(function () {
+  try {
+    var from = new URLSearchParams(window.location.hash.slice(1)).get('from');
+    if (from && !localStorage.getItem('vs_source')) localStorage.setItem('vs_source', from.slice(0, 60));
+  } catch (e) {}
+})();
+</script>
 </body>
 </html>

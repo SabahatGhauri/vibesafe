@@ -180,7 +180,10 @@ app.post("/login", async (req, res) =&gt; {
 (function () {
   try {
     var params = new URLSearchParams(window.location.search);
-    var fromUrl = params.get('utm_source') || params.get('ref');
+    // Internal links pass the source in the #fragment (#from=...) so Google
+    // doesn't crawl dozens of ?utm_source copies of the same page.
+    var hash = new URLSearchParams(window.location.hash.slice(1));
+    var fromUrl = params.get('utm_source') || params.get('ref') || hash.get('from');
     if (fromUrl && !localStorage.getItem('vs_source')) {
       localStorage.setItem('vs_source', fromUrl.slice(0, 60));
     }

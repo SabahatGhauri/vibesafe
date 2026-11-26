@@ -53,6 +53,10 @@
     {
       "source": "/api/unsubscribe",
       "destination": "https://vibesafe-api.vercel.app/api/unsubscribe"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/sitemap-2026.xml"
     }
   ]
 }
